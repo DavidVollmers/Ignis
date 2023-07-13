@@ -6,10 +6,9 @@ namespace Ignis.Fragments.Extensions;
 
 public static class FormFragmentExtensions
 {
-    public static RenderFragment BuildFormProperties(this IFragmentBuilder<FormFragmentContext> fragmentBuilder,
-        int sequence, FormFragmentContext context, Func<PropertyInfo, RenderFragment?> propertyFragmentBuilder)
+    public static RenderFragment BuildFormProperties(this FormFragmentContext context,
+        Func<PropertyInfo, RenderFragment?> propertyFragmentBuilder)
     {
-        if (fragmentBuilder == null) throw new ArgumentNullException(nameof(fragmentBuilder));
         if (context == null) throw new ArgumentNullException(nameof(context));
 
         return builder =>
@@ -18,7 +17,7 @@ public static class FormFragmentExtensions
 
             foreach (var property in properties)
             {
-                builder.AddContent(sequence, propertyFragmentBuilder(property));
+                propertyFragmentBuilder(property)?.Invoke(builder);
             }
         };
     }

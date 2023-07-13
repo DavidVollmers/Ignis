@@ -18,6 +18,9 @@ internal class DefaultLabelFragmentBuilder : IFragmentBuilder<LabelFragmentConte
             builder.AddContent(2, context.GetPropertyDisplayName());
 
             builder.CloseElement();
+            
+            builder.OpenElement(3, "br");
+            builder.CloseElement();
         };
     }
 }
