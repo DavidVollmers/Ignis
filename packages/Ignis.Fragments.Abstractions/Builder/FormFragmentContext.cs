@@ -6,9 +6,9 @@ public sealed class FormFragmentContext
 
     public Func<object, Task> OnSubmitAsync { get; }
 
-    internal FormFragmentContext(object model, Func<object, Task> onSubmitAsync)
+    internal FormFragmentContext(object model, Func<object, Task> onSubmit)
     {
         Model = model;
-        OnSubmitAsync = onSubmitAsync;
+        OnSubmitAsync = onSubmit;
     }
 }

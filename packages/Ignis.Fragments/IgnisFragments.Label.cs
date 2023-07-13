@@ -23,7 +23,7 @@ public static partial class IgnisFragments
     {
         if (expression == null) throw new ArgumentNullException(nameof(expression));
 
-        ParsePropertyExpression(expression, out var propertyInfo);
+        ParsePropertyExpression(expression, out _, out var propertyInfo);
 
         return Label(propertyInfo);
     }

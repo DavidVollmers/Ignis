@@ -7,18 +7,31 @@ namespace Ignis.Fragments;
 
 public static partial class IgnisFragments
 {
-    private static IFragmentBuilder<T>? TryGetFragmentBuilder<T>(object target) where T : class
+    private static IFragmentBuilder? TryGetFragmentBuilder<T>(object? target) where T : class
     {
-        return TryGetFragmentBuilder<T>(target.GetType());
+        return target == null ? null : TryGetFragmentBuilder<T>(target.GetType());
     }
 
-    private static IFragmentBuilder<T>? TryGetFragmentBuilder<T>(MemberInfo target) where T : class
+    private static IFragmentBuilder? TryGetFragmentBuilder<T>(MemberInfo target) where T : class
     {
-        var fragmentAttribute = target.GetCustomAttribute<FragmentAttribute>();
-        return fragmentAttribute?.Builder as IFragmentBuilder<T>;
+        IFragmentBuilder? fallbackFragmentBuilder = null;
+        
+        var fragmentAttributes = target.GetCustomAttributes<FragmentAttribute>();
+        foreach (var fragmentAttribute in fragmentAttributes)
+        {
+            if (fragmentAttribute.Builder is IFragmentBuilder<T> builder)
+            {
+                return builder;
+            }
+            
+            fallbackFragmentBuilder ??= fragmentAttribute.Builder;
+        }
+
+        return fallbackFragmentBuilder;
     }
 
-    private static void ParsePropertyExpression<T>(Expression<Func<T>> expression, out PropertyInfo propertyInfo)
+    private static void ParsePropertyExpression<T>(Expression<Func<T>> expression, out object instance,
+        out PropertyInfo propertyInfo)
     {
         var body = expression.Body;
 
@@ -28,7 +41,7 @@ public static partial class IgnisFragments
             body = unaryExpression.Operand;
         }
 
-        if (body is not MemberExpression { Member: PropertyInfo pi })
+        if (body is not MemberExpression { Member: PropertyInfo pi } memberExpression)
         {
             throw new ArgumentException(
                 $"The provided expression contains a {body.GetType().Name} which is not supported. Only simple property accessors of an object are supported.",
@@ -36,5 +49,26 @@ public static partial class IgnisFragments
         }
 
         propertyInfo = pi;
+
+        if (memberExpression.Expression is ConstantExpression constantExpression)
+        {
+            instance = constantExpression.Value ??
+                       throw new ArgumentException("The provided expression must evaluate to a non-null value.",
+                           nameof(expression));
+        }
+        else if (memberExpression.Expression != null)
+        {
+            var instanceLambda = Expression.Lambda(memberExpression.Expression);
+            var instanceLambdaCompiled = (Func<object?>)instanceLambda.Compile();
+            var result = instanceLambdaCompiled();
+            instance = result ??
+                       throw new ArgumentException("The provided expression must evaluate to a non-null value.");
+        }
+        else
+        {
+            throw new ArgumentException(
+                $"The provided expression contains a {body.GetType().Name} which is not supported. Only simple property accessors of an object are supported.",
+                nameof(expression));
+        }
     }
 }
