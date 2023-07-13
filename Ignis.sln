@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorServer", "examples\BlazorServer\BlazorServer.csproj", "{4354EFBA-D0A7-4EFC-897F-4EBCC7E11443}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{E697C569-7A68-4040-A633-DD894D41B99E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Fragments", "packages\Ignis.Fragments\Ignis.Fragments.csproj", "{5D3382FB-EADF-47D3-B8C3-736BE0B9338A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Fragments", "Fragments", "{58B1C928-DCC7-4420-B5D2-259C7DB3417A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Fragments.Abstractions", "packages\Ignis.Fragments.Abstractions\Ignis.Fragments.Abstractions.csproj", "{13FB0073-8FFF-43CE-996B-E2AE83BFCD7A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4354EFBA-D0A7-4EFC-897F-4EBCC7E11443}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4354EFBA-D0A7-4EFC-897F-4EBCC7E11443}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4354EFBA-D0A7-4EFC-897F-4EBCC7E11443}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4354EFBA-D0A7-4EFC-897F-4EBCC7E11443}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D3382FB-EADF-47D3-B8C3-736BE0B9338A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D3382FB-EADF-47D3-B8C3-736BE0B9338A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D3382FB-EADF-47D3-B8C3-736BE0B9338A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D3382FB-EADF-47D3-B8C3-736BE0B9338A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13FB0073-8FFF-43CE-996B-E2AE83BFCD7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13FB0073-8FFF-43CE-996B-E2AE83BFCD7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13FB0073-8FFF-43CE-996B-E2AE83BFCD7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13FB0073-8FFF-43CE-996B-E2AE83BFCD7A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4354EFBA-D0A7-4EFC-897F-4EBCC7E11443} = {E697C569-7A68-4040-A633-DD894D41B99E}
+		{5D3382FB-EADF-47D3-B8C3-736BE0B9338A} = {58B1C928-DCC7-4420-B5D2-259C7DB3417A}
+		{13FB0073-8FFF-43CE-996B-E2AE83BFCD7A} = {58B1C928-DCC7-4420-B5D2-259C7DB3417A}
+	EndGlobalSection
+EndGlobal
