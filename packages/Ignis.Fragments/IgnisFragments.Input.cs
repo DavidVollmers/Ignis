@@ -61,7 +61,8 @@ public static partial class IgnisFragments
         {
             var isValid = defaultBuilder.GetType().GetInterfaces()
                 .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IFragmentBuilder<>) &&
-                          i.GenericTypeArguments[0] == propertyInfo.PropertyType);
+                          i.GenericTypeArguments[0] == typeof(InputFragmentContext<>) &&
+                          i.GenericTypeArguments[0].GenericTypeArguments[0] == propertyInfo.PropertyType);
             if (!isValid)
             {
                 throw new ArgumentException(
