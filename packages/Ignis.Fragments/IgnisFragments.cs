@@ -14,20 +14,16 @@ public static partial class IgnisFragments
 
     private static IFragmentBuilder? TryGetFragmentBuilder<T>(MemberInfo target) where T : class
     {
-        IFragmentBuilder? fallbackFragmentBuilder = null;
-        
         var fragmentAttributes = target.GetCustomAttributes<FragmentAttribute>();
         foreach (var fragmentAttribute in fragmentAttributes)
         {
-            if (fragmentAttribute.Builder is IFragmentBuilder<T> builder)
+            if (fragmentAttribute.GetBuilder() is IFragmentBuilder<T> builder)
             {
                 return builder;
             }
-            
-            fallbackFragmentBuilder ??= fragmentAttribute.Builder;
         }
 
-        return fallbackFragmentBuilder;
+        return null;
     }
 
     private static void ParsePropertyExpression<T>(Expression<Func<T>> expression, out object instance,

@@ -70,11 +70,11 @@ public static partial class IgnisFragments
         if (instance == null) throw new ArgumentNullException(nameof(instance));
         if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
 
-        var method = typeof(IgnisFragments).GetMethod(nameof(InputCore), BindingFlags.NonPublic | BindingFlags.Static);
+        var method = typeof(IgnisFragments).GetMethod(nameof(InputCore), BindingFlags.NonPublic | BindingFlags.Static)!;
 
-        var genericMethod = method?.MakeGenericMethod(propertyInfo.PropertyType);
+        var genericMethod = method.MakeGenericMethod(propertyInfo.PropertyType);
 
-        return (RenderFragment?)genericMethod?.Invoke(null, new[] { instance, propertyInfo });
+        return (RenderFragment?)genericMethod.Invoke(null, new[] { instance, propertyInfo });
     }
 
     private static RenderFragment? InputCore<T>(object instance, PropertyInfo propertyInfo)
