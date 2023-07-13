@@ -1,4 +1,5 @@
 ﻿using Ignis.Fragments.Abstractions.Builder;
+using Ignis.Fragments.Builder;
 using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Fragments;
@@ -38,8 +39,10 @@ public static partial class IgnisFragments
 
     public static RenderFragment Form<T>(T model, OnSubmitAsync<T> onSubmit) where T : class
     {
-        var formFragmentContext = new FormFragmentContext(model, async o => { await onSubmit((T)o); });
+        var context = new FormFragmentContext(model, async o => { await onSubmit((T)o); });
+
+        var builder = TryGetFragmentBuilder<FormFragmentContext>(model) ?? new DefaultFormFragmentBuilder();
         
-        
+        return builder.BuildFragment(context);
     }
 }
