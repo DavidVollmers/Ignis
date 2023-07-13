@@ -1,0 +1,47 @@
+name: NuGet Packages CD
+
+on:
+  push:
+    branches: [ 'main' ]
+    tags: [ '**' ]
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  Pack:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # https://github.com/actions/checkout/issues/701 https://github.com/actions/checkout/pull/579
+          fetch-depth: 0
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: |
+            6.0.x
+            7.0.x
+      - run: echo "VERSION=$(git describe --tags --dirty)" >> $GITHUB_ENV
+      - run: dotnet pack -c Release -p:PackageOutputPath=../../nuget -p:Version=$VERSION
+      - uses: actions/upload-artifact@v3
+        with:
+          name: NuGet
+          path: ./nuget
+  Publish:
+    runs-on: ubuntu-latest
+    needs: Pack
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+      - run: dotnet nuget add source --username DavidVollmers --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github https://nuget.pkg.github.com/DavidVollmers/index.json
+      - uses: actions/download-artifact@v3
+        with:
+          name: NuGet
+          path: ./nuget
+      - run: |
+          dotnet nuget push ./nuget/**.nupkg --source nuget.org --api-key ${{ secrets.NUGET_API_KEY }}
+          dotnet nuget push ./nuget/**.nupkg --source github --api-key ${{ secrets.PAT_GITHUB }}
