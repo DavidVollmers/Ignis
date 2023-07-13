@@ -9,10 +9,12 @@ namespace BlazorServer.Data;
 public class ExampleForm
 {
     [Display(Name = "Mail Address")]
+    [Attribute("type", "email")]
     [RenderAs(typeof(Component<InputComponent<string>, InputFragmentContext<string>>))]
     public string MailAddress { get; set; } = null!;
 
     [Display(Name = "Password")]
+    [Attribute("type", "password")]
     [RenderAs(typeof(Component<InputComponent<string>, InputFragmentContext<string>>))]
     public string Password { get; set; } = null!;
 }

@@ -1,9 +1,11 @@
 ﻿<form @onsubmit="@(() => Context.OnSubmitAsync(Context.Model))">
-    @Context.BuildFormProperties(property =>
-        @<div class="form-group">
+    @foreach (var property in Context.GetProperties())
+    {
+        <div class="form-group">
             @Label(property)
             @Input(Context.Model, property)
-        </div>)
+        </div>
+    }
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>

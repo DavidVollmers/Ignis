@@ -50,7 +50,10 @@ public static partial class IgnisFragments
         if (onInput == null) throw new ArgumentNullException(nameof(onInput));
 
         var context =
-            new InputFragmentContext<T>(() => value, async v => { await onInput(value = v == null ? default : (T)v); });
+            new InputFragmentContext<T>(() => value, async v => { await onInput(value = v == null ? default : (T)v); })
+            {
+                Attributes = GetAttributes(value)
+            };
 
         var builder = TryGetFragmentBuilder<InputFragmentContext<T>>(value) ?? new DefaultInputFragmentBuilder<T>();
 
@@ -89,7 +92,7 @@ public static partial class IgnisFragments
                 propertyInfo.SetValue(instance, v);
 
                 return Task.CompletedTask;
-            }) { PropertyInfo = propertyInfo };
+            }) { Attributes = GetAttributes(propertyInfo), PropertyInfo = propertyInfo };
 
         var builder = TryGetFragmentBuilder<InputFragmentContext<T>>(propertyInfo) ??
                       new DefaultInputFragmentBuilder<T>();

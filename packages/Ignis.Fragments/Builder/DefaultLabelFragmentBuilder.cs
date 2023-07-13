@@ -13,9 +13,10 @@ internal class DefaultLabelFragmentBuilder : IFragmentBuilder<LabelFragmentConte
         return builder =>
         {
             builder.OpenElement(0, "label");
-            builder.AddAttribute(1, "for", context.PropertyInfo.Name);
+            builder.AddMultipleAttributes(1, context.Attributes!);
+            builder.AddAttribute(2, "for", context.PropertyInfo.Name);
 
-            builder.AddContent(2, context.GetPropertyDisplayName());
+            builder.AddContent(3, context.GetPropertyDisplayName());
 
             builder.CloseElement();
         };

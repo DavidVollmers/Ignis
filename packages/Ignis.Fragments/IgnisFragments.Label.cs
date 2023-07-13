@@ -12,7 +12,10 @@ public static partial class IgnisFragments
     {
         if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
 
-        var context = new LabelFragmentContext(propertyInfo);
+        var context = new LabelFragmentContext(propertyInfo)
+        {
+            Attributes = GetAttributes(propertyInfo)
+        };
 
         var builder = TryGetFragmentBuilder<LabelFragmentContext>(propertyInfo) ?? new DefaultLabelFragmentBuilder();
 

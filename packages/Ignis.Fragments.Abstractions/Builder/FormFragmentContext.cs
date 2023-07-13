@@ -6,8 +6,7 @@ public sealed class FormFragmentContext : FragmentContext
 
     public Func<object, Task> OnSubmitAsync { get; }
 
-    internal FormFragmentContext(object model, Func<object, Task> onSubmit,
-        IReadOnlyDictionary<string, object?> attributes) : base(attributes)
+    internal FormFragmentContext(object model, Func<object, Task> onSubmit)
     {
         Model = model;
         OnSubmitAsync = onSubmit;

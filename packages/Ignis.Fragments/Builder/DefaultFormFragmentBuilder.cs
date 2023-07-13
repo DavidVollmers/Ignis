@@ -20,31 +20,32 @@ internal class DefaultFormFragmentBuilder : IFragmentBuilder<FormFragmentContext
         return builder =>
         {
             builder.OpenElement(0, "form");
-            builder.AddAttribute(1, "onsubmit", OnSubmit);
+            builder.AddMultipleAttributes(1, context.Attributes!);
+            builder.AddAttribute(2, "onsubmit", OnSubmit);
 
-            builder.AddContent(2, context.BuildFormProperties(property =>
+            // ReSharper disable once VariableHidesOuterVariable
+            builder.AddContent(3, builder =>
             {
-                // ReSharper disable once VariableHidesOuterVariable
-                return builder =>
+                foreach (var property in context.GetProperties())
                 {
-                    builder.AddContent(3, IgnisFragments.Label(property));
-                    
-                    builder.OpenElement(4, "br");
+                    builder.AddContent(4, IgnisFragments.Label(property));
+
+                    builder.OpenElement(5, "br");
                     builder.CloseElement();
-                    
-                    builder.AddContent(5, IgnisFragments.Input(context.Model, property));
-                    
-                    builder.OpenElement(6, "br");
+
+                    builder.AddContent(6, IgnisFragments.Input(context.Model, property));
+
+                    builder.OpenElement(7, "br");
                     builder.CloseElement();
-                };
-            }));
-            
-            builder.OpenElement(7, "br");
+                }
+            });
+
+            builder.OpenElement(8, "br");
             builder.CloseElement();
-            
-            builder.OpenElement(8, "input");
-            builder.AddAttribute(9, "type", "submit");
-            builder.AddAttribute(10, "value", "Submit");
+
+            builder.OpenElement(9, "input");
+            builder.AddAttribute(10, "type", "submit");
+            builder.AddAttribute(11, "value", "Submit");
 
             builder.CloseElement();
 

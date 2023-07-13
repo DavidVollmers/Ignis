@@ -14,7 +14,8 @@ public static partial class IgnisFragments
 
     private static IReadOnlyDictionary<string, object?> GetAttributes(MemberInfo target)
     {
-        
+        var attributeAttributes = target.GetCustomAttributes<AttributeAttribute>();
+        return attributeAttributes.ToDictionary(a => a.Name, a => a.Value);
     }
 
     private static IFragmentBuilder? TryGetFragmentBuilder<T>(object? target) where T : class

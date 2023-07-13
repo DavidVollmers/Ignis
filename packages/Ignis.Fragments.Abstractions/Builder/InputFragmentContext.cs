@@ -2,10 +2,10 @@
 
 namespace Ignis.Fragments.Abstractions.Builder;
 
-public sealed class InputFragmentContext<T>
+public sealed class InputFragmentContext<T> : FragmentContext
 {
     private readonly Func<T?> _valueFunc;
-    
+
     public PropertyInfo? PropertyInfo { get; internal init; }
 
     public T? Value => _valueFunc();

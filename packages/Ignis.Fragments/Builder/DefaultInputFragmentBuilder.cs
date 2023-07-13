@@ -12,21 +12,17 @@ internal class DefaultInputFragmentBuilder<T> : IFragmentBuilder<InputFragmentCo
         return builder =>
         {
             builder.OpenElement(0, "input");
-            builder.AddAttribute(1, "type", "text");
-
-            if (context.PropertyInfo != null)
-            {
-                builder.AddAttribute(2, "id", context.PropertyInfo.Name);
-                builder.AddAttribute(3, "name", context.PropertyInfo.Name);
-            }
-
+            if (context.PropertyInfo != null) builder.AddAttribute(1, "name", context.PropertyInfo.Name);
+            builder.AddAttribute(2, "type", "text");
+            builder.AddMultipleAttributes(3, context.Attributes!);
+            if (context.PropertyInfo != null) builder.AddAttribute(4, "id", context.PropertyInfo.Name);
             if (context.PropertyInfo?.CanWrite != true)
             {
-                builder.AddAttribute(4, "readonly");
+                builder.AddAttribute(5, "readonly");
             }
 
-            builder.AddAttribute(5, "value", BindConverter.FormatValue(context.Value));
-            builder.AddAttribute(6, "onchange",
+            builder.AddAttribute(6, "value", BindConverter.FormatValue(context.Value));
+            builder.AddAttribute(7, "onchange",
                 EventCallback.Factory.CreateBinder<T>(this, v => context.OnInputAsync(v), context.Value!));
 
             builder.CloseElement();
