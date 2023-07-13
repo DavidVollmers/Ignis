@@ -49,28 +49,9 @@ public static partial class IgnisFragments
     {
         if (onInput == null) throw new ArgumentNullException(nameof(onInput));
 
-        var context = new InputFragmentContext(value, async v => { await onInput(v == null ? default : (T)v); });
+        var context = new InputFragmentContext<T>(value, async v => { await onInput(v == null ? default : (T)v); });
 
-        var builder = TryGetFragmentBuilder<InputFragmentContext>(value) ?? new DefaultInputFragmentBuilder();
-
-        return builder.BuildFragment(context);
-    }
-
-    public static RenderFragment? Input(object instance, PropertyInfo propertyInfo)
-    {
-        if (instance == null) throw new ArgumentNullException(nameof(instance));
-        if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
-
-        var context = new InputFragmentContext(propertyInfo.CanRead ? propertyInfo.GetValue(instance) : null, v =>
-        {
-            if (!propertyInfo.CanWrite) return Task.CompletedTask;
-
-            propertyInfo.SetValue(instance, v);
-
-            return Task.CompletedTask;
-        });
-
-        var builder = TryGetFragmentBuilder<InputFragmentContext>(propertyInfo) ?? new DefaultInputFragmentBuilder();
+        var builder = TryGetFragmentBuilder<InputFragmentContext<T>>(value) ?? new DefaultInputFragmentBuilder<T>();
 
         return builder.BuildFragment(context);
     }
@@ -82,5 +63,38 @@ public static partial class IgnisFragments
         ParsePropertyExpression(expression, out var instance, out var propertyInfo);
 
         return Input(instance, propertyInfo);
+    }
+
+    public static RenderFragment? Input(object instance, PropertyInfo propertyInfo)
+    {
+        if (instance == null) throw new ArgumentNullException(nameof(instance));
+        if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
+
+        var method = typeof(IgnisFragments).GetMethod(nameof(InputCore), BindingFlags.NonPublic | BindingFlags.Static);
+
+        var genericMethod = method?.MakeGenericMethod(propertyInfo.PropertyType);
+
+        return (RenderFragment?)genericMethod?.Invoke(null, new[] { instance, propertyInfo });
+    }
+
+    private static RenderFragment? InputCore<T>(object instance, PropertyInfo propertyInfo)
+    {
+        var context = new InputFragmentContext<T>(propertyInfo.CanRead ? (T)propertyInfo.GetValue(instance)! : default,
+            v =>
+            {
+                if (!propertyInfo.CanWrite) return Task.CompletedTask;
+
+                propertyInfo.SetValue(instance, v);
+
+                return Task.CompletedTask;
+            })
+        {
+            PropertyInfo = propertyInfo
+        };
+
+        var builder = TryGetFragmentBuilder<InputFragmentContext<T>>(propertyInfo) ??
+                      new DefaultInputFragmentBuilder<T>();
+
+        return builder.BuildFragment(context);
     }
 }

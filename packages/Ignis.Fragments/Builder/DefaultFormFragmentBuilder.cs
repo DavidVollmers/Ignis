@@ -25,15 +25,26 @@ internal class DefaultFormFragmentBuilder : IFragmentBuilder<FormFragmentContext
             builder.AddContent(2, context.BuildFormProperties(property =>
             {
                 // ReSharper disable once VariableHidesOuterVariable
-                return builder => { builder.AddContent(3, IgnisFragments.Label(property)); };
+                return builder =>
+                {
+                    builder.AddContent(3, IgnisFragments.Label(property));
+                    
+                    builder.OpenElement(4, "br");
+                    builder.CloseElement();
+                    
+                    builder.AddContent(5, IgnisFragments.Input(context.Model, property));
+                    
+                    builder.OpenElement(6, "br");
+                    builder.CloseElement();
+                };
             }));
             
-            builder.OpenElement(4, "br");
+            builder.OpenElement(7, "br");
             builder.CloseElement();
             
-            builder.OpenElement(5, "input");
-            builder.AddAttribute(6, "type", "submit");
-            builder.AddAttribute(7, "value", "Submit");
+            builder.OpenElement(8, "input");
+            builder.AddAttribute(9, "type", "submit");
+            builder.AddAttribute(10, "value", "Submit");
 
             builder.CloseElement();
 
