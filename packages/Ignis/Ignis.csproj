@@ -4,7 +4,7 @@
         <PackageId>Ignis</PackageId>
         <Authors>david@vollmers.org</Authors>
         <Copyright>David Vollmers</Copyright>
-        <Description>Ignite your Blazor experience!</Description>
+        <Description>Powerful utilities to build ASP.NET component-based UI</Description>
         <PackageProjectUrl>https://github.com/DavidVollmers/Ignis</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
