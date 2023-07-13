@@ -8,26 +8,12 @@ namespace Ignis.Fragments;
 
 public static partial class IgnisFragments
 {
-    public delegate void OnInput();
-
     public delegate void OnInput<in T>(T? value);
-
-    public delegate Task OnInputAsync();
 
     public delegate Task OnInputAsync<in T>(T? value);
 
-    public static RenderFragment? Input(object? value, OnInput onInput)
-    {
-        if (onInput == null) throw new ArgumentNullException(nameof(onInput));
-
-        return Input(value, () =>
-        {
-            onInput();
-            return Task.CompletedTask;
-        });
-    }
-
-    public static RenderFragment? Input<T>(T? value, OnInput<T> onInput)
+    public static RenderFragment? Input<T>(T? value, OnInput<T> onInput,
+        IFragmentBuilder<InputFragmentContext<T>>? defaultBuilder = null)
     {
         if (onInput == null) throw new ArgumentNullException(nameof(onInput));
 
@@ -35,17 +21,11 @@ public static partial class IgnisFragments
         {
             onInput(v);
             return Task.CompletedTask;
-        });
+        }, defaultBuilder);
     }
 
-    public static RenderFragment? Input(object? value, OnInputAsync onInput)
-    {
-        if (onInput == null) throw new ArgumentNullException(nameof(onInput));
-
-        return Input(value, async _ => { await onInput(); });
-    }
-
-    public static RenderFragment? Input<T>(T? value, OnInputAsync<T> onInput)
+    public static RenderFragment? Input<T>(T? value, OnInputAsync<T> onInput,
+        IFragmentBuilder<InputFragmentContext<T>>? defaultBuilder = null)
     {
         if (onInput == null) throw new ArgumentNullException(nameof(onInput));
 
@@ -55,33 +35,51 @@ public static partial class IgnisFragments
                 Attributes = GetAttributes(value)
             };
 
-        var builder = TryGetFragmentBuilder<InputFragmentContext<T>>(value) ?? new DefaultInputFragmentBuilder<T>();
+        var builder = TryGetFragmentBuilder<InputFragmentContext<T>>(value) ??
+                      defaultBuilder ?? new DefaultInputFragmentBuilder<T>();
 
         return builder.BuildFragment(context);
     }
 
-    public static RenderFragment? Input<T>(Expression<Func<T>> expression)
+    public static RenderFragment? Input<T>(Expression<Func<T>> expression,
+        IFragmentBuilder<InputFragmentContext<T>>? defaultBuilder = null)
     {
         if (expression == null) throw new ArgumentNullException(nameof(expression));
 
         ParsePropertyExpression(expression, out var instance, out var propertyInfo);
 
-        return Input(instance, propertyInfo);
+        return Input(instance, propertyInfo, defaultBuilder);
     }
 
-    public static RenderFragment? Input(object instance, PropertyInfo propertyInfo)
+    public static RenderFragment? Input(object instance, PropertyInfo propertyInfo,
+        IFragmentBuilder? defaultBuilder = null)
     {
         if (instance == null) throw new ArgumentNullException(nameof(instance));
         if (propertyInfo == null) throw new ArgumentNullException(nameof(propertyInfo));
+
+        if (defaultBuilder != null)
+        {
+            var isValid = defaultBuilder.GetType().GetInterfaces()
+                .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IFragmentBuilder<>) &&
+                          i.GenericTypeArguments[0] == propertyInfo.PropertyType);
+            if (!isValid)
+            {
+                throw new ArgumentException(
+                    $"The default builder must implement {typeof(IFragmentBuilder<>).Name}<{propertyInfo.PropertyType.Name}>.",
+                    nameof(defaultBuilder));
+            }
+        }
 
         var method = typeof(IgnisFragments).GetMethod(nameof(InputCore), BindingFlags.NonPublic | BindingFlags.Static)!;
 
         var genericMethod = method.MakeGenericMethod(propertyInfo.PropertyType);
 
-        return (RenderFragment?)genericMethod.Invoke(null, new[] { instance, propertyInfo });
+        return (RenderFragment?)genericMethod.Invoke(null, new[] { instance, propertyInfo, defaultBuilder });
     }
 
-    private static RenderFragment? InputCore<T>(object instance, PropertyInfo propertyInfo)
+    private static RenderFragment? InputCore<T>(object instance, PropertyInfo propertyInfo,
+        // ReSharper disable once SuggestBaseTypeForParameter
+        IFragmentBuilder<InputFragmentContext<T>>? defaultBuilder = null)
     {
         var context = new InputFragmentContext<T>(
             () => propertyInfo.CanRead ? (T)propertyInfo.GetValue(instance)! : default,
@@ -95,7 +93,7 @@ public static partial class IgnisFragments
             }) { Attributes = GetAttributes(propertyInfo), PropertyInfo = propertyInfo };
 
         var builder = TryGetFragmentBuilder<InputFragmentContext<T>>(propertyInfo) ??
-                      new DefaultInputFragmentBuilder<T>();
+                      defaultBuilder ?? new DefaultInputFragmentBuilder<T>();
 
         return builder.BuildFragment(context);
     }

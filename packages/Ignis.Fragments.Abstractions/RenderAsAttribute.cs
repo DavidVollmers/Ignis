@@ -13,10 +13,9 @@ public sealed class RenderAsAttribute : Attribute
     {
         if (builderType == null) throw new ArgumentNullException(nameof(builderType));
 
-        //TODO support interface from deeper in the inheritance hierarchy
-        var interfaceType = builderType.GetInterfaces()
-            .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IFragmentBuilder<>));
-        if (interfaceType == null)
+        var isValid = builderType.GetInterfaces()
+            .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IFragmentBuilder<>));
+        if (!isValid)
         {
             throw new ArgumentException(
                 $"All fragment builders must implement the type generic {nameof(IFragmentBuilder)} interface.",
