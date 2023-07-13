@@ -7,6 +7,16 @@ namespace Ignis.Fragments;
 
 public static partial class IgnisFragments
 {
+    private static IReadOnlyDictionary<string, object?> GetAttributes(object? target)
+    {
+        return target == null ? new Dictionary<string, object?>() : GetAttributes(target.GetType());
+    }
+
+    private static IReadOnlyDictionary<string, object?> GetAttributes(MemberInfo target)
+    {
+        
+    }
+
     private static IFragmentBuilder? TryGetFragmentBuilder<T>(object? target) where T : class
     {
         return target == null ? null : TryGetFragmentBuilder<T>(target.GetType());

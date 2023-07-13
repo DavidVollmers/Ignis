@@ -40,8 +40,10 @@ public static partial class IgnisFragments
     public static RenderFragment? Form<T>(T model, OnSubmitAsync<T> onSubmit) where T : class
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
+
+        var attributes = GetAttributes(model);
         
-        var context = new FormFragmentContext(model, async o => { await onSubmit((T)o); });
+        var context = new FormFragmentContext(model, async o => { await onSubmit((T)o); }, attributes);
 
         var builder = TryGetFragmentBuilder<FormFragmentContext>(model) ?? new DefaultFormFragmentBuilder();
 

@@ -1,6 +1,6 @@
 ﻿@typeparam TValue
 
-<input type="text" class="form-control" @bind-value="CurrentValue"
+<input type="@(Context.Attributes["type"] ?? "text")" class="form-control" @bind-value="CurrentValue"
        id="@Context.PropertyInfo?.Name" placeholder="@Context.PropertyInfo?.Name"/>
 
 @code
