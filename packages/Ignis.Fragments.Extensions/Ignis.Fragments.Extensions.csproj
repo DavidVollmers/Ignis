@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Ignis.Fragments.Extensions\Ignis.Fragments.Extensions.csproj" />
+        <ProjectReference Include="..\Ignis.Fragments.Abstractions\Ignis.Fragments.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>
