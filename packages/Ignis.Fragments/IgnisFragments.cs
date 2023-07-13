@@ -14,7 +14,7 @@ public static partial class IgnisFragments
 
     private static IFragmentBuilder? TryGetFragmentBuilder<T>(MemberInfo target) where T : class
     {
-        var fragmentAttributes = target.GetCustomAttributes<FragmentAttribute>();
+        var fragmentAttributes = target.GetCustomAttributes<RenderAsAttribute>();
         foreach (var fragmentAttribute in fragmentAttributes)
         {
             if (fragmentAttribute.GetBuilder() is IFragmentBuilder<T> builder)

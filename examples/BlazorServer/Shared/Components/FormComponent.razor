@@ -1,0 +1,16 @@
+﻿<form @onsubmit="@Context.OnSubmitAsync">
+    @Context.BuildFormProperties(property =>
+        @<div class="form-group">
+            @Label(property)
+            @Input(Context.Model, property)
+        </div>)
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+
+@code
+{
+    [CascadingParameter]
+    public FormFragmentContext Context { get; set; } = null!;
+}

@@ -1,0 +1,16 @@
+﻿@typeparam TValue
+
+<input type="text" class="form-control" @bind-value="CurrentValue"
+       id="@Context.PropertyInfo?.Name" placeholder="@Context.PropertyInfo?.Name"/>
+
+@code
+{
+    [CascadingParameter]
+    public InputFragmentContext<TValue> Context { get; set; } = null!;
+
+    private TValue? CurrentValue
+    {
+        get => Context.Value;
+        set => Context.OnInputAsync(value);
+    }
+}
