@@ -4,15 +4,17 @@ namespace Ignis.Fragments.Abstractions.Builder;
 
 public sealed class InputFragmentContext<T>
 {
+    private readonly Func<T?> _valueFunc;
+    
     public PropertyInfo? PropertyInfo { get; internal init; }
 
-    public T? Value { get; }
+    public T? Value => _valueFunc();
 
     public Func<T?, Task> OnInputAsync { get; }
 
-    internal InputFragmentContext(T? value, Func<T?, Task> onInput)
+    internal InputFragmentContext(Func<T?> valueFunc, Func<T?, Task> onInput)
     {
-        Value = value;
+        _valueFunc = valueFunc;
         OnInputAsync = onInput;
     }
 }
