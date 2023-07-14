@@ -59,14 +59,15 @@ public static partial class IgnisFragments
 
         if (defaultBuilder != null)
         {
-            var isValid = defaultBuilder.GetType().GetInterfaces()
-                .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IFragmentBuilder<>) &&
-                          i.GenericTypeArguments[0] == typeof(InputFragmentContext<>) &&
-                          i.GenericTypeArguments[0].GenericTypeArguments[0] == propertyInfo.PropertyType);
-            if (!isValid)
+            var genericBuilderInterface = defaultBuilder.GetType().GetInterfaces()
+                .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IFragmentBuilder<>));
+            if (genericBuilderInterface == null || 
+                genericBuilderInterface.GenericTypeArguments[0]
+                    .GetGenericTypeDefinition() != typeof(InputFragmentContext<>) || 
+                genericBuilderInterface.GenericTypeArguments[0].GenericTypeArguments[0] != propertyInfo.PropertyType)
             {
                 throw new ArgumentException(
-                    $"The default builder must implement {typeof(IFragmentBuilder<>).Name}<{propertyInfo.PropertyType.Name}>.",
+                    $"The default builder must implement {typeof(IFragmentBuilder<>).Name}<{typeof(InputFragmentContext<>)}<{propertyInfo.PropertyType.Name}>>.",
                     nameof(defaultBuilder));
             }
         }
