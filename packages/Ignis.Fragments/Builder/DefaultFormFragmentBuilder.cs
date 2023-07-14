@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Fragments.Builder;
 
-internal class DefaultFormFragmentBuilder : IFragmentBuilder<FormFragmentContext>
+internal class DefaultFormFragmentBuilder<T> : IFragmentBuilder<FormFragmentContext<T>> where T : class
 {
-    public RenderFragment? BuildFragment(FormFragmentContext context)
+    public RenderFragment? BuildFragment(FormFragmentContext<T> context)
     {
         if (context == null) throw new ArgumentNullException(nameof(context));
 

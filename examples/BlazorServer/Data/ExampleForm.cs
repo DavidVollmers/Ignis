@@ -5,7 +5,7 @@ using Ignis.Fragments.Abstractions.Builder;
 
 namespace BlazorServer.Data;
 
-[RenderAs(typeof(Component<FormComponent, FormFragmentContext>))]
+[RenderAs(typeof(Component<FormComponent, FormFragmentContext<ExampleForm>>))]
 public class ExampleForm
 {
     [Display(Name = "Mail Address")]
@@ -13,7 +13,6 @@ public class ExampleForm
     [RenderAs(typeof(Component<InputComponent<string>, InputFragmentContext<string>>))]
     public string MailAddress { get; set; } = null!;
 
-    [Display(Name = "Password")]
     [Attribute("type", "password")]
     [RenderAs(typeof(Component<InputComponent<string>, InputFragmentContext<string>>))]
     public string Password { get; set; } = null!;

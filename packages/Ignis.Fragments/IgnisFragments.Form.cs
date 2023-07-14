@@ -15,7 +15,7 @@ public static partial class IgnisFragments
     public delegate Task OnSubmitAsync<in T>(T model) where T : class;
 
     public static RenderFragment? Form<T>(T model, OnSubmit onSubmit,
-        IFragmentBuilder<FormFragmentContext>? defaultBuilder = null) where T : class
+        IFragmentBuilder<FormFragmentContext<T>>? defaultBuilder = null) where T : class
     {
         return Form(model, () =>
         {
@@ -25,7 +25,7 @@ public static partial class IgnisFragments
     }
 
     public static RenderFragment? Form<T>(T model, OnSubmit<T> onSubmit,
-        IFragmentBuilder<FormFragmentContext>? defaultBuilder = null) where T : class
+        IFragmentBuilder<FormFragmentContext<T>>? defaultBuilder = null) where T : class
     {
         return Form(model, m =>
         {
@@ -35,23 +35,23 @@ public static partial class IgnisFragments
     }
 
     public static RenderFragment? Form<T>(T model, OnSubmitAsync onSubmit,
-        IFragmentBuilder<FormFragmentContext>? defaultBuilder = null) where T : class
+        IFragmentBuilder<FormFragmentContext<T>>? defaultBuilder = null) where T : class
     {
         return Form(model, async _ => { await onSubmit(); }, defaultBuilder);
     }
 
     public static RenderFragment? Form<T>(T model, OnSubmitAsync<T> onSubmit,
-        IFragmentBuilder<FormFragmentContext>? defaultBuilder = null) where T : class
+        IFragmentBuilder<FormFragmentContext<T>>? defaultBuilder = null) where T : class
     {
         if (model == null) throw new ArgumentNullException(nameof(model));
 
-        var context = new FormFragmentContext(model, async o => { await onSubmit((T)o); })
+        var context = new FormFragmentContext<T>(model, async o => { await onSubmit(o); })
         {
             Attributes = GetAttributes(model)
         };
 
-        var builder = TryGetFragmentBuilder<FormFragmentContext>(model) ??
-                      defaultBuilder ?? new DefaultFormFragmentBuilder();
+        var builder = TryGetFragmentBuilder<FormFragmentContext<T>>(model) ??
+                      defaultBuilder ?? new DefaultFormFragmentBuilder<T>();
 
         return builder.BuildFragment(context);
     }
