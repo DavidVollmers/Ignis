@@ -96,4 +96,17 @@ public class InputTests : TestContext
             $"The default builder must implement {typeof(IFragmentBuilder<>).Name}<{typeof(InputFragmentContext<>)}<{propertyInfo.PropertyType.Name}>>. (Parameter 'defaultBuilder')",
             exception.Message);
     }
+
+    [Fact]
+    public void Input_PropertyInfo_WithMissingAttributeTestInputBuilder()
+    {
+        var model = new TestModel();
+        var propertyInfo = typeof(TestModel).GetProperty(nameof(TestModel.StringProperty))!;
+        var defaultBuilder = new MissingAttributeTestInputBuilder();
+
+        var fragment = Render(Input(model, propertyInfo, defaultBuilder)!);
+        
+        var input = fragment.Find("input");
+        Assert.Equal("text", input.GetAttribute("type"));
+    }
 }

@@ -2,5 +2,5 @@
 
 public abstract class FragmentContext
 {
-    public IReadOnlyDictionary<string, object?> Attributes { get; internal init; } = new Dictionary<string, object?>();
+    public AttributeCollection Attributes { get; internal init; } = new();
 }
