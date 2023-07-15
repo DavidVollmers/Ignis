@@ -20,12 +20,12 @@
     <InternalsVisibleTo Include="Ignis.Fragments"/>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.20" Condition="'$(TargetFramework)' == 'net6.0'"/>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.20"/>
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.9" Condition="'$(TargetFramework)' == 'net7.0'"/>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.9"/>
   </ItemGroup>
 
   <ItemGroup>

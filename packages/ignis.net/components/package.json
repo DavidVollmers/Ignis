@@ -1,0 +1,29 @@
+{
+  "name": "@ignis.net/components",
+  "version": "0.1.0",
+  "description": "TypeScript/JavaScript framework to build Ignis web components",
+  "main": "",
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidVollmers/Ignis.git"
+  },
+  "author": "david@vollmers.org",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DavidVollmers/Ignis/issues"
+  },
+  "homepage": "https://github.com/DavidVollmers/Ignis#readme",
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.2",
+    "@types/blazor__javascript-interop": "^3.1.3",
+    "typescript": "^5.1.6"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "README.md"
+  ]
+}

@@ -478,6 +478,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+!packages/ignis.net
 !packages/Ignis
 !packages/Ignis.Components
 !packages/Ignis.Components.Web

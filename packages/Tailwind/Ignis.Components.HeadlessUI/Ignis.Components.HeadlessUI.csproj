@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <PackageId>Ignis.Components.HeadlessUI</PackageId>
@@ -17,12 +17,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
-    <None Include="..\..\..\LICENSE.txt" Pack="true" PackagePath="\" />
+    <ProjectReference Include="..\..\Ignis.Components.Web\Ignis.Components.Web.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Ignis.Components\Ignis.Components.csproj" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\..\LICENSE.txt" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,9 @@
+﻿{
+  "extends": "@tsconfig/recommended/tsconfig.json",
+  "include": [
+    "lib/**/*"
+  ],
+  "compilerOptions": {
+    "outDir": "dist"
+  }
+}
