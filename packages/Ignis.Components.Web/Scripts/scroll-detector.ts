@@ -11,7 +11,7 @@ export class ScrollDetector extends ComponentBase {
     }
 
     private async onScroll(): Promise<void> {
-        await this.$ref.invokeMethodAsync('OnScrollAsync');
+        await this.$ref.invokeMethodAsync('OnScrollAsync', window.scrollX, window.scrollY);
     }
 
     protected dispose(): void {

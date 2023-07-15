@@ -21,7 +21,7 @@ class ScrollDetector extends components_1.ComponentBase {
     }
     onScroll() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.$ref.invokeMethodAsync('OnScrollAsync');
+            yield this.$ref.invokeMethodAsync('OnScrollAsync', window.scrollX, window.scrollY);
         });
     }
     dispose() {

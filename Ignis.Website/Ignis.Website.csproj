@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\packages\Ignis.Utils\Ignis.Utils.csproj"/>
-    <ProjectReference Include="..\packages\Tailwind\Ignis.Components.HeadlessUI\Ignis.Components.HeadlessUI.csproj"/>
+    <ProjectReference Include="..\packages\Ignis.Utils\Ignis.Utils.csproj" />
+    <ProjectReference Include="..\packages\Tailwind\Ignis.Components.HeadlessUI\Ignis.Components.HeadlessUI.csproj" />
   </ItemGroup>
 
 </Project>

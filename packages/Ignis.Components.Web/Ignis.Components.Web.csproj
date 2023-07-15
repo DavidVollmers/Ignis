@@ -18,24 +18,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ignis.Components\Ignis.Components.csproj"/>
+    <ProjectReference Include="..\Ignis.Components\Ignis.Components.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="Microsoft.JSInterop" Version="6.0.20"/>
+    <PackageReference Include="Microsoft.JSInterop" Version="6.0.20" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-    <PackageReference Include="Microsoft.JSInterop" Version="7.0.9"/>
+    <PackageReference Include="Microsoft.JSInterop" Version="7.0.9" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\"/>
-    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\"/>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="npm run build"/>
+    <Exec Command="npm run build" />
   </Target>
 
 </Project>
