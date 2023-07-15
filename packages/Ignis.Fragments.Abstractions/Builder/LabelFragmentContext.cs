@@ -2,7 +2,7 @@
 
 namespace Ignis.Fragments.Abstractions.Builder;
 
-public sealed class LabelFragmentContext : FragmentContext
+public class LabelFragmentContext : FragmentContext
 {
     public PropertyInfo PropertyInfo { get; }
 
