@@ -1,1 +1,11 @@
-﻿
+﻿@inherits IgnisComponentBase
+
+<MainHeader/>
+
+@Body
+
+@code
+{
+    [Parameter]
+    public RenderFragment? Body { get; set; }
+}
