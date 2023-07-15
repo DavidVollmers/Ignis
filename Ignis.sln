@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tailwind", "Tailwind", "{C2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Components.HeadlessUI", "packages\Tailwind\Ignis.Components.HeadlessUI\Ignis.Components.HeadlessUI.csproj", "{DFAD7C95-320E-4B09-B597-DCF159D649F1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Website", "Ignis.Website\Ignis.Website.csproj", "{1E246956-B7ED-4D51-AD28-3B691A5F8F3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{DFAD7C95-320E-4B09-B597-DCF159D649F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFAD7C95-320E-4B09-B597-DCF159D649F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFAD7C95-320E-4B09-B597-DCF159D649F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E246956-B7ED-4D51-AD28-3B691A5F8F3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E246956-B7ED-4D51-AD28-3B691A5F8F3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E246956-B7ED-4D51-AD28-3B691A5F8F3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E246956-B7ED-4D51-AD28-3B691A5F8F3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4354EFBA-D0A7-4EFC-897F-4EBCC7E11443} = {E697C569-7A68-4040-A633-DD894D41B99E}
