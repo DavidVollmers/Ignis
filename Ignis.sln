@@ -18,9 +18,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Tests.Fragments", "te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis", "packages\Ignis\Ignis.csproj", "{A9121BB0-5576-458E-9FB4-701D95F29C7C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Engine", "Engine", "{333AA1BE-3105-4370-BB59-34463BD1F325}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{333AA1BE-3105-4370-BB59-34463BD1F325}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Engine", "packages\Ignis.Engine\Ignis.Engine.csproj", "{ECDC9856-73CF-4B64-A458-72EDA276F6A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Components", "packages\Ignis.Components\Ignis.Components.csproj", "{ECDC9856-73CF-4B64-A458-72EDA276F6A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

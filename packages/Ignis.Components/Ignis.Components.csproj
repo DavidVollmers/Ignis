@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageId>Ignis.Engine</PackageId>
+    <PackageId>Ignis.Components</PackageId>
     <Authors>david@vollmers.org</Authors>
     <Copyright>David Vollmers</Copyright>
     <Description>Performance optimized render engine for ASP.NET components</Description>

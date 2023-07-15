@@ -479,7 +479,7 @@ $RECYCLE.BIN/
 *.lnk
 
 !packages/Ignis
-!packages/Ignis.Engine
+!packages/Ignis.Components
 !packages/Ignis.Fragments
 !packages/Ignis.Fragments.Abstractions
 !packages/Ignis.Fragments.Extensions

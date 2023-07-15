@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace Ignis.Engine;
+namespace Ignis.Components;
 
 public abstract class IgnisComponentBase : IComponent, IDisposable
 {
