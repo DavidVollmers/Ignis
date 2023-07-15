@@ -1,4 +1,5 @@
 ﻿@using BlazorServer.Data
+
 <form @onsubmit="@(() => Context.OnSubmitAsync(Context.Model))">
     @foreach (var property in Context.GetProperties())
     {
