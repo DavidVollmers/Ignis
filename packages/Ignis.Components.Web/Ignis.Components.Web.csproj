@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <PackageId>Ignis.Components.Web</PackageId>
@@ -15,7 +15,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageOutputPath>..\..\nuget</PackageOutputPath>
-    <DefaultItemExcludes>$(DefaultItemExcludes);wwwroot\js\ignis.components.web.min.js</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>

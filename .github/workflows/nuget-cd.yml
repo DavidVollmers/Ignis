@@ -23,7 +23,14 @@ jobs:
           dotnet-version: |
             6.0.x
             7.0.x
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
       - run: echo "VERSION=$(git describe --tags --dirty)" >> $GITHUB_ENV
+      - run: npm i
+        working-directory: packages/ignis.net/components
+      - run: npm i
+        working-directory: packages/Ignis.Components.Web 
       - run: dotnet pack -c Release -p:Version=$VERSION
       - uses: actions/upload-artifact@v3
         with:
