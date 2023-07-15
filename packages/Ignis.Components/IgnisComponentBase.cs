@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components;
 
-public abstract class IgnisComponentBase : IComponent, IDisposable
+public abstract class IgnisComponentBase : IComponent
 {
-    private readonly CancellationTokenSource _cancellationTokenSource = new();
     private readonly RenderFragment _renderFragment;
 
     private bool _isInitialized;
@@ -20,7 +19,7 @@ public abstract class IgnisComponentBase : IComponent, IDisposable
             BuildRenderTree(builder);
         };
     }
-    
+
     public void Attach(RenderHandle renderHandle)
     {
         if (_renderHandle is { IsInitialized: true })
@@ -29,44 +28,31 @@ public abstract class IgnisComponentBase : IComponent, IDisposable
         }
 
         _renderHandle = renderHandle;
-
-        CheckInitializedAsync(_cancellationTokenSource.Token).GetAwaiter().GetResult();
     }
 
     public async Task SetParametersAsync(ParameterView parameters)
     {
-        await CheckInitializedAsync(_cancellationTokenSource.Token);
-
+        if (!_isInitialized)
+        {
+            await InitializeAsync();
+        }
+        
         parameters.SetParameterProperties(this);
-        
-        OnUpdated();
-        
-        await OnUpdatedAsync(_cancellationTokenSource.Token);
+
+        await UpdateAsync();
 
         ForceUpdate();
     }
 
-    private async Task CheckInitializedAsync(CancellationToken cancellationToken)
-    {
-        if (_isInitialized || _renderHandle is not { IsInitialized: true }) return;
-
-        _isInitialized = true;
-
-        // ReSharper disable once MethodHasAsyncOverloadWithCancellation
-        OnInitialized();
-
-        await OnInitializedAsync(cancellationToken);
-    }
-    
     protected void ForceUpdate()
     {
-        if (_hasPendingQueuedRender) return;
-        
+        if (_hasPendingQueuedRender || _renderHandle is not { IsInitialized: true }) return;
+
         _hasPendingQueuedRender = true;
 
         try
         {
-            _renderHandle?.Render(_renderFragment);
+            _renderHandle.Value.Render(_renderFragment);
         }
         catch
         {
@@ -83,36 +69,23 @@ public abstract class IgnisComponentBase : IComponent, IDisposable
     {
     }
 
-    protected virtual Task OnInitializedAsync(CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
-
     protected virtual void OnUpdated()
     {
     }
 
-    protected virtual Task OnUpdatedAsync(CancellationToken cancellationToken)
+    internal virtual Task InitializeAsync()
     {
+        _isInitialized = true;
+
+        OnInitialized();
+
         return Task.CompletedTask;
     }
 
-    protected virtual void Dispose(bool disposing)
+    internal virtual Task UpdateAsync()
     {
-        if (!disposing) return;
+        OnUpdated();
 
-        _cancellationTokenSource.Cancel();
-        _cancellationTokenSource.Dispose();
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    ~IgnisComponentBase()
-    {
-        Dispose(false);
+        return Task.CompletedTask;
     }
 }
