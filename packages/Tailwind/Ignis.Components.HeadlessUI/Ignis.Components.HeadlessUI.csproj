@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <PackageId>Ignis.Fragments.Extensions</PackageId>
+    <PackageId>Ignis.Components.HeadlessUI</PackageId>
     <Authors>david@vollmers.org</Authors>
     <Copyright>David Vollmers</Copyright>
-    <Description>Extensions for Ignis.Fragments</Description>
-    <PackageProjectUrl>https://github.com/DavidVollmers/Ignis/tree/master/packages/Ignis.Fragments</PackageProjectUrl>
+    <Description>Completely unstyled, fully accessible UI components, designed to integrate beautifully with Tailwind CSS</Description>
+    <PackageProjectUrl>https://github.com/DavidVollmers/Ignis/tree/master/packages/Tailwind/Ignis.Components.HeadlessUI</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
@@ -17,12 +17,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ignis.Fragments.Abstractions\Ignis.Fragments.Abstractions.csproj"/>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\"/>
-    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\"/>
+    <None Include="..\..\..\LICENSE.txt" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
 </Project>

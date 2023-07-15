@@ -483,3 +483,4 @@ $RECYCLE.BIN/
 !packages/Ignis.Fragments
 !packages/Ignis.Fragments.Abstractions
 !packages/Ignis.Fragments.Extensions
+!packages/Tailwind

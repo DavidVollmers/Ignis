@@ -1,36 +1,36 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <PackageId>Ignis.Fragments.Abstractions</PackageId>
-        <Authors>david@vollmers.org</Authors>
-        <Copyright>David Vollmers</Copyright>
-        <Description>Abstractions for Ignis.Fragments</Description>
-        <PackageProjectUrl>https://github.com/DavidVollmers/Ignis/tree/master/packages/Ignis.Fragments</PackageProjectUrl>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/DavidVollmers/Ignis.git</RepositoryUrl>
-        <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-        <LangVersion>11</LangVersion>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>Ignis.Fragments.Abstractions</PackageId>
+    <Authors>david@vollmers.org</Authors>
+    <Copyright>David Vollmers</Copyright>
+    <Description>Abstractions for Ignis.Fragments</Description>
+    <PackageProjectUrl>https://github.com/DavidVollmers/Ignis/tree/master/packages/Ignis.Fragments</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/DavidVollmers/Ignis.git</RepositoryUrl>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <LangVersion>11</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <InternalsVisibleTo Include="Ignis.Fragments" />
-    </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Ignis.Fragments"/>
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.20" Condition="'$(TargetFramework)' == 'net6.0'" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.20" Condition="'$(TargetFramework)' == 'net6.0'"/>
+  </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.9" Condition="'$(TargetFramework)' == 'net7.0'" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.9" Condition="'$(TargetFramework)' == 'net7.0'"/>
+  </ItemGroup>
 
-    <ItemGroup>
-        <None Include="README.md" Pack="true" PackagePath="\" />
-        <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
-    </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 
 </Project>
