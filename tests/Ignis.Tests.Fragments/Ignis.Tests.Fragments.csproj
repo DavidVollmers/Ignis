@@ -1,23 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\..\packages\Ignis.Fragments\Ignis.Fragments.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\packages\Ignis.Fragments\Ignis.Fragments.csproj"/>
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="bunit" Version="1.21.9" />
-      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
-      <PackageReference Include="xunit" Version="2.5.0" />
-      <PackageReference Include="xunit.runner.visualstudio" Version="2.5.0">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="bunit" Version="1.21.9"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3"/>
+    <PackageReference Include="xunit" Version="2.5.0"/>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
 </Project>

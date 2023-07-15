@@ -24,7 +24,7 @@ jobs:
             6.0.x
             7.0.x
       - run: echo "VERSION=$(git describe --tags --dirty)" >> $GITHUB_ENV
-      - run: dotnet pack -c Release -p:PackageOutputPath=../../nuget -p:Version=$VERSION
+      - run: dotnet pack -c Release -p:Version=$VERSION
       - uses: actions/upload-artifact@v3
         with:
           name: NuGet
