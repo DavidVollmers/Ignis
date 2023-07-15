@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageId>Ignis</PackageId>
+    <PackageId>Ignis.Utils</PackageId>
     <Authors>david@vollmers.org</Authors>
     <Copyright>David Vollmers</Copyright>
-    <Description>The ASP.NET component framework for building modern web applications</Description>
-    <PackageProjectUrl>https://github.com/DavidVollmers/Ignis</PackageProjectUrl>
+    <Description>Utilities for ASP.NET component based UI</Description>
+    <PackageProjectUrl>https://github.com/DavidVollmers/Ignis/tree/master/packages/Ignis.Utils</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryType>git</RepositoryType>
@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+    <None Include="README.md" Pack="true" PackagePath="\" />
     <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\" />
   </ItemGroup>
 
