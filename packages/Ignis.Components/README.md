@@ -1,11 +1,11 @@
-﻿# Ignis.Engine
+﻿# Ignis.Components
 
-Performance optimized render engine for ASP.NET components
+Provides common classes for Ignis components
 
 ## Installation
 
 ```shell
-dotnet add package Ignis.Engine
+dotnet add package Ignis.Components
 ```
 
-Visit [nuget.org](https://www.nuget.org/packages/Ignis.Engine) for more information.
+Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components) for more information.
