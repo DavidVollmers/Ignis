@@ -480,6 +480,7 @@ $RECYCLE.BIN/
 
 !packages/Ignis
 !packages/Ignis.Components
+!packages/Ignis.Components.Web
 !packages/Ignis.Fragments
 !packages/Ignis.Fragments.Abstractions
 !packages/Ignis.Fragments.Extensions
