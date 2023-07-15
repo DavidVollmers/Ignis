@@ -15,6 +15,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageOutputPath>..\..\nuget</PackageOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);wwwroot\js\ignis.components.web.min.js</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,5 +34,9 @@
     <None Include="README.md" Pack="true" PackagePath="\"/>
     <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\"/>
   </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="npm run build"/>
+  </Target>
 
 </Project>

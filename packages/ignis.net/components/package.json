@@ -1,8 +1,9 @@
 {
   "name": "@ignis.net/components",
-  "version": "0.1.0",
+  "version": "0.1.0-preview",
   "description": "TypeScript/JavaScript framework to build Ignis web components",
-  "main": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "npx tsc",
     "prepublishOnly": "npm run build"

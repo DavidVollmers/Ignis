@@ -1,0 +1,16 @@
+{
+  "scripts": {
+    "build:ignis.net/components": "cd ../ignis.net/components && npm run build",
+    "build:ts": "npx tsc",
+    "build:js": "npx webpack ./dist/index.js -o ./wwwroot/js --output-filename ignis.components.web.min.js",
+    "build": "npm run build:ignis.net/components && npm run build:ts && npm run build:js"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.2",
+    "typescript": "^5.1.6",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@ignis.net/components": "file:../ignis.net/components"
+  }
+}
