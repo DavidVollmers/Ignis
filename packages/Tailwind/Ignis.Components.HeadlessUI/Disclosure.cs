@@ -3,18 +3,19 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Disclosure : IgnisComponentBase, IDynamicComponent, IOpenClose
+public sealed class Disclosure : IgnisDynamicComponentBase, IOpenClose
 {
     public bool IsOpen { get; private set; }
-
-    [Parameter] public string? AsElement { get; set; }
-
-    [Parameter] public Type? AsComponent { get; set; } = typeof(Fragment);
 
     [Parameter] public RenderFragment<IOpenClose>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? Attributes { get; set; }
+    
+    public Disclosure()
+    {
+        AsComponent = typeof(Fragment);
+    }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {

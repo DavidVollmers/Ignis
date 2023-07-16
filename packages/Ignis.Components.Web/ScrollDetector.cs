@@ -5,15 +5,15 @@ namespace Ignis.Components.Web;
 
 public sealed class ScrollDetector : IgnisComponentBase
 {
-    [Parameter, EditorRequired] public EventCallback<ScrollEventArgs> OnScroll { get; set; }
+    [Parameter] public EventCallback<ScrollEventArgs> OnScroll { get; set; }
 
     // ReSharper disable once InconsistentNaming
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
 
     [JSInvokable]
-    public Task OnScrollAsync(int scrollX, int scrollY)
+    public async Task OnScrollAsync(int scrollX, int scrollY)
     {
-        return OnScroll.InvokeAsync(new ScrollEventArgs(scrollX, scrollY));
+        await OnScroll.InvokeAsync(new ScrollEventArgs(scrollX, scrollY));
     }
 
     protected override void OnInitialized()

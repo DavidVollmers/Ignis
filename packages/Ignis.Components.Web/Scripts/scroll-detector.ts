@@ -1,4 +1,4 @@
-import {ComponentBase} from '@ignis.net/components'
+import {ComponentBase} from '@ignis.net/components';
 
 export class ScrollDetector extends ComponentBase {
     private readonly _onScroll = () => {
@@ -6,7 +6,7 @@ export class ScrollDetector extends ComponentBase {
     };
 
     public constructor($ref: DotNet.DotNetObject) {
-        super('Ignis.Components.Web.ScrollDetector', $ref);
+        super($ref, 'Ignis.Components.Web.ScrollDetector');
         (<any>window).addEventListener('scroll', this._onScroll);
         this._onScroll();
     }

@@ -8,7 +8,7 @@ public abstract class IgnisComponentBase : IComponent
     private readonly RenderFragment _renderFragment;
 
     private bool _isInitialized;
-    private RenderHandle? _renderHandle;
+    private RenderHandle _renderHandle;
     private bool _hasPendingQueuedRender;
 
     [Inject] public IServer Server { get; set; } = null!;
@@ -58,7 +58,7 @@ public abstract class IgnisComponentBase : IComponent
 
         try
         {
-            _renderHandle.Value.Render(_renderFragment);
+            _renderHandle.Render(_renderFragment);
         }
         catch
         {

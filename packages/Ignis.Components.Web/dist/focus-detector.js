@@ -9,25 +9,33 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ScrollDetector = void 0;
+exports.FocusDetector = void 0;
 const components_1 = require("@ignis.net/components");
-class ScrollDetector extends components_1.ComponentBase {
-    constructor($ref) {
-        super($ref, 'Ignis.Components.Web.ScrollDetector');
-        this._onScroll = () => {
-            const _ = this.onScroll();
+class FocusDetector extends components_1.ComponentBase {
+    constructor($ref, id, _element) {
+        super($ref, id);
+        this._element = _element;
+        this._onClick = (event) => {
+            const _ = this.onClick(event);
         };
-        window.addEventListener('scroll', this._onScroll);
-        this._onScroll();
+        window.addEventListener('click', this._onClick);
+        if (_element.contains(document.activeElement)) {
+            const _ = this.$ref.invokeMethodAsync('OnFocusAsync');
+        }
     }
-    onScroll() {
+    onClick(event) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.$ref.invokeMethodAsync('OnScrollAsync', window.scrollX, window.scrollY);
+            if (this._element.contains(event.target)) {
+                yield this.$ref.invokeMethodAsync('OnFocusAsync');
+            }
+            else {
+                yield this.$ref.invokeMethodAsync('OnBlurAsync');
+            }
         });
     }
     dispose() {
         super.dispose();
-        window.removeEventListener('scroll', this._onScroll);
+        window.removeEventListener('click', this._onClick);
     }
 }
-exports.ScrollDetector = ScrollDetector;
+exports.FocusDetector = FocusDetector;

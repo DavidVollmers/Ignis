@@ -7,7 +7,7 @@ public abstract class IgnisStaticComponentBase : IComponent
 {
     private readonly RenderFragment _renderFragment;
 
-    private RenderHandle? _renderHandle;
+    private RenderHandle _renderHandle;
     
     protected IgnisStaticComponentBase()
     {
@@ -28,7 +28,7 @@ public abstract class IgnisStaticComponentBase : IComponent
     {
         parameters.SetParameterProperties(this);
         
-        _renderHandle?.Render(_renderFragment);
+        _renderHandle.Render(_renderFragment);
 
         return Task.CompletedTask;
     }
