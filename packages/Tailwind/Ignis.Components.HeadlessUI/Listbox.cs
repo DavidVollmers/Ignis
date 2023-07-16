@@ -6,7 +6,9 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox<TValue>
 {
-    private readonly string _id = "hui-listbox-" + Guid.NewGuid().ToString("N");
+    private ListboxLabel<TValue>? _label;
+
+    public string Id { get; } = "hui-listbox-" + Guid.NewGuid().ToString("N");
 
     public bool IsOpen { get; private set; }
 
@@ -32,7 +34,7 @@ public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox<TValue
         builder.AddChildContentFor(2, this, builder =>
         {
             builder.OpenComponent<FocusDetector>(3);
-            builder.AddAttribute(4, nameof(FocusDetector.Id), _id);
+            builder.AddAttribute(4, nameof(FocusDetector.Id), Id);
             builder.AddAttribute(5, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, Close));
             // ReSharper disable once VariableHidesOuterVariable
             builder.AddAttribute(6, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
@@ -40,7 +42,8 @@ public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox<TValue
                 builder.OpenComponent<CascadingValue<IListbox<TValue>>>(7);
                 builder.AddAttribute(8, nameof(CascadingValue<IListbox<TValue>>.IsFixed), true);
                 builder.AddAttribute(9, nameof(CascadingValue<IListbox<TValue>>.Value), this);
-                builder.AddAttribute(10, nameof(CascadingValue<IListbox<TValue>>.ChildContent), ChildContent?.Invoke(this));
+                builder.AddAttribute(10, nameof(CascadingValue<IListbox<TValue>>.ChildContent),
+                    ChildContent?.Invoke(this));
 
                 builder.CloseComponent();
             }));
@@ -67,5 +70,17 @@ public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox<TValue
         IsOpen = false;
 
         ForceUpdate();
+    }
+
+    public Task FocusAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetLabel(ListboxLabel<TValue> label)
+    {
+        if (_label != null) throw new InvalidOperationException("Label already set.");
+
+        _label = label;
     }
 }

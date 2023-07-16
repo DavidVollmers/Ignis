@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxLabel : IgnisDynamicComponentBase
+public sealed class ListboxLabel<TValue> : IgnisDynamicComponentBase
 {
     [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [CascadingParameter] public IListbox<TValue> Listbox { get; set; } = null!;
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? Attributes { get; set; }
@@ -15,12 +17,24 @@ public sealed class ListboxLabel : IgnisDynamicComponentBase
         AsElement = "label";
     }
 
+    protected override void OnInitialized()
+    {
+        if (Listbox == null)
+        {
+            throw new InvalidOperationException("ListboxLabel must be used inside a Listbox.");
+        }
+
+        Listbox.SetLabel(this);
+    }
+
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
+        builder.AddAttribute(2, "id", Listbox.Id + "-label");
+        builder.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, Listbox.FocusAsync));
 
-        builder.AddChildContentFor(2, this, ChildContent);
+        builder.AddChildContentFor(4, this, ChildContent);
 
         builder.CloseAs(this);
     }
