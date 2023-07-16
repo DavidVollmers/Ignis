@@ -21,7 +21,6 @@ public sealed class Disclosure : IgnisDynamicComponentBase, IOpenClose
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddChildContentFor(2, this, builder =>
         {

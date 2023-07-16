@@ -56,7 +56,6 @@ public sealed class FocusDetector : IgnisComponentBase
         builder.AddMultipleAttributes(1, Attributes!);
         builder.AddAttribute(2, "id", Id);
         builder.AddElementReferenceCapture(3, element => _element = element);
-
         builder.AddContent(4, ChildContent);
 
         builder.CloseElement();
