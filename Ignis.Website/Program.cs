@@ -4,6 +4,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
+builder.Services.AddLocalization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -19,6 +21,13 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseRequestLocalization(options =>
+{
+    options.AddSupportedCultures("en");
+    options.AddSupportedUICultures("en");
+    options.SetDefaultCulture("en");
+});
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

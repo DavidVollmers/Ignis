@@ -18,6 +18,7 @@ class ScrollDetector extends components_1.ComponentBase {
             const _ = this.onScroll();
         };
         window.addEventListener('scroll', this._onScroll);
+        this._onScroll();
     }
     onScroll() {
         return __awaiter(this, void 0, void 0, function* () {
