@@ -1,7 +1,7 @@
 let isDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
 
 function updateTheme(theme) {
-    theme = theme ?? window.localStorage.theme ?? 'system';
+    theme = theme ?? window.localStorage.getItem('theme') ?? 'system';
 
     if (theme === 'dark' || (theme === 'system' && isDarkMode.matches)) {
         document.documentElement.classList.add('dark');
@@ -34,3 +34,7 @@ new MutationObserver(([{oldValue}]) => {
 }).observe(document.documentElement, {attributeFilter: ['data-theme'], attributeOldValue: true});
 
 isDarkMode.addEventListener('change', () => updateThemeWithoutTransitions());
+
+window.setTheme = (theme) => {
+    document.documentElement.setAttribute('data-theme', theme);
+};

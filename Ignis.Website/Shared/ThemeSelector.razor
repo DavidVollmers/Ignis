@@ -1,3 +1,44 @@
-﻿@inherits IgnisStaticComponentBase
+﻿@using System.Text.Json
+@inherits IgnisAsyncComponentBase
+@* ReSharper disable once InconsistentNaming *@
+@inject IJSRuntime JSRuntime
+@inject ILocalStorage LocalStorage
+@inject IStringLocalizer<ThemeSelector> Resources
 
+<Listbox AsElement="div"
+         @bind-Value="SelectedTheme"
+         @attributes="Attributes">
+    <ListboxLabel class="sr-only">
+        @Resources["Label"]
+    </ListboxLabel>
+</Listbox>
 
+@code
+{
+    private Theme _selectedTheme;
+
+    private Theme SelectedTheme
+    {
+        get => _selectedTheme;
+        set
+        {
+            _selectedTheme = value;
+            JSRuntime.InvokeVoidAsync("setTheme", JsonSerializer.Serialize(value));
+        }
+    }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object?>? Attributes { get; set; }
+
+    protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
+    {
+        _selectedTheme = await LocalStorage.GetItemAsync<Theme?>("theme") ?? Theme.System;
+    }
+
+    private enum Theme
+    {
+        System,
+        Light,
+        Dark
+    }
+}
