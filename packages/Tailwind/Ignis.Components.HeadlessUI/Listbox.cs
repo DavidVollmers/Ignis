@@ -16,6 +16,9 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IDynamicComponent, ILi
 
     [Parameter] public RenderFragment<IListbox<TValue>>? ChildContent { get; set; }
 
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object?>? Attributes { get; set; }
+
     public void Open()
     {
         if (IsOpen) return;

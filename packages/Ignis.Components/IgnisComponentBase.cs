@@ -11,6 +11,8 @@ public abstract class IgnisComponentBase : IComponent
     private RenderHandle? _renderHandle;
     private bool _hasPendingQueuedRender;
 
+    [Inject] public IServer Server { get; set; } = null!;
+
     protected IgnisComponentBase()
     {
         _renderFragment = builder =>
@@ -32,15 +34,19 @@ public abstract class IgnisComponentBase : IComponent
 
     public async Task SetParametersAsync(ParameterView parameters)
     {
+        if (Server.IsPrerendering) return;
+        
+        parameters.SetParameterProperties(this);
+        
         if (!_isInitialized)
         {
             await InitializeAsync();
         }
+        else
+        {
+            await UpdateAsync();
+        }
         
-        parameters.SetParameterProperties(this);
-
-        await UpdateAsync();
-
         ForceUpdate();
     }
 

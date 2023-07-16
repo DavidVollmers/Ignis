@@ -1,10 +1,23 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Ignis.Components;
 
 public static class IgnisComponentExtensions
 {
+    public static IServiceCollection AddIgnisServices(this IServiceCollection serviceCollection)
+    {
+        if (serviceCollection is null) throw new ArgumentNullException(nameof(serviceCollection));
+        
+        serviceCollection.AddHttpContextAccessor();
+        
+        serviceCollection.TryAddSingleton<IServer, Server>();
+        
+        return serviceCollection;
+    }
+    
     public static void OpenAs(this RenderTreeBuilder builder, int sequence, IDynamicComponent dynamicComponent)
     {
         if (builder == null) throw new ArgumentNullException(nameof(builder));
@@ -22,7 +35,9 @@ public static class IgnisComponentExtensions
 
         if (dynamicComponent.AsElement != null)
         {
+#pragma warning disable ASP0006
             builder.OpenElement(sequence, dynamicComponent.AsElement);
+#pragma warning restore ASP0006
         }
         else if (dynamicComponent.AsComponent != null)
         {
@@ -32,7 +47,9 @@ public static class IgnisComponentExtensions
                     $"Invalid component type {dynamicComponent.AsComponent.Name}. Must implement {nameof(IComponent)}.");
             }
 
+#pragma warning disable ASP0006
             builder.OpenComponent(sequence, dynamicComponent.AsComponent);
+#pragma warning restore ASP0006
         }
     }
 
@@ -73,11 +90,15 @@ public static class IgnisComponentExtensions
 
         if (dynamicComponent.AsElement != null)
         {
+#pragma warning disable ASP0006
             builder.AddContent(sequence, childContent);
+#pragma warning restore ASP0006
         }
         else if (dynamicComponent.AsComponent != null)
         {
+#pragma warning disable ASP0006
             builder.AddAttribute(sequence, childContentName, childContent);
+#pragma warning restore ASP0006
         }
     }
 }
