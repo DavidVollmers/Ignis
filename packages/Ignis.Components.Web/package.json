@@ -2,7 +2,7 @@
   "scripts": {
     "build:ignis.net/components": "cd ../ignis.net/components && npm run build",
     "build:ts": "npx tsc",
-    "build:js": "npx webpack ./dist/index.js -o ./wwwroot/js --output-filename ignis.components.web.min.js",
+    "build:js": "npx webpack ./dist/index.js -o ./wwwroot --output-filename min.js",
     "build": "npm run build:ignis.net/components && npm run build:ts && npm run build:js"
   },
   "devDependencies": {

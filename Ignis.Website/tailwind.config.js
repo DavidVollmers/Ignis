@@ -28,6 +28,19 @@ module.exports = {
             maxWidth: {
                 '8xl': '88rem',
             },
+            colors: {
+                ignis: {
+                    100: '#FDEEEA',
+                    200: '#FBD4D0',
+                    300: '#F9B9B6',
+                    400: '#F47F81',
+                    500: '#EF454C',
+                    600: '#D63E45',
+                    700: '#8F292E',
+                    800: '#6B2124',
+                    900: '#47171A',
+                }
+            }
         },
     },
     plugins: [require('@tailwindcss/typography')],
