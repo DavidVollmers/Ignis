@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxLabel<TValue> : IgnisDynamicComponentBase
+public sealed class ListboxLabel : IgnisDynamicComponentBase
 {
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [CascadingParameter] public IListbox<TValue> Listbox { get; set; } = null!;
+    [CascadingParameter] public IListbox Listbox { get; set; } = null!;
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? Attributes { get; set; }

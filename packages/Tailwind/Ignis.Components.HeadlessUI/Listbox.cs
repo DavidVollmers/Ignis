@@ -4,20 +4,20 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox<TValue>
+public sealed class Listbox : IgnisDynamicComponentBase, IListbox
 {
-    private ListboxLabel<TValue>? _label;
-    private ListboxButton<TValue>? _button;
+    private ListboxLabel? _label;
+    private ListboxButton? _button;
 
     public string Id { get; } = "hui-listbox-" + Guid.NewGuid().ToString("N");
 
     public bool IsOpen { get; private set; }
 
-    [Parameter] public TValue? Value { get; set; }
+    [Parameter] public object? Value { get; set; }
 
-    [Parameter] public EventCallback<TValue?> ValueChanged { get; set; }
+    [Parameter] public EventCallback<object?> ValueChanged { get; set; }
 
-    [Parameter] public RenderFragment<IListbox<TValue>>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<IListbox>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? Attributes { get; set; }
@@ -40,10 +40,10 @@ public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox<TValue
             // ReSharper disable once VariableHidesOuterVariable
             builder.AddAttribute(6, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
             {
-                builder.OpenComponent<CascadingValue<IListbox<TValue>>>(7);
-                builder.AddAttribute(8, nameof(CascadingValue<IListbox<TValue>>.IsFixed), true);
-                builder.AddAttribute(9, nameof(CascadingValue<IListbox<TValue>>.Value), this);
-                builder.AddAttribute(10, nameof(CascadingValue<IListbox<TValue>>.ChildContent),
+                builder.OpenComponent<CascadingValue<IListbox>>(7);
+                builder.AddAttribute(8, nameof(CascadingValue<IListbox>.IsFixed), true);
+                builder.AddAttribute(9, nameof(CascadingValue<IListbox>.Value), this);
+                builder.AddAttribute(10, nameof(CascadingValue<IListbox>.ChildContent),
                     ChildContent?.Invoke(this));
 
                 builder.CloseComponent();
@@ -80,14 +80,14 @@ public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox<TValue
         await _button.FocusAsync();
     }
 
-    public void SetLabel(ListboxLabel<TValue> label)
+    public void SetLabel(ListboxLabel label)
     {
         if (_label != null) throw new InvalidOperationException("ListboxLabel already set.");
 
         _label = label ?? throw new ArgumentNullException(nameof(label));
     }
 
-    public void SetButton(ListboxButton<TValue> button)
+    public void SetButton(ListboxButton button)
     {
         if (_button != null) throw new InvalidOperationException("ListboxButton already set.");
 

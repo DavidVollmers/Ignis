@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxButton<TValue> : IgnisDynamicComponentBase, IFocus
+public sealed class ListboxButton : IgnisDynamicComponentBase, IFocus
 {
     private ElementReference? _element;
     private object? _component;
 
-    [CascadingParameter] public IListbox<TValue> Listbox { get; set; } = null!;
+    [CascadingParameter] public IListbox Listbox { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 

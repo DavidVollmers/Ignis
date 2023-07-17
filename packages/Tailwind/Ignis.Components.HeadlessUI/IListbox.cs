@@ -3,15 +3,15 @@ using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
-public interface IListbox<TValue> : IOpenClose, IFocus
+public interface IListbox : IOpenClose, IFocus
 {
     string Id { get; }
     
-    TValue? Value { get; set; }
+    object? Value { get; set; }
 
-    EventCallback<TValue?> ValueChanged { get; set; }
+    EventCallback<object?> ValueChanged { get; set; }
     
-    internal void SetLabel(ListboxLabel<TValue> label);
+    internal void SetLabel(ListboxLabel label);
 
-    internal void SetButton(ListboxButton<TValue> button);
+    internal void SetButton(ListboxButton button);
 }
