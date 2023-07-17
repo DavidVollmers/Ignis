@@ -61,9 +61,9 @@ public sealed class ListboxOption<TValue> : IgnisDynamicComponentBase, IListboxO
 
     private void OnClick()
     {
-        //TODO on click
+        Listbox.SelectValue(Value);
 
-        ForceUpdate();
+        Listbox.Close();
     }
 
     private void OnMouseEnter()

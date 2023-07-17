@@ -7,6 +7,8 @@ public interface IListbox : IOpenClose, IFocus
     string Id { get; }
 
     bool IsValueSelected<TValue>(TValue? value);
+
+    void SelectValue<TValue>(TValue? value);
     
     internal void SetButton(ListboxButton button);
 }

@@ -1,11 +1,11 @@
 let isDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
 
 function updateTheme(theme) {
-    theme = theme ?? window.localStorage.getItem('theme') ?? 'system';
+    theme = theme ?? window.localStorage.getItem('theme') ?? '0';
 
-    if (theme === 'dark' || (theme === 'system' && isDarkMode.matches)) {
+    if (theme === '2' || (theme === '0' && isDarkMode.matches)) {
         document.documentElement.classList.add('dark');
-    } else if (theme === 'light' || (theme === 'system' && !isDarkMode.matches)) {
+    } else if (theme === '1' || (theme === '0' && !isDarkMode.matches)) {
         document.documentElement.classList.remove('dark');
     }
 
@@ -13,11 +13,13 @@ function updateTheme(theme) {
 }
 
 function updateThemeWithoutTransitions(theme) {
-    updateTheme(theme);
     document.documentElement.classList.add('[&_*]:!transition-none');
     window.setTimeout(() => {
-        document.documentElement.classList.remove('[&_*]:!transition-none');
-    }, 0);
+        updateTheme(theme);
+        window.setTimeout(() => {
+            document.documentElement.classList.remove('[&_*]:!transition-none');
+        }, 15);
+    }, 15);
 }
 
 document.documentElement.setAttribute('data-theme', updateTheme());

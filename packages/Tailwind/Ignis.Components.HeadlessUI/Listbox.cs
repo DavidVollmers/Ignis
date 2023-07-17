@@ -75,14 +75,19 @@ public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox
     public async Task FocusAsync()
     {
         if (_button == null) return;
-        
+
         await _button.FocusAsync();
     }
 
     public bool IsValueSelected<TValue1>(TValue1? value)
     {
-        //TODO
-        return false;
+        return value?.Equals(Value) ?? Value?.Equals(value) ?? false;
+    }
+
+    public void SelectValue<TValue1>(TValue1? value)
+    {
+        Value = (TValue?)(object?)value;
+        ValueChanged.InvokeAsync(Value);
     }
 
     public void SetButton(ListboxButton button)
