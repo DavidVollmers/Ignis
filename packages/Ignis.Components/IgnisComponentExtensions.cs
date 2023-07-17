@@ -120,11 +120,15 @@ public static class IgnisComponentExtensions
 
         if (dynamicComponent.AsElement != null)
         {
+#pragma warning disable ASP0006
             builder.AddElementReferenceCapture(sequence, elementCapture);
+#pragma warning restore ASP0006
         }
         else if (dynamicComponent.AsComponent != null)
         {
+#pragma warning disable ASP0006
             builder.AddComponentReferenceCapture(sequence, componentCapture);
+#pragma warning restore ASP0006
         }
     }
 }
