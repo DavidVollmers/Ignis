@@ -4,7 +4,7 @@ using Microsoft.JSInterop;
 
 namespace Ignis.Components.Web;
 
-public sealed class FocusDetector : IgnisComponentBase
+public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender
 {
     private ElementReference? _element;
     private bool? _isFocused;
@@ -12,7 +12,7 @@ public sealed class FocusDetector : IgnisComponentBase
     [Parameter] public EventCallback OnFocus { get; set; }
 
     [Parameter] public EventCallback OnBlur { get; set; }
-    
+
     [Parameter] public string AsElement { get; set; } = "div";
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
@@ -45,9 +45,11 @@ public sealed class FocusDetector : IgnisComponentBase
         await OnBlur.InvokeAsync();
     }
 
-    protected override void OnInitialized()
+    public async Task OnAfterRenderAsync()
     {
-        var _ = JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusDetector", Id, _element, DotNetObjectReference.Create(this));
+        if (Server.IsPrerendering || _isFocused.HasValue) return;
+        
+        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusDetector", DotNetObjectReference.Create(this), Id, _element);
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -55,7 +57,11 @@ public sealed class FocusDetector : IgnisComponentBase
         builder.OpenElement(0, AsElement);
         builder.AddMultipleAttributes(1, AdditionalAttributes!);
         builder.AddAttribute(2, "id", Id);
-        builder.AddElementReferenceCapture(3, element => _element = element);
+        builder.AddElementReferenceCapture(3, element =>
+        {
+            _isFocused = null;
+            _element = element;
+        });
         builder.AddContent(4, ChildContent);
 
         builder.CloseElement();

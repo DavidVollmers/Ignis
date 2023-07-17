@@ -8,12 +8,13 @@ export class FocusDetector extends ComponentBase {
     public constructor($ref: DotNet.DotNetObject, id: string, private readonly _element: HTMLElement) {
         super($ref, id);
         (<any>window).addEventListener('click', this._onClick);
-        if (_element.contains(document.activeElement)) {
+        if (this._element.contains(document.activeElement)) {
             const _ = this.$ref.invokeMethodAsync('OnFocusAsync');
         }
     }
 
     private async onClick(event: MouseEvent): Promise<void> {
+        console.log(this);
         if (this._element.contains(<Node>event.target)) {
             await this.$ref.invokeMethodAsync('OnFocusAsync');
         } else {

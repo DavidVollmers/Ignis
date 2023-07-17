@@ -31,7 +31,6 @@ public sealed class ListboxLabel : IgnisDynamicComponentBase
         builder.AddAttribute(1, "id", Listbox.Id + "-label");
         builder.AddAttribute(2, "onclick", EventCallback.Factory.Create(this, Listbox.FocusAsync));
         builder.AddMultipleAttributes(3, AdditionalAttributes!);
-
         builder.AddContentFor(4, this, ChildContent);
 
         builder.CloseAs(this);

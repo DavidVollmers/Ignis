@@ -27,6 +27,8 @@ public sealed class ListboxOptions : IgnisDynamicComponentBase
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        if (!Listbox.IsOpen) return;
+        
         builder.OpenAs(0, this);
         builder.AddAttribute(1, "tabindex", -1);
         builder.AddAttribute(2, "role", "listbox");
