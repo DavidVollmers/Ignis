@@ -14,7 +14,7 @@ public sealed class ListboxButton : IgnisDynamicComponentBase, IFocus
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? Attributes { get; set; }
+    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
     public ListboxButton()
     {
@@ -39,7 +39,7 @@ public sealed class ListboxButton : IgnisDynamicComponentBase, IFocus
         builder.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, Listbox.Open));
         builder.AddAttribute(4, "aria-labelledby", Listbox.Id + "-label");
         builder.AddAttribute(5, "aria-expanded", Listbox.IsOpen);
-        builder.AddMultipleAttributes(6, Attributes!);
+        builder.AddMultipleAttributes(6, AdditionalAttributes!);
         builder.AddReferenceCaptureFor(7, this, e => _element = e, c => _component = c);
         builder.AddContent(8, ChildContent);
 

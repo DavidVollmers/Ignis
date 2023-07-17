@@ -10,7 +10,7 @@ public sealed class Disclosure : IgnisDynamicComponentBase, IOpenClose
     [Parameter] public RenderFragment<IOpenClose>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? Attributes { get; set; }
+    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
     
     public Disclosure()
     {
@@ -20,7 +20,7 @@ public sealed class Disclosure : IgnisDynamicComponentBase, IOpenClose
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
+        builder.AddMultipleAttributes(1, AdditionalAttributes!);
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {

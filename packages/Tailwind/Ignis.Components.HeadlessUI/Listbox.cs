@@ -19,7 +19,7 @@ public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox
     [Parameter] public RenderFragment<IListbox>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? Attributes { get; set; }
+    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
     public Listbox()
     {
@@ -29,7 +29,7 @@ public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
+        builder.AddMultipleAttributes(1, AdditionalAttributes!);
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {

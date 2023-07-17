@@ -3,36 +3,47 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOption<TValue> : IgnisDynamicComponentBase
+public sealed class ListboxOption<TValue> : IgnisDynamicComponentBase, IListboxOption
 {
-    private bool _isActive;
+    public bool IsActive { get; private set; }
+
+    public bool IsSelected => Listbox.IsValueSelected(Value);
+
+    public IReadOnlyDictionary<string, object?> Attributes
+    {
+        get
+        {
+            var attributes = new Dictionary<string, object?>
+            {
+                { "tabindex", -1 },
+                { "role", "option" },
+                { "aria-selected", IsSelected },
+                { "onclick", EventCallback.Factory.Create(this, OnClick) },
+                { "onmouseenter", EventCallback.Factory.Create(this, OnMouseEnter) },
+                { "onmouseleave", EventCallback.Factory.Create(this, OnMouseLeave) }
+            };
+
+            // ReSharper disable once InvertIf
+            if (AdditionalAttributes != null)
+            {
+                foreach (var (key, value) in AdditionalAttributes)
+                {
+                    attributes[key] = value;
+                }
+            }
+
+            return attributes;
+        }
+    }
 
     [CascadingParameter] public IListbox Listbox { get; set; } = null!;
 
     [Parameter, EditorRequired] public TValue? Value { get; set; }
 
-    [Parameter] public string? SelectedClass { get; set; }
-
-    [Parameter] public string? ActiveClass { get; set; }
-
-    [Parameter] public string? InactiveClass { get; set; }
-
-    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment<IListboxOption>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? Attributes { get; set; }
-
-    private string CssClass
-    {
-        get
-        {
-            var originalClassString = Attributes?.ContainsKey("class") == true ? Attributes["class"] : null;
-            if (_isActive) return $"{originalClassString} {ActiveClass}".Trim();
-            return Listbox.IsValueSelected(Value)
-                ? $"{originalClassString} {SelectedClass}".Trim()
-                : $"{originalClassString} {InactiveClass}".Trim();
-        }
-    }
+    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
     public ListboxOption()
     {
@@ -42,15 +53,8 @@ public sealed class ListboxOption<TValue> : IgnisDynamicComponentBase
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
-        builder.AddAttribute(1, "role", "option");
-        builder.AddAttribute(2, "onclick", EventCallback.Factory.Create(this, OnClick));
-        builder.AddAttribute(3, "onmouseenter", EventCallback.Factory.Create(this, OnMouseEnter));
-        builder.AddAttribute(4, "onmouseleave", EventCallback.Factory.Create(this, OnMouseLeave));
-        builder.AddAttribute(5, "tabindex", -1);
-        builder.AddAttribute(6, "aria-selected", Listbox.IsValueSelected(Value));
-        builder.AddMultipleAttributes(7, Attributes!);
-        builder.AddAttribute(8, "class", CssClass);
-        builder.AddContentFor(9, this, ChildContent);
+        builder.AddMultipleAttributes(1, Attributes!);
+        builder.AddContentFor(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }
@@ -58,20 +62,20 @@ public sealed class ListboxOption<TValue> : IgnisDynamicComponentBase
     private void OnClick()
     {
         //TODO on click
-        
+
         ForceUpdate();
     }
 
     private void OnMouseEnter()
     {
-        this._isActive = true;
+        IsActive = true;
 
         ForceUpdate();
     }
 
     private void OnMouseLeave()
     {
-        this._isActive = false;
+        IsActive = false;
 
         ForceUpdate();
     }

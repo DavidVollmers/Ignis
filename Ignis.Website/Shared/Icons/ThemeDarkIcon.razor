@@ -1,6 +1,6 @@
 ﻿@inherits IgnisStaticComponentBase
 
-<svg aria-hidden="true" viewBox="0 0 16 16" @attributes="Attributes">
+<svg aria-hidden="true" viewBox="0 0 16 16" @attributes="AdditionalAttributes">
     <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -10,5 +10,5 @@
 @code
 {
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? Attributes { get; set; }
+    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 }

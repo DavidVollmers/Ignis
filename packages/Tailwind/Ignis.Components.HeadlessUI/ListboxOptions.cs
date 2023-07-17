@@ -10,7 +10,7 @@ public sealed class ListboxOptions : IgnisDynamicComponentBase
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? Attributes { get; set; }
+    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
     public ListboxOptions()
     {
@@ -33,7 +33,7 @@ public sealed class ListboxOptions : IgnisDynamicComponentBase
         builder.AddAttribute(3, "aria-activedescendant");
         builder.AddAttribute(4, "aria-orientation", "vertical");
         builder.AddAttribute(5, "aria-labelledby", Listbox.Id + "-label");
-        builder.AddMultipleAttributes(6, Attributes!);
+        builder.AddMultipleAttributes(6, AdditionalAttributes!);
         builder.AddContentFor(7, this, ChildContent);
 
         builder.CloseAs(this);

@@ -20,7 +20,7 @@ public sealed class FocusDetector : IgnisComponentBase
     [Parameter, EditorRequired] public string Id { get; set; } = null!;
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? Attributes { get; set; }
+    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
     // ReSharper disable once InconsistentNaming
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
@@ -53,7 +53,7 @@ public sealed class FocusDetector : IgnisComponentBase
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenElement(0, AsElement);
-        builder.AddMultipleAttributes(1, Attributes!);
+        builder.AddMultipleAttributes(1, AdditionalAttributes!);
         builder.AddAttribute(2, "id", Id);
         builder.AddElementReferenceCapture(3, element => _element = element);
         builder.AddContent(4, ChildContent);

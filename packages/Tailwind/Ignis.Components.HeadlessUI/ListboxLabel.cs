@@ -10,7 +10,7 @@ public sealed class ListboxLabel : IgnisDynamicComponentBase
     [CascadingParameter] public IListbox Listbox { get; set; } = null!;
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? Attributes { get; set; }
+    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
     public ListboxLabel()
     {
@@ -30,7 +30,7 @@ public sealed class ListboxLabel : IgnisDynamicComponentBase
         builder.OpenAs(0, this);
         builder.AddAttribute(1, "id", Listbox.Id + "-label");
         builder.AddAttribute(2, "onclick", EventCallback.Factory.Create(this, Listbox.FocusAsync));
-        builder.AddMultipleAttributes(3, Attributes!);
+        builder.AddMultipleAttributes(3, AdditionalAttributes!);
 
         builder.AddContentFor(4, this, ChildContent);
 

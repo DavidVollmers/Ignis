@@ -3,16 +3,19 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components;
 
-public sealed class Fragment : IgnisStaticComponentBase
+public sealed class Dynamic : IgnisDynamicComponentBase
 {
     [Parameter] public RenderFragment? ChildContent { get; set; }
-    
-    // not used but required to catch all unmatched attributes to not throw an exception
+
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.AddContent(0, ChildContent);
+        builder.OpenAs(0, this);
+        builder.AddMultipleAttributes(1, AdditionalAttributes!);
+        builder.AddContentFor(2, this, ChildContent);
+
+        builder.CloseAs(this);
     }
 }
