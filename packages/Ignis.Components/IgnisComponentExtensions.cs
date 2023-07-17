@@ -76,7 +76,7 @@ public static class IgnisComponentExtensions
     }
 
     public static void AddChildContentFor(this RenderTreeBuilder builder, int sequence,
-        IDynamicComponent dynamicComponent, RenderFragment? childContent, string childContentName = "ChildContent")
+        IDynamicComponent dynamicComponent, RenderFragment? childContent)
     {
         if (builder == null) throw new ArgumentNullException(nameof(builder));
         switch (dynamicComponent)
@@ -97,7 +97,7 @@ public static class IgnisComponentExtensions
         else if (dynamicComponent.AsComponent != null)
         {
 #pragma warning disable ASP0006
-            builder.AddAttribute(sequence, childContentName, childContent);
+            builder.AddAttribute(sequence, "ChildContent", childContent);
 #pragma warning restore ASP0006
         }
     }
