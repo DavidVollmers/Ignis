@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Listbox : IgnisDynamicComponentBase, IListbox
+public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox
 {
     private ListboxLabel? _label;
     private ListboxButton? _button;
@@ -13,9 +13,9 @@ public sealed class Listbox : IgnisDynamicComponentBase, IListbox
 
     public bool IsOpen { get; private set; }
 
-    [Parameter] public object? Value { get; set; }
+    [Parameter] public TValue? Value { get; set; }
 
-    [Parameter] public EventCallback<object?> ValueChanged { get; set; }
+    [Parameter] public EventCallback<TValue?> ValueChanged { get; set; }
 
     [Parameter] public RenderFragment<IListbox>? ChildContent { get; set; }
 
