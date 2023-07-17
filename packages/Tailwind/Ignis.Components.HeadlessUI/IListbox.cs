@@ -13,4 +13,6 @@ public interface IListbox<TValue> : IOpenClose
     Task FocusAsync();
     
     internal void SetLabel(ListboxLabel<TValue> label);
+
+    internal void SetButton(ListboxButton<TValue> button);
 }

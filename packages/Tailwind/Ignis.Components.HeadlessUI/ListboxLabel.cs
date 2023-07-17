@@ -30,9 +30,9 @@ public sealed class ListboxLabel<TValue> : IgnisDynamicComponentBase
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddAttribute(2, "id", Listbox.Id + "-label");
-        builder.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, Listbox.FocusAsync));
+        builder.AddAttribute(1, "id", Listbox.Id + "-label");
+        builder.AddAttribute(2, "onclick", EventCallback.Factory.Create(this, Listbox.FocusAsync));
+        builder.AddMultipleAttributes(3, Attributes!);
 
         builder.AddChildContentFor(4, this, ChildContent);
 

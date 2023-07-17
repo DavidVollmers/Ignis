@@ -7,6 +7,7 @@ namespace Ignis.Components.HeadlessUI;
 public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox<TValue>
 {
     private ListboxLabel<TValue>? _label;
+    private ListboxButton<TValue>? _button;
 
     public string Id { get; } = "hui-listbox-" + Guid.NewGuid().ToString("N");
 
@@ -72,15 +73,24 @@ public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox<TValue
         ForceUpdate();
     }
 
-    public Task FocusAsync()
+    public async Task FocusAsync()
     {
-        throw new NotImplementedException();
+        if (_button == null) return;
+        
+        await _button.FocusAsync();
     }
 
     public void SetLabel(ListboxLabel<TValue> label)
     {
-        if (_label != null) throw new InvalidOperationException("Label already set.");
+        if (_label != null) throw new InvalidOperationException("ListboxLabel already set.");
 
-        _label = label;
+        _label = label ?? throw new ArgumentNullException(nameof(label));
+    }
+
+    public void SetButton(ListboxButton<TValue> button)
+    {
+        if (_button != null) throw new InvalidOperationException("ListboxButton already set.");
+
+        _button = button ?? throw new ArgumentNullException(nameof(button));
     }
 }
