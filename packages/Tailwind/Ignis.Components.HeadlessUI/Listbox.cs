@@ -6,7 +6,6 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox
 {
-    private ListboxLabel? _label;
     private ListboxButton? _button;
 
     public string Id { get; } = "hui-listbox-" + Guid.NewGuid().ToString("N");
@@ -32,7 +31,7 @@ public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddChildContentFor(2, this, builder =>
+        builder.AddContentFor(2, this, builder =>
         {
             builder.OpenComponent<FocusDetector>(3);
             builder.AddAttribute(4, nameof(FocusDetector.Id), Id);
@@ -80,11 +79,10 @@ public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox
         await _button.FocusAsync();
     }
 
-    public void SetLabel(ListboxLabel label)
+    public bool IsValueSelected<TValue1>(TValue1? value)
     {
-        if (_label != null) throw new InvalidOperationException("ListboxLabel already set.");
-
-        _label = label ?? throw new ArgumentNullException(nameof(label));
+        //TODO
+        return false;
     }
 
     public void SetButton(ListboxButton button)

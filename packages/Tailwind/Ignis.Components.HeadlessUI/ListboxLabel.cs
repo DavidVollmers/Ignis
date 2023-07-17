@@ -23,8 +23,6 @@ public sealed class ListboxLabel : IgnisDynamicComponentBase
         {
             throw new InvalidOperationException("ListboxLabel must be used inside a Listbox.");
         }
-
-        Listbox.SetLabel(this);
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -34,7 +32,7 @@ public sealed class ListboxLabel : IgnisDynamicComponentBase
         builder.AddAttribute(2, "onclick", EventCallback.Factory.Create(this, Listbox.FocusAsync));
         builder.AddMultipleAttributes(3, Attributes!);
 
-        builder.AddChildContentFor(4, this, ChildContent);
+        builder.AddContentFor(4, this, ChildContent);
 
         builder.CloseAs(this);
     }

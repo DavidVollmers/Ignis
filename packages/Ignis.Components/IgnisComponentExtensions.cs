@@ -75,7 +75,7 @@ public static class IgnisComponentExtensions
         }
     }
 
-    public static void AddChildContentFor(this RenderTreeBuilder builder, int sequence,
+    public static void AddContentFor(this RenderTreeBuilder builder, int sequence,
         IDynamicComponent dynamicComponent, RenderFragment? childContent)
     {
         if (builder == null) throw new ArgumentNullException(nameof(builder));
