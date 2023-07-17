@@ -19,9 +19,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Heading" xml:space="preserve">
-    <value>More control. More power.</value>
+    <value>Build UI that matters.</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>Put more thought into your components, so your app only runs when necessary.</value>
+    <value>The ASP.NET component framework for building modern web applications.</value>
+  </data>
+  <data name="GetStartedButton" xml:space="preserve">
+    <value>Get Started</value>
+  </data>
+  <data name="GitHubButton" xml:space="preserve">
+    <value>View on GitHub</value>
   </data>
 </root>
