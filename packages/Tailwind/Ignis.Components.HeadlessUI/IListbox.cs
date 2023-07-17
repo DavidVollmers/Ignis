@@ -1,16 +1,15 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.Web;
+using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
-public interface IListbox<TValue> : IOpenClose
+public interface IListbox<TValue> : IOpenClose, IFocus
 {
     string Id { get; }
     
     TValue? Value { get; set; }
 
     EventCallback<TValue?> ValueChanged { get; set; }
-
-    Task FocusAsync();
     
     internal void SetLabel(ListboxLabel<TValue> label);
 

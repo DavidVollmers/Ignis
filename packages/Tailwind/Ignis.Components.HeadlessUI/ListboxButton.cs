@@ -1,19 +1,21 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.Web;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxButton<TValue> : IgnisDynamicComponentBase
+public sealed class ListboxButton<TValue> : IgnisDynamicComponentBase, IFocus
 {
     private ElementReference? _element;
-    
+    private object? _component;
+
     [CascadingParameter] public IListbox<TValue> Listbox { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? Attributes { get; set; }
-    
+
     public ListboxButton()
     {
         AsElement = "button";
@@ -38,17 +40,21 @@ public sealed class ListboxButton<TValue> : IgnisDynamicComponentBase
         builder.AddAttribute(4, "aria-labelledby", Listbox.Id + "-label");
         builder.AddAttribute(5, "aria-expanded", Listbox.IsOpen);
         builder.AddMultipleAttributes(6, Attributes!);
-        //TODO dynamic capture
-        builder.AddElementReferenceCapture(7, element => _element = element);
+        builder.AddReferenceCaptureFor(7, this, e => _element = e, c => _component = c);
         builder.AddContent(8, ChildContent);
-        
+
         builder.CloseAs(this);
     }
 
-    internal async Task FocusAsync()
+    public async Task FocusAsync()
     {
-        if (!_element.HasValue) return;
-        
-        await _element.Value.FocusAsync();
+        if (_element.HasValue)
+        {
+            await _element.Value.FocusAsync();    
+        }
+        else if (_component is IFocus focus)
+        {
+            await focus.FocusAsync();
+        }
     }
 }
