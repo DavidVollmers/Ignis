@@ -3,8 +3,37 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOption<TValue> : IgnisDynamicComponentBase, IListboxOption
+public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicComponent, IListboxOption
 {
+    private Type? _asComponent;
+    private string? _asElement;
+
+    [Parameter]
+#pragma warning disable BL0007
+    public string? AsElement
+#pragma warning restore BL0007
+    {
+        get => _asElement;
+        set
+        {
+            _asElement = value;
+            _asComponent = null;
+        }
+    }
+
+    [Parameter]
+#pragma warning disable BL0007
+    public Type? AsComponent
+#pragma warning restore BL0007
+    {
+        get => _asComponent;
+        set
+        {
+            _asComponent = value;
+            _asElement = null;
+        }
+    }
+    
     public bool IsActive { get; private set; }
 
     public bool IsSelected => Listbox.IsValueSelected(Value);

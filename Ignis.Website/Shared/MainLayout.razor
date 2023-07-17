@@ -1,6 +1,12 @@
 ﻿@inherits IgnisComponentBase
+@inject NavigationManager Router
 
 <MainHeader/>
+
+@if (IsHome)
+{
+    <Hero />
+}
 
 @Body
 
@@ -8,4 +14,6 @@
 {
     [Parameter]
     public RenderFragment? Body { get; set; }
+
+    private bool IsHome => Router.ToBaseRelativePath(Router.Uri).Equals(string.Empty);
 }

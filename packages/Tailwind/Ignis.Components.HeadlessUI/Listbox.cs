@@ -4,9 +4,37 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox
+public sealed class Listbox<TValue> : IgnisComponentBase, IDynamicComponent, IListbox
 {
     private ListboxButton? _button;
+    private Type? _asComponent;
+    private string? _asElement;
+
+    [Parameter]
+#pragma warning disable BL0007
+    public string? AsElement
+#pragma warning restore BL0007
+    {
+        get => _asElement;
+        set
+        {
+            _asElement = value;
+            _asComponent = null;
+        }
+    }
+
+    [Parameter]
+#pragma warning disable BL0007
+    public Type? AsComponent
+#pragma warning restore BL0007
+    {
+        get => _asComponent;
+        set
+        {
+            _asComponent = value;
+            _asElement = null;
+        }
+    }
 
     public string Id { get; } = "hui-listbox-" + Guid.NewGuid().ToString("N");
 
@@ -92,7 +120,7 @@ public sealed class Listbox<TValue> : IgnisDynamicComponentBase, IListbox
 
     public void SetButton(ListboxButton button)
     {
-        if (_button != null) throw new InvalidOperationException("ListboxButton already set.");
+        if (_button != null && _button != button) throw new InvalidOperationException("ListboxButton already set.");
 
         _button = button ?? throw new ArgumentNullException(nameof(button));
     }

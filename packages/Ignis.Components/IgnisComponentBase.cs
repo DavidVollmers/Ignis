@@ -24,7 +24,7 @@ public abstract class IgnisComponentBase : IComponent
 
     public void Attach(RenderHandle renderHandle)
     {
-        if (_renderHandle is { IsInitialized: true })
+        if (_renderHandle.IsInitialized)
         {
             throw new InvalidOperationException("Render handle already initialized.");
         }
@@ -52,7 +52,7 @@ public abstract class IgnisComponentBase : IComponent
 
     protected void ForceUpdate()
     {
-        if (_hasPendingQueuedRender || _renderHandle is not { IsInitialized: true }) return;
+        if (_hasPendingQueuedRender || !_renderHandle.IsInitialized) return;
 
         _hasPendingQueuedRender = true;
 

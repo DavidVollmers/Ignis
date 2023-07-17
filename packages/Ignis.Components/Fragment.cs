@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components;
 
-public sealed class Fragment : IgnisStaticComponentBase
+public sealed class Fragment : IgnisRigidComponentBase
 {
     [Parameter] public RenderFragment? ChildContent { get; set; }
     

@@ -1,0 +1,28 @@
+﻿@inherits IgnisRigidComponentBase
+@inject IStringLocalizer<Hero> Resources
+
+<div class="overflow-hidden bg-slate-900 dark:-mb-32 dark:mt-[-4.5rem] dark:pb-32 dark:pt-[4.5rem] dark:lg:mt-[-4.75rem] dark:lg:pt-[4.75rem]">
+    <div class="py-16 sm:px-2 lg:relative lg:px-0 lg:py-20">
+        <div class="mx-auto grid max-w-2xl grid-cols-1 items-center gap-x-8 gap-y-16 px-4 lg:max-w-8xl lg:grid-cols-2 lg:px-8 xl:gap-x-16 xl:px-12">
+            <div class="relative z-10 md:text-center lg:text-left">
+                <!-- TODO: Image component for preload and scaling utilities -->
+                <img class="absolute bottom-full right-full -mb-56 -mr-72 opacity-50"
+                     src="images/blur-cyan.png"
+                     alt=""
+                     width="530"
+                     height="530"/>
+                <div class="relative">
+                    <p class="inline bg-gradient-to-r from-indigo-200 via-sky-400 to-indigo-200 bg-clip-text font-display text-5xl tracking-tight text-transparent">
+                        @Resources["Heading"]
+                    </p>
+                    <p class="mt-3 text-2xl tracking-tight text-slate-400">
+                        @Resources["Description"]
+                    </p>
+                    <div class="mt-8 flex gap-4 md:justify-center lg:justify-start">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
