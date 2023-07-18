@@ -58,8 +58,7 @@
 
     protected override void OnInitialized()
     {
-        _link = Router.ToBaseRelativePath(Router.Uri);
-        if (_link == string.Empty) _link = "/";
+        _link = '/' + Router.ToBaseRelativePath(Router.Uri);
 
         _section = PageService.GetSectionByLink(_link);
 
