@@ -1,6 +1,7 @@
 ---
 title: Getting Started
-pageTitle: Introduction
+category: Introduction
+permalink: /
 ---
 
 # Getting Started

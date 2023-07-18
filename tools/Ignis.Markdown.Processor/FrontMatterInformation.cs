@@ -5,4 +5,8 @@ namespace Ignis.Markdown.Processor;
 internal class FrontMatterInformation
 {
     [YamlMember(Alias = "title")] public string Title { get; set; } = null!;
+    
+    [YamlMember(Alias = "category")] public string Category { get; set; } = null!;
+    
+    [YamlMember(Alias = "permalink")] public string Permalink { get; set; } = null!;
 }
