@@ -113,9 +113,7 @@ public sealed class Transition : IgnisComponentBase, IDynamicComponent, ITransit
 
     public void Hide(Action onHidden)
     {
-        LeaveCore();
-
-        onHidden();
+        LeaveCore(onHidden);
     }
 
     void ITransition.Show()
@@ -139,30 +137,45 @@ public sealed class Transition : IgnisComponentBase, IDynamicComponent, ITransit
         UpdateState(TransitionState.Entering);
 
         var duration = ParseDuration(Enter);
-        if (duration != null) Task.Delay(duration.Value).GetAwaiter().GetResult();
+        if (duration != null)
+        {
+            Task.Delay(duration.Value).ContinueWith(_ => UpdateState(TransitionState.CanLeave, true));
+            return;
+        }
 
         UpdateState(TransitionState.CanLeave);
     }
 
-    private void LeaveCore()
+    private void LeaveCore(Action? continueWith = null)
     {
         if (_state != TransitionState.CanLeave && _state != TransitionState.Default) return;
 
         UpdateState(TransitionState.Leaving);
 
         var duration = ParseDuration(Leave);
-        if (duration != null) Task.Delay(duration.Value).GetAwaiter().GetResult();
+        if (duration != null)
+        {
+            Task.Delay(duration.Value).ContinueWith(_ =>
+            {
+                UpdateState(TransitionState.CanEnter, true);
+                
+                continueWith?.Invoke();
+            });
+            return;
+        }
         
         UpdateState(TransitionState.CanEnter);
+                
+        continueWith?.Invoke();
     }
 
-    private void UpdateState(TransitionState state)
+    private void UpdateState(TransitionState state, bool async = false)
     {
         _state = state;
         
         _isShowing = state is TransitionState.Entering or TransitionState.CanLeave;
         
-        ForceUpdate();
+        ForceUpdate(async);
     }
 
     private static int? ParseDuration(string? classString)

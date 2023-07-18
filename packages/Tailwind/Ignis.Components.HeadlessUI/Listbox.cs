@@ -96,18 +96,18 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IDynamicComponent, ILi
 
         if (_transition != null)
         {
-            _transition.Hide(CloseCore);
+            _transition.Hide(() => CloseCore(true));
             return;
         }
 
         CloseCore();
     }
 
-    private void CloseCore()
+    private void CloseCore(bool async = false)
     {
         IsOpen = false;
 
-        ForceUpdate();
+        ForceUpdate(async);
     }
 
     public async Task FocusAsync()
@@ -126,7 +126,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IDynamicComponent, ILi
     {
         Value = (TValue?)(object?)value;
         ValueChanged.InvokeAsync(Value);
-        
+
         ForceUpdate();
     }
 

@@ -35,9 +35,9 @@ public abstract class IgnisComponentBase : IComponent
     public async Task SetParametersAsync(ParameterView parameters)
     {
         if (Server.IsPrerendering) return;
-        
+
         parameters.SetParameterProperties(this);
-        
+
         if (!_isInitialized)
         {
             await InitializeAsync();
@@ -46,11 +46,22 @@ public abstract class IgnisComponentBase : IComponent
         {
             await UpdateAsync();
         }
-        
+
         ForceUpdate();
     }
 
-    protected void ForceUpdate()
+    protected void ForceUpdate(bool async = false)
+    {
+        if (async)
+        {
+            _renderHandle.Dispatcher.InvokeAsync(ForceUpdateCore);
+            return;
+        }
+
+        ForceUpdateCore();
+    }
+
+    private void ForceUpdateCore()
     {
         if (_hasPendingQueuedRender || !_renderHandle.IsInitialized) return;
 
