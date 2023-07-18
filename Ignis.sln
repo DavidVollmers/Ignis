@@ -32,6 +32,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Utils", "packages\Ign
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Components.Web", "packages\Ignis.Components.Web\Ignis.Components.Web.csproj", "{B2F7725C-78BA-4419-B6AD-F5CF110CF475}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{9F55C5C8-4818-4AEA-99BA-22F6561F4690}"
+	ProjectSection(SolutionItems) = preProject
+		docs\GettingStarted.md = docs\GettingStarted.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{80B7BBBD-6FAB-4A17-A18E-46558A696C19}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Markdown.Processor", "tools\Ignis.Markdown.Processor\Ignis.Markdown.Processor.csproj", "{B62AEFAC-8F61-4993-9C8C-D43C6A5068EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -82,6 +91,10 @@ Global
 		{B2F7725C-78BA-4419-B6AD-F5CF110CF475}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2F7725C-78BA-4419-B6AD-F5CF110CF475}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2F7725C-78BA-4419-B6AD-F5CF110CF475}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B62AEFAC-8F61-4993-9C8C-D43C6A5068EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B62AEFAC-8F61-4993-9C8C-D43C6A5068EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B62AEFAC-8F61-4993-9C8C-D43C6A5068EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B62AEFAC-8F61-4993-9C8C-D43C6A5068EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4354EFBA-D0A7-4EFC-897F-4EBCC7E11443} = {E697C569-7A68-4040-A633-DD894D41B99E}
@@ -93,5 +106,6 @@ Global
 		{C2B40A69-55D5-4B5C-AF1B-B8323BEFAF96} = {333AA1BE-3105-4370-BB59-34463BD1F325}
 		{DFAD7C95-320E-4B09-B597-DCF159D649F1} = {C2B40A69-55D5-4B5C-AF1B-B8323BEFAF96}
 		{B2F7725C-78BA-4419-B6AD-F5CF110CF475} = {333AA1BE-3105-4370-BB59-34463BD1F325}
+		{B62AEFAC-8F61-4993-9C8C-D43C6A5068EC} = {80B7BBBD-6FAB-4A17-A18E-46558A696C19}
 	EndGlobalSection
 EndGlobal
