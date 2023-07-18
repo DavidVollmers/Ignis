@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Markdown.Processor", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Markdown.Processor.Contracts", "tools\Ignis.Markdown.Processor.Contracts\Ignis.Markdown.Processor.Contracts.csproj", "{F76EEA11-B648-46B4-B766-18A156524955}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Components.HeroIcons", "packages\Tailwind\Ignis.Components.HeroIcons\Ignis.Components.HeroIcons.csproj", "{F3457565-E8DE-4CFA-A4F3-9B53D2ADA59F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -96,6 +98,10 @@ Global
 		{F76EEA11-B648-46B4-B766-18A156524955}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F76EEA11-B648-46B4-B766-18A156524955}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F76EEA11-B648-46B4-B766-18A156524955}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3457565-E8DE-4CFA-A4F3-9B53D2ADA59F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3457565-E8DE-4CFA-A4F3-9B53D2ADA59F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3457565-E8DE-4CFA-A4F3-9B53D2ADA59F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3457565-E8DE-4CFA-A4F3-9B53D2ADA59F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4354EFBA-D0A7-4EFC-897F-4EBCC7E11443} = {E697C569-7A68-4040-A633-DD894D41B99E}
@@ -110,5 +116,6 @@ Global
 		{B62AEFAC-8F61-4993-9C8C-D43C6A5068EC} = {80B7BBBD-6FAB-4A17-A18E-46558A696C19}
 		{F76EEA11-B648-46B4-B766-18A156524955} = {80B7BBBD-6FAB-4A17-A18E-46558A696C19}
 		{0167D4EE-4C86-4D18-A0D7-B4A0751ABB16} = {9F55C5C8-4818-4AEA-99BA-22F6561F4690}
+		{F3457565-E8DE-4CFA-A4F3-9B53D2ADA59F} = {C2B40A69-55D5-4B5C-AF1B-B8323BEFAF96}
 	EndGlobalSection
 EndGlobal
