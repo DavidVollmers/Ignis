@@ -46,7 +46,7 @@ internal class DocsBuilder
                 Title = frontMatterInformation.Title, Link = frontMatterInformation.Permalink
             });
 
-            var html = markdownDocument.ToHtml();
+            var html = markdownDocument.ToHtml(_markdownPipeline);
 
             var outputPath = Path.Combine(frontMatterInformation.Permalink.Split('/')
                 .Prepend(outputDirectory.FullName)
