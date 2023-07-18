@@ -32,8 +32,11 @@ We recommend to add the `Ignis.Components.HeadlessUI` namespace to the `_Imports
         </p>
         <div class="prose mt-2.5 text-sky-800 [--tw-prose-background:theme(colors.sky.50)] prose-a:text-sky-900 prose-code:text-sky-900 dark:text-slate-300 dark:prose-code:text-slate-300">
             <p>
-                Since the Ignis.Components.HeadlessUI package depends on the [Ignis.Components.Web](https://github.com/DavidVollmers/Ignis/tree/master/packages/Ignis.Components.Web) package, you will want to load its assets in your application.
-                You can read more about this [here](/components/web).
+                Since the Ignis.Components.HeadlessUI package depends on the 
+                <a href="https://github.com/DavidVollmers/Ignis/tree/master/packages/Ignis.Components.Web">Ignis.Components.Web</a> 
+                package, you will want to load its assets in your application.
+                <br/>
+                You can read more about this <a href="/components/web">here</a>.
             </p>
         </div>
     </div>

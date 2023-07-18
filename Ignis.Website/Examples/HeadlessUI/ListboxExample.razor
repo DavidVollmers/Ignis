@@ -1,0 +1,37 @@
+﻿@inherits IgnisComponentBase
+
+<CodeExample>
+    <ExampleContent>
+        <div class="absolute top-16 w-72">
+            <Listbox @bind-Value="_selectedPerson">
+                <div class="relative mt-1">
+                    <ListboxButton class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                        <span class="block truncate">
+                            @_selectedPerson.Name
+                        </span>
+                    </ListboxButton>
+                </div>
+            </Listbox>
+        </div>
+    </ExampleContent>
+</CodeExample>
+
+@code
+{
+    private readonly Person[] _people =
+    {
+        new() { Name = "Wade Cooper" }
+    };
+
+    private Person _selectedPerson = null!;
+
+    protected override void OnInitialized()
+    {
+        _selectedPerson = _people[0];
+    }
+
+    public class Person
+    {
+        public string Name { get; set; } = null!;
+    }
+}
