@@ -60,6 +60,15 @@ namespace Ignis.Website.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to API reference.
+        /// </summary>
+        public static string ApiReferenceHeading {
+            get {
+                return ResourceManager.GetString("ApiReferenceHeading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Home page.
         /// </summary>
         public static string HomePageTitle {

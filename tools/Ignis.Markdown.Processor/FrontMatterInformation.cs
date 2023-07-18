@@ -11,6 +11,8 @@ internal class FrontMatterInformation
     [YamlMember(Alias = "permalink")] public string Permalink { get; set; } = null!;
     
     [YamlMember(Alias = "inject")] public InjectInformation? Inject { get; set; }
+    
+    [YamlMember(Alias = "api")] public string[]? Api { get; set; }
 
     public class InjectInformation
     {

@@ -7,6 +7,8 @@ public class Page
     public string Link { get; set; } = null!;
 
     public PageInject? Inject { get; set; }
+
+    public string[]? ApiTypeNames { get; set; }
     
     public class PageInject
     {

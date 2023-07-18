@@ -3,6 +3,7 @@
 @inherits IgnisComponentBase
 @inject NavigationManager Router
 @inject IPageService PageService
+@inject IStringLocalizer<CommonResources> CommonResources
 
 <MainHeader/>
 
@@ -17,7 +18,7 @@
         <div class="absolute bottom-0 right-0 top-16 hidden h-12 w-px bg-gradient-to-t from-slate-800 dark:block"></div>
         <div class="absolute bottom-0 right-0 top-28 hidden w-px bg-slate-800 dark:block"></div>
         <div class="sticky top-[4.5rem] -ml-0.5 h-[calc(100vh-4.5rem)] w-64 overflow-y-auto overflow-x-hidden py-16 pl-0.5 pr-8 xl:w-72 xl:pr-16">
-            <Navigation />
+            <Navigation/>
         </div>
     </div>
     @if (_section != null && _page != null)
@@ -48,6 +49,22 @@
                 {
                     <Prose>
                         @((MarkupString)_content)
+                    </Prose>
+                }
+                @if (_page.ApiTypeNames != null)
+                {
+                    <Prose>
+                        <h2>
+                            @CommonResources["ApiReferenceHeading"]
+                        </h2>
+
+                        @foreach (var typeName in _page.ApiTypeNames)
+                        {
+                            var type = Type.GetType(typeName);
+                            if (type == null) continue;
+
+                            <ApiDocumentation @key="typeName" Type="type"/>
+                        }
                     </Prose>
                 }
             </article>

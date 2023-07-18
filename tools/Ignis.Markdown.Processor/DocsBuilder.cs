@@ -46,6 +46,7 @@ internal class DocsBuilder
             {
                 Title = frontMatterInformation.Title,
                 Link = frontMatterInformation.Permalink,
+                ApiTypeNames = frontMatterInformation.Api,
                 Inject = frontMatterInformation.Inject == null
                     ? null
                     : new Page.PageInject

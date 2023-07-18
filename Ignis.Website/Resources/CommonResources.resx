@@ -21,4 +21,7 @@
   <data name="HomePageTitle" xml:space="preserve">
     <value>Home page</value>
   </data>
+  <data name="ApiReferenceHeading" xml:space="preserve">
+    <value>API reference</value>
+  </data>
 </root>
