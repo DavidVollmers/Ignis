@@ -1,4 +1,5 @@
-﻿using Markdig;
+﻿using System.Text.Json;
+using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Syntax;
 using YamlDotNet.Serialization;
@@ -61,6 +62,16 @@ internal class DocsBuilder
             using var writer = outputFile.CreateText();
             writer.Write(html);
         }
+
+        var sitemapJson = JsonSerializer.Serialize(categories.Values);
+        
+        var sitemapOutputFile = new FileInfo(Path.Combine(outputDirectory.FullName, "sitemap.json"));
+        
+        sitemapOutputFile.Directory!.Create();
+        
+        using var sitemapWriter = sitemapOutputFile.CreateText();
+        
+        sitemapWriter.Write(sitemapJson);
     }
 
     private class Category
