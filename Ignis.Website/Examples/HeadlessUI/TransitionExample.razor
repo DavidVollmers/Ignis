@@ -1,0 +1,26 @@
+﻿@inherits IgnisRigidComponentBase
+
+<CodeExample class="from-pink-500 to-rose-500">
+    <ExampleContent>
+        <div class="flex flex-col items-center py-16">
+            <div class="h-32 w-32">
+                <Transition AsComponent="typeof(Fragment)"
+                            Show="_isShowing"
+                            Enter="transform transition duration-[400ms]"
+                            EnterFrom="opacity-0 rotate-[-120deg] scale-50"
+                            EnterTo="opacity-100 rotate-0 scale-100"
+                            Leave="transform duration-200 transition ease-in-out"
+                            LeaveFrom="opacity-100 rotate-0 scale-100"
+                            LeaveTo="opacity-0 scale-95"
+                            Context="transition">
+                    <div class="@Css.Class("h-full w-full rounded-md bg-white shadow-lg", transition)"></div>
+                </Transition>
+            </div>
+        </div>
+    </ExampleContent>
+</CodeExample>
+
+@code
+{
+    private bool _isShowing;
+}

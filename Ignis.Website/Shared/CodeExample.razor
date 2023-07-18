@@ -1,6 +1,6 @@
 ﻿@inherits IgnisRigidComponentBase
 
-<div class="relative mt-8 mb-12 flex flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-r from-amber-300 to-orange-500">
+<div class="@Css.Class("relative mt-8 mb-12 flex flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-r", CssClass!)">
     <div class="pointer-events-none absolute inset-x-0 top-0 z-10 m-[2px] md:left-auto">
         <div class="flex items-stretch justify-end rounded-t-[10px] px-3 py-1 md:m-1 md:rounded-lg">
             <button class="bg-black bg-opacity-20 pointer-events-auto mr-1 flex rounded-md px-3 py-2 text-xs font-medium  text-white  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">
@@ -24,8 +24,13 @@
     </div>
 </div>
 
-@code 
+@code
 {
     [Parameter]
     public RenderFragment? ExampleContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+
+    private string? CssClass => AdditionalAttributes?.TryGetValue("class", out var cssClass) == true && cssClass is string value ? value : null;
 }

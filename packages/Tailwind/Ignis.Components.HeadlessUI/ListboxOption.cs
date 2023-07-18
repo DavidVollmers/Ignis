@@ -29,6 +29,15 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicComponen
             _asElement = null;
         }
     }
+
+    [CascadingParameter] public IListbox Listbox { get; set; } = null!;
+
+    [Parameter, EditorRequired] public TValue? Value { get; set; }
+
+    [Parameter] public RenderFragment<IListboxOption>? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
     
     public bool IsActive { get; private set; }
 
@@ -60,15 +69,6 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicComponen
             return attributes;
         }
     }
-
-    [CascadingParameter] public IListbox Listbox { get; set; } = null!;
-
-    [Parameter, EditorRequired] public TValue? Value { get; set; }
-
-    [Parameter] public RenderFragment<IListboxOption>? ChildContent { get; set; }
-
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
     public ListboxOption()
     {
