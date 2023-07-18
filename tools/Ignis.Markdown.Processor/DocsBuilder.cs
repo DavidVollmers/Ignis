@@ -35,8 +35,8 @@ internal class DocsBuilder
                 continue;
             }
 
-            var yaml = yamlFrontMatter.Lines.Lines.OrderByDescending(l => l.Line).Select(l => l.ToString() + '\n')
-                .Where(l => !l.StartsWith("---")).Aggregate((s, a) => s + a);
+            var yaml = yamlFrontMatter.Lines.Lines.Select(l => l.ToString() + '\n').Where(l => !l.StartsWith("---"))
+                .Aggregate((s, a) => s + a);
 
             var frontMatterInformation = _yamlDeserializer.Deserialize<FrontMatterInformation>(yaml);
 
@@ -44,7 +44,15 @@ internal class DocsBuilder
 
             sections[frontMatterInformation.Category].Add(new Page
             {
-                Title = frontMatterInformation.Title, Link = frontMatterInformation.Permalink
+                Title = frontMatterInformation.Title,
+                Link = frontMatterInformation.Permalink,
+                Example = frontMatterInformation.Example == null
+                    ? null
+                    : new Page.PageExample
+                    {
+                        TypeName = frontMatterInformation.Example.Type,
+                        Description = frontMatterInformation.Example.Description
+                    }
             });
 
             var html = markdownDocument.ToHtml(_markdownPipeline);

@@ -43,7 +43,7 @@ public sealed class Dynamic : IgnisRigidComponentBase, IDynamicComponent
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, AdditionalAttributes!);
-        builder.AddContentFor(2, this, ChildContent);
+        if (ChildContent != null) builder.AddContentFor(2, this, ChildContent);
 
         builder.CloseAs(this);
     }

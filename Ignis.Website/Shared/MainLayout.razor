@@ -20,7 +20,7 @@
             <!-- TODO: Navigation -->
         </div>
     </div>
-    @if (_section != null)
+    @if (_section != null && _page != null)
     {
         <div class="min-w-0 max-w-2xl flex-auto px-4 py-16 lg:max-w-none lg:pl-8 lg:pr-0 xl:px-16">
             <article>
@@ -29,13 +29,25 @@
                         @_section.Title
                     </p>
                     <h1 class="font-display text-3xl tracking-tight text-slate-900 dark:text-white">
-                        @CurrentPage!.Title
+                        @_page.Title
                     </h1>
                 </header>
+                @if (_page.Example != null)
+                {
+                    <Prose>
+                        <p>
+                            @_page.Example.Description
+                        </p>
+                    </Prose>
+                    @if (_exampleType != null)
+                    {
+                        <Dynamic AsComponent="_exampleType"/>
+                    }
+                }
                 @if (_content != null)
                 {
                     <Prose>
-                        @((MarkupString) _content)
+                        @((MarkupString)_content)
                     </Prose>
                 }
             </article>
@@ -50,11 +62,11 @@
     private Section? _section;
     private string? _content;
     private string? _link;
+    private Page? _page;
+    private Type? _exampleType;
 
     [Parameter]
     public RenderFragment? Body { get; set; }
-
-    private Page? CurrentPage => _section?.Links.FirstOrDefault(s => s.Link == _link);
 
     protected override void OnInitialized()
     {
@@ -64,6 +76,14 @@
 
         if (_section == null) return;
 
-        _content = PageService.GetPageContent(CurrentPage!);
+        _page = _section?.Links.FirstOrDefault(s => s.Link == _link);
+
+        if (_page == null) return;
+
+        _content = PageService.GetPageContent(_page);
+
+        if (_page.Example == null) return;
+
+        _exampleType = Type.GetType(_page.Example.TypeName);
     }
 }
