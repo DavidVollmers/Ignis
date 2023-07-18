@@ -6,9 +6,9 @@ public class Page
 
     public string Link { get; set; } = null!;
 
-    public PageExample? Example { get; set; }
+    public PageInject? Inject { get; set; }
     
-    public class PageExample
+    public class PageInject
     {
         public string TypeName { get; set; } = null!;
 

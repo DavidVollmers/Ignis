@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BuildYourOwnComponents_Heading" xml:space="preserve">
+    <value>Build your own Components</value>
+  </data>
+  <data name="BuildYourOwnComponents_Description" xml:space="preserve">
+    <value>Step-by-step guides for building your own components from scratch.</value>
+  </data>
+  <data name="ApiReference_Heading" xml:space="preserve">
+    <value>API Reference</value>
+  </data>
+  <data name="ApiReference_Description" xml:space="preserve">
+    <value>Learn more about all the capabilities of the Ignis framework.</value>
+  </data>
+  <data name="Components_Heading" xml:space="preserve">
+    <value>Components</value>
+  </data>
+  <data name="Components_Description" xml:space="preserve">
+    <value>Learn more about all the components that Ignis provides.</value>
+  </data>
+  <data name="HeadlessUI_Description" xml:space="preserve">
+    <value>Completely unstyled, fully accessible UI components, designed to integrate beautifully with Tailwind CSS.</value>
+  </data>
+</root>

@@ -10,9 +10,9 @@ internal class FrontMatterInformation
     
     [YamlMember(Alias = "permalink")] public string Permalink { get; set; } = null!;
     
-    [YamlMember(Alias = "example")] public ExampleInformation? Example { get; set; }
+    [YamlMember(Alias = "inject")] public InjectInformation? Inject { get; set; }
 
-    public class ExampleInformation
+    public class InjectInformation
     {
         [YamlMember(Alias = "type")] public string Type { get; set; } = null!;
         

@@ -46,12 +46,12 @@ internal class DocsBuilder
             {
                 Title = frontMatterInformation.Title,
                 Link = frontMatterInformation.Permalink,
-                Example = frontMatterInformation.Example == null
+                Inject = frontMatterInformation.Inject == null
                     ? null
-                    : new Page.PageExample
+                    : new Page.PageInject
                     {
-                        TypeName = frontMatterInformation.Example.Type,
-                        Description = frontMatterInformation.Example.Description
+                        TypeName = frontMatterInformation.Inject.Type,
+                        Description = frontMatterInformation.Inject.Description
                     }
             });
 

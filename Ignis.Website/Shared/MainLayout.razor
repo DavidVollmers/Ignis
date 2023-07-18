@@ -32,16 +32,16 @@
                         @_page.Title
                     </h1>
                 </header>
-                @if (_page.Example != null)
+                @if (_page.Inject != null)
                 {
                     <Prose>
                         <p>
-                            @_page.Example.Description
+                            @_page.Inject.Description
                         </p>
                     </Prose>
-                    @if (_exampleType != null)
+                    @if (_injectType != null)
                     {
-                        <Dynamic AsComponent="_exampleType"/>
+                        <Dynamic AsComponent="_injectType"/>
                     }
                 }
                 @if (_content != null)
@@ -63,7 +63,7 @@
     private string? _content;
     private string? _link;
     private Page? _page;
-    private Type? _exampleType;
+    private Type? _injectType;
 
     [Parameter]
     public RenderFragment? Body { get; set; }
@@ -82,8 +82,8 @@
 
         _content = PageService.GetPageContent(_page);
 
-        if (_page.Example == null) return;
+        if (_page.Inject == null) return;
 
-        _exampleType = Type.GetType(_page.Example.TypeName);
+        _injectType = Type.GetType(_page.Inject.TypeName);
     }
 }
