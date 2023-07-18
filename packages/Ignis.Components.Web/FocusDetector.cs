@@ -19,6 +19,8 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender
 
     [Parameter, EditorRequired] public string Id { get; set; } = null!;
 
+    [Parameter] public bool Strict { get; set; } = true;
+
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
@@ -28,7 +30,7 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender
     [JSInvokable]
     public async Task OnFocusAsync()
     {
-        if (_isFocused.HasValue && _isFocused.Value) return;
+        if (Strict && _isFocused.HasValue && _isFocused.Value) return;
 
         _isFocused = true;
 
@@ -38,7 +40,7 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender
     [JSInvokable]
     public async Task OnBlurAsync()
     {
-        if (_isFocused.HasValue && !_isFocused.Value) return;
+        if (Strict && _isFocused.HasValue && !_isFocused.Value) return;
 
         _isFocused = false;
 

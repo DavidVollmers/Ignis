@@ -7,4 +7,6 @@ public interface IListboxOption
     bool IsSelected { get; }
     
     IReadOnlyDictionary<string, object?> Attributes { get; }
+
+    internal void Select();
 }

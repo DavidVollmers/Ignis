@@ -1,6 +1,7 @@
 ﻿using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
@@ -61,20 +62,56 @@ public sealed class ListboxButton : IgnisRigidComponentBase, IDynamicComponent, 
         if (AsElement == "button") builder.AddAttribute(1, "type", "button");
         builder.AddAttribute(2, "aria-haspopup", "listbox");
         builder.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, Listbox.Open));
-        builder.AddAttribute(4, "aria-labelledby", Listbox.Id + "-label");
-        builder.AddAttribute(5, "aria-expanded", Listbox.IsOpen);
-        builder.AddMultipleAttributes(6, AdditionalAttributes!);
-        builder.AddReferenceCaptureFor(7, this, e => _element = e, c => _component = c);
-        builder.AddContent(8, ChildContent);
+#pragma warning disable CS0618
+        builder.AddAttribute(4, "onkeydown", EventCallback.Factory.Create(this, OnKeyDown));
+#pragma warning restore CS0618
+        builder.AddAttribute(5, "aria-labelledby", Listbox.Id + "-label");
+        builder.AddAttribute(6, "aria-expanded", Listbox.IsOpen);
+        builder.AddMultipleAttributes(7, AdditionalAttributes!);
+        builder.AddReferenceCaptureFor(8, this, e => _element = e, c => _component = c);
+        builder.AddContent(9, ChildContent);
 
         builder.CloseAs(this);
+    }
+
+    private void OnKeyDown(KeyboardEventArgs eventArgs)
+    {
+        switch (eventArgs.Code)
+        {
+            case "Escape":
+                Listbox.Close();
+                break;
+            case "Space" or "Enter":
+                if (Listbox.IsOpen) Listbox.ActiveOption?.Select();
+                Listbox.Close();
+                break;
+            case "ArrowUp" when Listbox.ActiveOption == null:
+            case "ArrowDown" when Listbox.ActiveOption == null:
+                if (Listbox.Options.Any()) Listbox.SetOptionActive(Listbox.Options[0], true);
+                Listbox.Open();
+                break;
+            case "ArrowDown":
+            {
+                var index = Array.IndexOf(Listbox.Options, Listbox.ActiveOption) + 1;
+                if (index < Listbox.Options.Length) Listbox.SetOptionActive(Listbox.Options[index], true);
+                Listbox.Open();
+                break;
+            }
+            case "ArrowUp":
+            {
+                var index = Array.IndexOf(Listbox.Options, Listbox.ActiveOption) - 1;
+                if (index >= 0) Listbox.SetOptionActive(Listbox.Options[index], true);
+                Listbox.Open();
+                break;
+            }
+        }
     }
 
     public async Task FocusAsync()
     {
         if (_element.HasValue)
         {
-            await _element.Value.FocusAsync();    
+            await _element.Value.FocusAsync();
         }
         else if (_component is IFocus focus)
         {

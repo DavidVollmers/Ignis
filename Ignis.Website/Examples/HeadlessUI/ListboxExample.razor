@@ -18,7 +18,7 @@
                                 LeaveFrom="opacity-100"
                                 LeaveTo="opacity-0"
                                 Context="transition">
-                        <ListboxOptions class="@Css.Class("absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm", transition)">
+                        <ListboxOptions class="@Css.Class("absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm sm:leading-[1.25rem]", transition)">
                             @foreach (var person in _people)
                             {
                                 <ListboxOption @key="person.Name"
@@ -51,7 +51,12 @@
 {
     private readonly Person[] _people =
     {
-        new() { Name = "Wade Cooper" }
+        new() { Name = "Wade Cooper" },
+        new() { Name = "Arlene Mccoy" },
+        new() { Name = "Devon Webb" },
+        new() { Name = "Tom Cook" },
+        new() { Name = "Tanya Fox" },
+        new() { Name = "Hellen Schmidt" }
     };
 
     private Person _selectedPerson = null!;

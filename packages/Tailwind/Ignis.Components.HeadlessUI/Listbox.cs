@@ -6,6 +6,8 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Listbox<TValue> : IgnisComponentBase, IDynamicComponent, IListbox
 {
+    private readonly IList<IListboxOption> _options = new List<IListboxOption>();
+
     private ITransition? _transition;
     private Type? _asComponent;
     private string? _asElement;
@@ -32,6 +34,10 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IDynamicComponent, ILi
             _asElement = null;
         }
     }
+
+    public IListboxOption[] Options => _options.ToArray();
+    
+    public IListboxOption? ActiveOption { get; private set; }
 
     public string Id { get; } = "hui-listbox-" + Guid.NewGuid().ToString("N");
 
@@ -60,14 +66,15 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IDynamicComponent, ILi
         {
             builder.OpenComponent<FocusDetector>(3);
             builder.AddAttribute(4, nameof(FocusDetector.Id), Id);
-            builder.AddAttribute(5, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, Close));
+            builder.AddAttribute(5, nameof(FocusDetector.Strict), false);
+            builder.AddAttribute(6, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, Close));
             // ReSharper disable once VariableHidesOuterVariable
-            builder.AddAttribute(6, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
+            builder.AddAttribute(7, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
             {
-                builder.OpenComponent<CascadingValue<IListbox>>(7);
-                builder.AddAttribute(8, nameof(CascadingValue<IListbox>.IsFixed), true);
-                builder.AddAttribute(9, nameof(CascadingValue<IListbox>.Value), this);
-                builder.AddAttribute(10, nameof(CascadingValue<IListbox>.ChildContent),
+                builder.OpenComponent<CascadingValue<IListbox>>(8);
+                builder.AddAttribute(9, nameof(CascadingValue<IListbox>.IsFixed), true);
+                builder.AddAttribute(10, nameof(CascadingValue<IListbox>.Value), this);
+                builder.AddAttribute(11, nameof(CascadingValue<IListbox>.ChildContent),
                     ChildContent?.Invoke(this));
 
                 builder.CloseComponent();
@@ -128,6 +135,34 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IDynamicComponent, ILi
         ValueChanged.InvokeAsync(Value);
 
         ForceUpdate();
+    }
+
+    public void SetOptionActive(IListboxOption option, bool isActive)
+    {
+        if (isActive)
+        {
+            ActiveOption = option;
+        }
+        else if (ActiveOption == option)
+        {
+            ActiveOption = null;
+        }
+        
+        ForceUpdate();
+    }
+
+    public void AddOption(IListboxOption option)
+    {
+        if (option == null) throw new ArgumentNullException(nameof(option));
+
+        if (!_options.Contains(option)) _options.Add(option);
+    }
+
+    public void RemoveOption(IListboxOption option)
+    {
+        if (option == null) throw new ArgumentNullException(nameof(option));
+        
+        _options.Remove(option);
     }
 
     public void SetButton(IFocus button)

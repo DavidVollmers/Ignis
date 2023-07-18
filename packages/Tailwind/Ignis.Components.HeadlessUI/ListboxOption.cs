@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicComponent, IListboxOption
+public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicComponent, IListboxOption, IDisposable
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -39,7 +39,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicComponen
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
     
-    public bool IsActive { get; private set; }
+    public bool IsActive => Listbox.ActiveOption == this;
 
     public bool IsSelected => Listbox.IsValueSelected(Value);
 
@@ -75,6 +75,16 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicComponen
         AsElement = "li";
     }
 
+    protected override void OnInitialized()
+    {
+        if (Listbox == null)
+        {
+            throw new InvalidOperationException("ListboxOption must be used inside a Listbox.");
+        }
+
+        Listbox.AddOption(this);
+    }
+
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
@@ -87,21 +97,27 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicComponen
     private void OnClick()
     {
         Listbox.SelectValue(Value);
-
+        
         Listbox.Close();
     }
 
     private void OnMouseEnter()
     {
-        IsActive = true;
-
-        ForceUpdate();
+        Listbox.SetOptionActive(this, true);
     }
 
     private void OnMouseLeave()
     {
-        IsActive = false;
+        Listbox.SetOptionActive(this, false);
+    }
 
-        ForceUpdate();
+    public void Select()
+    {
+        Listbox.SelectValue(Value);
+    }
+
+    public void Dispose()
+    {
+        Listbox.RemoveOption(this);
     }
 }
