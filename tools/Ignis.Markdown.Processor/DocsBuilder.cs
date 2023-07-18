@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Ignis.Markdown.Processor.Contracts;
 using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Syntax;
@@ -16,7 +17,7 @@ internal class DocsBuilder
     {
         var markdownFiles = sourceDirectory.EnumerateFiles("*.md", SearchOption.AllDirectories);
 
-        var categories = new Dictionary<string, Category>();
+        var sections = new Dictionary<string, List<Page>>();
 
         foreach (var markdownFile in markdownFiles)
         {
@@ -39,10 +40,9 @@ internal class DocsBuilder
 
             var frontMatterInformation = _yamlDeserializer.Deserialize<FrontMatterInformation>(yaml);
 
-            categories.TryAdd(frontMatterInformation.Category,
-                new Category { Title = frontMatterInformation.Category });
+            sections.TryAdd(frontMatterInformation.Category, new List<Page>());
 
-            categories[frontMatterInformation.Category].Links.Add(new PageLink
+            sections[frontMatterInformation.Category].Add(new Page
             {
                 Title = frontMatterInformation.Title, Link = frontMatterInformation.Permalink
             });
@@ -52,39 +52,28 @@ internal class DocsBuilder
             var outputPath = Path.Combine(frontMatterInformation.Permalink.Split('/')
                 .Prepend(outputDirectory.FullName)
                 .ToArray());
-            
+
             if (frontMatterInformation.Permalink == "/") outputPath = Path.Combine(outputPath, "index");
-            
+
             var outputFile = new FileInfo(outputPath + ".html");
-            
+
             outputFile.Directory!.Create();
 
             using var writer = outputFile.CreateText();
             writer.Write(html);
         }
 
-        var sitemapJson = JsonSerializer.Serialize(categories.Values);
-        
+        var sitemapJson = JsonSerializer.Serialize(sections.Select(s => new Section
+        {
+            Title = s.Key, Links = s.Value.ToArray()
+        }));
+
         var sitemapOutputFile = new FileInfo(Path.Combine(outputDirectory.FullName, "sitemap.json"));
-        
+
         sitemapOutputFile.Directory!.Create();
-        
+
         using var sitemapWriter = sitemapOutputFile.CreateText();
-        
+
         sitemapWriter.Write(sitemapJson);
-    }
-
-    private class Category
-    {
-        public string Title { get; set; } = null!;
-
-        public IList<PageLink> Links { get; set; } = new List<PageLink>();
-    }
-
-    private class PageLink
-    {
-        public string Title { get; set; } = null!;
-
-        public string Link { get; set; } = null!;
     }
 }

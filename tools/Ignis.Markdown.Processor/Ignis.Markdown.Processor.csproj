@@ -12,4 +12,8 @@
       <PackageReference Include="YamlDotNet" Version="13.1.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Ignis.Markdown.Processor.Contracts\Ignis.Markdown.Processor.Contracts.csproj" />
+    </ItemGroup>
+
 </Project>
