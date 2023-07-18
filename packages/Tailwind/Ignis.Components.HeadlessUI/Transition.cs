@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Transition : IgnisRigidComponentBase, IDynamicComponent, ITransition
+public sealed class Transition : IgnisComponentBase, IDynamicComponent, ITransition
 {
+    private TransitionState _state = TransitionState.Default;
     private Type? _asComponent;
     private string? _asElement;
+    private bool _isShowing;
 
     [Parameter]
     public string? AsElement
@@ -29,8 +31,19 @@ public sealed class Transition : IgnisRigidComponentBase, IDynamicComponent, ITr
             _asElement = null;
         }
     }
-    
-    [Parameter] public bool Show { get; set; }
+
+    [Parameter]
+    public bool Show
+    {
+        get => _isShowing;
+        set
+        {
+#pragma warning disable CS4014
+            if (value) EnterAsync();
+            else LeaveAsync();
+#pragma warning restore CS4014
+        }
+    }
 
     [Parameter] public string? Enter { get; set; }
 
@@ -53,19 +66,25 @@ public sealed class Transition : IgnisRigidComponentBase, IDynamicComponent, ITr
     {
         get
         {
-            //TODO build class string
-            return null;
+            var originalClassString = AdditionalAttributes?.ContainsKey("class") == true
+                ? AdditionalAttributes["class"]
+                : null;
+            return _state switch
+            {
+                TransitionState.CanEnter => $"{originalClassString} {Enter} {EnterFrom}".Trim(),
+                TransitionState.Entering => $"{originalClassString} {Enter} {EnterTo}".Trim(),
+                TransitionState.CanLeave => $"{originalClassString} {Leave} {LeaveFrom}".Trim(),
+                TransitionState.Leaving => $"{originalClassString} {Leave} {LeaveTo}".Trim(),
+                _ => null
+            };
         }
     }
-    
+
     public IReadOnlyDictionary<string, object?> Attributes
     {
         get
         {
-            var attributes = new Dictionary<string, object?>
-            {
-                { "class", CssClass }
-            };
+            var attributes = new Dictionary<string, object?> { { "class", CssClass } };
 
             // ReSharper disable once InvertIf
             if (AdditionalAttributes != null)
@@ -73,7 +92,7 @@ public sealed class Transition : IgnisRigidComponentBase, IDynamicComponent, ITr
                 foreach (var (key, value) in AdditionalAttributes)
                 {
                     if (key == "class") continue;
-                    
+
                     attributes[key] = value;
                 }
             }
@@ -92,7 +111,78 @@ public sealed class Transition : IgnisRigidComponentBase, IDynamicComponent, ITr
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         builder.AddContentFor(2, this, ChildContent?.Invoke(this));
-        
+
         builder.CloseAs(this);
+    }
+
+    private async Task EnterAsync()
+    {
+        if (_state != TransitionState.CanEnter && _state != TransitionState.Default) return;
+
+        _isShowing = true;
+        _state = TransitionState.Entering;
+
+        ForceUpdate();
+
+        var duration = ParseDuration(Enter);
+        if (duration != null) await Task.Delay(duration.Value);
+        
+        _state = TransitionState.CanLeave;
+
+        ForceUpdate();
+    }
+
+    private async Task LeaveAsync()
+    {
+        if (_state != TransitionState.CanLeave) return;
+
+        _state = TransitionState.Leaving;
+
+        ForceUpdate();
+
+        var duration = ParseDuration(Leave);
+        if (duration != null) await Task.Delay(duration.Value);
+
+        _state = TransitionState.CanEnter;
+        _isShowing = false;
+
+        ForceUpdate();
+    }
+
+    private static int? ParseDuration(string? classString)
+    {
+        var durationClass = classString?.Split(' ')
+            .Select(v => v.Trim().Split(':').Last())
+            .FirstOrDefault(v => v.StartsWith("duration-"));
+        if (durationClass == null) return null;
+
+        var factor = 1;
+        
+        var durationString = durationClass.Split('-').Last();
+        // ReSharper disable once InvertIf
+        if (durationString.StartsWith('['))
+        {
+            durationString = durationString.TrimStart('[').TrimEnd(']').ToLowerInvariant();
+            if (durationString.EndsWith("ms"))
+            {
+                durationString = durationString[..^2];
+            }
+            else if (durationString.EndsWith("s"))
+            {
+                durationString = durationString[..^1];
+                factor = 1000;
+            }
+        }
+
+        return int.Parse(durationString) * factor;
+    }
+
+    private enum TransitionState
+    {
+        Default,
+        CanEnter,
+        Entering,
+        CanLeave,
+        Leaving
     }
 }
