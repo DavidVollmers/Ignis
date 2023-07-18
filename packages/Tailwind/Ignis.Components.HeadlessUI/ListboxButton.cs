@@ -12,9 +12,7 @@ public sealed class ListboxButton : IgnisRigidComponentBase, IDynamicComponent, 
     private string? _asElement;
 
     [Parameter]
-#pragma warning disable BL0007
     public string? AsElement
-#pragma warning restore BL0007
     {
         get => _asElement;
         set
@@ -25,9 +23,7 @@ public sealed class ListboxButton : IgnisRigidComponentBase, IDynamicComponent, 
     }
 
     [Parameter]
-#pragma warning disable BL0007
     public Type? AsComponent
-#pragma warning restore BL0007
     {
         get => _asComponent;
         set

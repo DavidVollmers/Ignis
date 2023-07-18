@@ -9,9 +9,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicComponen
     private string? _asElement;
 
     [Parameter]
-#pragma warning disable BL0007
     public string? AsElement
-#pragma warning restore BL0007
     {
         get => _asElement;
         set
@@ -22,9 +20,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicComponen
     }
 
     [Parameter]
-#pragma warning disable BL0007
     public Type? AsComponent
-#pragma warning restore BL0007
     {
         get => _asComponent;
         set
