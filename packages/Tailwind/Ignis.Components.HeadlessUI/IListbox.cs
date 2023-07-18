@@ -10,5 +10,7 @@ public interface IListbox : IOpenClose, IFocus
 
     void SelectValue<TValue>(TValue? value);
     
-    internal void SetButton(ListboxButton button);
+    internal void SetButton(IFocus button);
+
+    internal void SetTransition(ITransition transition);
 }

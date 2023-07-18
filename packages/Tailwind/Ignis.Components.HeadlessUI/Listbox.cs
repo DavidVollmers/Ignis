@@ -6,9 +6,10 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Listbox<TValue> : IgnisComponentBase, IDynamicComponent, IListbox
 {
-    private ListboxButton? _button;
+    private ITransition? _transition;
     private Type? _asComponent;
     private string? _asElement;
+    private IFocus? _button;
 
     [Parameter]
     public string? AsElement
@@ -85,12 +86,25 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IDynamicComponent, ILi
         IsOpen = true;
 
         ForceUpdate();
+
+        _transition?.Show();
     }
 
     public void Close()
     {
         if (!IsOpen) return;
 
+        if (_transition != null)
+        {
+            _transition.Hide(CloseCore);
+            return;
+        }
+
+        CloseCore();
+    }
+
+    private void CloseCore()
+    {
         IsOpen = false;
 
         ForceUpdate();
@@ -112,12 +126,23 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IDynamicComponent, ILi
     {
         Value = (TValue?)(object?)value;
         ValueChanged.InvokeAsync(Value);
+        
+        ForceUpdate();
     }
 
-    public void SetButton(ListboxButton button)
+    public void SetButton(IFocus button)
     {
-        if (_button != null && _button != button) throw new InvalidOperationException("ListboxButton already set.");
+        if (_button != null && _button != button)
+            throw new InvalidOperationException("Listbox cannot contain multiple buttons.");
 
         _button = button ?? throw new ArgumentNullException(nameof(button));
+    }
+
+    public void SetTransition(ITransition transition)
+    {
+        if (_transition != null && _transition != transition)
+            throw new InvalidOperationException("Listbox cannot contain multiple transitions.");
+
+        _transition = transition ?? throw new ArgumentNullException(nameof(transition));
     }
 }

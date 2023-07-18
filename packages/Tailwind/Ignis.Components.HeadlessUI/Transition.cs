@@ -38,10 +38,8 @@ public sealed class Transition : IgnisComponentBase, IDynamicComponent, ITransit
         get => _isShowing;
         set
         {
-#pragma warning disable CS4014
-            if (value) EnterAsync();
-            else LeaveAsync();
-#pragma warning restore CS4014
+            if (value) EnterCore();
+            else LeaveCore();
         }
     }
 
@@ -58,6 +56,8 @@ public sealed class Transition : IgnisComponentBase, IDynamicComponent, ITransit
     [Parameter] public string? LeaveTo { get; set; }
 
     [Parameter] public RenderFragment<ITransition>? ChildContent { get; set; }
+
+    [CascadingParameter] public IListbox? Listbox { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
@@ -106,6 +106,23 @@ public sealed class Transition : IgnisComponentBase, IDynamicComponent, ITransit
         AsElement = "div";
     }
 
+    protected override void OnInitialized()
+    {
+        Listbox?.SetTransition(this);
+    }
+
+    public void Hide(Action onHidden)
+    {
+        LeaveCore();
+
+        onHidden();
+    }
+
+    void ITransition.Show()
+    {
+        EnterCore();
+    }
+
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
@@ -115,37 +132,36 @@ public sealed class Transition : IgnisComponentBase, IDynamicComponent, ITransit
         builder.CloseAs(this);
     }
 
-    private async Task EnterAsync()
+    private void EnterCore()
     {
         if (_state != TransitionState.CanEnter && _state != TransitionState.Default) return;
 
-        _isShowing = true;
-        _state = TransitionState.Entering;
-
-        ForceUpdate();
+        UpdateState(TransitionState.Entering);
 
         var duration = ParseDuration(Enter);
-        if (duration != null) await Task.Delay(duration.Value);
-        
-        _state = TransitionState.CanLeave;
+        if (duration != null) Task.Delay(duration.Value).GetAwaiter().GetResult();
 
-        ForceUpdate();
+        UpdateState(TransitionState.CanLeave);
     }
 
-    private async Task LeaveAsync()
+    private void LeaveCore()
     {
-        if (_state != TransitionState.CanLeave) return;
+        if (_state != TransitionState.CanLeave && _state != TransitionState.Default) return;
 
-        _state = TransitionState.Leaving;
-
-        ForceUpdate();
+        UpdateState(TransitionState.Leaving);
 
         var duration = ParseDuration(Leave);
-        if (duration != null) await Task.Delay(duration.Value);
+        if (duration != null) Task.Delay(duration.Value).GetAwaiter().GetResult();
+        
+        UpdateState(TransitionState.CanEnter);
+    }
 
-        _state = TransitionState.CanEnter;
-        _isShowing = false;
-
+    private void UpdateState(TransitionState state)
+    {
+        _state = state;
+        
+        _isShowing = state is TransitionState.Entering or TransitionState.CanLeave;
+        
         ForceUpdate();
     }
 
@@ -157,7 +173,7 @@ public sealed class Transition : IgnisComponentBase, IDynamicComponent, ITransit
         if (durationClass == null) return null;
 
         var factor = 1;
-        
+
         var durationString = durationClass.Split('-').Last();
         // ReSharper disable once InvertIf
         if (durationString.StartsWith('['))
