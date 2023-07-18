@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using Ignis.Markdown.Processor.Contracts;
-using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Website.Services;
 
@@ -29,6 +28,16 @@ internal class PageService : IPageService
         }
 
         return _sections!.FirstOrDefault(s => s.Links.Any(l => l.Link == link));
+    }
+
+    public Section[] GetSections()
+    {
+        if (_sections == null)
+        {
+            LoadSections();
+        }
+
+        return _sections ?? Array.Empty<Section>();
     }
 
     public string? GetPageContent(Page page)

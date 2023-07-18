@@ -6,5 +6,7 @@ public interface IPageService
 {
     Section? GetSectionByLink(string link);
     
+    Section[] GetSections();
+    
     string? GetPageContent(Page page);
 }
