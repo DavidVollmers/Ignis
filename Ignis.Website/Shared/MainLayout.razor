@@ -1,11 +1,14 @@
-﻿@inherits IgnisComponentBase
+﻿@using Ignis.Website.Services
+@using Ignis.Markdown.Processor.Contracts
+@inherits IgnisComponentBase
 @inject NavigationManager Router
+@inject IPageService PageService
 
 <MainHeader/>
 
-@if (IsHome)
+@if (_link == "/")
 {
-    <Hero />
+    <Hero/>
 }
 
 <div class="relative mx-auto flex max-w-8xl justify-center sm:px-2 lg:px-8 xl:px-12">
@@ -17,19 +20,51 @@
             <!-- TODO: Navigation -->
         </div>
     </div>
-    <div class="min-w-0 max-w-2xl flex-auto px-4 py-16 lg:max-w-none lg:pl-8 lg:pr-0 xl:px-16">
-        <article>
-            
-        </article>
-    </div>
+    @if (_section != null)
+    {
+        <div class="min-w-0 max-w-2xl flex-auto px-4 py-16 lg:max-w-none lg:pl-8 lg:pr-0 xl:px-16">
+            <article>
+                <header class="mb-9 space-y-1">
+                    <p class="font-display text-sm font-medium text-sky-500">
+                        @_section.Title
+                    </p>
+                    <h1 class="font-display text-3xl tracking-tight text-slate-900 dark:text-white">
+                        @CurrentPage!.Title
+                    </h1>
+                </header>
+                @if (_content != null)
+                {
+                    <Prose>
+                        @((MarkupString) _content)
+                    </Prose>
+                }
+            </article>
+        </div>
+    }
 </div>
 
 @Body
 
 @code
 {
+    private Section? _section;
+    private string? _content;
+    private string? _link;
+
     [Parameter]
     public RenderFragment? Body { get; set; }
 
-    private bool IsHome => Router.ToBaseRelativePath(Router.Uri).Equals(string.Empty);
+    private Page? CurrentPage => _section?.Links.FirstOrDefault(s => s.Link == _link);
+
+    protected override void OnInitialized()
+    {
+        _link = Router.ToBaseRelativePath(Router.Uri);
+        if (_link == string.Empty) _link = "/";
+
+        _section = PageService.GetSectionByLink(_link);
+
+        if (_section == null) return;
+
+        _content = PageService.GetPageContent(CurrentPage!);
+    }
 }
