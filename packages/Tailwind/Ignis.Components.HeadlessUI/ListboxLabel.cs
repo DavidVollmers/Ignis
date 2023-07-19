@@ -42,7 +42,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
     [Parameter]
     public RenderFragment<IListboxLabel>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IListboxLabel>? ChildContent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
@@ -99,7 +99,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IListboxLabel, ListboxLabel>(2, this, ChildContent?.Invoke(this));
+        builder.AddChildContentFor<IListboxLabel, ListboxLabel>(2, this, ChildContent);
 
         builder.CloseAs(this);
     }
