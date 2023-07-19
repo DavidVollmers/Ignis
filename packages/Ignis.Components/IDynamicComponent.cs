@@ -11,6 +11,10 @@ public interface IDynamicComponent : IComponent
 
 public interface IDynamicParentComponent<T> : IDynamicComponent where T : IDynamicComponent
 {
+    ElementReference? Element { get; set; }
+    
+    object? Component { get; set; }
+    
     RenderFragment<T>? _ { get; set; }
     
     IEnumerable<KeyValuePair<string, object?>>? Attributes { get; }

@@ -8,9 +8,10 @@
                 <Tab @key="category"
                      AsComponent="typeof(Fragment)">
                     <_ Context="tab">
-                        <button @attributes="tab.Attributes"
-                                type="button"
-                                class="@Css.Class("w-full rounded-lg py-2.5 text-sm font-medium leading-5 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2", tab.IsSelected ? "text-blue-700 bg-white shadow" : "text-blue-100 hover:bg-white/[0.12] hover:text-white")">
+                        <button @ref="tab.Element"
+                                @attributes="tab.Attributes"
+                                class="@Css.Class("w-full rounded-lg py-2.5 text-sm font-medium leading-5 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2", tab.IsSelected ? "text-blue-700 bg-white shadow" : "text-blue-100 hover:bg-white/[0.12] hover:text-white")"
+                                type="button">
                             @category
                         </button>
                     </_>

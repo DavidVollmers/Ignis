@@ -23,7 +23,8 @@
                                        AsComponent="typeof(Fragment)"
                                        Value="person">
                             <_ Context="option">
-                                <li @attributes="option.Attributes"
+                                <li @ref="option.Element"
+                                    @attributes="option.Attributes"
                                     class="@Css.Class("relative cursor-default select-none py-2 pl-10 pr-4", option.IsActive ? "bg-amber-100 text-amber-900" : "text-gray-900")">
                                     <span class="@Css.Class("block truncate", option.IsSelected ? "font-medium" : "font-normal")">
                                         @person.Name
