@@ -24,4 +24,7 @@
   <data name="NamespaceLabel" xml:space="preserve">
     <value>Namespace</value>
   </data>
+  <data name="TypeParametersHeading" xml:space="preserve">
+    <value>Type Parameters</value>
+  </data>
 </root>

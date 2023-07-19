@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxButton : IgnisRigidComponentBase, IDynamicComponent, IFocus
+public sealed class ListboxButton : IgnisComponentBase, IDynamicComponent, IFocus
 {
+    private bool _preventKeyDownDefault;
     private ElementReference? _element;
     private object? _component;
     private Type? _asComponent;
@@ -46,7 +47,7 @@ public sealed class ListboxButton : IgnisRigidComponentBase, IDynamicComponent, 
         AsElement = "button";
     }
 
-    protected override void OnRender()
+    protected override void OnInitialized()
     {
         if (Listbox == null)
         {
@@ -62,20 +63,25 @@ public sealed class ListboxButton : IgnisRigidComponentBase, IDynamicComponent, 
         if (AsElement == "button") builder.AddAttribute(1, "type", "button");
         builder.AddAttribute(2, "aria-haspopup", "listbox");
         builder.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, Listbox.Open));
+        builder.AddEventPreventDefaultAttribute(4, "onkeydown", _preventKeyDownDefault);
 #pragma warning disable CS0618
-        builder.AddAttribute(4, "onkeydown", EventCallback.Factory.Create(this, OnKeyDown));
+        builder.AddAttribute(5, "onkeydown", EventCallback.Factory.Create(this, OnKeyDown));
 #pragma warning restore CS0618
-        builder.AddAttribute(5, "aria-labelledby", Listbox.Id + "-label");
-        builder.AddAttribute(6, "aria-expanded", Listbox.IsOpen);
-        builder.AddMultipleAttributes(7, AdditionalAttributes!);
-        builder.AddReferenceCaptureFor(8, this, e => _element = e, c => _component = c);
-        builder.AddContent(9, ChildContent);
+        builder.AddAttribute(6, "aria-labelledby", Listbox.Id + "-label");
+        builder.AddAttribute(7, "aria-expanded", Listbox.IsOpen);
+        builder.AddMultipleAttributes(8, AdditionalAttributes!);
+        builder.AddReferenceCaptureFor(9, this, e => _element = e, c => _component = c);
+        builder.AddContent(10, ChildContent);
 
         builder.CloseAs(this);
     }
 
     private void OnKeyDown(KeyboardEventArgs eventArgs)
     {
+        var oldPreventKeyDownDefault = _preventKeyDownDefault;
+        
+        _preventKeyDownDefault = true;
+
         switch (eventArgs.Code)
         {
             case "Escape":
@@ -104,6 +110,14 @@ public sealed class ListboxButton : IgnisRigidComponentBase, IDynamicComponent, 
                 Listbox.Open();
                 break;
             }
+            default:
+                _preventKeyDownDefault = false;
+                break;
+        }
+
+        if (oldPreventKeyDownDefault != _preventKeyDownDefault)
+        {
+            ForceUpdate();
         }
     }
 

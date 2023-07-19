@@ -6,13 +6,6 @@
     @Type.Name
 </h3>
 
-@if (_typeComments != null)
-{
-    <p>
-        @_typeComments.FullCommentText
-    </p>
-}
-
 <h4>
     @Resources["DefinitionHeading"]
 </h4>
@@ -24,6 +17,25 @@
         @Type.Namespace
     </dd>
 </dl>
+
+@if (_typeComments != null)
+{
+    <p>
+        @_typeComments.Summary
+    </p>
+}
+
+@if (Type.GenericTypeArguments.Any())
+{
+    <h5>
+        @Resources["TypeParametersHeading"]
+    </h5>
+    
+    @foreach (var typeParam in Type.GenericTypeArguments)
+    {
+        
+    }
+}
 
 @code
 {
