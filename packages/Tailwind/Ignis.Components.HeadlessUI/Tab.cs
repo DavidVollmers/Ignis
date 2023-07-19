@@ -39,9 +39,8 @@ public sealed class Tab : IgnisComponentBase, ITab, IDynamicComponent, IDisposab
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
-    //TODO
     /// <inheritdoc />
-    public bool IsSelected => false;
+    public bool IsSelected => TabGroup.IsTabSelected(this);
 
     //TODO aria-controls
     /// <inheritdoc />

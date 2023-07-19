@@ -34,6 +34,16 @@ public sealed class TabGroup : IgnisRigidComponentBase, ITabGroup, IDynamicCompo
         }
     }
 
+    /// <inheritdoc />
+    [Parameter]
+    public int DefaultIndex { get; set; }
+
+    /// <inheritdoc />
+    [Parameter]
+    public int SelectedIndex { get; set; }
+
+    [Parameter] public EventCallback<int> SelectedIndexChanged { get; set; }
+
     [Parameter] public RenderFragment<ITabGroup>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
@@ -62,6 +72,16 @@ public sealed class TabGroup : IgnisRigidComponentBase, ITabGroup, IDynamicCompo
         });
 
         builder.CloseAs(this);
+    }
+
+    /// <inheritdoc />
+    public bool IsTabSelected(ITab tab)
+    {
+        if (tab == null) throw new ArgumentNullException(nameof(tab));
+
+        var index = _tabs.IndexOf(tab);
+
+        return index == SelectedIndex;
     }
 
     /// <inheritdoc />
