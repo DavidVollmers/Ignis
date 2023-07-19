@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxButton : IgnisComponentBase, IDynamicComponent, IFocus
+public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent, IFocus
 {
     private bool _preventKeyDownDefault;
     private ElementReference? _element;
@@ -13,6 +13,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicComponent, IFocu
     private Type? _asComponent;
     private string? _asElement;
 
+    /// <inheritdoc />
     [Parameter]
     public string? AsElement
     {
@@ -24,6 +25,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicComponent, IFocu
         }
     }
 
+    /// <inheritdoc />
     [Parameter]
     public Type? AsComponent
     {
@@ -37,10 +39,43 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicComponent, IFocu
 
     [CascadingParameter] public IListbox Listbox { get; set; } = null!;
 
-    [Parameter] public RenderFragment? ChildContent { get; set; }
+    /// <inheritdoc />
+    [Parameter] public RenderFragment<IDynamicComponent>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+
+    /// <inheritdoc />
+    public IReadOnlyDictionary<string, object?>? Attributes
+    {
+        get
+        {
+            var attributes = new Dictionary<string, object?>
+            {
+                { "aria-haspopup", "listbox" },
+                { "onclick", EventCallback.Factory.Create(this, Listbox.Open) },
+                { "onkeydown", _preventKeyDownDefault },
+#pragma warning disable CS0618
+                { "onkeydown", EventCallback.Factory.Create(this, OnKeyDown) },
+#pragma warning restore CS0618
+                { "aria-labelledby", Listbox.Id + "-label" },
+                { "aria-expanded", Listbox.IsOpen }
+            };
+            
+            if (AsElement == "button") attributes.Add("type", "button");
+
+            // ReSharper disable once InvertIf
+            if (AdditionalAttributes != null)
+            {
+                foreach (var (key, value) in AdditionalAttributes)
+                {
+                    attributes[key] = value;
+                }
+            }
+
+            return attributes;
+        }
+    }
 
     public ListboxButton()
     {
@@ -64,18 +99,9 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicComponent, IFocu
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
-        if (AsElement == "button") builder.AddAttribute(1, "type", "button");
-        builder.AddAttribute(2, "aria-haspopup", "listbox");
-        builder.AddAttribute(3, "onclick", EventCallback.Factory.Create(this, Listbox.Open));
-        builder.AddEventPreventDefaultAttribute(4, "onkeydown", _preventKeyDownDefault);
-#pragma warning disable CS0618
-        builder.AddAttribute(5, "onkeydown", EventCallback.Factory.Create(this, OnKeyDown));
-#pragma warning restore CS0618
-        builder.AddAttribute(6, "aria-labelledby", Listbox.Id + "-label");
-        builder.AddAttribute(7, "aria-expanded", Listbox.IsOpen);
-        builder.AddMultipleAttributes(8, AdditionalAttributes!);
-        builder.AddReferenceCaptureFor(9, this, e => _element = e, c => _component = c);
-        builder.AddContent(10, ChildContent);
+        builder.AddMultipleAttributes(1, Attributes!);
+        builder.AddReferenceCaptureFor(2, this, e => _element = e, c => _component = c);
+        builder.AddChildContentFor(3, this);
 
         builder.CloseAs(this);
     }
@@ -132,6 +158,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicComponent, IFocu
         }
     }
 
+    /// <inheritdoc />
     public async Task FocusAsync()
     {
         if (_element.HasValue)

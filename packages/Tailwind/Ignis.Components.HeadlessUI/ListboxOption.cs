@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, IDynamicComponent, IDisposable
+public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, IDisposable
 {
     private Type? _asComponent;
     private string? _asElement;
 
+    /// <inheritdoc />
     [Parameter]
     public string? AsElement
     {
@@ -19,6 +20,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
         }
     }
 
+    /// <inheritdoc />
     [Parameter]
     public Type? AsComponent
     {
@@ -34,15 +36,20 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
 
     [Parameter, EditorRequired] public TValue? Value { get; set; }
 
-    [Parameter] public RenderFragment<IListboxOption>? ChildContent { get; set; }
+    /// <inheritdoc />
+    [Parameter]
+    public RenderFragment<IListboxOption>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
+    /// <inheritdoc />
     public bool IsActive => Listbox.ActiveOption == this;
 
+    /// <inheritdoc />
     public bool IsSelected => Listbox.IsValueSelected(Value);
 
+    /// <inheritdoc />
     public IReadOnlyDictionary<string, object?> Attributes
     {
         get
@@ -92,7 +99,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddContentFor(2, this, ChildContent?.Invoke(this));
+        builder.AddChildContentFor<IListboxOption, ListboxOption<TValue>>(2, this);
 
         builder.CloseAs(this);
     }
@@ -114,6 +121,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
         Listbox.SetOptionActive(this, false);
     }
 
+    /// <inheritdoc />
     public void Select()
     {
         Listbox.SelectValue(Value);

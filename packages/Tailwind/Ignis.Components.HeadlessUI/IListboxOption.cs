@@ -1,12 +1,10 @@
 ﻿namespace Ignis.Components.HeadlessUI;
 
-public interface IListboxOption
+public interface IListboxOption : IDynamicParentComponent<IListboxOption>
 {
     bool IsActive { get; }
     
     bool IsSelected { get; }
-    
-    IReadOnlyDictionary<string, object?> Attributes { get; }
 
     internal void Select();
 }

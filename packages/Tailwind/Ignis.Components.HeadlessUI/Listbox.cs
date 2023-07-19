@@ -8,7 +8,7 @@ namespace Ignis.Components.HeadlessUI;
 /// Renders a listbox which can be used to select one or more values.
 /// </summary>
 /// <typeparam name="TValue">The value type.</typeparam>
-public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IDynamicComponent, IHandleAfterRender
+public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfterRender
 {
     private readonly IList<IListboxOption> _options = new List<IListboxOption>();
 
@@ -42,6 +42,28 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IDynamicComp
         }
     }
 
+    /// <summary>
+    /// The selected value.
+    /// </summary>
+    [Parameter]
+    public TValue? Value { get; set; }
+
+    /// <summary>
+    /// Occurs when the selected value changes.
+    /// </summary>
+    [Parameter]
+    public EventCallback<TValue?> ValueChanged { get; set; }
+
+    /// <inheritdoc />
+    [Parameter]
+    public RenderFragment<IListbox>? ChildContent { get; set; }
+    
+    /// <summary>
+    /// Additional attributes to be applied to the listbox.
+    /// </summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+
     /// <inheritdoc />
     public IListboxOption[] Options => _options.ToArray();
 
@@ -54,26 +76,8 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IDynamicComp
     /// <inheritdoc />
     public bool IsOpen { get; private set; }
 
-    /// <summary>
-    /// The selected value.
-    /// </summary>
-    [Parameter] public TValue? Value { get; set; }
-
-    /// <summary>
-    /// Occurs when the selected value changes.
-    /// </summary>
-    [Parameter] public EventCallback<TValue?> ValueChanged { get; set; }
-
-    /// <summary>
-    /// The content to be rendered inside the listbox.
-    /// </summary>
-    [Parameter] public RenderFragment<IListbox>? ChildContent { get; set; }
-
-    /// <summary>
-    /// Additional attributes to be applied to the listbox.
-    /// </summary>
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+    /// <inheritdoc />
+    public IReadOnlyDictionary<string, object?>? Attributes => AdditionalAttributes;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Listbox{TValue}"/> class.
@@ -87,7 +91,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IDynamicComp
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, AdditionalAttributes!);
+        builder.AddMultipleAttributes(1, Attributes!);
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
@@ -182,7 +186,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IDynamicComp
         {
             ActiveOption = null;
         }
-        
+
         ForceUpdate();
     }
 
@@ -198,7 +202,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IDynamicComp
     public void RemoveOption(IListboxOption option)
     {
         if (option == null) throw new ArgumentNullException(nameof(option));
-        
+
         _options.Remove(option);
     }
 
@@ -231,7 +235,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IDynamicComp
             var selectedOption = Options.FirstOrDefault(x => x.IsSelected);
             if (selectedOption != null) SetOptionActive(selectedOption, true);
         }
-        
+
         return Task.CompletedTask;
     }
 }

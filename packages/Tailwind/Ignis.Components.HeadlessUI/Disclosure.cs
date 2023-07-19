@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Disclosure : IgnisComponentBase, IDynamicComponent, IOpenClose
+public sealed class Disclosure : IgnisComponentBase, IDisclosure
 {
     private Type? _asComponent;
     private string? _asElement;
 
+    /// <inheritdoc />
     [Parameter]
     public string? AsElement
     {
@@ -19,6 +20,7 @@ public sealed class Disclosure : IgnisComponentBase, IDynamicComponent, IOpenClo
         }
     }
 
+    /// <inheritdoc />
     [Parameter]
     public Type? AsComponent
     {
@@ -29,23 +31,30 @@ public sealed class Disclosure : IgnisComponentBase, IDynamicComponent, IOpenClo
             _asElement = null;
         }
     }
-    
-    public bool IsOpen { get; private set; }
 
-    [Parameter] public RenderFragment<IOpenClose>? ChildContent { get; set; }
+    /// <inheritdoc />
+    [Parameter]
+    public RenderFragment<IDisclosure>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
-    
+
+    /// <inheritdoc />
+    public bool IsOpen { get; private set; }
+
+    /// <inheritdoc />
+    public IReadOnlyDictionary<string, object?>? Attributes => AdditionalAttributes;
+
     public Disclosure()
     {
         AsComponent = typeof(Fragment);
     }
 
+    /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, AdditionalAttributes!);
+        builder.AddMultipleAttributes(1, Attributes!);
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
@@ -60,6 +69,7 @@ public sealed class Disclosure : IgnisComponentBase, IDynamicComponent, IOpenClo
         builder.CloseAs(this);
     }
 
+    /// <inheritdoc />
     public void Open()
     {
         if (IsOpen) return;
@@ -69,6 +79,7 @@ public sealed class Disclosure : IgnisComponentBase, IDynamicComponent, IOpenClo
         ForceUpdate();
     }
 
+    /// <inheritdoc />
     public void Close()
     {
         if (!IsOpen) return;

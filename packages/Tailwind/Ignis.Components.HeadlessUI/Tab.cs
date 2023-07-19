@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Tab : IgnisComponentBase, ITab, IDynamicComponent, IDisposable
+public sealed class Tab : IgnisComponentBase, ITab, IDisposable
 {
     private Type? _asComponent;
     private string? _asElement;
