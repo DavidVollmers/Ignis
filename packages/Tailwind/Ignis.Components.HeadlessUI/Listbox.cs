@@ -79,6 +79,12 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     public bool IsOpen { get; private set; }
 
     /// <inheritdoc />
+    public ElementReference? Element { get; set; }
+
+    /// <inheritdoc />
+    public object? Component { get; set; }
+
+    /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
     /// <summary>

@@ -88,6 +88,12 @@ public sealed class Transition : IgnisComponentBase, ITransition
     }
 
     /// <inheritdoc />
+    public ElementReference? Element { get; set; }
+
+    /// <inheritdoc />
+    public object? Component { get; set; }
+
+    /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes
     {
         get

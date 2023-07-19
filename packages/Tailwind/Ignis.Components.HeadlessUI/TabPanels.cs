@@ -42,6 +42,12 @@ public sealed class TabPanels : IgnisRigidComponentBase, IDynamicParentComponent
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
+    public ElementReference? Element { get; set; }
+
+    /// <inheritdoc />
+    public object? Component { get; set; }
+
+    /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
     public TabPanels()

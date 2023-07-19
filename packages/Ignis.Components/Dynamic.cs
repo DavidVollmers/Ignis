@@ -41,6 +41,12 @@ public sealed class Dynamic : IgnisRigidComponentBase, IDynamicParentComponent
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
+    /// <inheritdoc />
+    public ElementReference? Element { get; set; }
+
+    /// <inheritdoc />
+    public object? Component { get; set; }
+
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)

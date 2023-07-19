@@ -58,6 +58,12 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
     public ITab[] Tabs => _tabs.ToArray();
 
     /// <inheritdoc />
+    public ElementReference? Element { get; set; }
+
+    /// <inheritdoc />
+    public object? Component { get; set; }
+
+    /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
     public TabGroup()

@@ -8,8 +8,6 @@ namespace Ignis.Components.HeadlessUI;
 public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent, IFocus
 {
     private bool _preventKeyDownDefault;
-    private ElementReference? _element;
-    private object? _component;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -47,6 +45,12 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+
+    /// <inheritdoc />
+    public ElementReference? Element { get; set; }
+
+    /// <inheritdoc />
+    public object? Component { get; set; }
 
     //TODO aria-controls
     /// <inheritdoc />
@@ -103,9 +107,10 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        if (AsElement != null) builder.AddElementReferenceCapture(2, e => _element = e);
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
         builder.AddChildContentFor<IDynamicComponent, ListboxButton>(3, this, ChildContent);
-        if (AsComponent != null) builder.AddComponentReferenceCapture(4, c => _component = c);
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
     }
@@ -166,15 +171,15 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
     /// <inheritdoc />
     public async Task FocusAsync()
     {
-        if (_element.HasValue)
+        if (Element.HasValue)
         {
-            await _element.Value.FocusAsync();
+            await Element.Value.FocusAsync();
         }
-        else if (_component is IFocus focus)
+        else if (Component is IFocus focus)
         {
             await focus.FocusAsync();
         }
-        
+
         ForceUpdate();
     }
 }

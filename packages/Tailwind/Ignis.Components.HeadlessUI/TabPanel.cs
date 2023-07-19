@@ -46,6 +46,12 @@ public sealed class TabPanel : IgnisComponentBase, ITabPanel, IDisposable
     /// <inheritdoc />
     public bool IsSelected => TabGroup.IsTabPanelSelected(this);
 
+    /// <inheritdoc />
+    public ElementReference? Element { get; set; }
+
+    /// <inheritdoc />
+    public object? Component { get; set; }
+
     //TODO aria-labelledby
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes
