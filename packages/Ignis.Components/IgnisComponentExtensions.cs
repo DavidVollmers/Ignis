@@ -121,6 +121,8 @@ public static class IgnisComponentExtensions
                     $"Invalid dynamic component {dynamicComponent.GetType().Name}. This is probably due to a missing .OpenAs() call.");
         }
 
+        if (content == null) return;
+
         if (dynamicComponent.AsElement != null)
         {
             builder.AddContent(sequence, content);

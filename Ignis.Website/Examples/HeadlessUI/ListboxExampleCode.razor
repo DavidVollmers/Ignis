@@ -1,9 +1,9 @@
 ﻿@inherits IgnisComponentBase
 
 <div class="absolute top-16 w-72">
-    <Listbox @bind-Value="_selectedPerson" Context="_">
+    <Listbox @bind-Value="_selectedPerson">
         <div class="relative mt-1">
-            <ListboxButton class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm" Context="_">
+            <ListboxButton class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
                 <span class="block truncate">
                     @_selectedPerson.Name
                 </span>
@@ -16,7 +16,7 @@
                         LeaveFrom="opacity-100"
                         LeaveTo="opacity-0"
                         Context="transition">
-                <ListboxOptions class="@Css.Class("absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm sm:leading-[1.25rem]", transition)" Context="_">
+                <ListboxOptions class="@Css.Class("absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm sm:leading-[1.25rem]", transition)">
                     @foreach (var person in _people)
                     {
                         <ListboxOption @key="person.Name"

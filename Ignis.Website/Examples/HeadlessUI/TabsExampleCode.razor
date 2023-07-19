@@ -1,8 +1,8 @@
 ﻿@inherits IgnisRigidComponentBase
 
 <div class="w-full max-w-md px-2 py-16 sm:px-0">
-    <TabGroup Context="_">
-        <TabList class="flex space-x-1 rounded-xl bg-blue-900/20 p-1" Context="_">
+    <TabGroup>
+        <TabList class="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
             @foreach (var category in _articlesByCategory.Keys)
             {
                 <Tab @key="category"
@@ -17,7 +17,7 @@
                 </Tab>
             }
         </TabList>
-        <TabPanels class="mt-2" Context="_">
+        <TabPanels class="mt-2">
 
         </TabPanels>
     </TabGroup>
