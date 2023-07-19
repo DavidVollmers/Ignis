@@ -79,7 +79,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     public bool IsOpen { get; private set; }
 
     /// <inheritdoc />
-    public IReadOnlyDictionary<string, object?>? Attributes => AdditionalAttributes;
+    public IEnumerable<KeyValuePair<string, object?>> Attributes => AdditionalAttributes;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Listbox{TValue}"/> class.

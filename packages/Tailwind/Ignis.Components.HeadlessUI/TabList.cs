@@ -42,7 +42,7 @@ public sealed class TabList : IgnisRigidComponentBase, IDynamicParentComponent
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
-    public IReadOnlyDictionary<string, object?>? Attributes
+    public IEnumerable<KeyValuePair<string, object?>> Attributes
     {
         get
         {

@@ -54,7 +54,7 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
-    public IReadOnlyDictionary<string, object?>? Attributes => AdditionalAttributes;
+    public IEnumerable<KeyValuePair<string, object?>> Attributes => AdditionalAttributes;
 
     public TabGroup()
     {

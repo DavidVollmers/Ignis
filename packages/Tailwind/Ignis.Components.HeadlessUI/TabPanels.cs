@@ -42,7 +42,7 @@ public sealed class TabPanels : IgnisRigidComponentBase, IDynamicParentComponent
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
-    public IReadOnlyDictionary<string, object?>? Attributes => AdditionalAttributes;
+    public IEnumerable<KeyValuePair<string, object?>> Attributes => AdditionalAttributes;
 
     public TabPanels()
     {

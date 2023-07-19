@@ -48,7 +48,7 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
 
     //TODO aria-controls
     /// <inheritdoc />
-    public IReadOnlyDictionary<string, object?> Attributes
+    public IEnumerable<KeyValuePair<string, object?>> Attributes
     {
         get
         {
