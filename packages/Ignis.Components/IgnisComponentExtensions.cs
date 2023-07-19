@@ -93,18 +93,7 @@ public static class IgnisComponentExtensions
                     $"Invalid dynamic component {dynamicComponent.GetType().Name}. This is probably due to a missing .OpenAs() call.");
         }
 
-        if (dynamicComponent.AsComponent == typeof(Fragment) && dynamicComponent._ != null)
-        {
-            return dynamicComponent._.Invoke(dynamicComponent);
-        }
-
-        if (dynamicComponent._ != null)
-        {
-            throw new InvalidOperationException(
-                $"Render fragment \"_\" is only supported inside of a {nameof(Fragment)}.");
-        }
-
-        return childContent;
+        return dynamicComponent._ != null ? dynamicComponent._.Invoke(dynamicComponent) : childContent;
     }
 
 #pragma warning disable ASP0006
