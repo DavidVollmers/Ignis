@@ -1,13 +1,41 @@
-﻿<h3>
+﻿@using LoxSmoke.DocXml
+@inherits IgnisComponentBase
+@inject IStringLocalizer<ApiDocumentation> Resources
+
+<h3>
     @Type.Name
 </h3>
 
+@if (_typeComments != null)
+{
+    <p>
+        @_typeComments.FullCommentText
+    </p>
+}
+
 <h4>
-    
+    @Resources["DefinitionHeading"]
 </h4>
+<dl class="flex gap-x-2">
+    <dt>
+        @Resources["NamespaceLabel"]:
+    </dt>
+    <dd>
+        @Type.Namespace
+    </dd>
+</dl>
 
 @code
 {
+    private TypeComments? _typeComments;
+
     [Parameter, EditorRequired]
     public Type Type { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        var reader = new DocXmlReader(new[] { Type.Assembly });
+
+        _typeComments = reader.GetTypeComments(Type);
+    }
 }

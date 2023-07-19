@@ -16,6 +16,7 @@
     <Nullable>enable</Nullable>
     <PackageOutputPath>..\..\..\nuget</PackageOutputPath>
     <NoWarn>BL0007</NoWarn>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
