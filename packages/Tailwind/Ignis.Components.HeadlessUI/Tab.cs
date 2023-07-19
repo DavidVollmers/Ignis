@@ -50,7 +50,7 @@ public sealed class Tab : IgnisComponentBase, ITab, IDynamicComponent, IDisposab
         {
             var attributes = new Dictionary<string, object?>
             {
-                { "tabindex", -1 }, 
+                { "tabindex", IsSelected ? 0 : -1 }, 
                 { "role", "tab" }, 
                 { "aria-selected", IsSelected },
                 { "onclick", EventCallback.Factory.Create(this, OnClick) }
