@@ -9,7 +9,10 @@ namespace Ignis.Markdown.Processor;
 
 internal class DocsBuilder
 {
-    private readonly MarkdownPipeline _markdownPipeline = new MarkdownPipelineBuilder().UseYamlFrontMatter().Build();
+    private readonly MarkdownPipeline _markdownPipeline = new MarkdownPipelineBuilder()
+        .UseYamlFrontMatter()
+        .UsePipeTables()
+        .Build();
 
     private readonly IDeserializer _yamlDeserializer = new DeserializerBuilder().IgnoreUnmatchedProperties().Build();
 

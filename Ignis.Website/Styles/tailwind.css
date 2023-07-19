@@ -9,3 +9,16 @@
         display: none;
     }
 }
+
+.prose :where(kbd):not(:where([class~=not-prose] *)) {
+    display: inline-flex;
+    border-radius: .375rem;
+    --tw-bg-opacity: 1;
+    background-color: rgb(55 65 81/var(--tw-bg-opacity));
+    padding: .125rem .5rem;
+    font-size: .75rem;
+    line-height: 1rem;
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255/var(--tw-text-opacity));
+    vertical-align: middle;
+}
