@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class TabGroup : IgnisComponentBase, ITabGroup, IDynamicComponent
+public sealed class TabGroup : IgnisComponentBase, ITabGroup
 {
     private readonly IList<ITab> _tabs = new List<ITab>();
 
@@ -44,10 +44,14 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup, IDynamicComponent
 
     [Parameter] public EventCallback<int> SelectedIndexChanged { get; set; }
 
+    /// <inheritdoc />
     [Parameter] public RenderFragment<ITabGroup>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+
+    /// <inheritdoc />
+    public IReadOnlyDictionary<string, object?>? Attributes => AdditionalAttributes;
 
     public TabGroup()
     {

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class TabList : IgnisRigidComponentBase, IDynamicComponent
+public sealed class TabList : IgnisRigidComponentBase, IDynamicParentComponent
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -32,10 +32,35 @@ public sealed class TabList : IgnisRigidComponentBase, IDynamicComponent
         }
     }
 
-    [Parameter] public RenderFragment? ChildContent { get; set; }
+    /// <inheritdoc />
+    [Parameter] public RenderFragment<IDynamicComponent>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+
+    /// <inheritdoc />
+    public IReadOnlyDictionary<string, object?>? Attributes
+    {
+        get
+        {
+            var attributes = new Dictionary<string, object?>
+            {
+                { "role", "tablist" },
+                { "aria-orientation", "horizontal" }
+            };
+
+            // ReSharper disable once InvertIf
+            if (AdditionalAttributes != null)
+            {
+                foreach (var (key, value) in AdditionalAttributes)
+                {
+                    attributes[key] = value;
+                }
+            }
+
+            return attributes;
+        }
+    }
 
     public TabList()
     {
@@ -46,10 +71,8 @@ public sealed class TabList : IgnisRigidComponentBase, IDynamicComponent
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
-        builder.AddAttribute(1, "role", "tablist");
-        builder.AddAttribute(2, "aria-orientation", "horizontal");
-        builder.AddMultipleAttributes(3, AdditionalAttributes!);
-        builder.AddContentFor(4, this, ChildContent);
+        builder.AddMultipleAttributes(1, AdditionalAttributes!);
+        builder.AddChildContentFor(2, this);
 
         builder.CloseAs(this);
     }

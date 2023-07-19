@@ -1,6 +1,6 @@
 ﻿namespace Ignis.Components.HeadlessUI;
 
-public interface ITabGroup
+public interface ITabGroup : IDynamicParentComponent<ITabGroup>
 {
     int DefaultIndex { get; set; }
     

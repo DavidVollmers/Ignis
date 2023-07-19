@@ -34,6 +34,7 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
 
     [CascadingParameter] public ITabGroup TabGroup { get; set; } = null!;
 
+    /// <inheritdoc />
     [Parameter] public RenderFragment<ITab>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
