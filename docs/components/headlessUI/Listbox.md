@@ -13,6 +13,37 @@ api:
   - Ignis.Components.HeadlessUI.ListboxOption`1, Ignis.Components.HeadlessUI
 ---
 
+## Binding objects as values
+
+Unlike native HTML form controls which only allow you to provide strings as values, Headless UI supports binding complex
+objects as well.
+
+## Using a custom label
+
+By default the `Listbox` will use the button contents as the label for screenreaders. If you'd like more control over
+what is announced to assistive technologies, use the `ListboxLabel` component.
+
+## Showing/hiding the listbox
+
+By default, your `ListboxOptions` instance will be shown/hidden automatically based on the internal `IsOpen` state
+tracked within the `Listbox` component itself.
+
+## Transitions
+
+To animate the opening/closing of the listbox panel, use the provided `Transition` component. All you need to do is wrap
+the `ListboxOptions` in a `<Transition>`, and the transition will be applied automatically.
+
+## Rendering a different element for a component
+
+By default, the `Listbox` and its subcomponents each render a default element that is sensible for that component.
+
+For example, `ListboxLabel` renders a `label` by default, `ListboxButton` renders a `button`, `ListboxOptions` renders
+a `ul`, and `ListboxOption` renders a `li`. By contrast, Listbox does not render an element, and instead renders its
+children directly.
+
+This is easy to change using the `AsElement` or `AsComponent` prop, which exists on every component.
+You can read more about this [here](/components/dynamic).
+
 ## Accessibility notes
 
 ### Focus management

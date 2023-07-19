@@ -10,6 +10,8 @@ public interface IListbox : IDynamicParentComponent<IListbox>, IOpenClose, IFocu
     internal IListboxOption[] Options { get; }
 
     internal IListboxOption? ActiveOption { get; }
+    
+    internal IListboxLabel? Label { get; }
 
     /// <summary>
     /// A unique identifier for the listbox.
@@ -38,6 +40,8 @@ public interface IListbox : IDynamicParentComponent<IListbox>, IOpenClose, IFocu
     internal void RemoveOption(IListboxOption option);
 
     internal void SetButton(IFocus button);
+
+    internal void SetLabel(IListboxLabel label);
 
     internal void SetTransition(ITransition transition);
 }

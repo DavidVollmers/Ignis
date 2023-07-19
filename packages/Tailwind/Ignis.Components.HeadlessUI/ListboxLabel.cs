@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentComponent
+public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -34,11 +34,15 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentCompon
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDynamicComponent>? _ { get; set; }
-
-    [Parameter] public RenderFragment? ChildContent { get; set; }
+    public string? Id { get; set; }
 
     [CascadingParameter] public IListbox Listbox { get; set; } = null!;
+
+    /// <inheritdoc />
+    [Parameter]
+    public RenderFragment<IListboxLabel>? _ { get; set; }
+
+    [Parameter] public RenderFragment<IListboxLabel>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
@@ -56,7 +60,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentCompon
         {
             var attributes = new Dictionary<string, object?>
             {
-                { "id", Listbox.Id + "-label" },
+                { "id", Id ?? Listbox.Id + "-label" },
                 { "onclick", EventCallback.Factory.Create(this, Listbox.FocusAsync) }
             };
 
@@ -86,6 +90,8 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentCompon
             throw new InvalidOperationException(
                 $"{nameof(ListboxLabel)} must be used inside a {nameof(Listbox<object>)}.");
         }
+
+        Listbox.SetLabel(this);
     }
 
     /// <inheritdoc />
@@ -93,7 +99,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentCompon
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IDynamicComponent, ListboxLabel>(2, this, ChildContent);
+        builder.AddChildContentFor<IListboxLabel, ListboxLabel>(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }

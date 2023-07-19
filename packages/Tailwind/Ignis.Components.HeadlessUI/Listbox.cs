@@ -73,10 +73,13 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     public IListboxOption? ActiveOption { get; private set; }
 
     /// <inheritdoc />
-    public string Id { get; } = "hui-listbox-" + Guid.NewGuid().ToString("N");
+    public IListboxLabel? Label { get; private set; }
 
     /// <inheritdoc />
     public bool IsOpen { get; private set; }
+
+    /// <inheritdoc />
+    public string Id { get; } = "ignis-hui-listbox-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc />
     public ElementReference? Element { get; set; }
@@ -218,16 +221,25 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     public void SetButton(IFocus button)
     {
         if (_button != null && _button != button)
-            throw new InvalidOperationException("Listbox cannot contain multiple buttons.");
+            throw new InvalidOperationException("Listbox cannot contain multiple ListboxButton components.");
 
         _button = button ?? throw new ArgumentNullException(nameof(button));
+    }
+
+    /// <inheritdoc />
+    public void SetLabel(IListboxLabel label)
+    {
+        if (Label != null && Label != label)
+            throw new InvalidOperationException("Listbox cannot contain multiple ListboxLabel components.");
+
+        Label = label ?? throw new ArgumentNullException(nameof(label));
     }
 
     /// <inheritdoc />
     public void SetTransition(ITransition transition)
     {
         if (_transition != null && _transition != transition)
-            throw new InvalidOperationException("Listbox cannot contain multiple transitions.");
+            throw new InvalidOperationException("Listbox cannot contain multiple Transition components.");
 
         _transition = transition ?? throw new ArgumentNullException(nameof(transition));
     }

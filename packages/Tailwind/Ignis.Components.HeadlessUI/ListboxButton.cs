@@ -66,11 +66,12 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
 #pragma warning disable CS0618
                 { "onkeydown", EventCallback.Factory.Create(this, OnKeyDown) },
 #pragma warning restore CS0618
-                { "aria-labelledby", Listbox.Id + "-label" },
                 { "aria-expanded", Listbox.IsOpen }
             };
 
             if (AsElement == "button") attributes.Add("type", "button");
+
+            if (Listbox.Label != null) attributes.Add("aria-labelledby", Listbox.Label.Id ?? Listbox.Id + "-label");
 
             // ReSharper disable once InvertIf
             if (AdditionalAttributes != null)
