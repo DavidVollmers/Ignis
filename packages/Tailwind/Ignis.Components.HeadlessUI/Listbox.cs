@@ -57,7 +57,9 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     /// <inheritdoc />
     [Parameter]
     public RenderFragment<IListbox>? _ { get; set; }
-    
+
+    [Parameter] public RenderFragment<IListbox>? ChildContent { get; set; }
+
     /// <summary>
     /// Additional attributes to be applied to the listbox.
     /// </summary>
@@ -93,7 +95,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddChildContentFor(2, this, builder =>
+        builder.AddContentFor(2, this, builder =>
         {
             builder.OpenComponent<FocusDetector>(3);
             builder.AddAttribute(4, nameof(FocusDetector.Id), Id);
@@ -106,7 +108,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
                 builder.AddAttribute(9, nameof(CascadingValue<IListbox>.IsFixed), true);
                 builder.AddAttribute(10, nameof(CascadingValue<IListbox>.Value), this);
                 builder.AddAttribute(11, nameof(CascadingValue<IListbox>.ChildContent),
-                    _?.Invoke(this));
+                    this.GetChildContent(ChildContent));
 
                 builder.CloseComponent();
             }));

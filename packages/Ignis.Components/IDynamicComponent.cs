@@ -2,7 +2,7 @@
 
 namespace Ignis.Components;
 
-public interface IDynamicComponent
+public interface IDynamicComponent : IComponent
 {
     string? AsElement { get; set; }
 
@@ -11,9 +11,9 @@ public interface IDynamicComponent
 
 public interface IDynamicParentComponent<T> : IDynamicComponent where T : IDynamicComponent
 {
-    IReadOnlyDictionary<string, object?>? Attributes { get; }
-    
     RenderFragment<T>? _ { get; set; }
+    
+    IReadOnlyDictionary<string, object?>? Attributes { get; }
 }
 
 public interface IDynamicParentComponent : IDynamicParentComponent<IDynamicComponent>

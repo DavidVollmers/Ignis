@@ -73,27 +73,43 @@ public static class IgnisComponentExtensions
         }
     }
 
-    public static void AddChildContentFor<TContext, TDynamic>(this RenderTreeBuilder builder, int sequence,
-        TDynamic dynamicComponent)
+    public static RenderFragment? GetChildContent<TContext, TDynamic>(this TDynamic dynamicComponent,
+        RenderFragment<TContext>? childContent)
         where TContext : IDynamicComponent where TDynamic : IDynamicParentComponent<TContext>, TContext
     {
-        AddChildContentFor(builder, sequence, dynamicComponent, dynamicComponent._?.Invoke(dynamicComponent));
+        return GetChildContent<TContext, TDynamic>(dynamicComponent, childContent?.Invoke(dynamicComponent));
     }
 
-    public static void AddChildContentFor(this RenderTreeBuilder builder, int sequence,
-        IDynamicParentComponent dynamicComponent, RenderFragment? content)
+    public static RenderFragment? GetChildContent<TContext, TDynamic>(this TDynamic dynamicComponent,
+        RenderFragment? childContent)
+        where TContext : IDynamicComponent where TDynamic : IDynamicParentComponent<TContext>, TContext
     {
-        if (dynamicComponent.AsComponent == typeof(Fragment))
+        switch (dynamicComponent)
         {
-            content = dynamicComponent._?.Invoke(dynamicComponent);
+            case null:
+                throw new ArgumentNullException(nameof(dynamicComponent));
+            case { AsElement: null, AsComponent: null } or { AsElement: not null, AsComponent: not null }:
+                throw new InvalidOperationException(
+                    $"Invalid dynamic component {dynamicComponent.GetType().Name}. This is probably due to a missing .OpenAs() call.");
         }
 
-        AddChildContentFor(builder, sequence, (IDynamicComponent)dynamicComponent, content);
+        if (dynamicComponent.AsComponent == typeof(Fragment) && dynamicComponent._ != null)
+        {
+            return dynamicComponent._.Invoke(dynamicComponent);
+        }
+
+        if (dynamicComponent._ != null)
+        {
+            throw new InvalidOperationException(
+                $"Render fragment \"_\" is only supported inside of a {nameof(Fragment)}.");
+        }
+
+        return childContent;
     }
 
 #pragma warning disable ASP0006
-    public static void AddChildContentFor(this RenderTreeBuilder builder, int sequence,
-        IDynamicComponent dynamicComponent, RenderFragment? content)
+    public static void AddContentFor(this RenderTreeBuilder builder, int sequence, IDynamicComponent dynamicComponent,
+        RenderFragment? content)
     {
         if (builder == null) throw new ArgumentNullException(nameof(builder));
         switch (dynamicComponent)
@@ -115,6 +131,14 @@ public static class IgnisComponentExtensions
         }
     }
 #pragma warning restore ASP0006
+
+    public static void AddChildContentFor<TContext, TDynamic>(this RenderTreeBuilder builder, int sequence,
+        TDynamic dynamicComponent, RenderFragment? childContent)
+        where TContext : IDynamicComponent where TDynamic : IDynamicParentComponent<TContext>, TContext
+    {
+        AddContentFor(builder, sequence, dynamicComponent,
+            GetChildContent<TContext, TDynamic>(dynamicComponent, childContent));
+    }
 
 #pragma warning disable ASP0006
     public static void AddReferenceCaptureFor(this RenderTreeBuilder builder, int sequence,

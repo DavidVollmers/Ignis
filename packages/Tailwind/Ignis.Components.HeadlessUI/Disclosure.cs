@@ -36,6 +36,8 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure
     [Parameter]
     public RenderFragment<IDisclosure>? _ { get; set; }
 
+    [Parameter] public RenderFragment<IDisclosure>? ChildContent { get; set; }
+
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
@@ -56,12 +58,13 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddChildContentFor(2, this, builder =>
+        builder.AddContentFor(2, this, builder =>
         {
             builder.OpenComponent<CascadingValue<IOpenClose>>(3);
             builder.AddAttribute(4, nameof(CascadingValue<IOpenClose>.IsFixed), true);
             builder.AddAttribute(5, nameof(CascadingValue<IOpenClose>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IOpenClose>.ChildContent), _?.Invoke(this));
+            builder.AddAttribute(6, nameof(CascadingValue<IOpenClose>.ChildContent),
+                this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });

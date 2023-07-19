@@ -41,6 +41,8 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
 
     /// <inheritdoc />
     [Parameter] public RenderFragment<IDynamicComponent>? _ { get; set; }
+    
+    [Parameter] public RenderFragment<IDynamicComponent>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
@@ -101,7 +103,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         builder.AddReferenceCaptureFor(2, this, e => _element = e, c => _component = c);
-        builder.AddChildContentFor(3, this);
+        builder.AddChildContentFor(3, this, ChildContent);
 
         builder.CloseAs(this);
     }
