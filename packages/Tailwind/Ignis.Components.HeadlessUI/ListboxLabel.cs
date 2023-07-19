@@ -44,7 +44,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentCompon
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes
+    public IEnumerable<KeyValuePair<string, object?>>? Attributes
     {
         get
         {

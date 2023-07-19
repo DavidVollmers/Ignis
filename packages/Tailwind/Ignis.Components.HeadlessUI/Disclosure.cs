@@ -45,7 +45,7 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure
     public bool IsOpen { get; private set; }
 
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => AdditionalAttributes;
+    public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
     public Disclosure()
     {

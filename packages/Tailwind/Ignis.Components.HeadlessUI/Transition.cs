@@ -88,7 +88,7 @@ public sealed class Transition : IgnisComponentBase, ITransition
     }
 
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes
+    public IEnumerable<KeyValuePair<string, object?>>? Attributes
     {
         get
         {

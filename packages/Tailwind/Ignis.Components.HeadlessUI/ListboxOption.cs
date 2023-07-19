@@ -52,7 +52,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     public bool IsSelected => Listbox.IsValueSelected(Value);
 
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes
+    public IEnumerable<KeyValuePair<string, object?>>? Attributes
     {
         get
         {

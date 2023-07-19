@@ -45,7 +45,7 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
 
     //TODO aria-active-descendant
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes
+    public IEnumerable<KeyValuePair<string, object?>>? Attributes
     {
         get
         {

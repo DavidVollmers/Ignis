@@ -50,7 +50,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
 
     //TODO aria-controls
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes
+    public IEnumerable<KeyValuePair<string, object?>>? Attributes
     {
         get
         {
@@ -58,7 +58,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
             {
                 { "aria-haspopup", "listbox" },
                 { "onclick", EventCallback.Factory.Create(this, Listbox.Open) },
-                { "onkeydown", _preventKeyDownDefault },
+                { "__internal_preventDefault_onkeydown", _preventKeyDownDefault },
 #pragma warning disable CS0618
                 { "onkeydown", EventCallback.Factory.Create(this, OnKeyDown) },
 #pragma warning restore CS0618

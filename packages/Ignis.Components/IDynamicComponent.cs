@@ -13,7 +13,7 @@ public interface IDynamicParentComponent<T> : IDynamicComponent where T : IDynam
 {
     RenderFragment<T>? _ { get; set; }
     
-    IEnumerable<KeyValuePair<string, object?>> Attributes { get; }
+    IEnumerable<KeyValuePair<string, object?>>? Attributes { get; }
 }
 
 public interface IDynamicParentComponent : IDynamicParentComponent<IDynamicComponent>
