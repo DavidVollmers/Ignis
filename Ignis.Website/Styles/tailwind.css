@@ -1,4 +1,4 @@
-@import 'prismjs/themes/prism-dark.css';
+@import './prism-one-dark.css';
 @import 'tailwindcss/base';
 @import './fonts.css';
 @import 'tailwindcss/components';
