@@ -33,6 +33,18 @@
     <PackageReference Include="LoxSmoke.DocXml" Version="3.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Examples\HeadlessUI\ListboxExampleCode.razor">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Examples\HeadlessUI\TransitionExampleCode.razor">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Examples\HeadlessUI\TabsExampleCode.razor">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="npm run build" />
   </Target>

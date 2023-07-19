@@ -1,36 +1,106 @@
-﻿@inherits IgnisRigidComponentBase
+﻿@using System.Reflection
+@inherits IgnisComponentBase
+@implements IHandleAfterRender
+@inject IStringLocalizer<CodeExample> Resources
+@* ReSharper disable once InconsistentNaming *@
+@inject IJSRuntime JSRuntime
 
 <div class="@Css.Class("relative mt-8 mb-12 flex flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-r", CssClass!)">
     <div class="pointer-events-none absolute inset-x-0 top-0 z-10 m-[2px] md:left-auto">
         <div class="flex items-stretch justify-end rounded-t-[10px] px-3 py-1 md:m-1 md:rounded-lg">
-            <button class="bg-black bg-opacity-20 pointer-events-auto mr-1 flex rounded-md px-3 py-2 text-xs font-medium  text-white  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">
-                Preview
+            <button @onclick="@ShowPreview"
+                    class="@Css.Class("bg-black pointer-events-auto mr-1 flex rounded-md px-3 py-2 text-xs font-medium text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50", _isCodeShowing ? "bg-opacity-0 hover:bg-opacity-[0.05]" : "bg-opacity-20")">
+                @Resources["PreviewButton"]
             </button>
-            <button class="bg-black bg-opacity-0 hover:bg-opacity-[0.05] pointer-events-auto flex rounded-md px-3 py-2 text-xs font-medium   text-white  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">
-                Code
+            <button @onclick="@ShowCode"
+                    class="@Css.Class("bg-black pointer-events-auto flex rounded-md px-3 py-2 text-xs font-medium text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50", !_isCodeShowing ? "bg-opacity-0 hover:bg-opacity-[0.05]" : "bg-opacity-20")">
+                @Resources["CodeButton"]
             </button>
             <div class="my-2 mx-1 w-[2px] grow-0 bg-black bg-opacity-10"></div>
-            <button class="bg-black bg-opacity-0 hover:bg-opacity-[0.05] pointer-events-auto relative rounded-md px-4 py-2 text-xs font-medium  text-white  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">
-                <span>Copy</span>
+            <button class="bg-black bg-opacity-0 hover:bg-opacity-[0.05] pointer-events-auto relative rounded-md px-4 py-2 text-xs font-medium text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50">
+                <span>
+                    @Resources["CopyButton"]
+                </span>
             </button>
         </div>
     </div>
-    <div class="w-full h-[392px]">
-        <div class="absolute inset-0">
-            <div class="flex w-full flex-col items-center justify-center">
-                @ExampleContent
+    @if (_isCodeShowing)
+    {
+        <Prose class="w-full max-w-full">
+            <div class="-my-6">
+                <div class="my-6 overflow-auto max-h-[450px]">
+                    <pre style="margin: 0" class="float-left min-w-full"><code class="language-cshtml">@_code</code></pre>
+                </div>
+            </div>
+        </Prose>
+    }
+    else
+    {
+        <div class="w-full h-[392px]">
+            <div class="absolute inset-0">
+                <div class="flex w-full flex-col items-center justify-center">
+                    @ExampleContent
+                </div>
             </div>
         </div>
-    </div>
+    }
 </div>
 
 @code
 {
-    [Parameter]
-    public RenderFragment? ExampleContent { get; set; }
+    private bool _isCodeShowing;
+    private string? _code;
+
+    [Parameter, EditorRequired]
+    public RenderFragment ExampleContent { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public string ExampleCode { get; set; } = null!;
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
-    private string? CssClass => AdditionalAttributes?.TryGetValue("class", out var cssClass) == true && cssClass is string value ? value : null;
+    private string? CssClass
+    {
+        get
+        {
+            if (_isCodeShowing) return null;
+
+            return AdditionalAttributes?.TryGetValue("class", out var cssClass) == true && cssClass is string value ? value : null;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        var assemblyFile = new FileInfo(typeof(CodeExample).Assembly.Location);
+
+        var path = Path.Combine(assemblyFile.DirectoryName!, Path.Combine(ExampleCode.Split('/')));
+        var codeFile = new FileInfo(path);
+
+        if (!codeFile.Exists) return;
+
+        _code = File.ReadAllText(codeFile.FullName);
+    }
+
+    private void ShowCode()
+    {
+        _isCodeShowing = true;
+
+        ForceUpdate();
+    }
+
+    private void ShowPreview()
+    {
+        _isCodeShowing = false;
+
+        ForceUpdate();
+    }
+
+    public async Task OnAfterRenderAsync()
+    {
+        if (_isCodeShowing)
+        {
+            await JSRuntime.InvokeVoidAsync("Prism.highlightAll");
+        }
+    }
 }
