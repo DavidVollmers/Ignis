@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Transition : IgnisComponentBase, IDynamicComponent, ITransition
+public sealed class Transition : IgnisComponentBase, ITransition, IDynamicComponent
 {
     private TransitionState _state = TransitionState.Default;
     private Type? _asComponent;

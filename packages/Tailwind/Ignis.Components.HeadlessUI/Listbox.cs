@@ -8,7 +8,7 @@ namespace Ignis.Components.HeadlessUI;
 /// Renders a listbox which can be used to select one or more values.
 /// </summary>
 /// <typeparam name="TValue">The value type.</typeparam>
-public sealed class Listbox<TValue> : IgnisComponentBase, IDynamicComponent, IListbox
+public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IDynamicComponent
 {
     private readonly IList<IListboxOption> _options = new List<IListboxOption>();
 

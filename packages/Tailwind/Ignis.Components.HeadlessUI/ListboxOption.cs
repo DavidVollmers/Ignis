@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicComponent, IListboxOption, IDisposable
+public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, IDynamicComponent, IDisposable
 {
     private Type? _asComponent;
     private string? _asElement;

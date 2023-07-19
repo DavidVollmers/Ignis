@@ -3,4 +3,6 @@
 public interface ITab
 {
     bool IsSelected { get; }
+    
+    IReadOnlyDictionary<string, object?> Attributes { get; }
 }

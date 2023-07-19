@@ -40,6 +40,32 @@ public sealed class Tab : IgnisRigidComponentBase, ITab, IDynamicComponent
     //TODO
     public bool IsSelected => false;
 
+    public IReadOnlyDictionary<string, object?> Attributes
+    {
+        get
+        {
+            var attributes = new Dictionary<string, object?>
+            {
+                { "tabindex", -1 },
+                { "role", "tab" },
+                { "aria-selected", IsSelected }
+            };
+            
+            if (AsElement == "button") attributes.Add("type", "button");
+
+            // ReSharper disable once InvertIf
+            if (AdditionalAttributes != null)
+            {
+                foreach (var (key, value) in AdditionalAttributes)
+                {
+                    attributes[key] = value;
+                }
+            }
+
+            return attributes;
+        }
+    }
+
     public Tab()
     {
         AsElement = "button";
@@ -50,12 +76,8 @@ public sealed class Tab : IgnisRigidComponentBase, ITab, IDynamicComponent
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
-        if (AsElement == "button") builder.AddAttribute(1, "type", "button");
-        builder.AddAttribute(2, "tabindex", -1);
-        builder.AddAttribute(3, "role", "tab");
-        builder.AddAttribute(4, "aria-selected", IsSelected);
-        builder.AddMultipleAttributes(5, AdditionalAttributes!);
-        builder.AddContentFor(6, this, ChildContent?.Invoke(this));
+        builder.AddMultipleAttributes(1, Attributes!);
+        builder.AddContentFor(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }
