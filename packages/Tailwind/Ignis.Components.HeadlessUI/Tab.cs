@@ -35,7 +35,10 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
     [CascadingParameter] public ITabGroup TabGroup { get; set; } = null!;
 
     /// <inheritdoc />
-    [Parameter] public RenderFragment<ITab>? _ { get; set; }
+    [Parameter]
+    public RenderFragment<ITab>? _ { get; set; }
+
+    [Parameter] public RenderFragment<ITab>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
@@ -51,8 +54,8 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
         {
             var attributes = new Dictionary<string, object?>
             {
-                { "tabindex", IsSelected ? 0 : -1 }, 
-                { "role", "tab" }, 
+                { "tabindex", IsSelected ? 0 : -1 },
+                { "role", "tab" },
                 { "aria-selected", IsSelected },
                 { "onclick", EventCallback.Factory.Create(this, OnClick) }
             };
@@ -93,7 +96,7 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor(2, this, _?.Invoke(this));
+        builder.AddChildContentFor<ITab, Tab>(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }

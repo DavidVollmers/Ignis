@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Transition : IgnisComponentBase, ITransition, IDynamicComponent
+public sealed class Transition : IgnisComponentBase, ITransition
 {
     private TransitionState _state = TransitionState.Default;
     private Type? _asComponent;
     private string? _asElement;
     private bool _isShowing;
 
+    /// <inheritdoc />
     [Parameter]
     public string? AsElement
     {
@@ -21,6 +22,7 @@ public sealed class Transition : IgnisComponentBase, ITransition, IDynamicCompon
         }
     }
 
+    /// <inheritdoc />
     [Parameter]
     public Type? AsComponent
     {
@@ -55,13 +57,18 @@ public sealed class Transition : IgnisComponentBase, ITransition, IDynamicCompon
 
     [Parameter] public string? LeaveTo { get; set; }
 
-    [Parameter] public RenderFragment<ITransition>? ChildContent { get; set; }
-
     [CascadingParameter] public IListbox? Listbox { get; set; }
+
+    /// <inheritdoc />
+    [Parameter]
+    public RenderFragment<ITransition>? _ { get; set; }
+
+    [Parameter] public RenderFragment<ITransition>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
+    /// <inheritdoc />
     public string? CssClass
     {
         get
@@ -80,6 +87,7 @@ public sealed class Transition : IgnisComponentBase, ITransition, IDynamicCompon
         }
     }
 
+    /// <inheritdoc />
     public IReadOnlyDictionary<string, object?> Attributes
     {
         get
@@ -106,11 +114,13 @@ public sealed class Transition : IgnisComponentBase, ITransition, IDynamicCompon
         AsElement = "div";
     }
 
+    /// <inheritdoc />
     protected override void OnInitialized()
     {
         Listbox?.SetTransition(this);
     }
 
+    /// <inheritdoc />
     public void Hide(Action onHidden)
     {
         LeaveCore(onHidden);
@@ -121,11 +131,12 @@ public sealed class Transition : IgnisComponentBase, ITransition, IDynamicCompon
         EnterCore();
     }
 
+    /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor(2, this, ChildContent?.Invoke(this));
+        builder.AddChildContentFor<ITransition, Transition>(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }
@@ -158,23 +169,23 @@ public sealed class Transition : IgnisComponentBase, ITransition, IDynamicCompon
             Task.Delay(duration.Value).ContinueWith(_ =>
             {
                 UpdateState(TransitionState.CanEnter, true);
-                
+
                 continueWith?.Invoke();
             });
             return;
         }
-        
+
         UpdateState(TransitionState.CanEnter);
-                
+
         continueWith?.Invoke();
     }
 
     private void UpdateState(TransitionState state, bool async = false)
     {
         _state = state;
-        
+
         _isShowing = state is TransitionState.Entering or TransitionState.CanLeave;
-        
+
         ForceUpdate(async);
     }
 

@@ -33,7 +33,10 @@ public sealed class TabPanels : IgnisRigidComponentBase, IDynamicParentComponent
     }
 
     /// <inheritdoc />
-    [Parameter] public RenderFragment<IDynamicComponent>? _ { get; set; }
+    [Parameter]
+    public RenderFragment<IDynamicComponent>? _ { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
@@ -51,8 +54,8 @@ public sealed class TabPanels : IgnisRigidComponentBase, IDynamicParentComponent
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor(2, this);
-        
+        builder.AddChildContentFor<IDynamicComponent, TabPanels>(2, this, ChildContent);
+
         builder.CloseAs(this);
     }
 }

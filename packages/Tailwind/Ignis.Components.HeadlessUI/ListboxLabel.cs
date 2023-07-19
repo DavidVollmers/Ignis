@@ -33,7 +33,10 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentCompon
     }
 
     /// <inheritdoc />
-    [Parameter] public RenderFragment<IDynamicComponent>? _ { get; set; }
+    [Parameter]
+    public RenderFragment<IDynamicComponent>? _ { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [CascadingParameter] public IListbox Listbox { get; set; } = null!;
 
@@ -50,7 +53,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentCompon
                 { "id", Listbox.Id + "-label" },
                 { "onclick", EventCallback.Factory.Create(this, Listbox.FocusAsync) }
             };
-            
+
             // ReSharper disable once InvertIf
             if (AdditionalAttributes != null)
             {
@@ -84,7 +87,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentCompon
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor(2, this);
+        builder.AddChildContentFor<IDynamicComponent, ListboxLabel>(2, this, ChildContent);
 
         builder.CloseAs(this);
     }

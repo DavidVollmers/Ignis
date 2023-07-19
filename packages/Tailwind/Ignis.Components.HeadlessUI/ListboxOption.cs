@@ -40,6 +40,8 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     [Parameter]
     public RenderFragment<IListboxOption>? _ { get; set; }
 
+    [Parameter] public RenderFragment<IListboxOption>? ChildContent { get; set; }
+
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
@@ -99,7 +101,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IListboxOption, ListboxOption<TValue>>(2, this);
+        builder.AddChildContentFor<IListboxOption, ListboxOption<TValue>>(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }

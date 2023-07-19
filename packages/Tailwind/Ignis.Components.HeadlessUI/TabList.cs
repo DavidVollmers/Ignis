@@ -33,7 +33,10 @@ public sealed class TabList : IgnisRigidComponentBase, IDynamicParentComponent
     }
 
     /// <inheritdoc />
-    [Parameter] public RenderFragment<IDynamicComponent>? _ { get; set; }
+    [Parameter]
+    public RenderFragment<IDynamicComponent>? _ { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
@@ -45,8 +48,7 @@ public sealed class TabList : IgnisRigidComponentBase, IDynamicParentComponent
         {
             var attributes = new Dictionary<string, object?>
             {
-                { "role", "tablist" },
-                { "aria-orientation", "horizontal" }
+                { "role", "tablist" }, { "aria-orientation", "horizontal" }
             };
 
             // ReSharper disable once InvertIf
@@ -72,7 +74,7 @@ public sealed class TabList : IgnisRigidComponentBase, IDynamicParentComponent
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, AdditionalAttributes!);
-        builder.AddChildContentFor(2, this);
+        builder.AddChildContentFor<IDynamicComponent, TabList>(2, this, ChildContent);
 
         builder.CloseAs(this);
     }

@@ -40,13 +40,15 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
     [CascadingParameter] public IListbox Listbox { get; set; } = null!;
 
     /// <inheritdoc />
-    [Parameter] public RenderFragment<IDynamicComponent>? _ { get; set; }
-    
-    [Parameter] public RenderFragment<IDynamicComponent>? ChildContent { get; set; }
+    [Parameter]
+    public RenderFragment<IDynamicComponent>? _ { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
+    //TODO aria-controls
     /// <inheritdoc />
     public IReadOnlyDictionary<string, object?>? Attributes
     {
@@ -63,7 +65,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
                 { "aria-labelledby", Listbox.Id + "-label" },
                 { "aria-expanded", Listbox.IsOpen }
             };
-            
+
             if (AsElement == "button") attributes.Add("type", "button");
 
             // ReSharper disable once InvertIf
@@ -96,14 +98,13 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
         Listbox.SetButton(this);
     }
 
-    //TODO aria-controls
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         builder.AddReferenceCaptureFor(2, this, e => _element = e, c => _component = c);
-        builder.AddChildContentFor(3, this, ChildContent);
+        builder.AddChildContentFor<IDynamicComponent, ListboxButton>(3, this, ChildContent);
 
         builder.CloseAs(this);
     }
@@ -129,6 +130,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
                 {
                     Listbox.Open();
                 }
+
                 break;
             case "ArrowUp" when Listbox.ActiveOption == null:
             case "ArrowDown" when Listbox.ActiveOption == null:

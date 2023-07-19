@@ -2,10 +2,8 @@
 
 namespace Ignis.Components.HeadlessUI;
 
-public interface ITransition : ICssClass
+public interface ITransition : IDynamicParentComponent<ITransition>, ICssClass
 {
-    IReadOnlyDictionary<string, object?> Attributes { get; }
-    
     void Hide(Action onHidden);
 
     void Show();
