@@ -92,8 +92,15 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicComponent, IFocu
                 Listbox.Close();
                 break;
             case "Space" or "Enter":
-                if (Listbox.IsOpen) Listbox.ActiveOption?.Select();
-                Listbox.Close();
+                if (Listbox.IsOpen)
+                {
+                    Listbox.ActiveOption?.Select();
+                    Listbox.Close();
+                }
+                else
+                {
+                    Listbox.Open();
+                }
                 break;
             case "ArrowUp" when Listbox.ActiveOption == null:
             case "ArrowDown" when Listbox.ActiveOption == null:

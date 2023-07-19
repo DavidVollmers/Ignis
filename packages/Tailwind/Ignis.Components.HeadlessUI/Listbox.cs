@@ -8,10 +8,11 @@ namespace Ignis.Components.HeadlessUI;
 /// Renders a listbox which can be used to select one or more values.
 /// </summary>
 /// <typeparam name="TValue">The value type.</typeparam>
-public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IDynamicComponent
+public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IDynamicComponent, IHandleAfterRender
 {
     private readonly IList<IListboxOption> _options = new List<IListboxOption>();
 
+    private bool _onBeforeOpenRender;
     private ITransition? _transition;
     private Type? _asComponent;
     private string? _asElement;
@@ -119,6 +120,8 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IDynamicComp
 
         IsOpen = true;
 
+        _onBeforeOpenRender = true;
+
         ForceUpdate();
 
         _transition?.Show();
@@ -215,5 +218,20 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IDynamicComp
             throw new InvalidOperationException("Listbox cannot contain multiple transitions.");
 
         _transition = transition ?? throw new ArgumentNullException(nameof(transition));
+    }
+
+    /// <inheritdoc />
+    public Task OnAfterRenderAsync()
+    {
+        // ReSharper disable once InvertIf
+        if (_onBeforeOpenRender)
+        {
+            _onBeforeOpenRender = false;
+
+            var selectedOption = Options.FirstOrDefault(x => x.IsSelected);
+            if (selectedOption != null) SetOptionActive(selectedOption, true);
+        }
+        
+        return Task.CompletedTask;
     }
 }
