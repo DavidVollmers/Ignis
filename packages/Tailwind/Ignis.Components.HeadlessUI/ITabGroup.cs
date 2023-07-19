@@ -8,6 +8,8 @@ public interface ITabGroup
 
     internal bool IsTabSelected(ITab tab);
     
+    internal void SelectTab(ITab tab);
+    
     internal void AddTab(ITab tab);
 
     internal void RemoveTab(ITab tab);

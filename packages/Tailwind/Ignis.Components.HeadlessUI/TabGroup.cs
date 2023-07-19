@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class TabGroup : IgnisRigidComponentBase, ITabGroup, IDynamicComponent
+public sealed class TabGroup : IgnisComponentBase, ITabGroup, IDynamicComponent
 {
     private readonly IList<ITab> _tabs = new List<ITab>();
 
@@ -55,6 +55,15 @@ public sealed class TabGroup : IgnisRigidComponentBase, ITabGroup, IDynamicCompo
     }
 
     /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        if (SelectedIndex == DefaultIndex) return;
+        
+        SelectedIndex = DefaultIndex;
+        SelectedIndexChanged.InvokeAsync(DefaultIndex);
+    }
+
+    /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
@@ -82,6 +91,21 @@ public sealed class TabGroup : IgnisRigidComponentBase, ITabGroup, IDynamicCompo
         var index = _tabs.IndexOf(tab);
 
         return index == SelectedIndex;
+    }
+
+    /// <inheritdoc />
+    public void SelectTab(ITab tab)
+    {
+        if (tab == null) throw new ArgumentNullException(nameof(tab));
+        
+        var index = _tabs.IndexOf(tab);
+
+        if (index == -1) return;
+        
+        SelectedIndex = index;
+        SelectedIndexChanged.InvokeAsync(index);
+
+        ForceUpdate();
     }
 
     /// <inheritdoc />

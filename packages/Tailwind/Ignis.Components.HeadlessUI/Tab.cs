@@ -50,7 +50,10 @@ public sealed class Tab : IgnisComponentBase, ITab, IDynamicComponent, IDisposab
         {
             var attributes = new Dictionary<string, object?>
             {
-                { "tabindex", -1 }, { "role", "tab" }, { "aria-selected", IsSelected }
+                { "tabindex", -1 }, 
+                { "role", "tab" }, 
+                { "aria-selected", IsSelected },
+                { "onclick", EventCallback.Factory.Create(this, OnClick) }
             };
 
             if (AsElement == "button") attributes.Add("type", "button");
@@ -92,6 +95,11 @@ public sealed class Tab : IgnisComponentBase, ITab, IDynamicComponent, IDisposab
         builder.AddContentFor(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
+    }
+
+    private void OnClick()
+    {
+        TabGroup.SelectTab(this);
     }
 
     public void Dispose()
