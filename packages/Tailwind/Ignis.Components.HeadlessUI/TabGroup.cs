@@ -5,6 +5,8 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class TabGroup : IgnisRigidComponentBase, ITabGroup, IDynamicComponent
 {
+    private readonly IList<ITab> _tabs = new List<ITab>();
+
     private Type? _asComponent;
     private string? _asElement;
 
@@ -58,7 +60,23 @@ public sealed class TabGroup : IgnisRigidComponentBase, ITabGroup, IDynamicCompo
 
             builder.CloseComponent();
         });
-        
+
         builder.CloseAs(this);
+    }
+
+    /// <inheritdoc />
+    public void AddTab(ITab tab)
+    {
+        if (tab == null) throw new ArgumentNullException(nameof(tab));
+
+        if (!_tabs.Contains(tab)) _tabs.Add(tab);
+    }
+
+    /// <inheritdoc />
+    public void RemoveTab(ITab tab)
+    {
+        if (tab == null) throw new ArgumentNullException(nameof(tab));
+
+        _tabs.Remove(tab);
     }
 }

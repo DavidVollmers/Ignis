@@ -38,7 +38,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
-    
+
     public bool IsActive => Listbox.ActiveOption == this;
 
     public bool IsSelected => Listbox.IsValueSelected(Value);
@@ -75,16 +75,19 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
         AsElement = "li";
     }
 
+    /// <inheritdoc />
     protected override void OnInitialized()
     {
         if (Listbox == null)
         {
-            throw new InvalidOperationException("ListboxOption must be used inside a Listbox.");
+            throw new InvalidOperationException(
+                $"{nameof(ListboxOption<object>)} must be used inside a {nameof(Listbox<object>)}.");
         }
 
         Listbox.AddOption(this);
     }
 
+    /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
@@ -97,7 +100,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     private void OnClick()
     {
         Listbox.SelectValue(Value);
-        
+
         Listbox.Close();
     }
 

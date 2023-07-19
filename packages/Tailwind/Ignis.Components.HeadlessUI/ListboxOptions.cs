@@ -29,7 +29,7 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicComponent
             _asElement = null;
         }
     }
-    
+
     [CascadingParameter] public IListbox Listbox { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
@@ -42,20 +42,22 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicComponent
         AsElement = "ul";
     }
 
+    /// <inheritdoc />
     protected override void OnRender()
     {
         if (Listbox == null)
         {
-            throw new InvalidOperationException("ListboxOptions must be used inside a Listbox.");
+            throw new InvalidOperationException(
+                $"{nameof(ListboxOptions)} must be used inside a {nameof(Listbox<object>)}.");
         }
     }
-    
+
     //TODO aria-active-descendant
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         if (!Listbox.IsOpen) return;
-        
+
         builder.OpenAs(0, this);
         builder.AddAttribute(1, "tabindex", -1);
         builder.AddAttribute(2, "role", "listbox");

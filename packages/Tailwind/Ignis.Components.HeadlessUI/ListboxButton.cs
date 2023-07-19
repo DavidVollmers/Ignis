@@ -47,16 +47,18 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicComponent, IFocu
         AsElement = "button";
     }
 
+    /// <inheritdoc />
     protected override void OnInitialized()
     {
         if (Listbox == null)
         {
-            throw new InvalidOperationException("ListboxButton must be used inside a Listbox.");
+            throw new InvalidOperationException(
+                $"{nameof(ListboxButton)} must be used inside a {nameof(Listbox<object>)}.");
         }
 
         Listbox.SetButton(this);
     }
-    
+
     //TODO aria-controls
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -81,7 +83,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicComponent, IFocu
     private void OnKeyDown(KeyboardEventArgs eventArgs)
     {
         var oldPreventKeyDownDefault = _preventKeyDownDefault;
-        
+
         _preventKeyDownDefault = true;
 
         switch (eventArgs.Code)

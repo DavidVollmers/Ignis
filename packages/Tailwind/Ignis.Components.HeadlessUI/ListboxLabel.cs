@@ -29,7 +29,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicComponent
             _asElement = null;
         }
     }
-    
+
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [CascadingParameter] public IListbox Listbox { get; set; } = null!;
@@ -42,14 +42,17 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicComponent
         AsElement = "label";
     }
 
+    /// <inheritdoc />
     protected override void OnRender()
     {
         if (Listbox == null)
         {
-            throw new InvalidOperationException("ListboxLabel must be used inside a Listbox.");
+            throw new InvalidOperationException(
+                $"{nameof(ListboxLabel)} must be used inside a {nameof(Listbox<object>)}.");
         }
     }
 
+    /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
