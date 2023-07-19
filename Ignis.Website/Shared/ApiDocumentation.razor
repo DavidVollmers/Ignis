@@ -1,14 +1,16 @@
 ﻿@using LoxSmoke.DocXml
+@using System.Reflection
+@using System.Text
 @inherits IgnisComponentBase
 @inject IStringLocalizer<ApiDocumentation> Resources
 
-<h3>
-    @Type.Name
-</h3>
+<h2>
+    @SanitizeTypeName(Type)
+</h2>
 
-<h4>
+<h3>
     @Resources["DefinitionHeading"]
-</h4>
+</h3>
 <dl class="flex gap-x-2">
     <dt>
         @Resources["NamespaceLabel"]:
@@ -25,15 +27,21 @@
     </p>
 }
 
-@if (Type.GenericTypeArguments.Any())
+<pre class="whitespace-normal"><code class="language-csharp">
+@GetTypeDefinition(Type)
+</code></pre>
+
+@if (Type.GenericTypeParameters.Any())
 {
-    <h5>
+    <h4>
         @Resources["TypeParametersHeading"]
-    </h5>
-    
-    @foreach (var typeParam in Type.GenericTypeArguments)
+    </h4>
+
+    @foreach (var typeParam in Type.GenericTypeParameters)
     {
-        
+        <p>
+            <code>@typeParam.Name</code>
+        </p>
     }
 }
 
@@ -42,12 +50,66 @@
     private TypeComments? _typeComments;
 
     [Parameter, EditorRequired]
-    public Type Type { get; set; } = null!;
+    public TypeInfo Type { get; set; } = null!;
 
     protected override void OnInitialized()
     {
         var reader = new DocXmlReader(new[] { Type.Assembly });
 
         _typeComments = reader.GetTypeComments(Type);
+    }
+
+    private string SanitizeTypeName(TypeInfo type, bool withNamespace = false)
+    {
+        var name = withNamespace ? type.FullName! : type.Name;
+    // ReSharper disable once InvertIf
+        if (type.IsGenericType)
+        {
+            var index = name.LastIndexOf('`');
+            name = name[..index];
+
+            var args = type.GenericTypeParameters.Select(p => p.Name);
+            name += $"<{string.Join(", ", args)}>";
+        }
+
+        return name;
+    }
+
+    private string GetTypeDefinition(TypeInfo type)
+    {
+        var builder = new StringBuilder();
+        builder.Append("public");
+
+        if (type is { IsAbstract: true, IsSealed: true }) builder.Append(" static");
+        else if (type.IsAbstract) builder.Append(" abstract");
+        else if (type.IsSealed) builder.Append(" sealed");
+
+        if (type.IsClass) builder.Append(" class");
+        else if (type.IsEnum) builder.Append(" enum");
+        else if (type.IsInterface) builder.Append(" interface");
+        else if (type.IsValueType) builder.Append(" struct");
+
+        builder.Append(' ');
+        builder.Append(SanitizeTypeName(type));
+
+        var types = new List<string>();
+
+        if (type.BaseType != null && type.BaseType != typeof(object))
+        {
+            types.Add(SanitizeTypeName(type.BaseType.GetTypeInfo(), true));
+        }
+        
+        if (type.ImplementedInterfaces.Any())
+        {
+            types.AddRange(type.ImplementedInterfaces.Select(i => SanitizeTypeName(i.GetTypeInfo(), true)));
+        }
+
+        if (types.Any())
+        {
+            builder.Append(" : ");
+            builder.Append(string.Join(", ", types));
+        }
+
+        return builder.ToString();
     }
 }

@@ -20,7 +20,7 @@ Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components.HeadlessUI) fo
 
 We recommend to add the `Ignis.Components.HeadlessUI` namespace to the `_Imports.razor` file in your project.
 
-```csharp
+```cshtml
 @using Ignis.Components.HeadlessUI
 ```
 

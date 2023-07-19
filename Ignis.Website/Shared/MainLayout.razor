@@ -1,9 +1,13 @@
 ﻿@using Ignis.Website.Services
 @using Ignis.Markdown.Processor.Contracts
+@using System.Reflection
 @inherits IgnisComponentBase
+@implements IHandleAfterRender
 @inject NavigationManager Router
 @inject IPageService PageService
 @inject IStringLocalizer<CommonResources> CommonResources
+@* ReSharper disable once InconsistentNaming *@
+@inject IJSRuntime JSRuntime
 
 <MainHeader/>
 
@@ -60,7 +64,7 @@
 
                         @foreach (var typeName in _page.ApiTypeNames)
                         {
-                            var type = Type.GetType(typeName);
+                            var type = Type.GetType(typeName)?.GetTypeInfo();
                             if (type == null) continue;
 
                             <ApiDocumentation @key="typeName" Type="type"/>
@@ -87,6 +91,11 @@
 
     protected override void OnInitialized()
     {
+        LoadPage();
+    }
+    
+    private void LoadPage()
+    {
         _link = '/' + Router.ToBaseRelativePath(Router.Uri);
 
         _section = PageService.GetSectionByLink(_link);
@@ -102,5 +111,10 @@
         if (_page.Inject == null) return;
 
         _injectType = Type.GetType(_page.Inject.TypeName);
+    }
+
+    public async Task OnAfterRenderAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("Prism.highlightAll");
     }
 }

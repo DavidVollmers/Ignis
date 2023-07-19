@@ -14,7 +14,6 @@ export class FocusDetector extends ComponentBase {
     }
 
     private async onClick(event: MouseEvent): Promise<void> {
-        console.log(this);
         if (this._element.contains(<Node>event.target)) {
             await this.$ref.invokeMethodAsync('OnFocusAsync');
         } else {
