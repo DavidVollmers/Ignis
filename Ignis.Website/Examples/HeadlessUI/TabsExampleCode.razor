@@ -3,7 +3,7 @@
 <div class="w-full max-w-md px-2 py-16 sm:px-0">
     <TabGroup>
         <TabList class="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
-            @foreach (var category in _articlesByCategory.Keys)
+            @foreach (var category in _postsByCategory.Keys)
             {
                 <Tab @key="category"
                      AsComponent="typeof(Fragment)">
@@ -18,17 +18,45 @@
             }
         </TabList>
         <TabPanels class="mt-2">
+            @foreach (var (category, posts) in _postsByCategory)
+            {
+                <TabPanel @key="category"
+                          class="rounded-xl bg-white p-3 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2">
+                    <ul>
+                        @foreach (var post in posts)
+                        {
+                            <li @key="post.Id"
+                                class="relative rounded-md p-3 hover:bg-gray-100">
+                                <h3 class="text-sm font-medium leading-5">
+                                    @post.Title
+                                </h3>
 
+                                <ul class="mt-1 flex space-x-1 text-xs font-normal leading-4 text-gray-500">
+                                    <li>@post.Date</li>
+                                    <li>&middot;</li>
+                                    <li>@post.CommentCount comments</li>
+                                    <li>&middot;</li>
+                                    <li>@post.ShareCount shares</li>
+                                </ul>
+                                
+                                <a href="#"
+                                   class="absolute inset-0 rounded-md ring-blue-400 focus:z-10 focus:outline-none focus:ring-2">
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </TabPanel>
+            }
         </TabPanels>
     </TabGroup>
 </div>
 
 @code
 {
-    private readonly Dictionary<string, Article[]> _articlesByCategory = new()
+    private readonly Dictionary<string, Post[]> _postsByCategory = new()
     {
         {
-            "Recent", new Article[]
+            "Recent", new Post[]
             {
                 new()
                 {
@@ -49,7 +77,7 @@
             }
         },
         {
-            "Popular", new Article[]
+            "Popular", new Post[]
             {
                 new()
                 {
@@ -70,7 +98,7 @@
             }
         },
         {
-            "Trending", new Article[]
+            "Trending", new Post[]
             {
                 new()
                 {
@@ -92,7 +120,7 @@
         }
     };
 
-    private class Article
+    private class Post
     {
         public int Id { get; set; }
 

@@ -13,4 +13,10 @@ public interface ITabGroup : IDynamicParentComponent<ITabGroup>
     internal void AddTab(ITab tab);
 
     internal void RemoveTab(ITab tab);
+    
+    internal bool IsTabPanelSelected(ITabPanel tabPanel);
+    
+    internal void AddTabPanel(ITabPanel tabPanel);
+    
+    internal void RemoveTabPanel(ITabPanel tabPanel);
 }

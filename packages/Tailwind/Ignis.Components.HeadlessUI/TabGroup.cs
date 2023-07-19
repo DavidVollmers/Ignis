@@ -6,6 +6,7 @@ namespace Ignis.Components.HeadlessUI;
 public sealed class TabGroup : IgnisComponentBase, ITabGroup
 {
     private readonly IList<ITab> _tabs = new List<ITab>();
+    private readonly IList<ITabPanel> _tabPanels = new List<ITabPanel>();
 
     private Type? _asComponent;
     private string? _asElement;
@@ -129,5 +130,31 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
         if (tab == null) throw new ArgumentNullException(nameof(tab));
 
         _tabs.Remove(tab);
+    }
+
+    /// <inheritdoc />
+    public bool IsTabPanelSelected(ITabPanel tabPanel)
+    {
+        if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));
+
+        var index = _tabPanels.IndexOf(tabPanel);
+
+        return index == SelectedIndex;
+    }
+
+    /// <inheritdoc />
+    public void AddTabPanel(ITabPanel tabPanel)
+    {
+        if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));
+
+        if (!_tabPanels.Contains(tabPanel)) _tabPanels.Add(tabPanel);
+    }
+
+    /// <inheritdoc />
+    public void RemoveTabPanel(ITabPanel tabPanel)
+    {
+        if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));
+
+        _tabPanels.Remove(tabPanel);
     }
 }
