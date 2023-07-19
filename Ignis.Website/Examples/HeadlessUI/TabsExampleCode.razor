@@ -21,7 +21,8 @@
             @foreach (var (category, posts) in _postsByCategory)
             {
                 <TabPanel @key="category"
-                          class="rounded-xl bg-white p-3 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2">
+                          class="rounded-xl bg-white p-3 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2" 
+                          Context="_">
                     <ul>
                         @foreach (var post in posts)
                         {

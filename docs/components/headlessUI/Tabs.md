@@ -8,4 +8,7 @@ inject:
 api:
   - Ignis.Components.HeadlessUI.TabGroup, Ignis.Components.HeadlessUI
   - Ignis.Components.HeadlessUI.TabList, Ignis.Components.HeadlessUI
+  - Ignis.Components.HeadlessUI.Tab, Ignis.Components.HeadlessUI
+  - Ignis.Components.HeadlessUI.TabPanels, Ignis.Components.HeadlessUI
+  - Ignis.Components.HeadlessUI.TabPanel, Ignis.Components.HeadlessUI
 ---

@@ -68,7 +68,8 @@
             var index = name.LastIndexOf('`');
             name = name[..index];
 
-            var args = type.GenericTypeParameters.Select(p => p.Name);
+            var args = type.GenericTypeParameters.Select(p => p.Name).ToList();
+            args.AddRange(type.GenericTypeArguments.Select(a => SanitizeTypeName(a.GetTypeInfo(), true)));
             name += $"<{string.Join(", ", args)}>";
         }
 
@@ -98,7 +99,7 @@
         {
             types.Add(SanitizeTypeName(type.BaseType.GetTypeInfo(), true));
         }
-        
+
         if (type.ImplementedInterfaces.Any())
         {
             types.AddRange(type.ImplementedInterfaces.Select(i => SanitizeTypeName(i.GetTypeInfo(), true)));
