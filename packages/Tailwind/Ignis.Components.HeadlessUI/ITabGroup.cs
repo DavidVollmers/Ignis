@@ -2,6 +2,8 @@
 
 public interface ITabGroup : IDynamicParentComponent<ITabGroup>
 {
+    internal ITab[] Tabs { get; }
+    
     int DefaultIndex { get; set; }
     
     int SelectedIndex { get; set; }

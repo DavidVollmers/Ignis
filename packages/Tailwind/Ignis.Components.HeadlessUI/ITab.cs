@@ -1,6 +1,8 @@
-﻿namespace Ignis.Components.HeadlessUI;
+﻿using Ignis.Components.Web;
 
-public interface ITab : IDynamicParentComponent<ITab>
+namespace Ignis.Components.HeadlessUI;
+
+public interface ITab : IDynamicParentComponent<ITab>, IFocus
 {
     bool IsSelected { get; }
 }

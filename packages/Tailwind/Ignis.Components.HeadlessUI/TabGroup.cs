@@ -55,6 +55,9 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
+    public ITab[] Tabs => _tabs.ToArray();
+
+    /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
     public TabGroup()
@@ -113,6 +116,8 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
         SelectedIndex = index;
         SelectedIndexChanged.InvokeAsync(index);
 
+        tab.FocusAsync();
+        
         ForceUpdate();
     }
 

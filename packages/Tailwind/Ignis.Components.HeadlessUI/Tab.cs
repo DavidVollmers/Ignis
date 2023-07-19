@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.Web;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
 public sealed class Tab : IgnisComponentBase, ITab, IDisposable
 {
+    private bool _preventKeyDownDefault;
+    private ElementReference? _element;
+    private object? _component;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -57,7 +62,11 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
                 { "tabindex", IsSelected ? 0 : -1 },
                 { "role", "tab" },
                 { "aria-selected", IsSelected },
-                { "onclick", EventCallback.Factory.Create(this, OnClick) }
+                { "onclick", EventCallback.Factory.Create(this, OnClick) },
+                { "__internal_preventDefault_onkeydown", _preventKeyDownDefault },
+#pragma warning disable CS0618
+                { "onkeydown", EventCallback.Factory.Create(this, OnKeyDown) },
+#pragma warning restore CS0618
             };
 
             if (AsElement == "button") attributes.Add("type", "button");
@@ -96,14 +105,60 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<ITab, Tab>(2, this, ChildContent?.Invoke(this));
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => _element = e);
+        builder.AddChildContentFor<ITab, Tab>(3, this, ChildContent?.Invoke(this));
+        if (AsComponent != null) builder.AddComponentReferenceCapture(4, c => _component = c);
 
         builder.CloseAs(this);
+    }
+
+    private void OnKeyDown(KeyboardEventArgs eventArgs)
+    {
+        var oldPreventKeyDownDefault = _preventKeyDownDefault;
+
+        _preventKeyDownDefault = true;
+
+        switch (eventArgs.Code)
+        {
+            case "ArrowLeft":
+                TabGroup.SelectTab(TabGroup.SelectedIndex == 0
+                    ? TabGroup.Tabs[^1]
+                    : TabGroup.Tabs[TabGroup.SelectedIndex - 1]);
+                break;
+            case "ArrowRight":
+                TabGroup.SelectTab(TabGroup.SelectedIndex == TabGroup.Tabs.Length - 1
+                    ? TabGroup.Tabs[0]
+                    : TabGroup.Tabs[TabGroup.SelectedIndex + 1]);
+                break;
+            default:
+                _preventKeyDownDefault = false;
+                break;
+        }
+
+        if (oldPreventKeyDownDefault != _preventKeyDownDefault)
+        {
+            ForceUpdate();
+        }
     }
 
     private void OnClick()
     {
         TabGroup.SelectTab(this);
+    }
+
+    /// <inheritdoc />
+    public async Task FocusAsync()
+    {
+        if (_element.HasValue)
+        {
+            await _element.Value.FocusAsync();
+        }
+        else if (_component is IFocus focus)
+        {
+            await focus.FocusAsync();
+        }
+
+        ForceUpdate();
     }
 
     public void Dispose()

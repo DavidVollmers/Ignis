@@ -96,6 +96,14 @@ public static class IgnisComponentExtensions
         return dynamicComponent._ != null ? dynamicComponent._.Invoke(dynamicComponent) : childContent;
     }
 
+    public static void AddChildContentFor<TContext, TDynamic>(this RenderTreeBuilder builder, int sequence,
+        TDynamic dynamicComponent, RenderFragment? childContent)
+        where TContext : IDynamicComponent where TDynamic : IDynamicParentComponent<TContext>, TContext
+    {
+        AddContentFor(builder, sequence, dynamicComponent,
+            GetChildContent<TContext, TDynamic>(dynamicComponent, childContent));
+    }
+
 #pragma warning disable ASP0006
     public static void AddContentFor(this RenderTreeBuilder builder, int sequence, IDynamicComponent dynamicComponent,
         RenderFragment? content)
@@ -119,42 +127,6 @@ public static class IgnisComponentExtensions
         else if (dynamicComponent.AsComponent != null)
         {
             builder.AddAttribute(sequence, "ChildContent", content);
-        }
-    }
-#pragma warning restore ASP0006
-
-    public static void AddChildContentFor<TContext, TDynamic>(this RenderTreeBuilder builder, int sequence,
-        TDynamic dynamicComponent, RenderFragment? childContent)
-        where TContext : IDynamicComponent where TDynamic : IDynamicParentComponent<TContext>, TContext
-    {
-        AddContentFor(builder, sequence, dynamicComponent,
-            GetChildContent<TContext, TDynamic>(dynamicComponent, childContent));
-    }
-
-#pragma warning disable ASP0006
-    public static void AddReferenceCaptureFor(this RenderTreeBuilder builder, int sequence,
-        IDynamicComponent dynamicComponent, Action<ElementReference> elementCapture,
-        Action<object> componentCapture)
-    {
-        if (builder == null) throw new ArgumentNullException(nameof(builder));
-        if (elementCapture == null) throw new ArgumentNullException(nameof(elementCapture));
-        if (componentCapture == null) throw new ArgumentNullException(nameof(componentCapture));
-        switch (dynamicComponent)
-        {
-            case null:
-                throw new ArgumentNullException(nameof(dynamicComponent));
-            case { AsElement: null, AsComponent: null } or { AsElement: not null, AsComponent: not null }:
-                throw new InvalidOperationException(
-                    $"Invalid dynamic component {dynamicComponent.GetType().Name}. This is probably due to a missing .OpenAs() call.");
-        }
-
-        if (dynamicComponent.AsElement != null)
-        {
-            builder.AddElementReferenceCapture(sequence, elementCapture);
-        }
-        else if (dynamicComponent.AsComponent != null)
-        {
-            builder.AddComponentReferenceCapture(sequence, componentCapture);
         }
     }
 #pragma warning restore ASP0006

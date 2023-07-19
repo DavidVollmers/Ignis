@@ -103,8 +103,9 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddReferenceCaptureFor(2, this, e => _element = e, c => _component = c);
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => _element = e);
         builder.AddChildContentFor<IDynamicComponent, ListboxButton>(3, this, ChildContent);
+        if (AsComponent != null) builder.AddComponentReferenceCapture(4, c => _component = c);
 
         builder.CloseAs(this);
     }
@@ -173,5 +174,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
         {
             await focus.FocusAsync();
         }
+        
+        ForceUpdate();
     }
 }
