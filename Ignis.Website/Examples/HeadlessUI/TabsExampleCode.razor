@@ -3,7 +3,100 @@
 <div class="w-full max-w-md px-2 py-16 sm:px-0">
     <TabGroup>
         <TabList class="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
-
+            @foreach (var category in _articlesByCategory.Keys)
+            {
+                <Tab @key="category"
+                     AsComponent="typeof(Fragment)"
+                     Context="tab">
+                    <button @attributes="tab.Attributes"
+                            class="@Css.Class("w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-blue-700 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2", tab.IsSelected ? "bg-white shadow" : "text-blue-100 hover:bg-white/[0.12] hover:text-white")">
+                        @category
+                    </button>
+                </Tab>
+            }
         </TabList>
     </TabGroup>
 </div>
+
+@code
+{
+    private readonly Dictionary<string, Article[]> _articlesByCategory = new()
+    {
+        {
+            "Recent", new Article[]
+            {
+                new()
+                {
+                    Id = 1,
+                    Title = "Does drinking coffee make you smarter?",
+                    Date = "5h ago",
+                    CommentCount = 5,
+                    ShareCount = 2
+                },
+                new()
+                {
+                    Id = 2,
+                    Title = "So you've bought coffee... now what?",
+                    Date = "2h ago",
+                    CommentCount = 3,
+                    ShareCount = 2
+                }
+            }
+        },
+        {
+            "Popular", new Article[]
+            {
+                new()
+                {
+                    Id = 1,
+                    Title = "Is tech making coffee better or worse?",
+                    Date = "Jan 7",
+                    CommentCount = 29,
+                    ShareCount = 16
+                },
+                new()
+                {
+                    Id = 2,
+                    Title = "The most innovative things happening in coffee",
+                    Date = "Mar 19",
+                    CommentCount = 24,
+                    ShareCount = 12
+                }
+            }
+        },
+        {
+            "Trending", new Article[]
+            {
+                new()
+                {
+                    Id = 1,
+                    Title = "Ask Me Anything: 10 answers to your questions about coffee",
+                    Date = "2d ago",
+                    CommentCount = 9,
+                    ShareCount = 5
+                },
+                new()
+                {
+                    Id = 2,
+                    Title = "The worst advice we've ever heard about coffee",
+                    Date = "4d ago",
+                    CommentCount = 1,
+                    ShareCount = 2
+                }
+            }
+        }
+    };
+
+    private class Article
+    {
+        public int Id { get; set; }
+
+        public string Title { get; set; } = null!;
+
+        public string Date { get; set; } = null!;
+
+        public int CommentCount { get; set; }
+
+        public int ShareCount { get; set; }
+    }
+}

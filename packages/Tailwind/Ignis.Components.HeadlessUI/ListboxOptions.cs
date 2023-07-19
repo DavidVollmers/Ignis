@@ -49,7 +49,9 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicComponent
             throw new InvalidOperationException("ListboxOptions must be used inside a Listbox.");
         }
     }
-
+    
+    //TODO aria-active-descendant
+    /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         if (!Listbox.IsOpen) return;
