@@ -35,7 +35,7 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
     [CascadingParameter] public IListbox Listbox { get; set; } = null!;
 
     /// <inheritdoc />
-    [Parameter] public RenderFragment<IDynamicComponent>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<IDynamicComponent>? _ { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }

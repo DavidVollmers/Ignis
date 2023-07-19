@@ -38,7 +38,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IListboxOption>? ChildContent { get; set; }
+    public RenderFragment<IListboxOption>? _ { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }

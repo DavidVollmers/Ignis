@@ -45,7 +45,7 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
     [Parameter] public EventCallback<int> SelectedIndexChanged { get; set; }
 
     /// <inheritdoc />
-    [Parameter] public RenderFragment<ITabGroup>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<ITabGroup>? _ { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
@@ -73,13 +73,13 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, AdditionalAttributes!);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.AddChildContentFor(2, this, builder =>
         {
             builder.OpenComponent<CascadingValue<ITabGroup>>(3);
             builder.AddAttribute(4, nameof(CascadingValue<ITabGroup>.IsFixed), true);
             builder.AddAttribute(5, nameof(CascadingValue<ITabGroup>.Value), this);
             builder.AddAttribute(6, nameof(CascadingValue<ITabGroup>.ChildContent),
-                ChildContent?.Invoke(this));
+                _?.Invoke(this));
 
             builder.CloseComponent();
         });

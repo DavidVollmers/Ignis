@@ -125,7 +125,7 @@ public sealed class Transition : IgnisComponentBase, ITransition, IDynamicCompon
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddContentFor(2, this, ChildContent?.Invoke(this));
+        builder.AddChildContentFor(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }

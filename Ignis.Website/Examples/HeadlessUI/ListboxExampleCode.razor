@@ -1,9 +1,9 @@
 ﻿@inherits IgnisComponentBase
 
 <div class="absolute top-16 w-72">
-    <Listbox @bind-Value="_selectedPerson">
+    <Listbox @bind-Value="_selectedPerson" Context="_">
         <div class="relative mt-1">
-            <ListboxButton class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+            <ListboxButton class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm" Context="_">
                 <span class="block truncate">
                     @_selectedPerson.Name
                 </span>
@@ -16,25 +16,26 @@
                         LeaveFrom="opacity-100"
                         LeaveTo="opacity-0"
                         Context="transition">
-                <ListboxOptions class="@Css.Class("absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm sm:leading-[1.25rem]", transition)">
+                <ListboxOptions class="@Css.Class("absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm sm:leading-[1.25rem]", transition)" Context="_">
                     @foreach (var person in _people)
                     {
                         <ListboxOption @key="person.Name"
                                        AsComponent="typeof(Fragment)"
-                                       Value="person"
-                                       Context="option">
-                            <li @attributes="option.Attributes"
-                                class="@Css.Class("relative cursor-default select-none py-2 pl-10 pr-4", option.IsActive ? "bg-amber-100 text-amber-900" : "text-gray-900")">
-                                <span class="@Css.Class("block truncate", option.IsSelected ? "font-medium" : "font-normal")">
-                                    @person.Name
-                                </span>
-                                @if (option.IsSelected)
-                                {
-                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                                        <CheckIcon class="h-5 w-5" aria-hidden="true"/>
+                                       Value="person">
+                            <_ Context="option">
+                                <li @attributes="option.Attributes"
+                                    class="@Css.Class("relative cursor-default select-none py-2 pl-10 pr-4", option.IsActive ? "bg-amber-100 text-amber-900" : "text-gray-900")">
+                                    <span class="@Css.Class("block truncate", option.IsSelected ? "font-medium" : "font-normal")">
+                                        @person.Name
                                     </span>
-                                }
-                            </li>
+                                    @if (option.IsSelected)
+                                    {
+                                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                            <CheckIcon class="h-5 w-5" aria-hidden="true"/>
+                                        </span>
+                                    }
+                                </li>
+                            </_>
                         </ListboxOption>
                     }
                 </ListboxOptions>

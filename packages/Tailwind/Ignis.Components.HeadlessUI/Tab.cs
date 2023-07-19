@@ -35,7 +35,7 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
     [CascadingParameter] public ITabGroup TabGroup { get; set; } = null!;
 
     /// <inheritdoc />
-    [Parameter] public RenderFragment<ITab>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<ITab>? _ { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
@@ -93,7 +93,7 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddContentFor(2, this, ChildContent?.Invoke(this));
+        builder.AddChildContentFor(2, this, _?.Invoke(this));
 
         builder.CloseAs(this);
     }

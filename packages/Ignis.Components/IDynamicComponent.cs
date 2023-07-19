@@ -13,7 +13,7 @@ public interface IDynamicParentComponent<T> : IDynamicComponent where T : IDynam
 {
     IReadOnlyDictionary<string, object?>? Attributes { get; }
     
-    RenderFragment<T>? ChildContent { get; set; }
+    RenderFragment<T>? _ { get; set; }
 }
 
 public interface IDynamicParentComponent : IDynamicParentComponent<IDynamicComponent>

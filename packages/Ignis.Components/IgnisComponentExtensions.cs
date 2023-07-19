@@ -18,6 +18,7 @@ public static class IgnisComponentExtensions
         return serviceCollection;
     }
 
+#pragma warning disable ASP0006
     public static void OpenAs(this RenderTreeBuilder builder, int sequence, IDynamicComponent dynamicComponent)
     {
         if (builder == null) throw new ArgumentNullException(nameof(builder));
@@ -35,9 +36,7 @@ public static class IgnisComponentExtensions
 
         if (dynamicComponent.AsElement != null)
         {
-#pragma warning disable ASP0006
             builder.OpenElement(sequence, dynamicComponent.AsElement);
-#pragma warning restore ASP0006
         }
         else if (dynamicComponent.AsComponent != null)
         {
@@ -47,11 +46,10 @@ public static class IgnisComponentExtensions
                     $"Invalid component type {dynamicComponent.AsComponent.Name}. Must implement {nameof(IComponent)}.");
             }
 
-#pragma warning disable ASP0006
             builder.OpenComponent(sequence, dynamicComponent.AsComponent);
-#pragma warning restore ASP0006
         }
     }
+#pragma warning restore ASP0006
 
     public static void CloseAs(this RenderTreeBuilder builder, IDynamicComponent dynamicComponent)
     {
@@ -79,17 +77,23 @@ public static class IgnisComponentExtensions
         TDynamic dynamicComponent)
         where TContext : IDynamicComponent where TDynamic : IDynamicParentComponent<TContext>, TContext
     {
-        AddContentFor(builder, sequence, dynamicComponent, dynamicComponent.ChildContent?.Invoke(dynamicComponent));
+        AddChildContentFor(builder, sequence, dynamicComponent, dynamicComponent._?.Invoke(dynamicComponent));
     }
 
     public static void AddChildContentFor(this RenderTreeBuilder builder, int sequence,
-        IDynamicParentComponent dynamicComponent)
+        IDynamicParentComponent dynamicComponent, RenderFragment? content)
     {
-        AddContentFor(builder, sequence, dynamicComponent, dynamicComponent.ChildContent?.Invoke(dynamicComponent));
+        if (dynamicComponent.AsComponent == typeof(Fragment))
+        {
+            content = dynamicComponent._?.Invoke(dynamicComponent);
+        }
+
+        AddChildContentFor(builder, sequence, (IDynamicComponent)dynamicComponent, content);
     }
 
-    public static void AddContentFor(this RenderTreeBuilder builder, int sequence, IDynamicComponent dynamicComponent,
-        RenderFragment? content, string childContentName = "ChildContent")
+#pragma warning disable ASP0006
+    public static void AddChildContentFor(this RenderTreeBuilder builder, int sequence,
+        IDynamicComponent dynamicComponent, RenderFragment? content)
     {
         if (builder == null) throw new ArgumentNullException(nameof(builder));
         switch (dynamicComponent)
@@ -103,18 +107,16 @@ public static class IgnisComponentExtensions
 
         if (dynamicComponent.AsElement != null)
         {
-#pragma warning disable ASP0006
             builder.AddContent(sequence, content);
-#pragma warning restore ASP0006
         }
         else if (dynamicComponent.AsComponent != null)
         {
-#pragma warning disable ASP0006
-            builder.AddAttribute(sequence, childContentName, content);
-#pragma warning restore ASP0006
+            builder.AddAttribute(sequence, "ChildContent", content);
         }
     }
+#pragma warning restore ASP0006
 
+#pragma warning disable ASP0006
     public static void AddReferenceCaptureFor(this RenderTreeBuilder builder, int sequence,
         IDynamicComponent dynamicComponent, Action<ElementReference> elementCapture,
         Action<object> componentCapture)
@@ -133,15 +135,12 @@ public static class IgnisComponentExtensions
 
         if (dynamicComponent.AsElement != null)
         {
-#pragma warning disable ASP0006
             builder.AddElementReferenceCapture(sequence, elementCapture);
-#pragma warning restore ASP0006
         }
         else if (dynamicComponent.AsComponent != null)
         {
-#pragma warning disable ASP0006
             builder.AddComponentReferenceCapture(sequence, componentCapture);
-#pragma warning restore ASP0006
         }
     }
+#pragma warning restore ASP0006
 }

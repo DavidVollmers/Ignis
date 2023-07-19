@@ -23,18 +23,19 @@
         {
             <ListboxOption @key="theme"
                            Value="theme"
-                           Context="option"
                            AsComponent="typeof(Fragment)">
-                <li @attributes="option.Attributes" class="@Css.Class("flex cursor-pointer select-none items-center rounded-[0.625rem] p-1", ("text-sky-500", option.IsSelected), ("text-slate-900 dark:text-white", option.IsActive && !option.IsSelected), ("text-slate-700 dark:text-slate-400", !option.IsActive && !option.IsSelected), ("bg-slate-100 dark:bg-slate-900/40", option.IsActive))">
-                    <div class="rounded-md bg-white p-1 shadow ring-1 ring-slate-900/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5">
-                        <Dynamic AsComponent="GetThemeIcon(theme)"
-                                 class="@Css.Class("h-4 w-4", option.IsSelected ? "fill-sky-400 dark:fill-sky-400" : "fill-slate-400")">
-                        </Dynamic>
-                    </div>
-                    <div class="ml-3">
-                        @Resources["Theme_" + theme]
-                    </div>
-                </li>
+                <_ Context="option">
+                    <li @attributes="option.Attributes" class="@Css.Class("flex cursor-pointer select-none items-center rounded-[0.625rem] p-1", ("text-sky-500", option.IsSelected), ("text-slate-900 dark:text-white", option.IsActive && !option.IsSelected), ("text-slate-700 dark:text-slate-400", !option.IsActive && !option.IsSelected), ("bg-slate-100 dark:bg-slate-900/40", option.IsActive))">
+                        <div class="rounded-md bg-white p-1 shadow ring-1 ring-slate-900/5 dark:bg-slate-700 dark:ring-inset dark:ring-white/5">
+                            <Dynamic AsComponent="GetThemeIcon(theme)"
+                                     class="@Css.Class("h-4 w-4", option.IsSelected ? "fill-sky-400 dark:fill-sky-400" : "fill-slate-400")">
+                            </Dynamic>
+                        </div>
+                        <div class="ml-3">
+                            @Resources["Theme_" + theme]
+                        </div>
+                    </li>
+                </_>
             </ListboxOption>
         }
     </ListboxOptions>

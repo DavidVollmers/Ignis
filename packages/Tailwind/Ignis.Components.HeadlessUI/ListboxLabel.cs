@@ -33,7 +33,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentCompon
     }
 
     /// <inheritdoc />
-    [Parameter] public RenderFragment<IDynamicComponent>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<IDynamicComponent>? _ { get; set; }
 
     [CascadingParameter] public IListbox Listbox { get; set; } = null!;
 
