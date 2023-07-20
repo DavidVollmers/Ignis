@@ -3,9 +3,6 @@ using Ignis.Website.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.WebHost.UseWebRoot("wwwroot");
-builder.WebHost.UseStaticWebAssets();
-
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();

@@ -16,11 +16,7 @@ jobs:
         with:
           node-version: 18.x
       - run: npm i
-        working-directory: packages/ignis.net/components
-      - run: npm i
-        working-directory: packages/Ignis.Components.Web
-      - run: npm i
-        working-directory: Ignis.Website
+      - run: dotnet build packages/Ignis.Components.Web -c Release
       - run: |
           dotnet build tools/Ignis.Markdown.Processor -c Release
           dotnet tools/Ignis.Markdown.Processor/bin/Release/net6.0/Ignis.Markdown.Processor.dll
