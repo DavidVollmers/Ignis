@@ -65,7 +65,7 @@
 
     private Type GetThemeIcon(Theme theme)
     {
-        return _selectedTheme switch
+        return theme switch
         {
             Theme.Light => typeof(ThemeLightIcon),
             Theme.Dark => typeof(ThemeDarkIcon),
