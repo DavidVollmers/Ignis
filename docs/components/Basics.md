@@ -22,7 +22,7 @@ dotnet add package Ignis.Components
 
 Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components) for more information.
 
-<a href="/components/basics#web"></a>
+<a name="web"></a>
 ### Ignis.Components.Web
 
 The web components package, containing components that are specific to the web/browser.
@@ -47,8 +47,8 @@ Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components.Web) for more 
                 <br/>
                 <br/>
                 You can easily do this by adding the following script to your <code>_Host.cshtml</code> file:
-                <pre><code class="language-html">&lt;script defer type="text/javascript" src="~/_content/Ignis.Components.Web/min.js"&gt;&lt;/script&gt;</code></pre>
             </p>
+            <pre><code class="language-html">&lt;script defer type="text/javascript" src="~/_content/Ignis.Components.Web/min.js"&gt;&lt;/script&gt;</code></pre>
         </div>
     </div>
 </div>

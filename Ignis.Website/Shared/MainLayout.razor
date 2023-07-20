@@ -99,7 +99,7 @@
     
     private void LoadPage()
     {
-        _link = '/' + Router.ToBaseRelativePath(Router.Uri);
+        _link = ('/' + Router.ToBaseRelativePath(Router.Uri)).Split('#')[0];
 
         _section = PageService.GetSectionByLink(_link);
 
