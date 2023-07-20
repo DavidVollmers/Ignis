@@ -1,16 +1,14 @@
 ﻿---
-title: Basics
+title: Packages
 category: Components
-permalink: /components/basics
+permalink: /components/packages
 ---
-
-## Packages
 
 Ignis is split up into multiple packages, each with their own responsibility.
 
 The following packages are available for building Ignis components:
 
-### Ignis.Components
+## Ignis.Components
 
 The core components package, containing abstract component bases and common components like `Dynamic` and `Fragment`.
 
@@ -22,7 +20,7 @@ dotnet add package Ignis.Components
 
 Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components) for more information.
 
-### Ignis.Components.Web
+## Ignis.Components.Web
 
 The web components package, containing components that are specific to the web/browser.
 

@@ -51,6 +51,20 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\docs\components\basics.html" />
+    <_ContentIncludedByDefault Remove="wwwroot\docs\components\dynamic.html" />
+    <_ContentIncludedByDefault Remove="wwwroot\docs\components\headlessUI.html" />
+    <_ContentIncludedByDefault Remove="wwwroot\docs\components\headlessUI\listbox.html" />
+    <_ContentIncludedByDefault Remove="wwwroot\docs\components\headlessUI\tabs.html" />
+    <_ContentIncludedByDefault Remove="wwwroot\docs\components\headlessUI\transition.html" />
+    <_ContentIncludedByDefault Remove="wwwroot\docs\components\web.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\docs\" />
+  </ItemGroup>
+
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="npm run build" />
   </Target>

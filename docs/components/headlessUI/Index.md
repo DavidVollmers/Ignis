@@ -36,7 +36,7 @@ We recommend to add the `Ignis.Components.HeadlessUI` namespace to the `_Imports
                 <a href="https://github.com/DavidVollmers/Ignis/tree/master/packages/Ignis.Components.Web">Ignis.Components.Web</a> 
                 package, you will want to load its assets in your application.
                 <br/>
-                You can read more about this <a href="/components/basics">here</a>.
+                You can read more about this <a href="/components/packages">here</a>.
             </p>
         </div>
     </div>
