@@ -1,0 +1,43 @@
+﻿name: Website CD
+
+on:
+  push:
+    branches: ['website']
+
+jobs:
+  Publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - run: npm i
+        working-directory: packages/ignis.net/components
+      - run: npm i
+        working-directory: packages/Ignis.Components.Web
+      - run: npm i
+        working-directory: Ignis.Website
+      - run: dotnet publish Ignis.Website/Ignis.Website.csproj -c Release
+      - uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - run: docker build Ignis.Website -t ${{ secrets.ACR_LOGIN_SERVER }}/ignis-website:${{ github.sha }}
+      - run: docker push ${{ secrets.ACR_LOGIN_SERVER }}/ignis-website:${{ github.sha }}
+      - uses: Azure/container-apps-deploy-action@v1
+        with:
+          imageToDeploy: ${{ secrets.ACR_LOGIN_SERVER }}/ignis-website:${{ github.sha }}
+          acrName: ${{ secrets.ACR_NAME }}
+          acrUsername: ${{ secrets.ACR_USERNAME }}
+          acrPassword: ${{ secrets.ACR_PASSWORD }}
+          resourceGroup: ignis-rg
+          containerAppName: ignis-website-ca
+          containerAppEnvironment: dvolper-cae

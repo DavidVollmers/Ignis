@@ -30,7 +30,7 @@ jobs:
       - run: npm i
         working-directory: packages/ignis.net/components
       - run: npm i
-        working-directory: packages/Ignis.Components.Web 
+        working-directory: packages/Ignis.Components.Web
       - run: dotnet pack -c Release -p:Version=$VERSION
       - uses: actions/upload-artifact@v3
         with:
