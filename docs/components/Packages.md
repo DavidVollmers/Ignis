@@ -46,7 +46,7 @@ Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components.Web) for more 
                 <br/>
                 You can easily do this by adding the following script to your <code>_Host.cshtml</code> file:
             </p>
-            <pre><code class="language-html">&lt;script defer type="text/javascript" src="~/_content/Ignis.Components.Web/min.js"&gt;&lt;/script&gt;</code></pre>
+            <pre class="whitespace-normal"><code class="language-html">&lt;script defer type="text/javascript" src="~/_content/Ignis.Components.Web/min.js"&gt;&lt;/script&gt;</code></pre>
         </div>
     </div>
 </div>

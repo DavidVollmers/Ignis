@@ -28,9 +28,7 @@ internal class PageService : IPageService
         }
 
         var section = _sections!.FirstOrDefault(s => s.Links.Any(l => l.Link == link));
-        return section == null
-            ? null
-            : new Section { Title = section.Title, Links = section.Links.OrderBy(l => l.Order).ToArray() };
+        return section == null ? null : OrderSectionPages(section);
     }
 
     public Section[] GetSections()
@@ -40,8 +38,10 @@ internal class PageService : IPageService
             LoadSections();
         }
 
-        return _sections?.OrderBy(s => s.Links.MinBy(l => l.Order)?.Order ?? -1).ToArray() 
-               ?? Array.Empty<Section>();
+        return _sections?
+            .OrderBy(s => s.Links.MinBy(l => l.Order)?.Order ?? -1)
+            .Select(OrderSectionPages)
+            .ToArray() ?? Array.Empty<Section>();
     }
 
     public string? GetPageContent(Page page)
@@ -81,5 +81,10 @@ internal class PageService : IPageService
         var docsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "docs");
 
         return Path.Combine(docsPath, Path.Combine(parts));
+    }
+
+    private static Section OrderSectionPages(Section section)
+    {
+        return new Section { Title = section.Title, Links = section.Links.OrderBy(l => l.Order).ToArray() };
     }
 }
