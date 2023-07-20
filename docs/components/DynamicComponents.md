@@ -1,5 +1,5 @@
 ﻿---
-order: 1
+order: 2
 title: Dynamic Components
 category: Components
 permalink: /components/dynamic
@@ -15,8 +15,6 @@ Out of the box, the `Ignis.Components` package provides the `Dynamic` component 
 or component:
 
 ```cshtml
-@using Ignis.Components
-
 <Dynamic AsElement="div" class="container">
     <Dynamic AsElement="h1">Hello World!</Dynamic>
 </Dynamic>
@@ -30,8 +28,6 @@ When rendering a dynamic component as a `Fragment`, the component will not be re
 content will be rendered.
 
 ```cshtml
-@using Ignis.Components
-
 <Dynamic AsComponent="typeof(Fragment)" class="container">
     <Dynamic AsElement="h1">Hello World!</Dynamic>
 </Dynamic>
@@ -45,8 +41,6 @@ interface or the `IDynamicParentComponent<T>` interface. This will allow users t
 render fragment and provide required attributes and reference captures as they see fit.
 
 ```cshtml
-@using Ignis.Components
-
 <Dynamic AsComponent="typeof(Fragment)" class="container">
     <_ Context="container">
         <Dynamic AsElement="h1" @attributes="container.Attributes">Hello World!</Dynamic>
@@ -70,10 +64,6 @@ the `OpenAs`, `CloseAs`, `AddContentFor`, `AddChildContentFor<TContext, TDynamic
 and `GetChildContent<TContext, TDynamic>` methods.
 
 ```csharp
-using Ignis.Components;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
-
 // Example implmentation of the <Dynamic> component. (This is deviating from the actual implementation)
 public sealed class Dynamic : IgnisRigidComponentBase, IDynamicParentComponent
 {

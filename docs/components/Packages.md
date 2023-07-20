@@ -11,7 +11,8 @@ The following packages are available for building Ignis components:
 
 ## Ignis.Components
 
-The core components package, containing abstract component bases and common components like `Dynamic` and `Fragment`.
+The core components package, containing abstract component bases which implement the
+Ignis [component lifecycle](/components/lifecycle) and common components like `Dynamic` and `Fragment`.
 
 You can easily install this package using the following command:
 
@@ -23,7 +24,8 @@ Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components) for more info
 
 ## Ignis.Components.Web
 
-The web components package, containing components that are specific to the web/browser.
+The web components package, containing components and interfaces that are specific to the web/browser,
+like `ScrollDetector` and `ILocalStorage` or `IFocus`.
 
 You can easily install this package using the following command:
 
@@ -46,7 +48,7 @@ Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components.Web) for more 
                 <br/>
                 You can easily do this by adding the following script to your <code>_Host.cshtml</code> file:
             </p>
-            <pre class="whitespace-normal"><code class="language-html">&lt;script defer type="text/javascript" src="~/_content/Ignis.Components.Web/min.js"&gt;&lt;/script&gt;</code></pre>
+            <pre><code class="language-html">&lt;script defer type="text/javascript" src="~/_content/Ignis.Components.Web/min.js"&gt;&lt;/script&gt;</code></pre>
         </div>
     </div>
 </div>

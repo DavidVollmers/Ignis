@@ -12,6 +12,7 @@ internal class DocsBuilder
     private readonly MarkdownPipeline _markdownPipeline = new MarkdownPipelineBuilder()
         .UseYamlFrontMatter()
         .UsePipeTables()
+        .UseDiagrams()
         .Build();
 
     private readonly IDeserializer _yamlDeserializer = new DeserializerBuilder().IgnoreUnmatchedProperties().Build();

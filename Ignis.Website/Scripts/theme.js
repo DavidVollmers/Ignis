@@ -18,6 +18,11 @@ function updateThemeWithoutTransitions(theme) {
         updateTheme(theme);
         window.setTimeout(() => {
             document.documentElement.classList.remove('[&_*]:!transition-none');
+
+            mermaid.init({
+                darkMode: theme === '2',
+                theme: theme === '2' ? 'dark' : 'default',
+            }, document.querySelectorAll('.mermaid'));
         }, 15);
     }, 15);
 }
@@ -39,4 +44,12 @@ isDarkMode.addEventListener('change', () => updateThemeWithoutTransitions());
 
 window.setTheme = (theme) => {
     document.documentElement.setAttribute('data-theme', theme);
+};
+
+window.getTheme = () => {
+    const theme = document.documentElement.getAttribute('data-theme');
+    if (theme === '0') {
+        return isDarkMode.matches ? '2' : '1';
+    }
+    return theme;
 };
