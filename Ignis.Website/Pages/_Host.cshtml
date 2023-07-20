@@ -6,16 +6,23 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <!DOCTYPE html>
-<html lang="@CultureInfo.CurrentCulture.TwoLetterISOLanguageName" 
+<html lang="@CultureInfo.CurrentCulture.TwoLetterISOLanguageName"
       class="antialiased [font-feature-settings:'ss01']">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <base href="~/"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#ef454c">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <base href="~/">
     <script defer type="text/javascript" src="~/_content/Ignis.Components.Web/min.js"></script>
     <script defer type="text/javascript" src="~/js/website.min.js"></script>
-    <link href="~/css/blazor.css" rel="stylesheet"/>
-    <link href="~/css/tailwind.min.css" rel="stylesheet"/>
+    <link href="~/css/blazor.css" rel="stylesheet">
+    <link href="~/css/tailwind.min.css" rel="stylesheet">
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered"/>
 </head>
 <body class="bg-white dark:bg-slate-900">

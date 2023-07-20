@@ -24,4 +24,7 @@
   <data name="ApiReferenceHeading" xml:space="preserve">
     <value>API reference</value>
   </data>
+  <data name="WebsiteTitle" xml:space="preserve">
+    <value>Ignis</value>
+  </data>
 </root>

@@ -76,5 +76,14 @@ namespace Ignis.Website.Resources {
                 return ResourceManager.GetString("HomePageTitle", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignis.
+        /// </summary>
+        public static string WebsiteTitle {
+            get {
+                return ResourceManager.GetString("WebsiteTitle", resourceCulture);
+            }
+        }
     }
 }

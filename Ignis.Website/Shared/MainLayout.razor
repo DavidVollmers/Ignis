@@ -9,6 +9,10 @@
 @* ReSharper disable once InconsistentNaming *@
 @inject IJSRuntime JSRuntime
 
+<PageTitle>
+    @CommonResources["WebsiteTitle"] - @_page?.Title
+</PageTitle>
+
 <MainHeader/>
 
 @if (_link == "/")
