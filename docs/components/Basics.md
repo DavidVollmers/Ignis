@@ -22,7 +22,6 @@ dotnet add package Ignis.Components
 
 Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components) for more information.
 
-<a name="web"></a>
 ### Ignis.Components.Web
 
 The web components package, containing components that are specific to the web/browser.
