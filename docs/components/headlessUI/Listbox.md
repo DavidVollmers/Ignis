@@ -1,4 +1,5 @@
 ---
+order: 2
 title: Listbox (Select)
 category: HeadlessUI
 permalink: /components/headlessUI/listbox

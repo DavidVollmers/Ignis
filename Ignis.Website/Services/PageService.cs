@@ -27,7 +27,10 @@ internal class PageService : IPageService
             if (_sections == null) return null;
         }
 
-        return _sections!.FirstOrDefault(s => s.Links.Any(l => l.Link == link));
+        var section = _sections!.FirstOrDefault(s => s.Links.Any(l => l.Link == link));
+        return section == null
+            ? null
+            : new Section { Title = section.Title, Links = section.Links.OrderBy(l => l.Order).ToArray() };
     }
 
     public Section[] GetSections()
@@ -37,7 +40,8 @@ internal class PageService : IPageService
             LoadSections();
         }
 
-        return _sections ?? Array.Empty<Section>();
+        return _sections?.OrderBy(s => s.Links.MinBy(l => l.Order)?.Order ?? -1).ToArray() 
+               ?? Array.Empty<Section>();
     }
 
     public string? GetPageContent(Page page)
@@ -49,7 +53,7 @@ internal class PageService : IPageService
         var path = page.Link;
         if (path == "/") path += "index";
         path += ".html";
-        
+
         var pageFile = new FileInfo(BuildDocsPath(path.Split('/')));
 
         if (!pageFile.Exists) return null;
@@ -66,7 +70,7 @@ internal class PageService : IPageService
             _logger.LogWarning("Sitemap file not found.");
             return;
         }
-        
+
         _sections = JsonSerializer.Deserialize<Section[]>(File.ReadAllText(sitemapFile.FullName));
 
         _cache.Clear();

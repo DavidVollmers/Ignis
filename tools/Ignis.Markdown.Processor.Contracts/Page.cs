@@ -9,6 +9,8 @@ public class Page
     public PageInject? Inject { get; set; }
 
     public string[]? ApiTypeNames { get; set; }
+
+    public int? Order { get; set; }
     
     public class PageInject
     {

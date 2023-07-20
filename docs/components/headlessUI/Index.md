@@ -1,4 +1,5 @@
 ---
+order: 1
 title: Introduction
 category: HeadlessUI
 permalink: /components/headlessUI

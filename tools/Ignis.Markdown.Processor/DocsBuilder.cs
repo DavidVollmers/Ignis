@@ -47,6 +47,7 @@ internal class DocsBuilder
 
             sections[frontMatterInformation.Category].Add(new Page
             {
+                Order = frontMatterInformation.Order,
                 Title = frontMatterInformation.Title,
                 Link = frontMatterInformation.Permalink,
                 ApiTypeNames = frontMatterInformation.Api,

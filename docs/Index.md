@@ -1,4 +1,5 @@
 ---
+order: -1
 title: Getting Started
 category: Introduction
 permalink: /

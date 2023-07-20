@@ -13,6 +13,8 @@ internal class FrontMatterInformation
     [YamlMember(Alias = "inject")] public InjectInformation? Inject { get; set; }
     
     [YamlMember(Alias = "api")] public string[]? Api { get; set; }
+    
+    [YamlMember(Alias = "order")] public int? Order { get; set; }
 
     public class InjectInformation
     {
