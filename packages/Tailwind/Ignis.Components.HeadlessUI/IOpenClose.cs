@@ -2,7 +2,7 @@
 
 public interface IOpenClose
 {
-    bool IsOpen { get; }
+    bool IsOpen { get; set; }
 
     void Open();
 

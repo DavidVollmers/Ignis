@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Disclosure : IgnisComponentBase, IDisclosure
+public sealed class Dialog : IgnisComponentBase, IDialog
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -48,9 +48,9 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDisclosure>? _ { get; set; }
+    public RenderFragment<IDialog>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IDisclosure>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<IDialog>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
@@ -64,9 +64,9 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
-    public Disclosure()
+    public Dialog()
     {
-        AsComponent = typeof(Fragment);
+        AsElement = "div";
     }
 
     /// <inheritdoc />
@@ -77,15 +77,15 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<IDisclosure>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IDisclosure>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<IDisclosure>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IDisclosure>.ChildContent),
+            builder.OpenComponent<CascadingValue<IDialog>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<IDialog>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<IDialog>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<IDialog>.ChildContent),
                 this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });
-
+        
         builder.CloseAs(this);
     }
 

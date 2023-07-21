@@ -17,6 +17,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     private Type? _asComponent;
     private string? _asElement;
     private IFocus? _button;
+    private bool _isOpen;
 
     /// <inheritdoc />
     [Parameter]
@@ -56,6 +57,19 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
 
     /// <inheritdoc />
     [Parameter]
+    public bool IsOpen
+    {
+        get => _isOpen;
+        set
+        {
+            // ReSharper disable once AssignmentInConditionalExpression
+            if (_isOpen = value) Open();
+            else Close();
+        }
+    }
+
+    /// <inheritdoc />
+    [Parameter]
     public RenderFragment<IListbox>? _ { get; set; }
 
     [Parameter] public RenderFragment<IListbox>? ChildContent { get; set; }
@@ -74,9 +88,6 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
 
     /// <inheritdoc />
     public IListboxLabel? Label { get; private set; }
-
-    /// <inheritdoc />
-    public bool IsOpen { get; private set; }
 
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-listbox-" + Guid.NewGuid().ToString("N");
@@ -131,9 +142,9 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     /// <inheritdoc />
     public void Open()
     {
-        if (IsOpen) return;
+        if (_isOpen) return;
 
-        IsOpen = true;
+        _isOpen = true;
 
         _onBeforeOpenRender = true;
 
@@ -145,7 +156,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     /// <inheritdoc />
     public void Close()
     {
-        if (!IsOpen) return;
+        if (!_isOpen) return;
 
         if (_transition != null)
         {
@@ -158,7 +169,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
 
     private void CloseCore(bool async = false)
     {
-        IsOpen = false;
+        _isOpen = false;
 
         ForceUpdate(async);
     }
