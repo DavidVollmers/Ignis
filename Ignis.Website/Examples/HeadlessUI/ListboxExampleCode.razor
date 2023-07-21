@@ -26,22 +26,21 @@
                     {
                         <ListboxOption @key="person.Name"
                                        AsComponent="typeof(Fragment)"
-                                       Value="person">
-                            <_ Context="option">
-                                <li @ref="option.Element"
-                                    @attributes="option.Attributes"
-                                    class="@Css.Class("relative cursor-default select-none py-2 pl-10 pr-4", option.IsActive ? "bg-amber-100 text-amber-900" : "text-gray-900")">
-                                    <span class="@Css.Class("block truncate", option.IsSelected ? "font-medium" : "font-normal")">
-                                        @person.Name
+                                       Value="person"
+                                       Context="option">
+                            <li @ref="option.Element"
+                                @attributes="option.Attributes"
+                                class="@Css.Class("relative cursor-default select-none py-2 pl-10 pr-4", option.IsActive ? "bg-amber-100 text-amber-900" : "text-gray-900")">
+                                <span class="@Css.Class("block truncate", option.IsSelected ? "font-medium" : "font-normal")">
+                                    @person.Name
+                                </span>
+                                @if (option.IsSelected)
+                                {
+                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                        <CheckIcon class="h-5 w-5" aria-hidden="true"/>
                                     </span>
-                                    @if (option.IsSelected)
-                                    {
-                                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
-                                            <CheckIcon class="h-5 w-5" aria-hidden="true"/>
-                                        </span>
-                                    }
-                                </li>
-                            </_>
+                                }
+                            </li>
                         </ListboxOption>
                     }
                 </ListboxOptions>
