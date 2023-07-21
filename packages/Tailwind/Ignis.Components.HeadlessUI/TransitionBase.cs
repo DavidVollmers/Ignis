@@ -9,6 +9,10 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass
 
     protected bool IsShowing { get; private set; }
     
+    protected bool IsInitialized { get; private set; }
+    
+    protected bool ShowInitially { get; set; }
+
     [Parameter] public string? Enter { get; set; }
 
     [Parameter] public string? EnterFrom { get; set; }
@@ -20,6 +24,8 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass
     [Parameter] public string? LeaveFrom { get; set; }
 
     [Parameter] public string? LeaveTo { get; set; }
+
+    [Parameter] public bool Appear { get; set; }
 
     /// <inheritdoc />
     public string? CssClass
@@ -59,6 +65,18 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
+
+    protected override void OnInitialized()
+    {
+        IsInitialized = true;
+
+        // ReSharper disable once InvertIf
+        if (Appear)
+        {
+            if (ShowInitially) EnterTransition();
+            else LeaveTransition();
+        }
+    }
 
     protected void EnterTransition()
     {

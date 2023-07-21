@@ -5,7 +5,6 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Transition : TransitionBase, ITransition
 {
-    private bool _isInitialized;
     private Type? _asComponent;
     private string? _asElement;
     private bool _show;
@@ -40,17 +39,14 @@ public sealed class Transition : TransitionBase, ITransition
         get => _show;
         set
         {
-            _show = value;
+            ShowInitially = _show = value;
 
-            if (!_isInitialized) return;
+            if (!IsInitialized) return;
 
             if (_show) EnterTransition();
             else LeaveTransition();
         }
     }
-
-    /// <inheritdoc />
-    [Parameter] public bool Appear { get; set; }
 
     [CascadingParameter] public IListbox? Listbox { get; set; }
 
@@ -75,15 +71,8 @@ public sealed class Transition : TransitionBase, ITransition
     protected override void OnInitialized()
     {
         Listbox?.SetTransition(this);
-
-        _isInitialized = true;
-
-        // ReSharper disable once InvertIf
-        if (Appear)
-        {
-            if (_show) EnterTransition();
-            else LeaveTransition();
-        }
+        
+        base.OnInitialized();
     }
 
     /// <inheritdoc />
