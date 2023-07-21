@@ -62,11 +62,14 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
         get => _isOpen;
         set
         {
-            // ReSharper disable once AssignmentInConditionalExpression
-            if (_isOpen = value) Open();
+            if (value) Open();
             else Close();
         }
     }
+
+    /// <inheritdoc />
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
 
     /// <inheritdoc />
     [Parameter]
@@ -144,7 +147,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     {
         if (_isOpen) return;
 
-        _isOpen = true;
+        IsOpenChanged.InvokeAsync(_isOpen = true);
 
         _onBeforeOpenRender = true;
 
@@ -169,7 +172,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
 
     private void CloseCore(bool async = false)
     {
-        _isOpen = false;
+        IsOpenChanged.InvokeAsync(_isOpen = false);
 
         ForceUpdate(async);
     }
@@ -191,8 +194,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     /// <inheritdoc />
     public void SelectValue<TValue1>(TValue1? value)
     {
-        Value = (TValue?)(object?)value;
-        ValueChanged.InvokeAsync(Value);
+        ValueChanged.InvokeAsync(Value = (TValue?)(object?)value);
 
         ForceUpdate();
     }

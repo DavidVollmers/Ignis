@@ -76,8 +76,7 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
     {
         if (SelectedIndex == DefaultIndex) return;
 
-        SelectedIndex = DefaultIndex;
-        SelectedIndexChanged.InvokeAsync(DefaultIndex);
+        SelectedIndexChanged.InvokeAsync(SelectedIndex = DefaultIndex);
     }
 
     /// <inheritdoc />
@@ -119,8 +118,7 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
 
         if (index == -1) return;
 
-        SelectedIndex = index;
-        SelectedIndexChanged.InvokeAsync(index);
+        SelectedIndexChanged.InvokeAsync(SelectedIndex = index);
 
         tab.FocusAsync();
 

@@ -40,11 +40,14 @@ public sealed class Dialog : IgnisComponentBase, IDialog
         get => _isOpen;
         set
         {
-            // ReSharper disable once AssignmentInConditionalExpression
-            if (_isOpen = value) Open();
+            if (value) Open();
             else Close();
         }
     }
+
+    /// <inheritdoc />
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
 
     /// <inheritdoc />
     [Parameter]
@@ -94,7 +97,7 @@ public sealed class Dialog : IgnisComponentBase, IDialog
     {
         if (_isOpen) return;
 
-        _isOpen = true;
+        IsOpenChanged.InvokeAsync(_isOpen = true);
 
         ForceUpdate();
     }
@@ -104,7 +107,7 @@ public sealed class Dialog : IgnisComponentBase, IDialog
     {
         if (!_isOpen) return;
 
-        _isOpen = false;
+        IsOpenChanged.InvokeAsync(_isOpen = false);
 
         ForceUpdate();
     }

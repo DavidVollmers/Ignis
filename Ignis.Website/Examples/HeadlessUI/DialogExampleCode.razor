@@ -1,0 +1,28 @@
+﻿@using Ignis.Components
+@using Ignis.Components.HeadlessUI
+
+@inherits IgnisRigidComponentBase
+
+<div class="fixed inset-0 flex items-center justify-center">
+    <button type="button"
+            @onclick="OpenModal"
+            class="rounded-md bg-black bg-opacity-20 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+        Open dialog
+    </button>
+    
+    <Transition Appear Show="_isOpen" AsComponent="typeof(Fragment)">
+        <Dialog class="relative z-10" @bind-IsOpen="_isOpen">
+            
+        </Dialog>
+    </Transition>
+</div>
+
+@code
+{
+    private bool _isOpen = true;
+    
+    private void OpenModal()
+    {
+        _isOpen = true;
+    }
+}
