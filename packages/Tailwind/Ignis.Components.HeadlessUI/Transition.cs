@@ -5,6 +5,8 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Transition : TransitionBase, ITransition
 {
+    private readonly IList<ITransitionChild> _children = new List<ITransitionChild>();
+
     private Type? _asComponent;
     private string? _asElement;
     private bool _show;
@@ -43,8 +45,8 @@ public sealed class Transition : TransitionBase, ITransition
 
             if (!IsInitialized) return;
 
-            if (_show) EnterTransition();
-            else LeaveTransition();
+            if (_show) ((ITransition)this).Show();
+            else Hide();
         }
     }
 
@@ -71,19 +73,8 @@ public sealed class Transition : TransitionBase, ITransition
     protected override void OnInitialized()
     {
         Listbox?.SetTransition(this);
-        
+
         base.OnInitialized();
-    }
-
-    /// <inheritdoc />
-    public void Hide(Action onHidden)
-    {
-        LeaveTransition(onHidden);
-    }
-
-    void ITransition.Show()
-    {
-        EnterTransition();
     }
 
     /// <inheritdoc />
@@ -91,8 +82,71 @@ public sealed class Transition : TransitionBase, ITransition
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<ITransition, Transition>(2, this, ChildContent?.Invoke(this));
+        // ReSharper disable once VariableHidesOuterVariable
+        builder.AddContentFor(2, this, builder =>
+        {
+            builder.OpenComponent<CascadingValue<ITransition>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<ITransition>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<ITransition>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<ITransition>.ChildContent),
+                this.GetChildContent(ChildContent));
+
+            builder.CloseComponent();
+        });
 
         builder.CloseAs(this);
+    }
+
+    /// <inheritdoc />
+    public void Hide(Action? onHidden = null)
+    {
+        var aggregatedOnHidden = AggregatedOnHidden(onHidden);
+
+        LeaveTransition(aggregatedOnHidden);
+
+        foreach (var child in _children)
+        {
+            child.Hide(aggregatedOnHidden);
+        }
+    }
+
+    void ITransition.Show()
+    {
+        EnterTransition();
+
+        foreach (var child in _children)
+        {
+            child.Show();
+        }
+    }
+
+    /// <inheritdoc />
+    public void AddChild(ITransitionChild child)
+    {
+        if (child == null) throw new ArgumentNullException(nameof(child));
+
+        if (!_children.Contains(child)) _children.Add(child);
+    }
+
+    /// <inheritdoc />
+    public void RemoveChild(ITransitionChild child)
+    {
+        if (child == null) throw new ArgumentNullException(nameof(child));
+
+        _children.Remove(child);
+    }
+
+    private Action? AggregatedOnHidden(Action? callback = null)
+    {
+        if (callback == null) return null;
+
+        var count = _children.Count + 1;
+
+        return () =>
+        {
+            count--;
+
+            if (count == 0) callback();
+        };
     }
 }

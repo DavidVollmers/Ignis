@@ -66,6 +66,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
+    /// <inheritdoc />
     protected override void OnInitialized()
     {
         IsInitialized = true;
