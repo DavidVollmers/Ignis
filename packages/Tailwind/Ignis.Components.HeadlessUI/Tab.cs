@@ -7,6 +7,7 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Tab : IgnisComponentBase, ITab, IDisposable
 {
+    private readonly AttributeCollection _attributes;
     private bool _preventKeyDownDefault;
     private Type? _asComponent;
     private string? _asElement;
@@ -44,7 +45,11 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
     [Parameter] public RenderFragment<ITab>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    {
+        get => _attributes.AdditionalAttributes;
+        set => _attributes.AdditionalAttributes = value;
+    }
 
     /// <inheritdoc />
     public bool IsSelected => TabGroup.IsTabSelected(this);
@@ -57,40 +62,24 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
 
     //TODO aria-controls
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes
-    {
-        get
-        {
-            var attributes = new Dictionary<string, object?>
-            {
-                { "tabindex", IsSelected ? 0 : -1 },
-                { "role", "tab" },
-                { "aria-selected", IsSelected },
-                { "onclick", EventCallback.Factory.Create(this, OnClick) },
-                { "__internal_preventDefault_onkeydown", _preventKeyDownDefault },
-#pragma warning disable CS0618
-                { "onkeydown", EventCallback.Factory.Create(this, OnKeyDown) },
-#pragma warning restore CS0618
-            };
-
-            if (AsElement == "button") attributes.Add("type", "button");
-
-            // ReSharper disable once InvertIf
-            if (AdditionalAttributes != null)
-            {
-                foreach (var (key, value) in AdditionalAttributes)
-                {
-                    attributes[key] = value;
-                }
-            }
-
-            return attributes;
-        }
-    }
+    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
     public Tab()
     {
         AsElement = "button";
+
+        _attributes = new AttributeCollection(new[]
+        {
+            () => new KeyValuePair<string, object>("role", "tab"),
+            () => new KeyValuePair<string, object>("aria-selected", IsSelected),
+            () => new KeyValuePair<string, object>("tabindex", IsSelected ? 0 : -1),
+            () => new KeyValuePair<string, object>("onclick", EventCallback.Factory.Create(this, OnClick)),
+            () => new KeyValuePair<string, object>("__internal_preventDefault_onkeydown", _preventKeyDownDefault),
+#pragma warning disable CS0618
+            () => new KeyValuePair<string, object>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
+#pragma warning restore CS0618
+            () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null)
+        });
     }
 
     /// <inheritdoc />

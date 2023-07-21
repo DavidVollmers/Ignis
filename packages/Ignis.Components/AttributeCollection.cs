@@ -2,26 +2,25 @@
 
 namespace Ignis.Components;
 
-public sealed class AttributeCollection : IEnumerable<KeyValuePair<string, object?>>
+internal sealed class AttributeCollection : IEnumerable<KeyValuePair<string, object?>>
 {
-    private readonly IDictionary<string, object?> _attributes = new Dictionary<string, object?>();
+    private readonly Func<KeyValuePair<string, object?>>[] _attributes;
 
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    // public object? this[string key]
-    // {
-    //     get
-    //     {
-    //         return _attributes.TryGetValue(key, out var value)
-    //             ? value
-    //             : AdditionalAttributes?.FirstOrDefault(a => a.Key == key).Value;
-    //     }
-    // }
+    public AttributeCollection(IEnumerable<Func<KeyValuePair<string, object?>>> attributes)
+    {
+        if (attributes == null) throw new ArgumentNullException(nameof(attributes));
+
+        _attributes = attributes.ToArray();
+    }
 
     public IEnumerator<KeyValuePair<string, object?>> GetEnumerator()
     {
-        foreach (var attribute in _attributes)
+        foreach (var attributeDelegate in _attributes)
         {
+            var attribute = attributeDelegate();
+
             if (AdditionalAttributes?.Any(a => a.Key == attribute.Key) == true) continue;
 
             yield return attribute;
