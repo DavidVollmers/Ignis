@@ -39,7 +39,7 @@ public sealed class Dynamic : IgnisRigidComponentBase, IDynamicParentComponent
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
     public ElementReference? Element { get; set; }

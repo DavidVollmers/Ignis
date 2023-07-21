@@ -41,7 +41,11 @@ public sealed class TabPanel : IgnisComponentBase, ITabPanel, IDisposable
     [Parameter] public RenderFragment<ITabPanel>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    {
+        get => _attributes.AdditionalAttributes;
+        set => _attributes.AdditionalAttributes = value;
+    }
 
     /// <inheritdoc />
     public bool IsSelected => TabGroup.IsTabPanelSelected(this);

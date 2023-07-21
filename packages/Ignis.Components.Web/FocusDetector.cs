@@ -22,7 +22,7 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender
     [Parameter] public bool Strict { get; set; } = true;
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     // ReSharper disable once InconsistentNaming
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;

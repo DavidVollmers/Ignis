@@ -7,6 +7,8 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent, IFocus
 {
+    private readonly AttributeCollection _attributes;
+
     private bool _preventKeyDownDefault;
     private Type? _asComponent;
     private string? _asElement;
@@ -44,7 +46,11 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    {
+        get => _attributes.AdditionalAttributes;
+        set => _attributes.AdditionalAttributes = value;
+    }
 
     /// <inheritdoc />
     public ElementReference? Element { get; set; }
@@ -54,41 +60,25 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
 
     //TODO aria-controls
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes
-    {
-        get
-        {
-            var attributes = new Dictionary<string, object?>
-            {
-                { "aria-haspopup", "listbox" },
-                { "onclick", EventCallback.Factory.Create(this, Listbox.Open) },
-                { "__internal_preventDefault_onkeydown", _preventKeyDownDefault },
-#pragma warning disable CS0618
-                { "onkeydown", EventCallback.Factory.Create(this, OnKeyDown) },
-#pragma warning restore CS0618
-                { "aria-expanded", Listbox.IsOpen }
-            };
-
-            if (AsElement == "button") attributes.Add("type", "button");
-
-            if (Listbox.Label != null) attributes.Add("aria-labelledby", Listbox.Label.Id ?? Listbox.Id + "-label");
-
-            // ReSharper disable once InvertIf
-            if (AdditionalAttributes != null)
-            {
-                foreach (var (key, value) in AdditionalAttributes)
-                {
-                    attributes[key] = value;
-                }
-            }
-
-            return attributes;
-        }
-    }
+    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
     public ListboxButton()
     {
         AsElement = "button";
+
+        _attributes = new AttributeCollection(new[]
+        {
+            () => new KeyValuePair<string, object?>("aria-haspopup", "listbox"),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Listbox.Open)),
+            () => new KeyValuePair<string, object?>("__internal_preventDefault_onkeydown", _preventKeyDownDefault),
+#pragma warning disable CS0618
+            () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
+#pragma warning restore CS0618
+            () => new KeyValuePair<string, object?>("aria-expanded", Listbox.IsOpen),
+            () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null), () =>
+                new KeyValuePair<string, object?>("aria-labelledby",
+                    Listbox.Label == null ? null : Listbox.Label.Id ?? Listbox.Id + "-label")
+        });
     }
 
     /// <inheritdoc />

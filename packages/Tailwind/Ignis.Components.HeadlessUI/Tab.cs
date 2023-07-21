@@ -70,13 +70,13 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
 
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object>("role", "tab"),
-            () => new KeyValuePair<string, object>("aria-selected", IsSelected),
-            () => new KeyValuePair<string, object>("tabindex", IsSelected ? 0 : -1),
-            () => new KeyValuePair<string, object>("onclick", EventCallback.Factory.Create(this, OnClick)),
-            () => new KeyValuePair<string, object>("__internal_preventDefault_onkeydown", _preventKeyDownDefault),
+            () => new KeyValuePair<string, object?>("role", "tab"),
+            () => new KeyValuePair<string, object?>("aria-selected", IsSelected),
+            () => new KeyValuePair<string, object?>("tabindex", IsSelected ? 0 : -1),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, OnClick)),
+            () => new KeyValuePair<string, object?>("__internal_preventDefault_onkeydown", _preventKeyDownDefault),
 #pragma warning disable CS0618
-            () => new KeyValuePair<string, object>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
+            () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
 #pragma warning restore CS0618
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null)
         });

@@ -66,7 +66,11 @@ public sealed class Transition : IgnisComponentBase, ITransition
     [Parameter] public RenderFragment<ITransition>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    {
+        get => _attributes.AdditionalAttributes;
+        set => _attributes.AdditionalAttributes = value;
+    }
 
     /// <inheritdoc />
     public string? CssClass

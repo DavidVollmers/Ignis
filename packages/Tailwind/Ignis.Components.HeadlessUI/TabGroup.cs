@@ -52,7 +52,11 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
     [Parameter] public RenderFragment<ITabGroup>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    {
+        get => _attributes.AdditionalAttributes;
+        set => _attributes.AdditionalAttributes = value;
+    }
 
     /// <inheritdoc />
     public ITab[] Tabs => _tabs.ToArray();

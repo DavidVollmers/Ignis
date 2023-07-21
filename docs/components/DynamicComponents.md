@@ -102,7 +102,7 @@ public sealed class Dynamic : IgnisRigidComponentBase, IDynamicParentComponent
 
     // Capture all unmatched parameters and attributes to pass them to the rendered child content.
     [Parameter(CaptureUnmatchedValues = true)]
-    public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     // Optional property to allow capturing element references.
     public ElementReference? Element { get; set; }
