@@ -32,6 +32,13 @@ these props:
 - **LeaveFrom**: The starting point to leave from, for example `opacity-100` if something should fade out.
 - **LeaveTo**: The ending point to leave to, for example `opacity-0` after fading out.
 
+## Transitioning on initial render
+
+If you want an element to transition the very first time it's rendered, set the `Appear` prop to `true`.
+
+This is useful if you want something to transition in on initial page load, or when its parent is conditionally
+rendered.
+
 ## Rendering a different element for a component
 
 By default, the `Transition` component does not render an element, and instead renders its children directly.
