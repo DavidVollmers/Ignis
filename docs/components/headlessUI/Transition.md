@@ -32,6 +32,16 @@ these props:
 - **LeaveFrom**: The starting point to leave from, for example `opacity-100` if something should fade out.
 - **LeaveTo**: The ending point to leave to, for example `opacity-0` after fading out.
 
+## Co-ordinating multiple transitions
+
+Sometimes you need to transition multiple elements with different animations but all based on the same state. For
+example, say the user clicks a button to open a sidebar that slides over the screen, and you also need to fade-in a
+background overlay at the same time.
+
+You can do this by wrapping the related elements with a parent `Transition` component, and wrapping each child that
+needs its own transition styles with a `TransitionChild` component, which will automatically communicate with the parent
+`Transition` and inherit the parent's `Show` state.
+
 ## Transitioning on initial render
 
 If you want an element to transition the very first time it's rendered, set the `Appear` prop to `true`.
