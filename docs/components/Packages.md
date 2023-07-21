@@ -71,3 +71,17 @@ Visit [nuget.org](https://www.nuget.org/packages/Ignis.Utils) for more informati
 This package contains a set of components that are based on the [HeadlessUI](https://headlessui.com) project.
 
 You can read more about it [here](/components/headlessUI).
+
+## Ignis.Components.HeroIcons
+
+Beautiful hand-crafted SVG icons, by the makers of Tailwind CSS.
+
+Port of the [heroicons](https://heroicons.com) project based on Ignis components.
+
+You can easily install this package using the following command:
+
+```shell
+dotnet add package Ignis.Components.HeroIcons
+```
+
+Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components.HeroIcons) for more information.

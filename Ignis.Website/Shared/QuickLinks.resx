@@ -33,4 +33,10 @@
   <data name="HeadlessUI_Description" xml:space="preserve">
     <value>Completely unstyled, fully accessible UI components, designed to integrate beautifully with Tailwind CSS.</value>
   </data>
+  <data name="Fragments_Heading" xml:space="preserve">
+    <value>Fragments</value>
+  </data>
+  <data name="Fragments_Description" xml:space="preserve">
+    <value />
+  </data>
 </root>
