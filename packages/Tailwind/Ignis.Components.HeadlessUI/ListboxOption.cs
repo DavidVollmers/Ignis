@@ -5,6 +5,8 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, IDisposable
 {
+    private readonly AttributeCollection _attributes;
+
     private Type? _asComponent;
     private string? _asElement;
 
@@ -62,36 +64,21 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     public object? Component { get; set; }
 
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes
-    {
-        get
-        {
-            var attributes = new Dictionary<string, object?>
-            {
-                { "tabindex", -1 },
-                { "role", "option" },
-                { "aria-selected", IsSelected },
-                { "onclick", EventCallback.Factory.Create(this, OnClick) },
-                { "onmouseenter", EventCallback.Factory.Create(this, OnMouseEnter) },
-                { "onmouseleave", EventCallback.Factory.Create(this, OnMouseLeave) }
-            };
-
-            // ReSharper disable once InvertIf
-            if (AdditionalAttributes != null)
-            {
-                foreach (var (key, value) in AdditionalAttributes)
-                {
-                    attributes[key] = value;
-                }
-            }
-
-            return attributes;
-        }
-    }
+    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
     public ListboxOption()
     {
         AsElement = "li";
+
+        _attributes = new AttributeCollection(new[]
+        {
+            () => new KeyValuePair<string, object?>("tabindex", -1),
+            () => new KeyValuePair<string, object?>("role", "option"),
+            () => new KeyValuePair<string, object?>("aria-selected", IsSelected),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, OnClick)),
+            () => new KeyValuePair<string, object?>("onmouseenter", EventCallback.Factory.Create(this, OnMouseEnter)),
+            () => new KeyValuePair<string, object?>("onmouseleave", EventCallback.Factory.Create(this, OnMouseLeave))
+        });
     }
 
     /// <inheritdoc />

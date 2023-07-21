@@ -60,7 +60,6 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
     /// <inheritdoc />
     public object? Component { get; set; }
 
-    //TODO aria-controls
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
@@ -68,6 +67,7 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
     {
         AsElement = "button";
 
+        //TODO aria-controls
         _attributes = new AttributeCollection(new[]
         {
             () => new KeyValuePair<string, object?>("role", "tab"),

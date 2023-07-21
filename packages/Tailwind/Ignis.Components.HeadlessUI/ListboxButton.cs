@@ -58,7 +58,6 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
     /// <inheritdoc />
     public object? Component { get; set; }
 
-    //TODO aria-controls
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
@@ -66,6 +65,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
     {
         AsElement = "button";
 
+        //TODO aria-controls
         _attributes = new AttributeCollection(new[]
         {
             () => new KeyValuePair<string, object?>("aria-haspopup", "listbox"),
