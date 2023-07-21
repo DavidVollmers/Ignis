@@ -5,7 +5,6 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class TabGroup : IgnisComponentBase, ITabGroup
 {
-    private readonly AttributeCollection _attributes = new(ArraySegment<Func<KeyValuePair<string, object?>>>.Empty);
     private readonly IList<ITabPanel> _tabPanels = new List<ITabPanel>();
     private readonly IList<ITab> _tabs = new List<ITab>();
 
@@ -53,11 +52,7 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
     [Parameter] public RenderFragment<ITabGroup>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
-    {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
     public ITab[] Tabs => _tabs.ToArray();
@@ -69,7 +64,7 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
     public object? Component { get; set; }
 
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
+    public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
     public TabGroup()
     {

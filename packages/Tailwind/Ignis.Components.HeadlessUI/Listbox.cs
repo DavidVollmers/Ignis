@@ -10,7 +10,6 @@ namespace Ignis.Components.HeadlessUI;
 /// <typeparam name="TValue">The value type.</typeparam>
 public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfterRender
 {
-    private readonly AttributeCollection _attributes = new(ArraySegment<Func<KeyValuePair<string, object?>>>.Empty);
     private readonly IList<IListboxOption> _options = new List<IListboxOption>();
 
     private bool _onBeforeOpenRender;
@@ -65,11 +64,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     /// Additional attributes to be applied to the listbox.
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
-    {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
     public IListboxOption[] Options => _options.ToArray();
@@ -93,7 +88,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     public object? Component { get; set; }
 
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
+    public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Listbox{TValue}"/> class.

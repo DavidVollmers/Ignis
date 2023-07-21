@@ -66,20 +66,14 @@ public sealed class Transition : IgnisComponentBase, ITransition
     [Parameter] public RenderFragment<ITransition>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
-    {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
     public string? CssClass
     {
         get
         {
-            var originalClassString = AdditionalAttributes?.ContainsKey("class") == true
-                ? AdditionalAttributes["class"]
-                : null;
+            var originalClassString = AdditionalAttributes?.FirstOrDefault(a => a.Key == "class");
             return _state switch
             {
                 TransitionState.CanEnter => $"{originalClassString} {Enter} {EnterFrom}".Trim(),
@@ -102,20 +96,17 @@ public sealed class Transition : IgnisComponentBase, ITransition
     {
         get
         {
-            var attributes = new Dictionary<string, object?> { { "class", CssClass } };
-
-            // ReSharper disable once InvertIf
             if (AdditionalAttributes != null)
             {
-                foreach (var (key, value) in AdditionalAttributes)
+                foreach (var attribute in AdditionalAttributes)
                 {
-                    if (key == "class") continue;
-
-                    attributes[key] = value;
+                    if (attribute.Key == "class") continue;
+                    
+                    yield return attribute;
                 }
             }
 
-            return attributes;
+            yield return new KeyValuePair<string, object?>("class", CssClass);
         }
     }
 

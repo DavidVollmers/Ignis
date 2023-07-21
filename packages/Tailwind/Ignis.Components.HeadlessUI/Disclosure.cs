@@ -5,7 +5,6 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Disclosure : IgnisComponentBase, IDisclosure
 {
-    private readonly AttributeCollection _attributes = new(ArraySegment<Func<KeyValuePair<string, object?>>>.Empty);
     private Type? _asComponent;
     private string? _asElement;
 
@@ -40,11 +39,7 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure
     [Parameter] public RenderFragment<IDisclosure>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
-    {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
     public bool IsOpen { get; private set; }
@@ -56,7 +51,7 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure
     public object? Component { get; set; }
 
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
+    public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
     public Disclosure()
     {
