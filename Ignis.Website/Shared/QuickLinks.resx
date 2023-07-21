@@ -18,12 +18,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ApiReference_Heading" xml:space="preserve">
-    <value>API reference</value>
-  </data>
-  <data name="ApiReference_Description" xml:space="preserve">
-    <value>Learn more about all the capabilities of the Ignis framework.</value>
-  </data>
   <data name="Components_Heading" xml:space="preserve">
     <value>Components</value>
   </data>
@@ -37,6 +31,6 @@
     <value>Fragments</value>
   </data>
   <data name="Fragments_Description" xml:space="preserve">
-    <value />
+    <value>Understand how to build object-driven UI using Ignis.Fragments.</value>
   </data>
 </root>
