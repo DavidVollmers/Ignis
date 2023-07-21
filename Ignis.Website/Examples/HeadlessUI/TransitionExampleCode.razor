@@ -7,6 +7,7 @@
 <div class="flex flex-col items-center py-16">
     <div class="h-32 w-32">
         <Transition AsComponent="typeof(Fragment)"
+                    Appear
                     Show="_isShowing"
                     Enter="transform transition duration-[400ms]"
                     EnterFrom="opacity-0 rotate-[-120deg] scale-50"

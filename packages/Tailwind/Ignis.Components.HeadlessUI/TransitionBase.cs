@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
-public abstract class TransitionBase : IgnisComponentBase, ICssClass
+public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAfterRender
 {
     private TransitionState _state = TransitionState.Default;
 
     protected bool IsShowing { get; private set; }
     
-    protected bool IsInitialized { get; private set; }
+    protected bool DidRenderOnce { get; private set; }
     
     protected bool ShowInitially { get; set; }
 
@@ -66,23 +66,12 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    /// <inheritdoc />
-    protected override void OnInitialized()
-    {
-        IsInitialized = true;
-
-        // ReSharper disable once InvertIf
-        if (Appear)
-        {
-            if (ShowInitially) EnterTransition();
-            else LeaveTransition();
-        }
-    }
-
     protected void EnterTransition()
     {
         if (_state != TransitionState.CanEnter && _state != TransitionState.Default) return;
 
+        IsShowing = true;
+        
         UpdateState(TransitionState.Entering);
 
         var duration = ParseDuration(Enter);
@@ -109,6 +98,10 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass
                 UpdateState(TransitionState.CanEnter, true);
 
                 continueWith?.Invoke();
+        
+                IsShowing = true;
+        
+                ForceUpdate(true);
             });
             return;
         }
@@ -116,13 +109,15 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass
         UpdateState(TransitionState.CanEnter);
 
         continueWith?.Invoke();
+        
+        IsShowing = true;
+        
+        ForceUpdate();
     }
 
     private void UpdateState(TransitionState state, bool async = false)
     {
         _state = state;
-
-        IsShowing = state is TransitionState.Entering or TransitionState.CanLeave;
 
         ForceUpdate(async);
     }
@@ -162,5 +157,20 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass
         Entering,
         CanLeave,
         Leaving
+    }
+
+    /// <inheritdoc />
+    public async Task OnAfterRenderAsync()
+    {
+        if (DidRenderOnce) return;
+        
+        DidRenderOnce = true;
+
+        // ReSharper disable once InvertIf
+        if (Appear)
+        {
+            if (ShowInitially) EnterTransition();
+            else LeaveTransition();
+        }
     }
 }

@@ -62,8 +62,6 @@ public sealed class TransitionChild : TransitionBase, ITransitionChild, IDisposa
 
         //TODO check if parent is shown initially (for appear prop)
         Parent.AddChild(this);
-
-        base.OnInitialized();
     }
 
     /// <inheritdoc />
@@ -71,7 +69,8 @@ public sealed class TransitionChild : TransitionBase, ITransitionChild, IDisposa
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<ITransitionChild, TransitionChild>(2, this, ChildContent?.Invoke(this));
+        if (IsShowing)
+            builder.AddChildContentFor<ITransitionChild, TransitionChild>(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }

@@ -1,7 +1,8 @@
 ﻿@using Ignis.Components
 @using Ignis.Components.HeadlessUI
+@using Ignis.Utils
 
-@inherits IgnisRigidComponentBase
+@inherits IgnisComponentBase
 
 <div class="absolute inset-0 flex items-center justify-center">
     <button type="button"
@@ -20,8 +21,22 @@
                              LeaveFrom="opacity-100"
                              LeaveTo="opacity-0"
                              Context="transition">
-                
+                <div class="@Css.Class("absolute inset-0 bg-black bg-opacity-25", transition)"></div>
             </TransitionChild>
+            
+            <div class="absolute inset-0 overflow-y-auto">
+                <div class="flex min-h-full items-center justify-center p-4 text-center">
+                    <TransitionChild AsComponent="typeof(Fragment)"
+                                     Enter="ease-out duration-300"
+                                     EnterFrom="opacity-0 scale-95"
+                                     EnterTo="opacity-100 scale-100"
+                                     Leave="ease-in duration-200"
+                                     LeaveFrom="opacity-100 scale-100"
+                                     LeaveTo="opacity-0 scale-95">
+                        
+                    </TransitionChild>
+                </div>
+            </div>
         </Dialog>
     </Transition>
 </div>
@@ -33,5 +48,7 @@
     private void OpenModal()
     {
         _isOpen = true;
+
+        ForceUpdate();
     }
 }

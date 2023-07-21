@@ -43,7 +43,7 @@ public sealed class Transition : TransitionBase, ITransition
         {
             ShowInitially = _show = value;
 
-            if (!IsInitialized) return;
+            if (!DidRenderOnce) return;
 
             if (_show) ((ITransition)this).Show();
             else Hide();
@@ -73,8 +73,6 @@ public sealed class Transition : TransitionBase, ITransition
     protected override void OnInitialized()
     {
         Listbox?.SetTransition(this);
-
-        base.OnInitialized();
     }
 
     /// <inheritdoc />
@@ -88,8 +86,9 @@ public sealed class Transition : TransitionBase, ITransition
             builder.OpenComponent<CascadingValue<ITransition>>(3);
             builder.AddAttribute(4, nameof(CascadingValue<ITransition>.IsFixed), true);
             builder.AddAttribute(5, nameof(CascadingValue<ITransition>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<ITransition>.ChildContent),
-                this.GetChildContent(ChildContent));
+            if (IsShowing)
+                builder.AddAttribute(6, nameof(CascadingValue<ITransition>.ChildContent),
+                    this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });
