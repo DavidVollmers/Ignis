@@ -4,7 +4,7 @@
 <ScrollDetector OnScroll="OnScroll"/>
 <header class="@Css.Class("sticky top-0 z-50 flex flex-wrap items-center justify-between bg-white px-4 py-5 shadow-md shadow-slate-900/5 transition duration-500 dark:shadow-none sm:px-6 lg:px-8", _isScrolled ? "dark:bg-slate-900/95 dark:backdrop-blur dark:[@supports(backdrop-filter:blur(0))]:bg-slate-900/75" : "dark:bg-transparent")">
     <div class="mr-6 flex lg:hidden">
-        <!-- TODO: MobileNavigation -->
+        <MobileNavigation />
     </div>
     <div class="relative flex flex-grow basis-0 items-center">
         <a href="/" aria-label="@CommonResources["HomePageTitle"]" class="flex">
