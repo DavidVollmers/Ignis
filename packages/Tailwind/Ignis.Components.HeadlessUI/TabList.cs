@@ -5,6 +5,8 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class TabList : IgnisRigidComponentBase, IDynamicParentComponent
 {
+    private readonly AttributeCollection _attributes;
+    
     private Type? _asComponent;
     private string? _asElement;
 
@@ -52,31 +54,17 @@ public sealed class TabList : IgnisRigidComponentBase, IDynamicParentComponent
     public object? Component { get; set; }
 
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes
-    {
-        get
-        {
-            var attributes = new Dictionary<string, object?>
-            {
-                { "role", "tablist" }, { "aria-orientation", "horizontal" }
-            };
-
-            // ReSharper disable once InvertIf
-            if (AdditionalAttributes != null)
-            {
-                foreach (var (key, value) in AdditionalAttributes)
-                {
-                    attributes[key] = value;
-                }
-            }
-
-            return attributes;
-        }
-    }
+    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
     public TabList()
     {
         AsElement = "div";
+
+        _attributes = new AttributeCollection(new[]
+        {
+            () => new KeyValuePair<string, object?>("role", "tablist"),
+            () => new KeyValuePair<string, object?>("aria-orientation", "horizontal")
+        });
     }
 
     /// <inheritdoc />

@@ -5,6 +5,8 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class TabPanels : IgnisRigidComponentBase, IDynamicParentComponent
 {
+    private readonly AttributeCollection _attributes = new(ArraySegment<Func<KeyValuePair<string, object?>>>.Empty);
+
     private Type? _asComponent;
     private string? _asElement;
 
@@ -52,7 +54,7 @@ public sealed class TabPanels : IgnisRigidComponentBase, IDynamicParentComponent
     public object? Component { get; set; }
 
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
+    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
     public TabPanels()
     {

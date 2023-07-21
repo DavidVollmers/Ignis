@@ -5,6 +5,8 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class TabPanel : IgnisComponentBase, ITabPanel, IDisposable
 {
+    private readonly AttributeCollection _attributes;
+    
     private Type? _asComponent;
     private string? _asElement;
 
@@ -56,34 +58,19 @@ public sealed class TabPanel : IgnisComponentBase, ITabPanel, IDisposable
     /// <inheritdoc />
     public object? Component { get; set; }
 
-    //TODO aria-labelledby
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes
-    {
-        get
-        {
-            var attributes = new Dictionary<string, object?>
-            {
-                { "role", "tabpanel" },
-                { "tabindex", IsSelected ? 0 : -1 }
-            };
-
-            // ReSharper disable once InvertIf
-            if (AdditionalAttributes != null)
-            {
-                foreach (var (key, value) in AdditionalAttributes)
-                {
-                    attributes[key] = value;
-                }
-            }
-            
-            return attributes;
-        }
-    }
+    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
     public TabPanel()
     {
         AsElement = "div";
+
+        //TODO aria-labelledby
+        _attributes = new AttributeCollection(new[]
+        {
+            () => new KeyValuePair<string, object?>("role", "tabpanel"),
+            () => new KeyValuePair<string, object?>("tabindex", IsSelected ? 0 : -1)
+        });
     }
 
     /// <inheritdoc />

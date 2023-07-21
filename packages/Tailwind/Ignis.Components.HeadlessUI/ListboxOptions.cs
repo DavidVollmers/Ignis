@@ -5,6 +5,8 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComponent
 {
+    private readonly AttributeCollection _attributes;
+    
     private Type? _asComponent;
     private string? _asElement;
 
@@ -53,36 +55,21 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
     /// <inheritdoc />
     public object? Component { get; set; }
 
-    //TODO aria-active-descendant
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes
-    {
-        get
-        {
-            var attributes = new Dictionary<string, object?>
-            {
-                { "tabindex", -1 },
-                { "role", "listbox" },
-                { "aria-orientation", "vertical" },
-                { "aria-labelledby", Listbox.Id + "-label" }
-            };
-
-            // ReSharper disable once InvertIf
-            if (AdditionalAttributes != null)
-            {
-                foreach (var (key, value) in AdditionalAttributes)
-                {
-                    attributes[key] = value;
-                }
-            }
-
-            return attributes;
-        }
-    }
+    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
     public ListboxOptions()
     {
         AsElement = "ul";
+        
+        //TODO aria-active-descendant
+        _attributes = new AttributeCollection(new []
+        {
+            () => new KeyValuePair<string, object?>("tabindex", -1),
+            () => new KeyValuePair<string, object?>("role", "listbox"),
+            () => new KeyValuePair<string, object?>("aria-orientation", "vertical"),
+            () => new KeyValuePair<string, object?>("aria-labelledby", Listbox.Id + "-label")
+        });
     }
 
     /// <inheritdoc />

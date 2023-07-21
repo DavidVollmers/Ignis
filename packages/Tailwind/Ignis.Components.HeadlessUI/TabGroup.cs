@@ -5,8 +5,9 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class TabGroup : IgnisComponentBase, ITabGroup
 {
-    private readonly IList<ITab> _tabs = new List<ITab>();
+    private readonly AttributeCollection _attributes = new(ArraySegment<Func<KeyValuePair<string, object?>>>.Empty);
     private readonly IList<ITabPanel> _tabPanels = new List<ITabPanel>();
+    private readonly IList<ITab> _tabs = new List<ITab>();
 
     private Type? _asComponent;
     private string? _asElement;
@@ -68,7 +69,7 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
     public object? Component { get; set; }
 
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
+    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
     public TabGroup()
     {
@@ -127,7 +128,7 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
         SelectedIndexChanged.InvokeAsync(index);
 
         tab.FocusAsync();
-        
+
         ForceUpdate();
     }
 
