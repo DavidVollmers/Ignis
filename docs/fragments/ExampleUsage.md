@@ -1,5 +1,5 @@
 ---
-order: 201
+order: 101
 title: Example Usage
 category: Fragments
 permalink: /components/fragments/usage
@@ -24,7 +24,7 @@ public class LoginModel
 
 And you want to render a form for it. You can do it like this:
 
-```csharp
+```cshtml
 @Form(new LoginModel(), OnSubmit)
 
 @code {
@@ -77,7 +77,7 @@ public class LoginModel
 
 And build the layout and markup in your component:
 
-```csharp
+```cshtml
 <form @onsubmit="@(() => Context.OnSubmitAsync(Context.Model))">
     @foreach (var property in Context.GetProperties())
     {

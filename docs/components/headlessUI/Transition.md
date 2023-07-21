@@ -1,5 +1,5 @@
 ---
-order: 110
+order: 210
 title: Transition
 category: HeadlessUI
 permalink: /components/headlessUI/transition

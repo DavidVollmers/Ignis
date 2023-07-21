@@ -1,5 +1,5 @@
 ﻿---
-order: 109
+order: 209
 title: Tabs
 category: HeadlessUI
 permalink: /components/headlessUI/tabs

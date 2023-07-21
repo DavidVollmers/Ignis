@@ -1,5 +1,5 @@
 ---
-order: 200
+order: 100
 title: Introduction
 category: Fragments
 permalink: /components/fragments
@@ -27,6 +27,7 @@ Visit [nuget.org](https://www.nuget.org/packages/Ignis.Fragments) for more infor
         <div class="prose mt-2.5 text-sky-800 [--tw-prose-background:theme(colors.sky.50)] prose-a:text-sky-900 prose-code:text-sky-900 dark:text-slate-300 dark:prose-code:text-slate-300">
             <p>
                 Ignis.Fragments provides a static class <code>IgnisFragments</code> which contains all common render fragments.
+                <br/>
                 <br/>
                 For the best developer experience we recommend to import the static class like this in your <code>_Imports.razor</code>:
             </p>

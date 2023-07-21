@@ -1,5 +1,5 @@
 ---
-order: 102
+order: 202
 title: Listbox (Select)
 category: HeadlessUI
 permalink: /components/headlessUI/listbox
