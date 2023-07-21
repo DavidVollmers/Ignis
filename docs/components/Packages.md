@@ -53,3 +53,21 @@ Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components.Web) for more 
     </div>
 </div>
 
+## Ignis.Utils
+
+This package contains a set of utilities that can be used in your application, like a static `Css` class that can be
+used to generate CSS classes for your components.
+
+You can easily install this package using the following command:
+
+```shell
+dotnet add package Ignis.Utils
+```
+
+Visit [nuget.org](https://www.nuget.org/packages/Ignis.Utils) for more information.
+
+## Ignis.Components.HeadlessUI
+
+This package contains a set of components that are based on the [HeadlessUI](https://headlessui.com) project.
+
+You can read more about it [here](/components/headlessUI).

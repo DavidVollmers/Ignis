@@ -18,12 +18,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BuildYourOwnComponents_Heading" xml:space="preserve">
-    <value>Build your own components</value>
-  </data>
-  <data name="BuildYourOwnComponents_Description" xml:space="preserve">
-    <value>Step-by-step guides for building your own components from scratch.</value>
-  </data>
   <data name="ApiReference_Heading" xml:space="preserve">
     <value>API reference</value>
   </data>
