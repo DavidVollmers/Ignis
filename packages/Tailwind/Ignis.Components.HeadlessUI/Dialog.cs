@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Dialog : IgnisComponentBase, IDialog
+public sealed class Dialog : IgnisComponentBase, IDialog, IDisposable
 {
     private readonly AttributeCollection _attributes;
 
@@ -53,6 +53,8 @@ public sealed class Dialog : IgnisComponentBase, IDialog
     [Parameter]
     public EventCallback<bool> IsOpenChanged { get; set; }
 
+    [CascadingParameter] public ITransition? Transition { get; set; }
+
     /// <inheritdoc />
     [Parameter]
     public RenderFragment<IDialog>? _ { get; set; }
@@ -85,12 +87,18 @@ public sealed class Dialog : IgnisComponentBase, IDialog
         _attributes = new AttributeCollection(new[]
         {
             () => new KeyValuePair<string, object?>("id", Id), () => new KeyValuePair<string, object>("role", "dialog"),
-            () => new KeyValuePair<string, object>("aria-modal", "true"),
-            () => new KeyValuePair<string, object?>("aria-labelledby",
+            () => new KeyValuePair<string, object>("aria-modal", "true"), () => new KeyValuePair<string, object?>(
+                "aria-labelledby",
                 _title == null ? null : _title.Id ?? Id + "-title"),
             () => new KeyValuePair<string, object?>("aria-describedby",
                 _description == null ? null : _description.Id ?? Id + "-description")
         });
+    }
+
+    /// <inheritdoc />
+    protected override void OnInitialized()
+    {
+        Transition?.AddDialog(this);
     }
 
     /// <inheritdoc />
@@ -129,9 +137,20 @@ public sealed class Dialog : IgnisComponentBase, IDialog
     {
         if (!_isOpen) return;
 
+        if (Transition != null)
+        {
+            Transition.Hide(() => CloseCore(true));
+            return;
+        }
+
+        CloseCore();
+    }
+
+    private void CloseCore(bool async = false)
+    {
         IsOpenChanged.InvokeAsync(_isOpen = false);
 
-        ForceUpdate();
+        ForceUpdate(async);
     }
 
     /// <inheritdoc />
@@ -142,5 +161,10 @@ public sealed class Dialog : IgnisComponentBase, IDialog
                 $"{nameof(Dialog)} cannot contain multiple {nameof(DialogTitle)} components.");
 
         _title = title;
+    }
+
+    public void Dispose()
+    {
+        Transition?.RemoveDialog(this);
     }
 }

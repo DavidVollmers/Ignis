@@ -11,4 +11,8 @@ public interface ITransition : IDynamicParentComponent<ITransition>, ICssClass
     internal void AddChild(ITransitionChild child);
     
     internal void RemoveChild(ITransitionChild child);
+    
+    internal void AddDialog(IDialog dialog);
+    
+    internal void RemoveDialog(IDialog dialog);
 }

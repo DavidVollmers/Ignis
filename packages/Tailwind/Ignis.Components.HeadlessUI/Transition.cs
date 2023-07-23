@@ -6,6 +6,7 @@ namespace Ignis.Components.HeadlessUI;
 public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
 {
     private readonly IList<ITransitionChild> _children = new List<ITransitionChild>();
+    private readonly IList<IDialog> _dialogs = new List<IDialog>();
 
     private bool _didRenderOnce;
     private bool _showInitially;
@@ -114,6 +115,11 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
     /// <inheritdoc />
     protected override void EnterTransition(Action? continueWith = null)
     {
+        foreach (var dialog in _dialogs)
+        {
+            dialog.Open();
+        }
+
         var childCount = _children.Count;
 
         void InternalContinueWith()
@@ -135,6 +141,7 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
         base.EnterTransition(InternalContinueWith);
     }
 
+    /// <inheritdoc />
     protected override void LeaveTransition(Action? continueWith = null)
     {
         var childCount = _children.Count;
@@ -175,6 +182,22 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
     }
 
     /// <inheritdoc />
+    public void AddDialog(IDialog dialog)
+    {
+        if (dialog == null) throw new ArgumentNullException(nameof(dialog));
+
+        if (!_dialogs.Contains(dialog)) _dialogs.Add(dialog);
+    }
+
+    /// <inheritdoc />
+    public void RemoveDialog(IDialog dialog)
+    {
+        if (dialog == null) throw new ArgumentNullException(nameof(dialog));
+
+        _dialogs.Remove(dialog);
+    }
+
+    /// <inheritdoc />
     public Task OnAfterRenderAsync()
     {
         if (_didRenderOnce) return Task.CompletedTask;
@@ -182,7 +205,7 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
         _didRenderOnce = true;
 
         if (!Appear) return Task.CompletedTask;
-        
+
         if (_showInitially) EnterTransition();
         else LeaveTransition();
 
