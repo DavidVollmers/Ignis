@@ -29,10 +29,10 @@ public static class IgnisComponentExtensions
                 throw new ArgumentNullException(nameof(dynamicComponent));
             case { AsElement: not null, AsComponent: not null }:
                 throw new InvalidOperationException(
-                    $"Cannot specify both AsElement and AsComponent for {dynamicComponent.GetType().Name}.");
+                    $"Cannot specify both {nameof(IDynamicComponent.AsElement)} and {nameof(IDynamicComponent.AsComponent)} for {dynamicComponent.GetType().Name}.");
             case { AsElement: null, AsComponent: null }:
                 throw new InvalidOperationException(
-                    $"Must specify either AsElement or AsComponent for {dynamicComponent.GetType().Name}.");
+                    $"Must specify either {nameof(IDynamicComponent.AsElement)} and {nameof(IDynamicComponent.AsComponent)} for {dynamicComponent.GetType().Name}.");
         }
 
         if (dynamicComponent.AsElement != null)
