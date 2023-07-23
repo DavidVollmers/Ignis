@@ -6,7 +6,7 @@
 @inject IJSRuntime JSRuntime
 
 <div class="@Css.Class("relative mt-8 mb-12 flex flex-col items-center justify-center overflow-hidden rounded-xl bg-gradient-to-r", CssClass!)">
-    <div class="pointer-events-none absolute inset-x-0 top-0 z-10 m-[2px] md:left-auto">
+    <div class="pointer-events-none absolute inset-x-0 top-0 z-20 m-[2px] md:left-auto">
         <div class="flex items-stretch justify-end rounded-t-[10px] px-3 py-1 md:m-1 md:rounded-lg">
             <button @onclick="@ShowPreview"
                     class="@Css.Class("bg-black pointer-events-auto mr-1 flex rounded-md px-3 py-2 text-xs font-medium text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-50", _isCodeShowing ? "bg-opacity-0 hover:bg-opacity-[0.05]" : "bg-opacity-20")">

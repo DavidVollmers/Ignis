@@ -12,7 +12,7 @@
     </button>
     
     <Transition Appear Show="_isOpen" AsComponent="typeof(Fragment)" Context="_">
-        <Dialog class="relative z-10" @bind-IsOpen="_isOpen">
+        <Dialog class="z-10" @bind-IsOpen="_isOpen">
             <TransitionChild AsComponent="typeof(Fragment)"
                              Enter="ease-out duration-300"
                              EnterFrom="opacity-0"

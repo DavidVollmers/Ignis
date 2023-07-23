@@ -3,15 +3,11 @@ using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
-public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAfterRender
+public abstract class TransitionBase : IgnisComponentBase, ICssClass
 {
     private TransitionState _state = TransitionState.Default;
 
     protected bool IsShowing { get; private set; }
-    
-    protected bool DidRenderOnce { get; private set; }
-    
-    protected bool ShowInitially { get; set; }
 
     [Parameter] public string? Enter { get; set; }
 
@@ -24,8 +20,6 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     [Parameter] public string? LeaveFrom { get; set; }
 
     [Parameter] public string? LeaveTo { get; set; }
-
-    [Parameter] public bool Appear { get; set; }
 
     /// <inheritdoc />
     public string? CssClass
@@ -164,20 +158,5 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         Entering,
         CanLeave,
         Leaving
-    }
-
-    /// <inheritdoc />
-    public async Task OnAfterRenderAsync()
-    {
-        if (DidRenderOnce) return;
-        
-        DidRenderOnce = true;
-
-        // ReSharper disable once InvertIf
-        if (Appear)
-        {
-            if (ShowInitially) EnterTransition();
-            else LeaveTransition();
-        }
     }
 }

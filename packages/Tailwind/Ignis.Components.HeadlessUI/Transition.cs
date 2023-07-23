@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Transition : TransitionBase, ITransition
+public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
 {
     private readonly IList<ITransitionChild> _children = new List<ITransitionChild>();
 
+    private bool _didRenderOnce;
+    private bool _showInitially;
     private Type? _asComponent;
     private string? _asElement;
     private bool _show;
@@ -41,14 +43,16 @@ public sealed class Transition : TransitionBase, ITransition
         get => _show;
         set
         {
-            ShowInitially = _show = value;
+            _showInitially = _show = value;
 
-            if (!DidRenderOnce) return;
+            if (!_didRenderOnce) return;
 
             if (_show) EnterTransition();
             else LeaveTransition();
         }
     }
+
+    [Parameter] public bool Appear { get; set; }
 
     [CascadingParameter] public IListbox? Listbox { get; set; }
 
@@ -111,7 +115,7 @@ public sealed class Transition : TransitionBase, ITransition
     protected override void EnterTransition(Action? continueWith = null)
     {
         var childCount = _children.Count;
-        
+
         void InternalContinueWith()
         {
             if (_children.Count == childCount)
@@ -119,12 +123,12 @@ public sealed class Transition : TransitionBase, ITransition
                 continueWith?.Invoke();
                 return;
             }
-            
+
             foreach (var child in _children)
             {
                 child.Show(InternalContinueWith);
             }
-            
+
             childCount = _children.Count;
         }
 
@@ -142,15 +146,15 @@ public sealed class Transition : TransitionBase, ITransition
                 continueWith?.Invoke();
                 return;
             }
-            
+
             foreach (var child in _children)
             {
                 child.Hide(InternalContinueWith);
             }
-            
+
             childCount = _children.Count;
         }
-        
+
         base.LeaveTransition(InternalContinueWith);
     }
 
@@ -168,5 +172,20 @@ public sealed class Transition : TransitionBase, ITransition
         if (child == null) throw new ArgumentNullException(nameof(child));
 
         _children.Remove(child);
+    }
+
+    /// <inheritdoc />
+    public Task OnAfterRenderAsync()
+    {
+        if (_didRenderOnce) return Task.CompletedTask;
+
+        _didRenderOnce = true;
+
+        if (!Appear) return Task.CompletedTask;
+        
+        if (_showInitially) EnterTransition();
+        else LeaveTransition();
+
+        return Task.CompletedTask;
     }
 }
