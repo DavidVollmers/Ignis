@@ -131,21 +131,4 @@ public static class IgnisComponentExtensions
         }
     }
 #pragma warning restore ASP0006
-
-    public static bool Contains(this RenderFragment renderFragment, Type component)
-    {
-        if (renderFragment == null) throw new ArgumentNullException(nameof(renderFragment));
-        if (component == null) throw new ArgumentNullException(nameof(component));
-
-        var builder = new RenderTreeBuilder();
-
-        renderFragment.Invoke(builder);
-
-        var frames = builder.GetFrames();
-
-#pragma warning disable BL0006
-        return frames.Array.Any(frame =>
-            frame.ComponentType == component && frame.FrameType == RenderTreeFrameType.Component);
-#pragma warning restore BL0006
-    }
 }
