@@ -76,15 +76,15 @@ public sealed class TransitionChild : TransitionBase, ITransitionChild, IDisposa
     }
 
     /// <inheritdoc />
-    public void Hide(Action? onHidden = null)
+    public void Hide(Action? continueWith = null)
     {
-        LeaveTransition(onHidden);
+        LeaveTransition(continueWith);
     }
 
     /// <inheritdoc />
-    public void Show()
+    public void Show(Action? continueWith = null)
     {
-        EnterTransition();
+        EnterTransition(continueWith);
     }
 
     public void Dispose()

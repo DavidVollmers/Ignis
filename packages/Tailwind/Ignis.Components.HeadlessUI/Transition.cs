@@ -9,6 +9,7 @@ public sealed class Transition : TransitionBase, ITransition
 
     private Type? _asComponent;
     private string? _asElement;
+    private bool _hasChildren;
     private bool _show;
 
     /// <inheritdoc />
@@ -73,6 +74,8 @@ public sealed class Transition : TransitionBase, ITransition
     protected override void OnInitialized()
     {
         Listbox?.SetTransition(this);
+
+        _hasChildren = ChildContent?.Invoke(this).Contains(typeof(TransitionChild)) ?? false;
     }
 
     /// <inheritdoc />
@@ -97,26 +100,46 @@ public sealed class Transition : TransitionBase, ITransition
     }
 
     /// <inheritdoc />
-    public void Hide(Action? onHidden = null)
+    public void Hide(Action? continueWith = null)
     {
-        var aggregatedOnHidden = AggregatedOnHidden(onHidden);
-
-        LeaveTransition(aggregatedOnHidden);
-
-        foreach (var child in _children)
+        LeaveTransition(() =>
         {
-            child.Hide(aggregatedOnHidden);
-        }
+            if (!_hasChildren)
+            {
+                continueWith?.Invoke();
+                return;
+            }
+
+            var aggregatedOnHidden = AggregatedOnHidden(continueWith);
+
+            foreach (var child in _children)
+            {
+                child.Hide(aggregatedOnHidden);
+            }
+        });
     }
 
-    void ITransition.Show()
+    void ITransition.Show(Action? continueWith)
     {
-        EnterTransition();
-
-        foreach (var child in _children)
+        var childCount = _children.Count;
+        
+        void InternalOnShowed()
         {
-            child.Show();
+            if (_children.Count == childCount)
+            {
+                continueWith?.Invoke();
+                return;
+            }
+            
+            foreach (var child in _children)
+            {
+                child.Show(InternalOnShowed);
+            }
+            
+            childCount = _children.Count;
         }
+
+        EnterTransition(InternalOnShowed);
     }
 
     /// <inheritdoc />
@@ -139,7 +162,7 @@ public sealed class Transition : TransitionBase, ITransition
     {
         if (callback == null) return null;
 
-        var count = _children.Count + 1;
+        var count = _children.Count;
 
         return () =>
         {

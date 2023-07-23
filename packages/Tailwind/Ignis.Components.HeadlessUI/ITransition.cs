@@ -4,9 +4,9 @@ namespace Ignis.Components.HeadlessUI;
 
 public interface ITransition : IDynamicParentComponent<ITransition>, ICssClass
 {
-    void Hide(Action? onHidden = null);
+    void Hide(Action? continueWith = null);
 
-    void Show();
+    void Show(Action? continueWith = null);
     
     internal void AddChild(ITransitionChild child);
     
