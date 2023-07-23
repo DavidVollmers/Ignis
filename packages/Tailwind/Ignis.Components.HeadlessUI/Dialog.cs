@@ -85,8 +85,8 @@ public sealed class Dialog : IgnisComponentBase, IDialog
         _attributes = new AttributeCollection(new[]
         {
             () => new KeyValuePair<string, object?>("id", Id), () => new KeyValuePair<string, object>("role", "dialog"),
-            () => new KeyValuePair<string, object>("aria-modal", "true"), () => new KeyValuePair<string, object?>(
-                "aria-labelledby",
+            () => new KeyValuePair<string, object>("aria-modal", "true"),
+            () => new KeyValuePair<string, object?>("aria-labelledby",
                 _title == null ? null : _title.Id ?? Id + "-title"),
             () => new KeyValuePair<string, object?>("aria-describedby",
                 _description == null ? null : _description.Id ?? Id + "-description")
