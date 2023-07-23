@@ -45,8 +45,8 @@ public sealed class Transition : TransitionBase, ITransition
 
             if (!DidRenderOnce) return;
 
-            if (_show) ((ITransition)this).Show();
-            else Hide();
+            if (_show) EnterTransition();
+            else LeaveTransition();
         }
     }
 
@@ -99,28 +99,16 @@ public sealed class Transition : TransitionBase, ITransition
     /// <inheritdoc />
     public void Hide(Action? continueWith = null)
     {
-        var childCount = _children.Count;
-
-        void InternalContinueWith()
-        {
-            if (_children.Count == childCount)
-            {
-                continueWith?.Invoke();
-                return;
-            }
-            
-            foreach (var child in _children)
-            {
-                child.Hide(InternalContinueWith);
-            }
-            
-            childCount = _children.Count;
-        }
-        
-        LeaveTransition(InternalContinueWith);
+        LeaveTransition(continueWith);
     }
 
     void ITransition.Show(Action? continueWith)
+    {
+        EnterTransition(continueWith);
+    }
+
+    /// <inheritdoc />
+    protected override void EnterTransition(Action? continueWith = null)
     {
         var childCount = _children.Count;
         
@@ -140,7 +128,30 @@ public sealed class Transition : TransitionBase, ITransition
             childCount = _children.Count;
         }
 
-        EnterTransition(InternalContinueWith);
+        base.EnterTransition(InternalContinueWith);
+    }
+
+    protected override void LeaveTransition(Action? continueWith = null)
+    {
+        var childCount = _children.Count;
+
+        void InternalContinueWith()
+        {
+            if (_children.Count == childCount)
+            {
+                continueWith?.Invoke();
+                return;
+            }
+            
+            foreach (var child in _children)
+            {
+                child.Hide(InternalContinueWith);
+            }
+            
+            childCount = _children.Count;
+        }
+        
+        base.LeaveTransition(InternalContinueWith);
     }
 
     /// <inheritdoc />

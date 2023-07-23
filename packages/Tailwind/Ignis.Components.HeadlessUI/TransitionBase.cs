@@ -66,7 +66,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    protected void EnterTransition(Action? continueWith = null)
+    protected virtual void EnterTransition(Action? continueWith = null)
     {
         if (_state != TransitionState.CanEnter && _state != TransitionState.Default) return;
 
@@ -91,7 +91,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         continueWith?.Invoke();
     }
 
-    protected void LeaveTransition(Action? continueWith = null)
+    protected virtual void LeaveTransition(Action? continueWith = null)
     {
         if (_state != TransitionState.CanLeave && _state != TransitionState.Default) return;
 
