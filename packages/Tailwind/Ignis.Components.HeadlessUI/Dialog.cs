@@ -5,6 +5,10 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Dialog : IgnisComponentBase, IDialog
 {
+    private readonly AttributeCollection _attributes;
+
+    private IDialogDescription? _description;
+    private IDialogTitle? _title;
     private Type? _asComponent;
     private string? _asElement;
     private bool _isOpen;
@@ -56,7 +60,14 @@ public sealed class Dialog : IgnisComponentBase, IDialog
     [Parameter] public RenderFragment<IDialog>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    {
+        get => _attributes.AdditionalAttributes;
+        set => _attributes.AdditionalAttributes = value;
+    }
+
+    /// <inheritdoc />
+    public string Id { get; } = "ignis-hui-dialog-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc />
     public ElementReference? Element { get; set; }
@@ -65,11 +76,22 @@ public sealed class Dialog : IgnisComponentBase, IDialog
     public object? Component { get; set; }
 
     /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
+    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
     public Dialog()
     {
         AsElement = "div";
+
+        _attributes = new AttributeCollection(new[]
+        {
+            () => new KeyValuePair<string, object?>("id", Id),
+            () => new KeyValuePair<string, object>("role", "dialog"),
+            () => new KeyValuePair<string, object>("aria-modal", "true"),
+            () => new KeyValuePair<string, object?>("aria-labelledby",
+                _title == null ? null : _title.Id ?? Id + "-title"),
+            () => new KeyValuePair<string, object?>("aria-describedby",
+                _description == null ? null : _description.Id ?? Id + "-description")
+        });
     }
 
     /// <inheritdoc />
@@ -83,12 +105,13 @@ public sealed class Dialog : IgnisComponentBase, IDialog
             builder.OpenComponent<CascadingValue<IDialog>>(3);
             builder.AddAttribute(4, nameof(CascadingValue<IDialog>.IsFixed), true);
             builder.AddAttribute(5, nameof(CascadingValue<IDialog>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IDialog>.ChildContent),
-                this.GetChildContent(ChildContent));
+            if (_isOpen)
+                builder.AddAttribute(6, nameof(CascadingValue<IDialog>.ChildContent),
+                    this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });
-        
+
         builder.CloseAs(this);
     }
 

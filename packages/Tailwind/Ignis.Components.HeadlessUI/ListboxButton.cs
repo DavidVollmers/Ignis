@@ -75,9 +75,9 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
             () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
 #pragma warning restore CS0618
             () => new KeyValuePair<string, object?>("aria-expanded", Listbox.IsOpen),
-            () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null), () =>
-                new KeyValuePair<string, object?>("aria-labelledby",
-                    Listbox.Label == null ? null : Listbox.Label.Id ?? Listbox.Id + "-label")
+            () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
+            () => new KeyValuePair<string, object?>("aria-labelledby",
+                Listbox.Label == null ? null : Listbox.Label.Id ?? Listbox.Id + "-label")
         });
     }
 
