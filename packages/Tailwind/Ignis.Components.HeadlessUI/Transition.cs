@@ -122,6 +122,7 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
 
         var childCount = _children.Count;
 
+        //TODO min max watch on child count
         void InternalContinueWith()
         {
             if (_children.Count == childCount)
@@ -130,12 +131,12 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
                 return;
             }
 
+            childCount = _children.Count;
+
             foreach (var child in _children)
             {
                 child.Show(InternalContinueWith);
             }
-
-            childCount = _children.Count;
         }
 
         base.EnterTransition(InternalContinueWith);
@@ -146,20 +147,26 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
     {
         var childCount = _children.Count;
 
+        //TODO min max watch on child count
         void InternalContinueWith()
         {
             if (_children.Count == childCount)
             {
+                foreach (var dialog in _dialogs)
+                {
+                    dialog.CloseFromTransition();
+                }
+                
                 continueWith?.Invoke();
                 return;
             }
+
+            childCount = _children.Count;
 
             foreach (var child in _children)
             {
                 child.Hide(InternalContinueWith);
             }
-
-            childCount = _children.Count;
         }
 
         base.LeaveTransition(InternalContinueWith);

@@ -163,6 +163,12 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IDisposable
         _title = title;
     }
 
+    /// <inheritdoc />
+    public void CloseFromTransition()
+    {
+        CloseCore(true);
+    }
+
     public void Dispose()
     {
         Transition?.RemoveDialog(this);

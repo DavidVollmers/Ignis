@@ -66,23 +66,15 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass
 
         IsShowing = true;
         
-        UpdateState(TransitionState.Entering);
+        UpdateState(TransitionState.Entering, true);
 
         var duration = ParseDuration(Enter);
-        if (duration != null)
+        Task.Delay(duration ?? 0).ContinueWith(_ =>
         {
-            Task.Delay(duration.Value).ContinueWith(_ =>
-            {
-                UpdateState(TransitionState.CanLeave, true);
+            UpdateState(TransitionState.CanLeave, true);
 
-                continueWith?.Invoke();
-            });
-            return;
-        }
-
-        UpdateState(TransitionState.CanLeave);
-
-        continueWith?.Invoke();
+            continueWith?.Invoke();
+        });
     }
 
     protected virtual void LeaveTransition(Action? continueWith = null)
@@ -92,28 +84,16 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass
         UpdateState(TransitionState.Leaving);
 
         var duration = ParseDuration(Leave);
-        if (duration != null)
+        Task.Delay(duration ?? 0).ContinueWith(_ =>
         {
-            Task.Delay(duration.Value).ContinueWith(_ =>
-            {
-                UpdateState(TransitionState.CanEnter, true);
+            UpdateState(TransitionState.CanEnter, true);
 
-                continueWith?.Invoke();
+            continueWith?.Invoke();
         
-                IsShowing = true;
+            IsShowing = true;
         
-                ForceUpdate(true);
-            });
-            return;
-        }
-
-        UpdateState(TransitionState.CanEnter);
-
-        continueWith?.Invoke();
-        
-        IsShowing = true;
-        
-        ForceUpdate();
+            ForceUpdate(true);
+        });
     }
 
     private void UpdateState(TransitionState state, bool async = false)
