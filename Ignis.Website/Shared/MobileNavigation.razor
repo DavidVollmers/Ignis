@@ -1,10 +1,30 @@
 ﻿@inherits IgnisComponentBase
 @inject IStringLocalizer<MobileNavigation> Resources
+@inject IStringLocalizer<CommonResources> CommonResources
 
-<button type="button" @onclick="OpenNavigation"
-        class="relative" aria-label="@Resources["OpenNavigationButton"]">
+<button type="button" 
+        @onclick="OpenNavigation"
+        class="relative" 
+        aria-label="@Resources["OpenNavigationButton"]">
     <Bars3Icon class="h-6 w-6 stroke-slate-500" aria-hidden="true"/>
 </button>
+<Dialog @bind-IsOpen="_isOpen"
+        class="fixed inset-0 z-50 flex items-start overflow-y-auto bg-slate-900/50 pr-10 backdrop-blur lg:hidden"
+        aria-label="@Resources["NavigationLabel"]">
+    <DialogPanel class="min-h-full w-full max-w-xs bg-white px-4 pb-12 pt-5 dark:bg-slate-900 sm:px-6">
+        <div class="flex items-center">
+            <button type="button"
+                    @onclick="CloseNavigation"
+                    aria-label="@Resources["CloseNavigationButton"]">
+                <XMarkIcon class="h-6 w-6 stroke-slate-500" aria-hidden="true"/>
+            </button>
+            <a href="/" class="ml-6" aria-label="@CommonResources["HomePageTitle"]">
+                <Logo class="h-9 w-9 fill-ignis-500"/>
+            </a>
+        </div>
+        <Navigation class="mt-5 px-1"/>
+    </DialogPanel>
+</Dialog>
 
 @code
 {
@@ -13,6 +33,13 @@
     private void OpenNavigation()
     {
         _isOpen = true;
+
+        ForceUpdate();
+    }
+    
+    private void CloseNavigation()
+    {
+        _isOpen = false;
 
         ForceUpdate();
     }

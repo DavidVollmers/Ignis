@@ -21,4 +21,10 @@
   <data name="OpenNavigationButton" xml:space="preserve">
     <value>Open Navigation</value>
   </data>
+  <data name="NavigationLabel" xml:space="preserve">
+    <value>Navigation</value>
+  </data>
+  <data name="CloseNavigationButton" xml:space="preserve">
+    <value>Close Navigation</value>
+  </data>
 </root>

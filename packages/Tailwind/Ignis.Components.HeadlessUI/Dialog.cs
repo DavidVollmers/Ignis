@@ -105,6 +105,8 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, ID
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        if (!_isOpen) return;
+
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         // ReSharper disable once VariableHidesOuterVariable
@@ -113,9 +115,7 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, ID
             builder.OpenComponent<CascadingValue<IDialog>>(3);
             builder.AddAttribute(4, nameof(CascadingValue<IDialog>.IsFixed), true);
             builder.AddAttribute(5, nameof(CascadingValue<IDialog>.Value), this);
-            if (_isOpen)
-                builder.AddAttribute(6, nameof(CascadingValue<IDialog>.ChildContent),
-                    this.GetChildContent(ChildContent));
+            builder.AddAttribute(6, nameof(CascadingValue<IDialog>.ChildContent), this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });
@@ -131,7 +131,7 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, ID
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
         _continueWith = continueWith;
-        
+
         ForceUpdate();
     }
 
@@ -193,11 +193,11 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, ID
     public Task OnAfterRenderAsync()
     {
         var continueWith = _continueWith;
-        
+
         _continueWith = null;
-        
+
         continueWith?.Invoke();
-        
+
         return Task.CompletedTask;
     }
 }
