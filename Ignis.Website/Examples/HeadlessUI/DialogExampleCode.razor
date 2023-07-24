@@ -12,12 +12,12 @@
     </button>
 
     <Transition Appear Show="_isOpen" AsComponent="typeof(Fragment)" Context="_">
-        <Dialog class="z-10" @bind-IsOpen="_isOpen">
+        <Dialog class="z-10" IsOpenChanged="v => _isOpen = v">
             <TransitionChild AsComponent="typeof(Fragment)"
-                             Enter="ease-out duration-300"
+                             Enter="ease-out duration-[3000ms]"
                              EnterFrom="opacity-0"
                              EnterTo="opacity-100"
-                             Leave="ease-in duration-200"
+                             Leave="ease-in duration-[2000ms]"
                              LeaveFrom="opacity-100"
                              LeaveTo="opacity-0"
                              Context="transition">
@@ -27,10 +27,10 @@
             <div class="absolute inset-0 overflow-y-auto">
                 <div class="flex min-h-full items-center justify-center p-4 text-center">
                     <TransitionChild AsComponent="typeof(Fragment)"
-                                     Enter="ease-out duration-300"
+                                     Enter="ease-out duration-[3000ms]"
                                      EnterFrom="opacity-0 scale-95"
                                      EnterTo="opacity-100 scale-100"
-                                     Leave="ease-in duration-200"
+                                     Leave="ease-in duration-[2000ms]"
                                      LeaveFrom="opacity-100 scale-100"
                                      LeaveTo="opacity-0 scale-95"
                                      Context="transition">

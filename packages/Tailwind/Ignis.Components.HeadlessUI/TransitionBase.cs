@@ -69,6 +69,8 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         
         UpdateState(TransitionState.CanEnter, () =>
         {
+            OnEnter();
+            
             UpdateState(TransitionState.Entering, () =>
             {
                 var duration = ParseDuration(Enter);
@@ -95,7 +97,12 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
                 {
                     RenderContent = false;
                     
-                    UpdateState(TransitionState.CanEnter, continueWith);
+                    UpdateState(TransitionState.CanEnter, () =>
+                    {
+                        OnLeft();
+                        
+                        continueWith?.Invoke();
+                    });
                 });
             });
         });
@@ -110,6 +117,22 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         _continueWith = continueWith;
         
         ForceUpdate(true);
+    }
+    
+    protected virtual void OnEnter() {}
+    
+    protected virtual void OnLeft() {}
+
+    /// <inheritdoc />
+    public virtual Task OnAfterRenderAsync()
+    {
+        var continueWith = _continueWith;
+        
+        _continueWith = null;
+        
+        continueWith?.Invoke();
+        
+        return Task.CompletedTask;
     }
 
     private static int? ParseDuration(string? classString)
@@ -135,21 +158,10 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
                 durationString = durationString[..^1];
                 factor = 1000;
             }
+            else return null;
         }
 
         return int.Parse(durationString) * factor;
-    }
-
-    /// <inheritdoc />
-    public virtual Task OnAfterRenderAsync()
-    {
-        var continueWith = _continueWith;
-        
-        _continueWith = null;
-        
-        continueWith?.Invoke();
-        
-        return Task.CompletedTask;
     }
 
     private enum TransitionState

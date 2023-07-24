@@ -115,26 +115,13 @@ public sealed class Transition : TransitionBase, ITransition
     /// <inheritdoc />
     protected override void EnterTransition(Action? continueWith = null)
     {
-        foreach (var dialog in _dialogs)
-        {
-            dialog.Open();
-        }
-
         WatchTransition(true, continueWith);
     }
 
     /// <inheritdoc />
     protected override void LeaveTransition(Action? continueWith = null)
     {
-        WatchTransition(false, () =>
-        {
-            foreach (var dialog in _dialogs)
-            {
-                dialog.CloseFromTransition();
-            }
-
-            continueWith?.Invoke();
-        });
+        WatchTransition(false, continueWith);
     }
 
     /// <inheritdoc />
@@ -170,18 +157,21 @@ public sealed class Transition : TransitionBase, ITransition
     }
 
     /// <inheritdoc />
-    public override Task OnAfterRenderAsync()
+    protected override void OnLeft()
     {
-        if (_didRenderOnce) return base.OnAfterRenderAsync();
+        foreach (var dialog in _dialogs)
+        {
+            dialog.CloseFromTransition();
+        }
+    }
 
-        _didRenderOnce = true;
-
-        if (!Appear) return base.OnAfterRenderAsync();
-
-        if (_showInitially) EnterTransition();
-        else LeaveTransition();
-
-        return base.OnAfterRenderAsync();
+    /// <inheritdoc />
+    protected override void OnEnter()
+    {
+        foreach (var dialog in _dialogs)
+        {
+            dialog.Open();
+        }  
     }
 
     private void WatchTransition(bool isEnter, Action? continueWith)
@@ -203,13 +193,30 @@ public sealed class Transition : TransitionBase, ITransition
                 else child.Hide(ContinueWith);
             }
 
+            // ReSharper disable once InvertIf
             if (finishedTransitions == startedTransitions.Count + 1)
             {
-                continueWith?.Invoke();
+                if (isEnter) continueWith?.Invoke();
+                else base.LeaveTransition(continueWith);
             }
         }
 
         if (isEnter) base.EnterTransition(ContinueWith);
-        else base.LeaveTransition(ContinueWith);
+        else ContinueWith();
+    }
+
+    /// <inheritdoc />
+    public override Task OnAfterRenderAsync()
+    {
+        if (_didRenderOnce) return base.OnAfterRenderAsync();
+
+        _didRenderOnce = true;
+
+        if (!Appear) return base.OnAfterRenderAsync();
+
+        if (_showInitially) EnterTransition();
+        else LeaveTransition();
+
+        return base.OnAfterRenderAsync();
     }
 }
