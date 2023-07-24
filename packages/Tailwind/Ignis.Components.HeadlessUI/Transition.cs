@@ -91,7 +91,7 @@ public sealed class Transition : TransitionBase, ITransition
             builder.OpenComponent<CascadingValue<ITransition>>(3);
             builder.AddAttribute(4, nameof(CascadingValue<ITransition>.IsFixed), true);
             builder.AddAttribute(5, nameof(CascadingValue<ITransition>.Value), this);
-            if (RenderContent)
+            if (RenderContent || _showInitially)
                 builder.AddAttribute(6, nameof(CascadingValue<ITransition>.ChildContent),
                     this.GetChildContent(ChildContent));
 

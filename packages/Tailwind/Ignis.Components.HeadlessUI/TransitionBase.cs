@@ -31,11 +31,11 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
             return _state switch
             {
                 TransitionState.Entering => $"{originalClassString?.Value} {Enter} {EnterFrom}".Trim(),
-                TransitionState.Entered or TransitionState.CanLeave
-                    => $"{originalClassString?.Value} {Enter} {EnterTo}".Trim(),
+                TransitionState.Entered => $"{originalClassString?.Value} {Enter} {EnterTo}".Trim(),
+                TransitionState.CanLeave => $"{originalClassString?.Value} {EnterTo}".Trim(),
                 TransitionState.Leaving => $"{originalClassString?.Value} {Leave} {LeaveFrom}".Trim(),
-                TransitionState.Left or TransitionState.CanEnter
-                    => $"{originalClassString?.Value} {Leave} {LeaveTo}".Trim(),
+                TransitionState.Left => $"{originalClassString?.Value} {Leave} {LeaveTo}".Trim(),
+                TransitionState.CanEnter => $"{originalClassString?.Value} {LeaveTo}".Trim(),
                 _ => originalClassString?.Value?.ToString()
             };
         }
