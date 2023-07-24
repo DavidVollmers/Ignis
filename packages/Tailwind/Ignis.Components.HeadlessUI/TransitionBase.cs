@@ -7,7 +7,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 {
     private TransitionState _state = TransitionState.Default;
     private Action? _continueWith;
-    
+
     protected bool RenderContent { get; private set; }
 
     [Parameter] public string? Enter { get; set; }
@@ -31,9 +31,11 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
             return _state switch
             {
                 TransitionState.Entering => $"{originalClassString?.Value} {Enter} {EnterFrom}".Trim(),
-                TransitionState.Entered => $"{originalClassString?.Value} {Enter} {EnterTo}".Trim(),
+                TransitionState.Entered or TransitionState.CanLeave
+                    => $"{originalClassString?.Value} {Enter} {EnterTo}".Trim(),
                 TransitionState.Leaving => $"{originalClassString?.Value} {Leave} {LeaveFrom}".Trim(),
-                TransitionState.Left => $"{originalClassString?.Value} {Leave} {LeaveTo}".Trim(),
+                TransitionState.Left or TransitionState.CanEnter
+                    => $"{originalClassString?.Value} {Leave} {LeaveTo}".Trim(),
                 _ => originalClassString?.Value?.ToString()
             };
         }
@@ -63,10 +65,10 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
     protected virtual void EnterTransition(Action? continueWith = null)
     {
-        if (_state != TransitionState.Default) return;
+        if (_state != TransitionState.Default && _state != TransitionState.CanEnter) return;
 
         RenderContent = true;
-        
+
         UpdateState(TransitionState.Entering, () =>
         {
             UpdateState(TransitionState.Entered, () =>
@@ -74,7 +76,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
                 var duration = ParseDuration(Enter);
                 Task.Delay(duration ?? 0).ContinueWith(_ =>
                 {
-                    UpdateState(TransitionState.Default, continueWith);
+                    UpdateState(TransitionState.CanLeave, continueWith);
                 });
             });
         });
@@ -82,10 +84,10 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
     protected virtual void LeaveTransition(Action? continueWith = null)
     {
-        if (_state != TransitionState.Default) return;
-        
+        if (_state != TransitionState.Default && _state != TransitionState.CanLeave) return;
+
         RenderContent = true;
-        
+
         UpdateState(TransitionState.Leaving, () =>
         {
             UpdateState(TransitionState.Left, () =>
@@ -94,8 +96,8 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
                 Task.Delay(duration ?? 0).ContinueWith(_ =>
                 {
                     RenderContent = false;
-                    
-                    UpdateState(TransitionState.Default, continueWith);
+
+                    UpdateState(TransitionState.CanEnter, continueWith);
                 });
             });
         });
@@ -104,11 +106,11 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     private void UpdateState(TransitionState state, Action? continueWith)
     {
         if (_continueWith != null) return;
-        
+
         _state = state;
 
         _continueWith = continueWith;
-        
+
         ForceUpdate(true);
     }
 
@@ -116,11 +118,11 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     public virtual Task OnAfterRenderAsync()
     {
         var continueWith = _continueWith;
-        
+
         _continueWith = null;
-        
+
         continueWith?.Invoke();
-        
+
         return Task.CompletedTask;
     }
 
@@ -156,8 +158,10 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     private enum TransitionState
     {
         Default,
+        CanEnter,
         Entering,
         Entered,
+        CanLeave,
         Leaving,
         Left
     }

@@ -169,6 +169,16 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, ID
     }
 
     /// <inheritdoc />
+    public void SetDescription(IDialogDescription description)
+    {
+        if (_description != null && _description != description)
+            throw new InvalidOperationException(
+                $"{nameof(Dialog)} cannot contain multiple {nameof(DialogDescription)} components.");
+
+        _description = description;
+    }
+
+    /// <inheritdoc />
     public void CloseFromTransition(Action? continueWith = null)
     {
         CloseCore(continueWith, true);
