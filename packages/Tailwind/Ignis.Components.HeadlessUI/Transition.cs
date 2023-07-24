@@ -120,56 +120,21 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
             dialog.Open();
         }
 
-        var childCount = _children.Count;
-
-        //TODO min max watch on child count
-        void InternalContinueWith()
-        {
-            if (_children.Count == childCount)
-            {
-                continueWith?.Invoke();
-                return;
-            }
-
-            childCount = _children.Count;
-
-            foreach (var child in _children)
-            {
-                child.Show(InternalContinueWith);
-            }
-        }
-
-        base.EnterTransition(InternalContinueWith);
+        WatchTransition(true, continueWith);
     }
 
     /// <inheritdoc />
     protected override void LeaveTransition(Action? continueWith = null)
     {
-        var childCount = _children.Count;
-
-        //TODO min max watch on child count
-        void InternalContinueWith()
+        WatchTransition(false, () =>
         {
-            if (_children.Count == childCount)
+            foreach (var dialog in _dialogs)
             {
-                foreach (var dialog in _dialogs)
-                {
-                    dialog.CloseFromTransition();
-                }
-                
-                continueWith?.Invoke();
-                return;
+                dialog.CloseFromTransition();
             }
 
-            childCount = _children.Count;
-
-            foreach (var child in _children)
-            {
-                child.Hide(InternalContinueWith);
-            }
-        }
-
-        base.LeaveTransition(InternalContinueWith);
+            continueWith?.Invoke();
+        });
     }
 
     /// <inheritdoc />
@@ -217,5 +182,40 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
         else LeaveTransition();
 
         return Task.CompletedTask;
+    }
+
+    private void WatchTransition(bool isEnter, Action? continueWith)
+    {
+        var minChildCount = _children.Count;
+        var maxChildCount = _children.Count;
+
+        void MinContinueWith()
+        {
+            --minChildCount;
+
+            if (minChildCount == 0)
+            {
+                continueWith?.Invoke();
+            }
+        }
+
+        void MaxContinueWith()
+        {
+            if (_children.Count == maxChildCount)
+            {
+                foreach (var child in _children)
+                {
+                    if (isEnter) child.Show(MinContinueWith);
+                    else child.Hide(MinContinueWith);
+                }
+
+                return;
+            }
+
+            minChildCount = maxChildCount = _children.Count;
+        }
+
+        if (isEnter) base.EnterTransition(MaxContinueWith);
+        else base.LeaveTransition(MaxContinueWith);
     }
 }
