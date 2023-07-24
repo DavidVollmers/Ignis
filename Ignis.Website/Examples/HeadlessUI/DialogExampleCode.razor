@@ -14,10 +14,10 @@
     <Transition Appear Show="_isOpen" AsComponent="typeof(Fragment)" Context="_">
         <Dialog class="z-10" IsOpenChanged="v => _isOpen = v">
             <TransitionChild AsComponent="typeof(Fragment)"
-                             Enter="ease-out duration-[3000ms]"
+                             Enter="ease-out duration-300"
                              EnterFrom="opacity-0"
                              EnterTo="opacity-100"
-                             Leave="ease-in duration-[2000ms]"
+                             Leave="ease-in duration-200"
                              LeaveFrom="opacity-100"
                              LeaveTo="opacity-0"
                              Context="transition">
@@ -27,10 +27,10 @@
             <div class="absolute inset-0 overflow-y-auto">
                 <div class="flex min-h-full items-center justify-center p-4 text-center">
                     <TransitionChild AsComponent="typeof(Fragment)"
-                                     Enter="ease-out duration-[3000ms]"
+                                     Enter="ease-out duration-300"
                                      EnterFrom="opacity-0 scale-95"
                                      EnterTo="opacity-100 scale-100"
-                                     Leave="ease-in duration-[2000ms]"
+                                     Leave="ease-in duration-200"
                                      LeaveFrom="opacity-100 scale-100"
                                      LeaveTo="opacity-0 scale-95"
                                      Context="transition">
@@ -41,11 +41,11 @@
                             </DialogTitle>
                             <div class="mt-2">
                                 <p class="text-sm text-gray-500">
-                                    Your payment has been successfully submitted. We’ve sent 
+                                    Your payment has been successfully submitted. We’ve sent
                                     you an email with all of the details of your order.
                                 </p>
                             </div>
-                            
+
                             <div class="mt-4">
                                 <button type="button"
                                         class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"

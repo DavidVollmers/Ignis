@@ -12,8 +12,8 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
 {
     private readonly IList<IListboxOption> _options = new List<IListboxOption>();
 
-    private bool _onBeforeOpenRender;
     private ITransition? _transition;
+    private Action? _continueWith;
     private Type? _asComponent;
     private string? _asElement;
     private IFocus? _button;
@@ -123,7 +123,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
             builder.OpenComponent<FocusDetector>(3);
             builder.AddAttribute(4, nameof(FocusDetector.Id), Id);
             builder.AddAttribute(5, nameof(FocusDetector.Strict), false);
-            builder.AddAttribute(6, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, Close));
+            builder.AddAttribute(6, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, () => Close()));
             // ReSharper disable once VariableHidesOuterVariable
             builder.AddAttribute(7, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
             {
@@ -143,36 +143,43 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     }
 
     /// <inheritdoc />
-    public void Open()
+    public void Open(Action? continueWith = null)
     {
-        if (_isOpen) return;
+        if (_isOpen || _continueWith != null) return;
 
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
-        _onBeforeOpenRender = true;
+        _continueWith = () =>
+        {
+            var selectedOption = Options.FirstOrDefault(x => x.IsSelected);
+            if (selectedOption != null) SetOptionActive(selectedOption, true);
 
+            if (_transition != null) _transition.Show(continueWith);
+            else continueWith?.Invoke();
+        };
+        
         ForceUpdate();
-
-        _transition?.Show();
     }
 
     /// <inheritdoc />
-    public void Close()
+    public void Close(Action? continueWith = null)
     {
-        if (!_isOpen) return;
+        if (!_isOpen || _continueWith != null) return;
 
         if (_transition != null)
         {
-            _transition.Hide(() => CloseCore(true));
+            _transition.Hide(() => CloseCore(continueWith, true));
             return;
         }
 
-        CloseCore();
+        CloseCore(continueWith);
     }
 
-    private void CloseCore(bool async = false)
+    private void CloseCore(Action? continueWith, bool async = false)
     {
         IsOpenChanged.InvokeAsync(_isOpen = false);
+
+        _continueWith = continueWith;
 
         ForceUpdate(async);
     }
@@ -263,15 +270,12 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     /// <inheritdoc />
     public Task OnAfterRenderAsync()
     {
-        // ReSharper disable once InvertIf
-        if (_onBeforeOpenRender)
-        {
-            _onBeforeOpenRender = false;
-
-            var selectedOption = Options.FirstOrDefault(x => x.IsSelected);
-            if (selectedOption != null) SetOptionActive(selectedOption, true);
-        }
-
+        var continueWith = _continueWith;
+        
+        _continueWith = null;
+        
+        continueWith?.Invoke();
+        
         return Task.CompletedTask;
     }
 }

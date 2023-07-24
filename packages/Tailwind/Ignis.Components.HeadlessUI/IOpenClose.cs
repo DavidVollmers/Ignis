@@ -8,7 +8,7 @@ public interface IOpenClose
     
     EventCallback<bool> IsOpenChanged { get; set; }
 
-    void Open();
+    void Open(Action? continueWith = null);
 
-    void Close();
+    void Close(Action? continueWith = null);
 }

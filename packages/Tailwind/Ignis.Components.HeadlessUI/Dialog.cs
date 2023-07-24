@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Dialog : IgnisComponentBase, IDialog, IDisposable
+public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, IDisposable
 {
     private readonly AttributeCollection _attributes;
 
     private IDialogDescription? _description;
+    private Action? _continueWith;
     private IDialogTitle? _title;
     private Type? _asComponent;
     private string? _asElement;
@@ -123,9 +124,9 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IDisposable
     }
 
     /// <inheritdoc />
-    public void Open()
+    public void Open(Action? continueWith = null)
     {
-        if (_isOpen) return;
+        if (_isOpen || _continueWith != null) return;
 
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
@@ -133,22 +134,24 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IDisposable
     }
 
     /// <inheritdoc />
-    public void Close()
+    public void Close(Action? continueWith = null)
     {
-        if (!_isOpen) return;
+        if (!_isOpen || _continueWith != null) return;
 
         if (Transition != null)
         {
-            Transition.Hide(() => CloseCore(true));
+            Transition.Hide(() => CloseCore(continueWith, true));
             return;
         }
 
-        CloseCore();
+        CloseCore(continueWith);
     }
 
-    private void CloseCore(bool async = false)
+    private void CloseCore(Action? continueWith, bool async = false)
     {
         IsOpenChanged.InvokeAsync(_isOpen = false);
+
+        _continueWith = continueWith;
 
         ForceUpdate(async);
     }
@@ -164,13 +167,25 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IDisposable
     }
 
     /// <inheritdoc />
-    public void CloseFromTransition()
+    public void CloseFromTransition(Action? continueWith = null)
     {
-        CloseCore(true);
+        CloseCore(continueWith, true);
     }
 
     public void Dispose()
     {
         Transition?.RemoveDialog(this);
+    }
+
+    /// <inheritdoc />
+    public Task OnAfterRenderAsync()
+    {
+        var continueWith = _continueWith;
+        
+        _continueWith = null;
+        
+        continueWith?.Invoke();
+        
+        return Task.CompletedTask;
     }
 }

@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Disclosure : IgnisComponentBase, IDisclosure
+public sealed class Disclosure : IgnisComponentBase, IDisclosure, IHandleAfterRender
 {
+    private Action? _continueWith;
     private Type? _asComponent;
     private string? _asElement;
     private bool _isOpen;
@@ -93,22 +94,38 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure
     }
 
     /// <inheritdoc />
-    public void Open()
+    public void Open(Action? continueWith = null)
     {
-        if (_isOpen) return;
+        if (_isOpen || _continueWith != null) return;
         
         IsOpenChanged.InvokeAsync(_isOpen = true);
+
+        _continueWith = continueWith;
 
         ForceUpdate();
     }
 
     /// <inheritdoc />
-    public void Close()
+    public void Close(Action? continueWith = null)
     {
-        if (!_isOpen) return;
+        if (!_isOpen || _continueWith != null) return;
 
         IsOpenChanged.InvokeAsync(_isOpen = false);
 
+        _continueWith = continueWith;
+
         ForceUpdate();
+    }
+
+    /// <inheritdoc />
+    public Task OnAfterRenderAsync()
+    {
+        var continueWith = _continueWith;
+        
+        _continueWith = null;
+        
+        continueWith?.Invoke();
+        
+        return Task.CompletedTask;
     }
 }

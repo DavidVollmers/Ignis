@@ -79,7 +79,7 @@ public sealed class DialogPanel : IgnisRigidComponentBase, IDynamicParentCompone
             builder.OpenComponent<FocusDetector>(3);
             builder.AddAttribute(4, nameof(FocusDetector.Id), Dialog.Id);
             builder.AddAttribute(5, nameof(FocusDetector.Strict), false);
-            builder.AddAttribute(6, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, Dialog.Close));
+            builder.AddAttribute(6, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, () => Dialog.Close()));
             // ReSharper disable once VariableHidesOuterVariable
             builder.AddAttribute(7, nameof(FocusDetector.ChildContent),
                 this.GetChildContent<IDynamicComponent, DialogPanel>(ChildContent));

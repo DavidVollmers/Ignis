@@ -69,7 +69,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
         _attributes = new AttributeCollection(new[]
         {
             () => new KeyValuePair<string, object?>("aria-haspopup", "listbox"),
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Listbox.Open)),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, () => Listbox.Open())),
             () => new KeyValuePair<string, object?>("__internal_preventDefault_onkeydown", _preventKeyDownDefault),
 #pragma warning disable CS0618
             () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),

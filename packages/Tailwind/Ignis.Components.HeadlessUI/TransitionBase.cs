@@ -69,8 +69,6 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         
         UpdateState(TransitionState.Entering, () =>
         {
-            OnEnter();
-            
             UpdateState(TransitionState.Entered, () =>
             {
                 var duration = ParseDuration(Enter);
@@ -97,12 +95,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
                 {
                     RenderContent = false;
                     
-                    UpdateState(TransitionState.Default, () =>
-                    {
-                        OnLeft();
-                        
-                        continueWith?.Invoke();
-                    });
+                    UpdateState(TransitionState.Default, continueWith);
                 });
             });
         });
@@ -118,10 +111,6 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         
         ForceUpdate(true);
     }
-    
-    protected virtual void OnEnter() {}
-    
-    protected virtual void OnLeft() {}
 
     /// <inheritdoc />
     public virtual Task OnAfterRenderAsync()

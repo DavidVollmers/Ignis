@@ -6,5 +6,5 @@ public interface IDialog : IDynamicParentComponent<IDialog>, IOpenClose
     
     internal void SetTitle(IDialogTitle title);
 
-    internal void CloseFromTransition();
+    internal void CloseFromTransition(Action? continueWith = null);
 }
