@@ -60,7 +60,6 @@ public sealed class TransitionChild : TransitionBase, ITransitionChild, IDisposa
                 $"{nameof(TransitionChild)} must be used inside a {nameof(Transition)}.");
         }
 
-        //TODO check if parent is shown initially (for appear prop)
         Parent.AddChild(this);
     }
 
@@ -69,7 +68,7 @@ public sealed class TransitionChild : TransitionBase, ITransitionChild, IDisposa
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        if (IsShowing)
+        if (RenderContent)
             builder.AddChildContentFor<ITransitionChild, TransitionChild>(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);

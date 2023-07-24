@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
-public abstract class TransitionBase : IgnisComponentBase, ICssClass
+public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAfterRender
 {
     private TransitionState _state = TransitionState.Default;
-
-    protected bool IsShowing { get; private set; }
+    private Action? _continueWith;
+    
+    protected bool RenderContent { get; private set; }
 
     [Parameter] public string? Enter { get; set; }
 
@@ -64,43 +65,51 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass
     {
         if (_state != TransitionState.CanEnter && _state != TransitionState.Default) return;
 
-        IsShowing = true;
+        RenderContent = true;
         
-        UpdateState(TransitionState.Entering, true);
-
-        var duration = ParseDuration(Enter);
-        Task.Delay(duration ?? 0).ContinueWith(_ =>
+        UpdateState(TransitionState.CanEnter, () =>
         {
-            UpdateState(TransitionState.CanLeave, true);
-
-            continueWith?.Invoke();
+            UpdateState(TransitionState.Entering, () =>
+            {
+                var duration = ParseDuration(Enter);
+                Task.Delay(duration ?? 0).ContinueWith(_ =>
+                {
+                    UpdateState(TransitionState.CanLeave, continueWith);
+                });
+            });
         });
     }
 
     protected virtual void LeaveTransition(Action? continueWith = null)
     {
         if (_state != TransitionState.CanLeave && _state != TransitionState.Default) return;
-
-        UpdateState(TransitionState.Leaving);
-
-        var duration = ParseDuration(Leave);
-        Task.Delay(duration ?? 0).ContinueWith(_ =>
+        
+        RenderContent = true;
+        
+        UpdateState(TransitionState.CanLeave, () =>
         {
-            UpdateState(TransitionState.CanEnter, true);
-
-            continueWith?.Invoke();
-        
-            IsShowing = true;
-        
-            ForceUpdate(true);
+            UpdateState(TransitionState.Leaving, () =>
+            {
+                var duration = ParseDuration(Leave);
+                Task.Delay(duration ?? 0).ContinueWith(_ =>
+                {
+                    RenderContent = false;
+                    
+                    UpdateState(TransitionState.CanEnter, continueWith);
+                });
+            });
         });
     }
 
-    private void UpdateState(TransitionState state, bool async = false)
+    private void UpdateState(TransitionState state, Action? continueWith)
     {
+        if (_continueWith != null) return;
+        
         _state = state;
 
-        ForceUpdate(async);
+        _continueWith = continueWith;
+        
+        ForceUpdate(true);
     }
 
     private static int? ParseDuration(string? classString)
@@ -129,6 +138,18 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass
         }
 
         return int.Parse(durationString) * factor;
+    }
+
+    /// <inheritdoc />
+    public virtual Task OnAfterRenderAsync()
+    {
+        var continueWith = _continueWith;
+        
+        _continueWith = null;
+        
+        continueWith?.Invoke();
+        
+        return Task.CompletedTask;
     }
 
     private enum TransitionState

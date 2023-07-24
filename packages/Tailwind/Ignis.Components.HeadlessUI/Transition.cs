@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
+public sealed class Transition : TransitionBase, ITransition
 {
     private readonly IList<ITransitionChild> _children = new List<ITransitionChild>();
     private readonly IList<IDialog> _dialogs = new List<IDialog>();
@@ -91,7 +91,7 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
             builder.OpenComponent<CascadingValue<ITransition>>(3);
             builder.AddAttribute(4, nameof(CascadingValue<ITransition>.IsFixed), true);
             builder.AddAttribute(5, nameof(CascadingValue<ITransition>.Value), this);
-            if (IsShowing)
+            if (RenderContent)
                 builder.AddAttribute(6, nameof(CascadingValue<ITransition>.ChildContent),
                     this.GetChildContent(ChildContent));
 
@@ -170,18 +170,18 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
     }
 
     /// <inheritdoc />
-    public Task OnAfterRenderAsync()
+    public override Task OnAfterRenderAsync()
     {
-        if (_didRenderOnce) return Task.CompletedTask;
+        if (_didRenderOnce) return base.OnAfterRenderAsync();
 
         _didRenderOnce = true;
 
-        if (!Appear) return Task.CompletedTask;
+        if (!Appear) return base.OnAfterRenderAsync();
 
         if (_showInitially) EnterTransition();
         else LeaveTransition();
 
-        return Task.CompletedTask;
+        return base.OnAfterRenderAsync();
     }
 
     private void WatchTransition(bool isEnter, Action? continueWith)
@@ -189,7 +189,7 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
         var startedTransitions = new List<ITransitionChild>();
         var finishedTransitions = 0;
 
-        void StartTransition()
+        void ContinueWith()
         {
             ++finishedTransitions;
             
@@ -199,8 +199,8 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
                 
                 startedTransitions.Add(child);
                 
-                if (isEnter) child.Show(StartTransition);
-                else child.Hide(StartTransition);
+                if (isEnter) child.Show(ContinueWith);
+                else child.Hide(ContinueWith);
             }
 
             if (finishedTransitions == startedTransitions.Count + 1)
@@ -209,7 +209,7 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
             }
         }
 
-        if (isEnter) base.EnterTransition(StartTransition);
-        else base.LeaveTransition(StartTransition);
+        if (isEnter) base.EnterTransition(ContinueWith);
+        else base.LeaveTransition(ContinueWith);
     }
 }
