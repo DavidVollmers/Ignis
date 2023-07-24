@@ -186,36 +186,30 @@ public sealed class Transition : TransitionBase, ITransition, IHandleAfterRender
 
     private void WatchTransition(bool isEnter, Action? continueWith)
     {
-        var minChildCount = _children.Count;
-        var maxChildCount = _children.Count;
+        var startedTransitions = new List<ITransitionChild>();
+        var finishedTransitions = 0;
 
-        void MinContinueWith()
+        void StartTransition()
         {
-            --minChildCount;
+            ++finishedTransitions;
+            
+            foreach (var child in _children)
+            {
+                if (startedTransitions.Contains(child)) continue;
+                
+                startedTransitions.Add(child);
+                
+                if (isEnter) child.Show(StartTransition);
+                else child.Hide(StartTransition);
+            }
 
-            if (minChildCount == 0)
+            if (finishedTransitions == startedTransitions.Count + 1)
             {
                 continueWith?.Invoke();
             }
         }
 
-        void MaxContinueWith()
-        {
-            if (_children.Count == maxChildCount)
-            {
-                foreach (var child in _children)
-                {
-                    if (isEnter) child.Show(MinContinueWith);
-                    else child.Hide(MinContinueWith);
-                }
-
-                return;
-            }
-
-            minChildCount = maxChildCount = _children.Count;
-        }
-
-        if (isEnter) base.EnterTransition(MaxContinueWith);
-        else base.LeaveTransition(MaxContinueWith);
+        if (isEnter) base.EnterTransition(StartTransition);
+        else base.LeaveTransition(StartTransition);
     }
 }
