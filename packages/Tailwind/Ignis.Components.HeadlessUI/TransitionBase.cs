@@ -30,11 +30,11 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
             var originalClassString = AdditionalAttributes?.FirstOrDefault(a => a.Key == "class");
             return _state switch
             {
-                TransitionState.CanEnter => $"{originalClassString} {Enter} {EnterFrom}".Trim(),
-                TransitionState.Entering => $"{originalClassString} {Enter} {EnterTo}".Trim(),
-                TransitionState.CanLeave => $"{originalClassString} {Leave} {LeaveFrom}".Trim(),
-                TransitionState.Leaving => $"{originalClassString} {Leave} {LeaveTo}".Trim(),
-                _ => null
+                TransitionState.Entering => $"{originalClassString?.Value} {Enter} {EnterFrom}".Trim(),
+                TransitionState.Entered => $"{originalClassString?.Value} {Enter} {EnterTo}".Trim(),
+                TransitionState.Leaving => $"{originalClassString?.Value} {Leave} {LeaveFrom}".Trim(),
+                TransitionState.Left => $"{originalClassString?.Value} {Leave} {LeaveTo}".Trim(),
+                _ => originalClassString?.Value?.ToString()
             };
         }
     }
@@ -63,20 +63,20 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
     protected virtual void EnterTransition(Action? continueWith = null)
     {
-        if (_state != TransitionState.CanEnter && _state != TransitionState.Default) return;
+        if (_state != TransitionState.Default) return;
 
         RenderContent = true;
         
-        UpdateState(TransitionState.CanEnter, () =>
+        UpdateState(TransitionState.Entering, () =>
         {
             OnEnter();
             
-            UpdateState(TransitionState.Entering, () =>
+            UpdateState(TransitionState.Entered, () =>
             {
                 var duration = ParseDuration(Enter);
                 Task.Delay(duration ?? 0).ContinueWith(_ =>
                 {
-                    UpdateState(TransitionState.CanLeave, continueWith);
+                    UpdateState(TransitionState.Default, continueWith);
                 });
             });
         });
@@ -84,20 +84,20 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
     protected virtual void LeaveTransition(Action? continueWith = null)
     {
-        if (_state != TransitionState.CanLeave && _state != TransitionState.Default) return;
+        if (_state != TransitionState.Default) return;
         
         RenderContent = true;
         
-        UpdateState(TransitionState.CanLeave, () =>
+        UpdateState(TransitionState.Leaving, () =>
         {
-            UpdateState(TransitionState.Leaving, () =>
+            UpdateState(TransitionState.Left, () =>
             {
                 var duration = ParseDuration(Leave);
                 Task.Delay(duration ?? 0).ContinueWith(_ =>
                 {
                     RenderContent = false;
                     
-                    UpdateState(TransitionState.CanEnter, () =>
+                    UpdateState(TransitionState.Default, () =>
                     {
                         OnLeft();
                         
@@ -167,9 +167,9 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     private enum TransitionState
     {
         Default,
-        CanEnter,
         Entering,
-        CanLeave,
-        Leaving
+        Entered,
+        Leaving,
+        Left
     }
 }
