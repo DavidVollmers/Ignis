@@ -130,6 +130,8 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, ID
 
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
+        _continueWith = continueWith;
+        
         ForceUpdate();
     }
 
