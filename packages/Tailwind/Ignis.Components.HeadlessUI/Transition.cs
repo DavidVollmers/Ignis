@@ -156,29 +156,11 @@ public sealed class Transition : TransitionBase, ITransition
         _dialogs.Remove(dialog);
     }
 
-    /// <inheritdoc />
-    protected override void OnLeft()
-    {
-        foreach (var dialog in _dialogs)
-        {
-            dialog.CloseFromTransition();
-        }
-    }
-
-    /// <inheritdoc />
-    protected override void OnEnter()
-    {
-        foreach (var dialog in _dialogs)
-        {
-            dialog.Open();
-        }  
-    }
-
     private void WatchTransition(bool isEnter, Action? continueWith)
     {
         var startedTransitions = new List<ITransitionChild>();
         var finishedTransitions = 0;
-
+        
         void ContinueWith()
         {
             ++finishedTransitions;
@@ -197,12 +179,36 @@ public sealed class Transition : TransitionBase, ITransition
             if (finishedTransitions == startedTransitions.Count + 1)
             {
                 if (isEnter) continueWith?.Invoke();
-                else base.LeaveTransition(continueWith);
+                else AggregateDialogs(false, () => base.LeaveTransition(continueWith));
             }
         }
 
-        if (isEnter) base.EnterTransition(ContinueWith);
+        if (isEnter) base.EnterTransition(() => AggregateDialogs(true, ContinueWith));
         else ContinueWith();
+    }
+
+    private void AggregateDialogs(bool open, Action continueWith)
+    {
+        if (_dialogs.Count == 0)
+        {
+            continueWith();
+            return;
+        }
+        
+        var count = _dialogs.Count;
+        
+        void ContinueWith()
+        {
+            --count;
+            
+            if (count == 0) continueWith();
+        }
+        
+        foreach (var dialog in _dialogs)
+        {
+            if (open) dialog.Open(ContinueWith);
+            else dialog.CloseFromTransition(ContinueWith);
+        }
     }
 
     /// <inheritdoc />
