@@ -1,9 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <PackageId>Ignis.Components.Server</PackageId>
+    <Authors>david@vollmers.org</Authors>
+    <Copyright>David Vollmers</Copyright>
+    <Description>Provides classes for using Ignis components within a Blazor Server application</Description>
+    <PackageProjectUrl>https://github.com/DavidVollmers/Ignis/tree/master/packages/Ignis.Components.Server</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/DavidVollmers/Ignis.git</RepositoryUrl>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <LangVersion>11</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageOutputPath>..\..\nuget</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +23,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ignis.Components\Ignis.Components.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
 </Project>

@@ -8,8 +8,6 @@ public static class IgnisWebComponentExtensions
     public static IServiceCollection AddIgnisWebServices(this IServiceCollection serviceCollection)
     {
         if (serviceCollection is null) throw new ArgumentNullException(nameof(serviceCollection));
-
-        serviceCollection.AddIgnisServices();
         
         serviceCollection.TryAddScoped<ILocalStorage, LocalStorage>();
         

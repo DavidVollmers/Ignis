@@ -53,6 +53,17 @@ Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components.Web) for more 
     </div>
 </div>
 
+## Ignis.Components.Server
+
+Provides classes for using Ignis components within a Blazor Server application. This package is required if you want to
+use Ignis components in your Blazor Server application.
+
+You can easily install this package using the following command:
+
+```shell
+dotnet add package Ignis.Components.Server
+```
+
 ## Ignis.Utils
 
 This package contains a set of utilities that can be used in your application, like a static `Css` class that can be
