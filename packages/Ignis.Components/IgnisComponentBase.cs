@@ -24,12 +24,6 @@ public abstract class IgnisComponentBase : IComponent
 
     public void Attach(RenderHandle renderHandle)
     {
-        if (HostContext == null)
-        {
-            throw new InvalidOperationException(
-                "Missing host context. Make sure to either install Ignis.Components.Server or Ignis.Components.WebAssembly.");
-        }
-
         if (_renderHandle.IsInitialized)
         {
             throw new InvalidOperationException("Render handle already initialized.");

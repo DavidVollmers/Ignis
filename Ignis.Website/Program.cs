@@ -1,3 +1,4 @@
+using Ignis.Components.Server;
 using Ignis.Components.Web;
 using Ignis.Website.Services;
 
@@ -8,6 +9,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 builder.Services.AddLocalization();
+
+builder.Services.AddIgnisServerServices();
 
 builder.Services.AddIgnisWebServices();
 

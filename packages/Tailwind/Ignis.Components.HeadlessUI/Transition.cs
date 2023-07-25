@@ -91,7 +91,7 @@ public sealed class Transition : TransitionBase, ITransition
             builder.OpenComponent<CascadingValue<ITransition>>(3);
             builder.AddAttribute(4, nameof(CascadingValue<ITransition>.IsFixed), true);
             builder.AddAttribute(5, nameof(CascadingValue<ITransition>.Value), this);
-            if (RenderContent || _showInitially)
+            if (RenderContent || _show)
                 builder.AddAttribute(6, nameof(CascadingValue<ITransition>.ChildContent),
                     this.GetChildContent(ChildContent));
 
@@ -115,13 +115,20 @@ public sealed class Transition : TransitionBase, ITransition
     /// <inheritdoc />
     protected override void EnterTransition(Action? continueWith = null)
     {
+        _show = true;
+
         WatchTransition(true, continueWith);
     }
 
     /// <inheritdoc />
     protected override void LeaveTransition(Action? continueWith = null)
     {
-        WatchTransition(false, continueWith);
+        WatchTransition(false, () =>
+        {
+            _show = false;
+
+            continueWith?.Invoke();
+        });
     }
 
     /// <inheritdoc />
@@ -160,17 +167,17 @@ public sealed class Transition : TransitionBase, ITransition
     {
         var startedTransitions = new List<ITransitionChild>();
         var finishedTransitions = 0;
-        
+
         void ContinueWith()
         {
             ++finishedTransitions;
-            
+
             foreach (var child in _children)
             {
                 if (startedTransitions.Contains(child)) continue;
-                
+
                 startedTransitions.Add(child);
-                
+
                 if (isEnter) child.Show(ContinueWith);
                 else child.Hide(ContinueWith);
             }
@@ -194,16 +201,16 @@ public sealed class Transition : TransitionBase, ITransition
             continueWith();
             return;
         }
-        
+
         var count = _dialogs.Count;
-        
+
         void ContinueWith()
         {
             --count;
-            
+
             if (count == 0) continueWith();
         }
-        
+
         foreach (var dialog in _dialogs)
         {
             if (open) dialog.Open(ContinueWith);
