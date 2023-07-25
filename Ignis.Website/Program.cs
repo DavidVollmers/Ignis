@@ -1,4 +1,4 @@
-using Ignis.Components.HeadlessUI;
+using Ignis.Components;
 using Ignis.Components.Server;
 using Ignis.Components.Web;
 using Ignis.Website.Services;
@@ -13,8 +13,7 @@ builder.Services.AddLocalization();
 
 builder.Services.AddIgnisServer();
 builder.Services.AddIgnisWeb();
-
-builder.Services.AddHeadlessUI();
+builder.Services.AddIgnis();
 
 builder.Services.AddSingleton<IPageService, PageService>();
 
