@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutletRegistrySubscriber, IDisposable
+public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutletRegistrySubscriber, IOutlet,
+    IDisposable
 {
     private readonly IList<IDialog> _dialogs = new List<IDialog>();
 
@@ -62,13 +63,7 @@ public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutle
         {
             foreach (var dialog in _dialogs)
             {
-                if (dialog.IgnoreOutlet) continue;
-                
-                builder.OpenComponent<Outlet>(2);
-                builder.SetKey(dialog.Id);
-                builder.AddAttribute(3, nameof(Outlet.ChildContent), dialog.OutletContent);
-
-                builder.CloseComponent();
+                builder.AddContent(2, dialog.OutletContent);
             }
         });
 
@@ -79,10 +74,10 @@ public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutle
     public void OnComponentRegistered(IOutletComponent component)
     {
         if (component is not IDialog dialog) return;
-        
+
         _dialogs.Add(dialog);
-        
-        dialog.Adopt();
+
+        dialog.SetOutlet(this);
 
         ForceUpdate();
     }
@@ -95,20 +90,28 @@ public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutle
         if (!_dialogs.Contains(dialog)) return;
 
         _dialogs.Remove(dialog);
-            
+
+        dialog.SetFree();
+
         ForceUpdate();
+    }
+
+    /// <inheritdoc />
+    public void Update(bool async = false)
+    {
+        ForceUpdate(async);
     }
 
     public void Dispose()
     {
         _outletRegistry?.Unsubscribe(this);
         _outletRegistry = null;
-        
+
         foreach (var dialog in _dialogs)
         {
             dialog.SetFree();
         }
-        
+
         _dialogs.Clear();
     }
 }

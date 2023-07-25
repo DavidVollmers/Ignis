@@ -4,39 +4,54 @@ namespace Ignis.Components;
 
 public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComponent, IDisposable
 {
-    public bool IsAdopted { get; private set; }
+    private bool _ignoreOutlet;
+    private IOutlet? _outlet;
 
-    [Parameter] public bool IgnoreOutlet { get; set; }
+    [Parameter]
+    public bool IgnoreOutlet
+    {
+        get => _ignoreOutlet;
+        set
+        {
+            OutletRegistry.UnregisterComponent(this);
 
-    [CascadingParameter] public IOutlet? Outlet { get; set; }
-    
+            _ignoreOutlet = value;
+
+            if (!_ignoreOutlet) OutletRegistry.RegisterComponent(this);
+        }
+    }
+
     public RenderFragment OutletContent => BuildRenderTree;
 
-    protected override bool ShouldRender => IgnoreOutlet || !IsAdopted;
+    protected override bool ShouldRender => IgnoreOutlet || _outlet == null;
 
     [Inject] public IOutletRegistry OutletRegistry { get; set; } = null!;
 
     protected override void OnInitialized()
     {
-        OutletRegistry.RegisterComponent(this);
+        if (!IgnoreOutlet) OutletRegistry.RegisterComponent(this);
     }
 
     protected new void ForceUpdate(bool async = false)
     {
-        if (Outlet != null) Outlet.Update();
+        if (_outlet != null) _outlet.Update(async);
         else base.ForceUpdate(async);
     }
-    
-    public void Adopt()
+
+    public void SetOutlet(IOutlet outlet)
     {
-        if (IsAdopted) throw new InvalidOperationException("Component is already adopted.");
-        
-        IsAdopted = true;
+        if (outlet == null) throw new ArgumentNullException(nameof(outlet));
+
+        if (IgnoreOutlet) return;
+
+        if (_outlet != null && outlet != _outlet) throw new InvalidOperationException("Component is already adopted.");
+
+        _outlet = outlet;
     }
 
     public void SetFree()
     {
-        IsAdopted = false;
+        _outlet = null;
     }
 
     protected virtual void Dispose(bool disposing)
