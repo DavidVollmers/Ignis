@@ -9,4 +9,8 @@ public interface IOutletComponent : IComponent
     bool IgnoreOutlet { get; set; }
     
     RenderFragment? OutletContent { get; }
+    
+    void Adopt();
+
+    void SetFree();
 }

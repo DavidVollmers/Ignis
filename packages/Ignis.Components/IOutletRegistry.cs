@@ -5,6 +5,8 @@ public interface IOutletRegistry
     void RegisterComponent(IOutletComponent component);
 
     void UnregisterComponent(IOutletComponent component);
-
-    IEnumerable<IOutletComponent> GetFreeComponents();
+    
+    void Subscribe(IOutletRegistrySubscriber subscriber);
+    
+    void Unsubscribe(IOutletRegistrySubscriber subscriber);
 }

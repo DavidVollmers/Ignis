@@ -2,7 +2,7 @@
 
 namespace Ignis.Components;
 
-public class Outlet : IComponent, IOutlet
+public sealed class Outlet : IComponent, IOutlet
 {
     private readonly RenderFragment _renderFragment;
     
@@ -13,13 +13,18 @@ public class Outlet : IComponent, IOutlet
 
     [Inject] public IHostContext HostContext { get; set; } = null!;
 
-    protected Outlet()
+    public Outlet()
     {
         _renderFragment = builder =>
         {
             _hasPendingQueuedRender = false;
-            
-            ChildContent?.Invoke(builder);
+
+            builder.OpenComponent<CascadingValue<IOutlet>>(0);
+            builder.AddAttribute(1, nameof(CascadingValue<IOutlet>.IsFixed), true);
+            builder.AddAttribute(2, nameof(CascadingValue<IOutlet>.Value), this);
+            builder.AddAttribute(3, nameof(CascadingValue<IOutlet>.ChildContent), ChildContent);
+
+            builder.CloseComponent();
         };
     }
     

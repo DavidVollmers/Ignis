@@ -4,7 +4,7 @@ namespace Ignis.Components;
 
 public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComponent, IDisposable
 {
-    public bool IsAdopted => Outlet != null;
+    public bool IsAdopted { get; private set; }
 
     [Parameter] public bool IgnoreOutlet { get; set; }
 
@@ -25,6 +25,18 @@ public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComp
     {
         if (Outlet != null) Outlet.Update();
         else base.ForceUpdate(async);
+    }
+    
+    public void Adopt()
+    {
+        if (IsAdopted) throw new InvalidOperationException("Component is already adopted.");
+        
+        IsAdopted = true;
+    }
+
+    public void SetFree()
+    {
+        IsAdopted = false;
     }
 
     protected virtual void Dispose(bool disposing)
