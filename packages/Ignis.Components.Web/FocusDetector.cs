@@ -49,7 +49,7 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender
 
     public async Task OnAfterRenderAsync()
     {
-        if (Server.IsPrerendering || _isFocused.HasValue) return;
+        if (HostContext.IsPrerendering || _isFocused.HasValue) return;
         
         await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusDetector", DotNetObjectReference.Create(this), Id, _element);
     }

@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Ignis.Components;
+namespace Ignis.Components.Server;
 
-internal class Server : IServer
+internal class ServerHostContext : IHostContext
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public bool IsPrerendering => !_httpContextAccessor.HttpContext!.Response.HasStarted;
 
-    public Server(IHttpContextAccessor httpContextAccessor)
+    public ServerHostContext(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
     }

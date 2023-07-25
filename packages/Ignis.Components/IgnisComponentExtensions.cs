@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.AspNetCore.Components.RenderTree;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -14,7 +13,7 @@ public static class IgnisComponentExtensions
 
         serviceCollection.AddHttpContextAccessor();
 
-        serviceCollection.TryAddSingleton<IServer, Server>();
+        serviceCollection.TryAddSingleton<IHostContext, Server>();
 
         return serviceCollection;
     }

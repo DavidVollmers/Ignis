@@ -1,6 +1,6 @@
 ﻿namespace Ignis.Components;
 
-public interface IServer
+public interface IHostContext
 {
     bool IsPrerendering { get; }
 }

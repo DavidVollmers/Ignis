@@ -482,7 +482,9 @@ $RECYCLE.BIN/
 !packages/ignis.net
 !packages/Ignis
 !packages/Ignis.Components
+!packages/Ignis.Components.Server
 !packages/Ignis.Components.Web
+!packages/Ignis.Components.WebAssembly
 !packages/Ignis.Fragments
 !packages/Ignis.Fragments.Abstractions
 !packages/Ignis.Fragments.Extensions
