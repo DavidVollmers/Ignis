@@ -14,4 +14,4 @@ InvalidOperationException: Cannot provide a value for property 'HostContext' on 
 ```
 
 **Solution:** Make sure to install either the `Ignis.Components.Server` or `Ignis.Components.WebAssembly` package in
-your project and call either `AddIgnisServerServices` or `AddIgnisWebAssemblyServices` in your `Program.cs`.
+your project and call either `AddIgnisServer` or `AddIgnisWebAssembly` in your `Program.cs`.

@@ -1,6 +1,6 @@
 ﻿namespace Ignis.Components.HeadlessUI;
 
-public interface IDialog : IDynamicParentComponent<IDialog>, IOpenClose
+public interface IDialog : IDynamicParentComponent<IDialog>, IOpenClose, IOutletComponent
 {
     string Id { get; }
     

@@ -1,10 +1,21 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Ignis.Components;
 
 public static class IgnisComponentExtensions
 {
+    public static IServiceCollection AddIgnis(this IServiceCollection serviceCollection)
+    {
+        if (serviceCollection == null) throw new ArgumentNullException(nameof(serviceCollection));
+
+        serviceCollection.TryAddScoped<IOutletRegistry, OutletRegistry>();
+        
+        return serviceCollection;
+    }
+    
 #pragma warning disable ASP0006
     public static void OpenAs(this RenderTreeBuilder builder, int sequence, IDynamicComponent dynamicComponent)
     {

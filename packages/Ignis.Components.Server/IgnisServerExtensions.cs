@@ -5,7 +5,7 @@ namespace Ignis.Components.Server;
 
 public static class IgnisServerExtensions
 {
-    public static IServiceCollection AddIgnisServerServices(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddIgnisServer(this IServiceCollection serviceCollection)
     {
         if (serviceCollection is null) throw new ArgumentNullException(nameof(serviceCollection));
 

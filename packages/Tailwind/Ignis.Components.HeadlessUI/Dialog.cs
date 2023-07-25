@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, IDisposable
+public sealed class Dialog : IgnisComponentBase, IDialog, IOutletComponent, IHandleAfterRender, IDisposable
 {
     private readonly AttributeCollection _attributes;
 
@@ -82,6 +82,11 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, ID
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
+    /// <inheritdoc />
+    public RenderFragment OutletContent => BuildRenderTreeCore;
+
+    [Inject] internal IOutletRegistry OutletRegistry { get; set; } = null!;
+    
     public Dialog()
     {
         AsElement = "div";
@@ -100,14 +105,23 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, ID
     /// <inheritdoc />
     protected override void OnInitialized()
     {
+        OutletRegistry.RegisterComponent(this);
+        
         Transition?.AddDialog(this);
     }
 
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        if (!_isOpen) return;
+        if (OutletRegistry.HasOutletFor(this)) return;
+        
+        BuildRenderTreeCore(builder);
+    }
 
+    private void BuildRenderTreeCore(RenderTreeBuilder builder)
+    {
+        if (!_isOpen) return;
+        
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         // ReSharper disable once VariableHidesOuterVariable
@@ -195,6 +209,8 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, ID
 
     public void Dispose()
     {
+        OutletRegistry.UnregisterComponent(this);
+        
         Transition?.RemoveDialog(this);
     }
 }
