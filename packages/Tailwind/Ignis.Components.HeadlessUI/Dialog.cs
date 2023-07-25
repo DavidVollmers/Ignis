@@ -12,7 +12,6 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     private IDialogTitle? _title;
     private Type? _asComponent;
     private string? _asElement;
-    private bool _didOpen;
     private bool _isOpen;
 
     /// <inheritdoc />
@@ -134,8 +133,6 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
         _continueWith = continueWith;
-
-        _didOpen = true;
         
         ForceUpdate();
     }
@@ -143,7 +140,7 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     /// <inheritdoc />
     public void Close(Action? continueWith = null)
     {
-        if (_didOpen || !_isOpen || _continueWith != null) return;
+        if (!_isOpen || _continueWith != null) return;
 
         if (Transition != null)
         {
@@ -184,8 +181,6 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     /// <inheritdoc />
     public Task OnAfterRenderAsync()
     {
-        if (_didOpen) _didOpen = false;
-        
         var continueWith = _continueWith;
 
         _continueWith = null;
