@@ -64,6 +64,8 @@ You can easily install this package using the following command:
 dotnet add package Ignis.Components.Server
 ```
 
+Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components.Server) for more information.
+
 ## Ignis.Utils
 
 This package contains a set of utilities that can be used in your application, like a static `Css` class that can be

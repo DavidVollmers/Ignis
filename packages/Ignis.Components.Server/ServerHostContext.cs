@@ -6,7 +6,7 @@ internal class ServerHostContext : IHostContext
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public bool IsPrerendering => !_httpContextAccessor.HttpContext!.Response.HasStarted;
+    public bool IsPrerendering => !_httpContextAccessor.HttpContext?.Response.HasStarted ?? false;
 
     public ServerHostContext(IHttpContextAccessor httpContextAccessor)
     {
