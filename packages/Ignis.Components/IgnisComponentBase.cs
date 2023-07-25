@@ -11,6 +11,8 @@ public abstract class IgnisComponentBase : IComponent
     private RenderHandle _renderHandle;
     private bool _hasPendingQueuedRender;
 
+    protected virtual bool ShouldRender => true;
+
     [Inject] public IHostContext HostContext { get; set; } = null!;
 
     protected IgnisComponentBase()
@@ -18,6 +20,7 @@ public abstract class IgnisComponentBase : IComponent
         _renderFragment = builder =>
         {
             _hasPendingQueuedRender = false;
+            
             BuildRenderTree(builder);
         };
     }
@@ -54,16 +57,16 @@ public abstract class IgnisComponentBase : IComponent
     {
         if (async)
         {
-            _renderHandle.Dispatcher.InvokeAsync(ForceUpdateCore);
+            _renderHandle.Dispatcher.InvokeAsync(QueueRender);
             return;
         }
 
-        ForceUpdateCore();
+        QueueRender();
     }
 
-    private void ForceUpdateCore()
+    private void QueueRender()
     {
-        if (_hasPendingQueuedRender || !_renderHandle.IsInitialized) return;
+        if (_hasPendingQueuedRender || !_renderHandle.IsInitialized || !ShouldRender) return;
 
         _hasPendingQueuedRender = true;
 

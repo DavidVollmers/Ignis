@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DialogOutlet : IgnisRigidComponentBase, IDynamicComponent, IOutlet, IDisposable
+public sealed class DialogOutlet : IgnisRigidComponentBase, IDynamicComponent
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -32,36 +32,32 @@ public sealed class DialogOutlet : IgnisRigidComponentBase, IDynamicComponent, I
         }
     }
 
-    [Inject] internal IOutletRegistry OutletRegistry { get; set; } = null!;
-    
+    [Inject] public IOutletRegistry OutletRegistry { get; set; } = null!;
+
     public DialogOutlet()
     {
         AsComponent = typeof(Fragment);
     }
 
     /// <inheritdoc />
-    protected override void OnRender()
-    {
-        OutletRegistry.AddOutlet(this);
-    }
-
-    /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
-        
-        
+        // ReSharper disable once VariableHidesOuterVariable
+        builder.AddContentFor(1, this, builder =>
+        {
+            foreach (var component in OutletRegistry.GetFreeComponents())
+            {
+                if (component is not IDialog dialog) continue;
+                
+                builder.OpenComponent<Outlet>(2);
+                builder.SetKey(dialog.Id);
+                builder.AddAttribute(3, nameof(Outlet.ChildContent), dialog.OutletContent);
+                
+                builder.CloseComponent();
+            }
+        });
+
         builder.CloseAs(this);
-    }
-
-    public void Dispose()
-    {
-        OutletRegistry.RemoveOutlet(this);
-    }
-
-    /// <inheritdoc />
-    public bool CanOutlet(IOutletComponent outletComponent)
-    {
-        return outletComponent is IDialog;
     }
 }

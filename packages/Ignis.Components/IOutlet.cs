@@ -2,5 +2,5 @@
 
 public interface IOutlet
 {
-    bool CanOutlet(IOutletComponent outletComponent);
+    void Update(bool async = false);
 }

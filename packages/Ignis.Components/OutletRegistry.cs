@@ -2,22 +2,7 @@
 
 internal class OutletRegistry : IOutletRegistry
 {
-    private readonly IList<IOutlet> _outlets = new List<IOutlet>();
     private readonly IList<IOutletComponent> _components = new List<IOutletComponent>();
-
-    public void AddOutlet(IOutlet outlet)
-    {
-        if (outlet == null) throw new ArgumentNullException(nameof(outlet));
-
-        if (!_outlets.Contains(outlet)) _outlets.Add(outlet);
-    }
-
-    public void RemoveOutlet(IOutlet outlet)
-    {
-        if (outlet == null) throw new ArgumentNullException(nameof(outlet));
-
-        _outlets.Remove(outlet);
-    }
 
     public void RegisterComponent(IOutletComponent component)
     {
@@ -33,10 +18,8 @@ internal class OutletRegistry : IOutletRegistry
         _components.Remove(component);
     }
 
-    public bool HasOutletFor(IOutletComponent component)
+    public IEnumerable<IOutletComponent> GetFreeComponents()
     {
-        if (component == null) throw new ArgumentNullException(nameof(component));
-
-        return _components.Contains(component) && _outlets.Any(outlet => outlet.CanOutlet(component));
+        return _components.Where(component => !component.IsAdopted);
     }
 }

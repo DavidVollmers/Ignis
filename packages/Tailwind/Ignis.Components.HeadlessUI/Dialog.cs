@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Dialog : IgnisComponentBase, IDialog, IOutletComponent, IHandleAfterRender, IDisposable
+public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRender
 {
     private readonly AttributeCollection _attributes;
 
@@ -81,11 +81,6 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IOutletComponent, IHan
 
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    /// <inheritdoc />
-    public RenderFragment OutletContent => BuildRenderTreeCore;
-
-    [Inject] internal IOutletRegistry OutletRegistry { get; set; } = null!;
     
     public Dialog()
     {
@@ -105,20 +100,13 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IOutletComponent, IHan
     /// <inheritdoc />
     protected override void OnInitialized()
     {
-        OutletRegistry.RegisterComponent(this);
-        
         Transition?.AddDialog(this);
+        
+        base.OnInitialized();
     }
 
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
-    {
-        if (OutletRegistry.HasOutletFor(this)) return;
-        
-        BuildRenderTreeCore(builder);
-    }
-
-    private void BuildRenderTreeCore(RenderTreeBuilder builder)
     {
         if (!_isOpen) return;
         
@@ -207,10 +195,14 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IOutletComponent, IHan
         return Task.CompletedTask;
     }
 
-    public void Dispose()
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
     {
-        OutletRegistry.UnregisterComponent(this);
+        if (disposing)
+        {
+            Transition?.RemoveDialog(this);
+        }
         
-        Transition?.RemoveDialog(this);
+        base.Dispose(disposing);
     }
 }
