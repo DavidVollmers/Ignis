@@ -12,6 +12,7 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, ID
     private IDialogTitle? _title;
     private Type? _asComponent;
     private string? _asElement;
+    private bool _didOpen;
     private bool _isOpen;
 
     /// <inheritdoc />
@@ -132,13 +133,15 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, ID
 
         _continueWith = continueWith;
 
+        _didOpen = true;
+        
         ForceUpdate();
     }
 
     /// <inheritdoc />
     public void Close(Action? continueWith = null)
     {
-        if (!_isOpen || _continueWith != null) return;
+        if (_didOpen || !_isOpen || _continueWith != null) return;
 
         if (Transition != null)
         {
@@ -161,21 +164,13 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, ID
     /// <inheritdoc />
     public void SetTitle(IDialogTitle title)
     {
-        if (_title != null && _title != title)
-            throw new InvalidOperationException(
-                $"{nameof(Dialog)} cannot contain multiple {nameof(DialogTitle)} components.");
-
-        _title = title;
+        _title = title ?? throw new ArgumentNullException(nameof(title));
     }
 
     /// <inheritdoc />
     public void SetDescription(IDialogDescription description)
     {
-        if (_description != null && _description != description)
-            throw new InvalidOperationException(
-                $"{nameof(Dialog)} cannot contain multiple {nameof(DialogDescription)} components.");
-
-        _description = description;
+        _description = description ?? throw new ArgumentNullException(nameof(description));
     }
 
     /// <inheritdoc />
@@ -184,14 +179,11 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, ID
         CloseCore(continueWith, true);
     }
 
-    public void Dispose()
-    {
-        Transition?.RemoveDialog(this);
-    }
-
     /// <inheritdoc />
     public Task OnAfterRenderAsync()
     {
+        if (_didOpen) _didOpen = false;
+        
         var continueWith = _continueWith;
 
         _continueWith = null;
@@ -199,5 +191,10 @@ public sealed class Dialog : IgnisComponentBase, IDialog, IHandleAfterRender, ID
         continueWith?.Invoke();
 
         return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        Transition?.RemoveDialog(this);
     }
 }

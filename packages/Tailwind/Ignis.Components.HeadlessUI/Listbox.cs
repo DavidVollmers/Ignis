@@ -240,30 +240,18 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     /// <inheritdoc />
     public void SetButton(IFocus button)
     {
-        if (_button != null && _button != button)
-            throw new InvalidOperationException(
-                $"{nameof(Listbox<object>)} cannot contain multiple {nameof(ListboxButton)} components.");
-
         _button = button ?? throw new ArgumentNullException(nameof(button));
     }
 
     /// <inheritdoc />
     public void SetLabel(IListboxLabel label)
     {
-        if (Label != null && Label != label)
-            throw new InvalidOperationException(
-                $"{nameof(Listbox<object>)} cannot contain multiple {nameof(ListboxLabel)} components.");
-
         Label = label ?? throw new ArgumentNullException(nameof(label));
     }
 
     /// <inheritdoc />
     public void SetTransition(ITransition transition)
     {
-        if (_transition != null && _transition != transition)
-            throw new InvalidOperationException(
-                $"{nameof(Listbox<object>)} cannot contain multiple {nameof(Transition)} components.");
-
         _transition = transition ?? throw new ArgumentNullException(nameof(transition));
     }
 
