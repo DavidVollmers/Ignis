@@ -4,7 +4,7 @@ using Microsoft.JSInterop;
 
 namespace Ignis.Components.Web;
 
-public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender
+public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender, IAsyncDisposable
 {
     private ElementReference? _element;
     private bool? _isFocused;
@@ -19,7 +19,7 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender
 
     [Parameter, EditorRequired] public string Id { get; set; } = null!;
 
-    [Parameter] public bool Strict { get; set; } = true;
+    [Parameter] public bool DefaultValue { get; set; } = true;
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
@@ -30,7 +30,7 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender
     [JSInvokable]
     public async Task OnFocusAsync()
     {
-        if (Strict && _isFocused.HasValue && _isFocused.Value) return;
+        if (_isFocused.HasValue && _isFocused.Value) return;
 
         _isFocused = true;
 
@@ -40,7 +40,7 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender
     [JSInvokable]
     public async Task OnBlurAsync()
     {
-        if (Strict && _isFocused.HasValue && !_isFocused.Value) return;
+        if (_isFocused.HasValue && !_isFocused.Value) return;
 
         _isFocused = false;
 
@@ -50,8 +50,9 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender
     public async Task OnAfterRenderAsync()
     {
         if (HostContext.IsPrerendering || _isFocused.HasValue) return;
-        
-        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusDetector", DotNetObjectReference.Create(this), Id, _element);
+
+        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusDetector", DotNetObjectReference.Create(this), Id,
+            _element, _isFocused ?? DefaultValue);
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -67,5 +68,10 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender
         builder.AddContent(4, ChildContent);
 
         builder.CloseElement();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusDetector", null, Id);
     }
 }

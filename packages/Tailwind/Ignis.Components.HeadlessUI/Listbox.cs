@@ -122,7 +122,6 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
         {
             builder.OpenComponent<FocusDetector>(3);
             builder.AddAttribute(4, nameof(FocusDetector.Id), Id);
-            builder.AddAttribute(5, nameof(FocusDetector.Strict), false);
             builder.AddAttribute(6, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, () => Close()));
             // ReSharper disable once VariableHidesOuterVariable
             builder.AddAttribute(7, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
