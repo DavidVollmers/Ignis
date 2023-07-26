@@ -156,7 +156,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
 
             if (_transition != null) _transition.Show(continueWith);
             else continueWith?.Invoke();
-        });
+        }, ForceUpdate);
         
         ForceUpdate();
     }
@@ -179,7 +179,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     {
         IsOpenChanged.InvokeAsync(_isOpen = false);
 
-        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith);
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, ForceUpdate);
 
         ForceUpdate(async);
     }

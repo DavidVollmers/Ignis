@@ -133,7 +133,7 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
 
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
-        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith);
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, ForceUpdate);
 
         ForceUpdate();
     }
@@ -156,7 +156,7 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     {
         IsOpenChanged.InvokeAsync(_isOpen = false);
 
-        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith);
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, ForceUpdate);
 
         ForceUpdate(async);
     }
