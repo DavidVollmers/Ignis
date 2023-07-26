@@ -20,7 +20,7 @@ jobs:
       - run: |
           dotnet build tools/Ignis.Markdown.Processor -c Release
           dotnet tools/Ignis.Markdown.Processor/bin/Release/net6.0/Ignis.Markdown.Processor.dll
-      - run: dotnet publish Ignis.Website/Ignis.Website.csproj -c Release
+      - run: dotnet publish website/Ignis.Website/Ignis.Website.csproj -c Release
       - uses: azure/docker-login@v1
         with:
           login-server: ${{ secrets.ACR_LOGIN_SERVER }}
@@ -29,7 +29,7 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - run: docker build Ignis.Website -t ${{ secrets.ACR_LOGIN_SERVER }}/ignis-website:${{ github.sha }}
+      - run: docker build website/Ignis.Website -t ${{ secrets.ACR_LOGIN_SERVER }}/ignis-website:${{ github.sha }}
       - run: docker push ${{ secrets.ACR_LOGIN_SERVER }}/ignis-website:${{ github.sha }}
       - uses: Azure/container-apps-deploy-action@v1
         with:
