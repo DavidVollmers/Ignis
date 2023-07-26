@@ -8,7 +8,9 @@ public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComp
     private IOutlet? _outlet;
 
     [Parameter]
+#pragma warning disable BL0007
     public bool IgnoreOutlet
+#pragma warning restore BL0007
     {
         get => _ignoreOutlet;
         set
