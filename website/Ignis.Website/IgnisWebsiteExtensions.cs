@@ -7,12 +7,14 @@ namespace Ignis.Website;
 
 public static class IgnisWebsiteExtensions
 {
-    public static IServiceCollection AddIgnisWebsite(this IServiceCollection services)
+    public static IServiceCollection AddIgnisWebsite<T>(this IServiceCollection services) where T : class, IPageService
     {
-        services.AddIgnisWeb();
+        services.AddLocalization();
+        
+        services.AddIgnisWeb(); 
         services.AddIgnis();
 
-        services.AddSingleton<IPageService, PageService>();
+        services.AddSingleton<IPageService, T>();
 
         return services;
     }

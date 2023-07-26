@@ -4,9 +4,9 @@ namespace Ignis.Website.Services;
 
 public interface IPageService
 {
-    Section? GetSectionByLink(string link);
+    Task<Section?> GetSectionByLinkAsync(string link, CancellationToken cancellationToken = default);
     
-    Section[] GetSections();
+    Task<Section[]?> GetSectionsAsync(CancellationToken cancellationToken = default);
     
-    string? GetPageContent(Page page);
+    Task<string?> GetPageContentAsync(Page page, CancellationToken cancellationToken = default);
 }
