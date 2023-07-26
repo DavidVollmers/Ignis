@@ -1,6 +1,7 @@
 using Ignis.Components.Server;
 using Ignis.Website;
 using Ignis.Website.Server.Services;
+using Ignis.Website.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-builder.Services.AddIgnisWebsite<PageService>();
+builder.Services.AddSingleton<IPageService, PageService>();
+builder.Services.AddIgnisWebsite();
 builder.Services.AddIgnisServer();
 
 var app = builder.Build();

@@ -7,7 +7,7 @@ namespace Ignis.Website.WebAssembly.Services;
 
 internal class PageService : PageServiceBase
 {
-    private const string DocsPath = "/wwwroot/docs";
+    private const string DocsPath = "/docs";
 
     private readonly HttpClient _httpClient;
     private readonly ILogger<PageService> _logger;
