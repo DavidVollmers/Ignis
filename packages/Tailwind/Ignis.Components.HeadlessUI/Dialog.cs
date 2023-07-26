@@ -8,7 +8,6 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     private readonly AttributeCollection _attributes;
 
     private IDialogDescription? _description;
-    private Action? _continueWith;
     private IDialogTitle? _title;
     private Type? _asComponent;
     private string? _asElement;
@@ -80,7 +79,9 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
 
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-    
+
+    [Inject] internal FrameTracker FrameTracker { get; set; }
+
     public Dialog()
     {
         AsElement = "div";
@@ -100,7 +101,7 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     protected override void OnInitialized()
     {
         Transition?.AddDialog(this);
-        
+
         base.OnInitialized();
     }
 
@@ -108,7 +109,7 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         if (!_isOpen) return;
-        
+
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         // ReSharper disable once VariableHidesOuterVariable
@@ -128,19 +129,19 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     /// <inheritdoc />
     public void Open(Action? continueWith = null)
     {
-        if (_isOpen || _continueWith != null) return;
+        if (_isOpen || FrameTracker.IsPending) return;
 
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
-        _continueWith = continueWith;
-        
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith);
+
         ForceUpdate();
     }
 
     /// <inheritdoc />
     public void Close(Action? continueWith = null)
     {
-        if (!_isOpen || _continueWith != null) return;
+        if (!_isOpen || FrameTracker.IsPending) return;
 
         if (Transition != null)
         {
@@ -155,7 +156,7 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     {
         IsOpenChanged.InvokeAsync(_isOpen = false);
 
-        _continueWith = continueWith;
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith);
 
         ForceUpdate(async);
     }
@@ -181,11 +182,7 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     /// <inheritdoc />
     public Task OnAfterRenderAsync()
     {
-        var continueWith = _continueWith;
-
-        _continueWith = null;
-
-        continueWith?.Invoke();
+        FrameTracker.OnAfterRender();
 
         return Task.CompletedTask;
     }
@@ -197,7 +194,7 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
         {
             Transition?.RemoveDialog(this);
         }
-        
+
         base.Dispose(disposing);
     }
 }

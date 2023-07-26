@@ -5,7 +5,6 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Disclosure : IgnisComponentBase, IDisclosure, IHandleAfterRender
 {
-    private Action? _continueWith;
     private Type? _asComponent;
     private string? _asElement;
     private bool _isOpen;
@@ -68,6 +67,8 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure, IHandleAfterRe
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
+    [Inject] internal FrameTracker FrameTracker { get; set; }
+
     public Disclosure()
     {
         AsComponent = typeof(Fragment);
@@ -96,11 +97,11 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure, IHandleAfterRe
     /// <inheritdoc />
     public void Open(Action? continueWith = null)
     {
-        if (_isOpen || _continueWith != null) return;
+        if (_isOpen || FrameTracker.IsPending) return;
         
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
-        _continueWith = continueWith;
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith);
 
         ForceUpdate();
     }
@@ -108,11 +109,11 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure, IHandleAfterRe
     /// <inheritdoc />
     public void Close(Action? continueWith = null)
     {
-        if (!_isOpen || _continueWith != null) return;
+        if (!_isOpen || FrameTracker.IsPending) return;
 
         IsOpenChanged.InvokeAsync(_isOpen = false);
 
-        _continueWith = continueWith;
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith);
 
         ForceUpdate();
     }
@@ -120,11 +121,7 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure, IHandleAfterRe
     /// <inheritdoc />
     public Task OnAfterRenderAsync()
     {
-        var continueWith = _continueWith;
-        
-        _continueWith = null;
-        
-        continueWith?.Invoke();
+        FrameTracker.OnAfterRender();
         
         return Task.CompletedTask;
     }

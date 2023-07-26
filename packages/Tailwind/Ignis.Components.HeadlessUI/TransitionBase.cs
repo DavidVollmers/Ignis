@@ -6,7 +6,6 @@ namespace Ignis.Components.HeadlessUI;
 public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAfterRender
 {
     private TransitionState _state = TransitionState.Default;
-    private Action? _continueWith;
 
     protected bool RenderContent { get; private set; }
 
@@ -21,6 +20,9 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     [Parameter] public string? LeaveFrom { get; set; }
 
     [Parameter] public string? LeaveTo { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
     public string? CssClass
@@ -60,8 +62,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         }
     }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
+    [Inject] internal FrameTracker FrameTracker { get; set; }
 
     protected virtual void EnterTransition(Action? continueWith = null)
     {
@@ -105,11 +106,11 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
     private void UpdateState(TransitionState state, Action? continueWith)
     {
-        if (_continueWith != null) return;
+        if (FrameTracker.IsPending) return;
 
         _state = state;
 
-        _continueWith = continueWith;
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith);
 
         ForceUpdate(true);
     }
@@ -117,11 +118,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     /// <inheritdoc />
     public virtual Task OnAfterRenderAsync()
     {
-        var continueWith = _continueWith;
-
-        _continueWith = null;
-
-        continueWith?.Invoke();
+        FrameTracker.OnAfterRender();
 
         return Task.CompletedTask;
     }

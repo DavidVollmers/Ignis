@@ -1,12 +1,14 @@
 ﻿namespace Ignis.Components;
 
-internal class NextFrameTracker
+internal class FrameTracker
 {
     private readonly IHostContext _hostContext;
 
     private Action? _action;
 
-    public NextFrameTracker(IHostContext hostContext)
+    public bool IsPending => _action != null;
+
+    public FrameTracker(IHostContext hostContext)
     {
         _hostContext = hostContext ?? throw new ArgumentNullException(nameof(hostContext));
     }
@@ -15,6 +17,7 @@ internal class NextFrameTracker
     {
         if (action == null) throw new ArgumentNullException(nameof(action));
 
+        // If we're server-side, we can just execute the action on the next render, otherwise we need to wait for the second render. (WebAssembly)
         _action = _hostContext.IsServerSide
             ? action
             : () =>
@@ -25,6 +28,10 @@ internal class NextFrameTracker
 
     public void OnAfterRender()
     {
-        _action?.Invoke();
+        var action = _action;
+
+        _action = null;
+        
+        action?.Invoke();
     }
 }

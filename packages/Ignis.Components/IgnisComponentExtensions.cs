@@ -11,7 +11,7 @@ public static class IgnisComponentExtensions
     {
         if (serviceCollection == null) throw new ArgumentNullException(nameof(serviceCollection));
 
-        serviceCollection.AddTransient<NextFrameTracker>();
+        serviceCollection.AddTransient<FrameTracker>();
         
         serviceCollection.TryAddScoped<IOutletRegistry, OutletRegistry>();
         

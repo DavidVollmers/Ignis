@@ -13,7 +13,6 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     private readonly IList<IListboxOption> _options = new List<IListboxOption>();
 
     private ITransition? _transition;
-    private Action? _continueWith;
     private Type? _asComponent;
     private string? _asElement;
     private IFocus? _button;
@@ -104,6 +103,8 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
+    [Inject] internal FrameTracker FrameTracker { get; set; }
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Listbox{TValue}"/> class.
     /// </summary>
@@ -144,18 +145,18 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     /// <inheritdoc />
     public void Open(Action? continueWith = null)
     {
-        if (_isOpen || _continueWith != null) return;
+        if (_isOpen || FrameTracker.IsPending) return;
 
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
-        _continueWith = () =>
+        FrameTracker.ExecuteOnNextFrame(() =>
         {
             var selectedOption = Options.FirstOrDefault(x => x.IsSelected);
             if (selectedOption != null) SetOptionActive(selectedOption, true);
 
             if (_transition != null) _transition.Show(continueWith);
             else continueWith?.Invoke();
-        };
+        });
         
         ForceUpdate();
     }
@@ -163,7 +164,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     /// <inheritdoc />
     public void Close(Action? continueWith = null)
     {
-        if (!_isOpen || _continueWith != null) return;
+        if (!_isOpen || FrameTracker.IsPending) return;
 
         if (_transition != null)
         {
@@ -178,7 +179,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     {
         IsOpenChanged.InvokeAsync(_isOpen = false);
 
-        _continueWith = continueWith;
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith);
 
         ForceUpdate(async);
     }
@@ -257,11 +258,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     /// <inheritdoc />
     public Task OnAfterRenderAsync()
     {
-        var continueWith = _continueWith;
-        
-        _continueWith = null;
-        
-        continueWith?.Invoke();
+        FrameTracker.OnAfterRender();
         
         return Task.CompletedTask;
     }
