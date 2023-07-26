@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Ignis.Website": {
+    "Ignis.Website.Server": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
