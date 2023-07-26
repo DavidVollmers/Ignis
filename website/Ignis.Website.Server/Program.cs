@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
-builder.Services.AddSingleton<IPageService, PageService>();
+builder.Services.AddSingleton<IStaticFileService, StaticFileService>();
 builder.Services.AddIgnisWebsite();
 builder.Services.AddIgnisServer();
 

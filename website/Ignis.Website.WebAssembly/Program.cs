@@ -10,7 +10,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped<IPageService, PageService>();
+builder.Services.AddScoped<IStaticFileService, StaticFileService>();
 builder.Services.AddIgnisWebsite();
 builder.Services.AddIgnisWebAssembly();
 
