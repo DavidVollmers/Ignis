@@ -62,7 +62,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         }
     }
 
-    [Inject] internal FrameTracker FrameTracker { get; set; }
+    [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
 
     protected virtual void EnterTransition(Action? continueWith = null)
     {

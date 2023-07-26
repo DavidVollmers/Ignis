@@ -80,7 +80,7 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
-    [Inject] internal FrameTracker FrameTracker { get; set; }
+    [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
 
     public Dialog()
     {

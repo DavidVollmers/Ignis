@@ -103,7 +103,7 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
-    [Inject] internal FrameTracker FrameTracker { get; set; }
+    [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Listbox{TValue}"/> class.

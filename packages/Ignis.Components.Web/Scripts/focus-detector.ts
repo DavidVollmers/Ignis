@@ -1,26 +1,29 @@
 ﻿import {ComponentBase} from '@ignis.net/components';
 
 export class FocusDetector extends ComponentBase {
-    private readonly _onClick = (event: MouseEvent) => {
-        const _ = this.onClick(event);
+    private _isFocused: boolean = true;
+
+    private readonly _onClick = () => {
+        const _ = this.onClick();
     };
 
-    public constructor($ref: DotNet.DotNetObject, id: string, private readonly _element: HTMLElement, private _isFocused: boolean) {
+    public constructor($ref: DotNet.DotNetObject, id: string, private readonly _element: HTMLElement) {
         super($ref, id);
         if ($ref != null) {
             (<any>window).addEventListener('click', this._onClick);
+            this._element.focus();
         }
     }
 
-    private async onClick(event: MouseEvent): Promise<void> {
-        if (this._element.contains(<Node>event.target)) {
+    private async onClick(): Promise<void> {
+        if (this._element.contains(document.activeElement)) {
             if (this._isFocused) return;
-            await this.$ref.invokeMethodAsync('OnFocusAsync');
             this._isFocused = true;
+            await this.$ref.invokeMethodAsync('OnFocusAsync', false);
         } else {
             if (!this._isFocused) return;
-            await this.$ref.invokeMethodAsync('OnBlurAsync');
             this._isFocused = false;
+            await this.$ref.invokeMethodAsync('OnBlurAsync', false);
         }
     }
 

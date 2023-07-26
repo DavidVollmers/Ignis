@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="Ignis.Components.HeadlessUI" />
+    <InternalsVisibleTo Include="Ignis.Components.Web" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">

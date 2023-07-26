@@ -7,7 +7,7 @@ namespace Ignis.Components.Web;
 public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender, IAsyncDisposable
 {
     private ElementReference? _element;
-    private bool? _isFocused;
+    private bool _isFocused;
 
     [Parameter] public EventCallback OnFocus { get; set; }
 
@@ -19,18 +19,18 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender, IAsy
 
     [Parameter, EditorRequired] public string Id { get; set; } = null!;
 
-    [Parameter] public bool DefaultValue { get; set; } = true;
-
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     // ReSharper disable once InconsistentNaming
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
 
+    [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
+
     [JSInvokable]
     public async Task OnFocusAsync()
     {
-        if (_isFocused.HasValue && _isFocused.Value) return;
+        if (_isFocused) return;
 
         _isFocused = true;
 
@@ -40,19 +40,11 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender, IAsy
     [JSInvokable]
     public async Task OnBlurAsync()
     {
-        if (_isFocused.HasValue && !_isFocused.Value) return;
+        if (!_isFocused) return;
 
         _isFocused = false;
 
         await OnBlur.InvokeAsync();
-    }
-
-    public async Task OnAfterRenderAsync()
-    {
-        if (HostContext.IsPrerendering || _isFocused.HasValue) return;
-
-        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusDetector", DotNetObjectReference.Create(this), Id,
-            _element, _isFocused ?? DefaultValue);
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -62,12 +54,24 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender, IAsy
         builder.AddAttribute(2, "id", Id);
         builder.AddElementReferenceCapture(3, element =>
         {
-            _isFocused = null;
+            _isFocused = true;
             _element = element;
+            FrameTracker.ExecuteOnNextFrame(() =>
+            {
+                var _ = JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusDetector",
+                    DotNetObjectReference.Create(this), Id, _element);
+            }, ForceUpdate);
         });
         builder.AddContent(4, ChildContent);
 
         builder.CloseElement();
+    }
+
+    public Task OnAfterRenderAsync()
+    {
+        FrameTracker.OnAfterRender();
+
+        return Task.CompletedTask;
     }
 
     public async ValueTask DisposeAsync()

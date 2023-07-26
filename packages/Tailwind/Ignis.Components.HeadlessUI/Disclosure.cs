@@ -67,7 +67,7 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure, IHandleAfterRe
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
-    [Inject] internal FrameTracker FrameTracker { get; set; }
+    [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
 
     public Disclosure()
     {
