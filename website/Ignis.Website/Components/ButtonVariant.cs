@@ -1,4 +1,4 @@
-﻿namespace Ignis.Website.Shared;
+﻿namespace Ignis.Website.Components;
 
 public enum ButtonVariant
 {

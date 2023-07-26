@@ -26,8 +26,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tailwind", "Tailwind", "{C2
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Components.HeadlessUI", "packages\Tailwind\Ignis.Components.HeadlessUI\Ignis.Components.HeadlessUI.csproj", "{DFAD7C95-320E-4B09-B597-DCF159D649F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Website", "Ignis.Website\Ignis.Website.csproj", "{1E246956-B7ED-4D51-AD28-3B691A5F8F3A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Utils", "packages\Ignis.Utils\Ignis.Utils.csproj", "{B3521022-692C-4783-8DC4-E2A1A0E600C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Components.Web", "packages\Ignis.Components.Web\Ignis.Components.Web.csproj", "{B2F7725C-78BA-4419-B6AD-F5CF110CF475}"
@@ -43,6 +41,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorWebAssembly", "examples\BlazorWebAssembly\BlazorWebAssembly.csproj", "{8EEE5AE7-265A-4BD7-8972-673F9FB339FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Components.Server", "packages\Ignis.Components.Server\Ignis.Components.Server.csproj", "{117FA8C4-BC7B-4126-B9DE-956DD5CE25C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Website", "Website", "{A92AF225-F718-4B02-AA3B-B47F26A3457F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Website.Server", "website\Ignis.Website.Server\Ignis.Website.Server.csproj", "{4FB38F21-4E08-4D23-B610-8312D8E57782}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Website", "website\Ignis.Website\Ignis.Website.csproj", "{2C61C6D9-3DB4-4ECE-B5C7-7984964A63DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,10 +86,6 @@ Global
 		{DFAD7C95-320E-4B09-B597-DCF159D649F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFAD7C95-320E-4B09-B597-DCF159D649F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFAD7C95-320E-4B09-B597-DCF159D649F1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1E246956-B7ED-4D51-AD28-3B691A5F8F3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1E246956-B7ED-4D51-AD28-3B691A5F8F3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1E246956-B7ED-4D51-AD28-3B691A5F8F3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1E246956-B7ED-4D51-AD28-3B691A5F8F3A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B3521022-692C-4783-8DC4-E2A1A0E600C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B3521022-692C-4783-8DC4-E2A1A0E600C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B3521022-692C-4783-8DC4-E2A1A0E600C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -114,6 +114,14 @@ Global
 		{117FA8C4-BC7B-4126-B9DE-956DD5CE25C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{117FA8C4-BC7B-4126-B9DE-956DD5CE25C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{117FA8C4-BC7B-4126-B9DE-956DD5CE25C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FB38F21-4E08-4D23-B610-8312D8E57782}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FB38F21-4E08-4D23-B610-8312D8E57782}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FB38F21-4E08-4D23-B610-8312D8E57782}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FB38F21-4E08-4D23-B610-8312D8E57782}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C61C6D9-3DB4-4ECE-B5C7-7984964A63DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C61C6D9-3DB4-4ECE-B5C7-7984964A63DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C61C6D9-3DB4-4ECE-B5C7-7984964A63DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C61C6D9-3DB4-4ECE-B5C7-7984964A63DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4354EFBA-D0A7-4EFC-897F-4EBCC7E11443} = {E697C569-7A68-4040-A633-DD894D41B99E}
@@ -131,5 +139,7 @@ Global
 		{F3457565-E8DE-4CFA-A4F3-9B53D2ADA59F} = {C2B40A69-55D5-4B5C-AF1B-B8323BEFAF96}
 		{8EEE5AE7-265A-4BD7-8972-673F9FB339FC} = {E697C569-7A68-4040-A633-DD894D41B99E}
 		{117FA8C4-BC7B-4126-B9DE-956DD5CE25C3} = {333AA1BE-3105-4370-BB59-34463BD1F325}
+		{4FB38F21-4E08-4D23-B610-8312D8E57782} = {A92AF225-F718-4B02-AA3B-B47F26A3457F}
+		{2C61C6D9-3DB4-4ECE-B5C7-7984964A63DF} = {A92AF225-F718-4B02-AA3B-B47F26A3457F}
 	EndGlobalSection
 EndGlobal

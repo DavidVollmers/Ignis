@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Ignis.Markdown.Processor.Contracts;
+using Microsoft.Extensions.Logging;
 
 namespace Ignis.Website.Services;
 
