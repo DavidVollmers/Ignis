@@ -1,6 +1,8 @@
-﻿@inherits IgnisComponentBase
+﻿@using Ignis.Website.Services
+@inherits IgnisAsyncComponentBase
 @implements IHandleAfterRender
 @inject IStringLocalizer<CodeExample> Resources
+@inject IStaticFileService StaticFileService
 @* ReSharper disable once InconsistentNaming *@
 @inject IJSRuntime JSRuntime
 
@@ -69,8 +71,9 @@
         }
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
     {
+        _code = await StaticFileService.GetFileContentAsync(ExampleCode, cancellationToken);
     }
 
     private void ShowCode()
