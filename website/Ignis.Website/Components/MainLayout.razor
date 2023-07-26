@@ -1,7 +1,7 @@
 ﻿@using Ignis.Website.Services
 @using Ignis.Markdown.Processor.Contracts
 @using System.Reflection
-@inherits IgnisComponentBase
+@inherits IgnisAsyncComponentBase
 @implements IHandleAfterRender
 @inject NavigationManager Router
 @inject IPageService PageService
@@ -96,16 +96,16 @@
     [Parameter]
     public RenderFragment? Body { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
     {
-        LoadPage();
+        await LoadPageAsync(cancellationToken);
     }
     
-    private void LoadPage()
+    private async Task LoadPageAsync(CancellationToken cancellationToken)
     {
         _link = ('/' + Router.ToBaseRelativePath(Router.Uri)).Split('#')[0];
 
-        _section = PageService.GetSectionByLink(_link);
+        _section = await PageService.GetSectionByLinkAsync(_link, cancellationToken);
 
         if (_section == null) return;
 
@@ -113,7 +113,7 @@
 
         if (_page == null) return;
 
-        _content = PageService.GetPageContent(_page);
+        _content = await PageService.GetPageContentAsync(_page, cancellationToken);
 
         if (_page.Inject == null) return;
 
