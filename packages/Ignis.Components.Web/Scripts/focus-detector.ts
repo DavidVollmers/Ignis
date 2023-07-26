@@ -1,6 +1,7 @@
 ﻿import {ComponentBase} from '@ignis.net/components';
 
 export class FocusDetector extends ComponentBase {
+    private _isInitialized: boolean = false;
     private _isFocused: boolean = true;
 
     private readonly _onClick = () => {
@@ -11,11 +12,15 @@ export class FocusDetector extends ComponentBase {
         super($ref, id);
         if ($ref != null) {
             (<any>window).addEventListener('click', this._onClick);
-            this._element.focus();
+            window.setTimeout(() => {
+                this._element.focus();
+                this._isInitialized = true;
+            }, 15);
         }
     }
 
     private async onClick(): Promise<void> {
+        if (!this._isInitialized) return;
         if (this._element.contains(document.activeElement)) {
             if (this._isFocused) return;
             this._isFocused = true;
