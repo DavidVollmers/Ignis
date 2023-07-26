@@ -56,10 +56,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\docs\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <AdditionalFiles Include="Components\Icons\GitHubIcon.razor" />
     <AdditionalFiles Include="Components\Icons\ThemeDarkIcon.razor" />
     <AdditionalFiles Include="Components\Icons\ThemeLightIcon.razor" />
