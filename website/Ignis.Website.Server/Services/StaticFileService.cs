@@ -7,7 +7,7 @@ internal class StaticFileService : IStaticFileService
 {
     public async Task<string?> GetFileContentAsync(string path, CancellationToken cancellationToken = default)
     {
-        var file = new FileInfo(Path.Combine(path.Split('/')));
+        var file = new FileInfo(BuildPath(path));
 
         if (!file.Exists) return null;
 
@@ -19,5 +19,10 @@ internal class StaticFileService : IStaticFileService
         var json = await GetFileContentAsync(path, cancellationToken);
 
         return json == null ? default : JsonSerializer.Deserialize<T>(json);
+    }
+    
+    private static string BuildPath(string path)
+    {
+        return Path.Combine("wwwroot", Path.Combine(path.Split('/')));
     }
 }
