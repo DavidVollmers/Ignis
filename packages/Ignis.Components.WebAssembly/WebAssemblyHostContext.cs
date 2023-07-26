@@ -3,4 +3,6 @@
 internal class WebAssemblyHostContext : IHostContext
 {
     public bool IsPrerendering => false;
+
+    public bool IsServerSide => false;
 }

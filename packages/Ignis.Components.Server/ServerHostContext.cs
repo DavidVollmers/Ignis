@@ -8,6 +8,8 @@ internal class ServerHostContext : IHostContext
 
     public bool IsPrerendering => !_httpContextAccessor.HttpContext?.Response.HasStarted ?? false;
 
+    public bool IsServerSide => true;
+
     public ServerHostContext(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));

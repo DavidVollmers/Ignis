@@ -2,7 +2,7 @@
 
 namespace Ignis.Components;
 
-internal sealed class AttributeCollection : IEnumerable<KeyValuePair<string, object?>>
+internal class AttributeCollection : IEnumerable<KeyValuePair<string, object?>>
 {
     private readonly Func<KeyValuePair<string, object?>>[] _attributes;
 
