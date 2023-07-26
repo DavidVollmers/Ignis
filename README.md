@@ -1,8 +1,8 @@
 <div align="center">
     <br/>
-    <img width="64" alt="" src="Ignis.Website/wwwroot/images/logo.svg" />
+    <img width="64" alt="" src="website/Ignis.Website/wwwroot/images/logo.svg" />
     <br/>
-    <img width="196" alt="" src="Ignis.Website/wwwroot/images/logo-text.svg" />
+    <img width="196" alt="" src="website/Ignis.Website/wwwroot/images/logo-text.svg" />
     <br/>
 </div>
 
