@@ -50,6 +50,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Website", "website\Ig
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Website.WebAssembly", "website\Ignis.Website.WebAssembly\Ignis.Website.WebAssembly.csproj", "{126310EF-FB39-4E64-8BF1-5527DA369B89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Components.WebAssembly", "packages\Ignis.Components.WebAssembly\Ignis.Components.WebAssembly.csproj", "{F3F0E357-E427-4C7D-B15A-5186B5DD7369}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -128,6 +130,10 @@ Global
 		{126310EF-FB39-4E64-8BF1-5527DA369B89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{126310EF-FB39-4E64-8BF1-5527DA369B89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{126310EF-FB39-4E64-8BF1-5527DA369B89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3F0E357-E427-4C7D-B15A-5186B5DD7369}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3F0E357-E427-4C7D-B15A-5186B5DD7369}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3F0E357-E427-4C7D-B15A-5186B5DD7369}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3F0E357-E427-4C7D-B15A-5186B5DD7369}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4354EFBA-D0A7-4EFC-897F-4EBCC7E11443} = {E697C569-7A68-4040-A633-DD894D41B99E}
@@ -148,5 +154,6 @@ Global
 		{4FB38F21-4E08-4D23-B610-8312D8E57782} = {A92AF225-F718-4B02-AA3B-B47F26A3457F}
 		{2C61C6D9-3DB4-4ECE-B5C7-7984964A63DF} = {A92AF225-F718-4B02-AA3B-B47F26A3457F}
 		{126310EF-FB39-4E64-8BF1-5527DA369B89} = {A92AF225-F718-4B02-AA3B-B47F26A3457F}
+		{F3F0E357-E427-4C7D-B15A-5186B5DD7369} = {333AA1BE-3105-4370-BB59-34463BD1F325}
 	EndGlobalSection
 EndGlobal
