@@ -71,14 +71,6 @@
 
     protected override void OnInitialized()
     {
-        var assemblyFile = new FileInfo(typeof(CodeExample).Assembly.Location);
-
-        var path = Path.Combine(assemblyFile.DirectoryName!, Path.Combine(ExampleCode.Split('/')));
-        var codeFile = new FileInfo(path);
-
-        if (!codeFile.Exists) return;
-
-        _code = File.ReadAllText(codeFile.FullName);
     }
 
     private void ShowCode()

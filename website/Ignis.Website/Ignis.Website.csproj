@@ -36,39 +36,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Examples\HeadlessUI\ListboxExampleCode.razor">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Examples\HeadlessUI\TransitionExampleCode.razor">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Examples\HeadlessUI\TabsExampleCode.razor">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="Examples\HeadlessUI\DialogExampleCode.razor">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Update="package.json">
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </Content>
     <Content Update="package-lock.json">
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Include="Components\Icons\GitHubIcon.razor" />
-    <AdditionalFiles Include="Components\Icons\ThemeDarkIcon.razor" />
-    <AdditionalFiles Include="Components\Icons\ThemeLightIcon.razor" />
-    <AdditionalFiles Include="Components\Icons\ThemeSystemIcon.razor" />
-    <AdditionalFiles Include="Examples\HeadlessUI\DialogExample.razor" />
-    <AdditionalFiles Include="Examples\HeadlessUI\DialogExampleCode.razor" />
-    <AdditionalFiles Include="Examples\HeadlessUI\ListboxExample.razor" />
-    <AdditionalFiles Include="Examples\HeadlessUI\ListboxExampleCode.razor" />
-    <AdditionalFiles Include="Examples\HeadlessUI\TabsExample.razor" />
-    <AdditionalFiles Include="Examples\HeadlessUI\TabsExampleCode.razor" />
-    <AdditionalFiles Include="Examples\HeadlessUI\TransitionExample.razor" />
-    <AdditionalFiles Include="Examples\HeadlessUI\TransitionExampleCode.razor" />
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">

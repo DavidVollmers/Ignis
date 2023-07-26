@@ -9,7 +9,7 @@ internal class StaticFileService : IStaticFileService
     {
         var file = new FileInfo(BuildPath(path));
 
-        if (!file.Exists) return null;
+        if (!file.Exists)  return null;
 
         return await File.ReadAllTextAsync(file.FullName, cancellationToken);
     }
@@ -20,9 +20,9 @@ internal class StaticFileService : IStaticFileService
 
         return json == null ? default : JsonSerializer.Deserialize<T>(json);
     }
-    
+
     private static string BuildPath(string path)
     {
-        return Path.Combine("wwwroot", Path.Combine(path.Split('/')));
+        return Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", Path.Combine(path.Split('/')));
     }
 }
