@@ -2,5 +2,9 @@
 
 public interface IDisclosure : IDynamicParentComponent<IDisclosure>, IOpenClose
 {
+    internal IDisclosurePanel? Panel { get; }
     
+    string Id { get; }
+
+    internal void SetPanel(IDisclosurePanel panel);
 }

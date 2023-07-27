@@ -59,6 +59,12 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure, IHandleAfterRe
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
+    public IDisclosurePanel? Panel { get; private set; }
+
+    /// <inheritdoc />
+    public string Id { get; } = "ignis-hui-disclosure-" + Guid.NewGuid().ToString("N");
+
+    /// <inheritdoc />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -98,7 +104,7 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure, IHandleAfterRe
     public void Open(Action? continueWith = null)
     {
         if (_isOpen || FrameTracker.IsPending) return;
-        
+
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
         if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, ForceUpdate);
@@ -119,10 +125,16 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure, IHandleAfterRe
     }
 
     /// <inheritdoc />
+    public void SetPanel(IDisclosurePanel panel)
+    {
+        Panel = panel ?? throw new ArgumentNullException(nameof(panel));
+    }
+
+    /// <inheritdoc />
     public Task OnAfterRenderAsync()
     {
         FrameTracker.OnAfterRender();
-        
+
         return Task.CompletedTask;
     }
 }
