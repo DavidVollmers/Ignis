@@ -28,9 +28,9 @@ jobs:
           node-version: 18.x
       - run: echo "VERSION=$(git describe --tags --dirty)" >> $GITHUB_ENV
       - run: npm i
-        working-directory: packages/ignis.net/components
-      - run: npm i
-        working-directory: packages/Ignis.Components.Web
+      - run: |
+          dotnet build tools/Ignis.Components.HeroIcons.Generator -c Release
+          dotnet tools/Ignis.Components.HeroIcons.Generator/bin/Release/net6.0/Ignis.Components.HeroIcons.Generator.dll
       - run: dotnet pack -c Release -p:Version=$VERSION
       - uses: actions/upload-artifact@v3
         with:
