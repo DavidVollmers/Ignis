@@ -1,4 +1,5 @@
-﻿@inherits IgnisComponentBase
+﻿@using Ignis.Components.HeroIcons.Outline
+@inherits IgnisComponentBase
 @inject IStringLocalizer<MobileNavigation> Resources
 @inject IStringLocalizer<CommonResources> CommonResources
 
@@ -6,7 +7,7 @@
         @onclick="OpenNavigation"
         class="relative" 
         aria-label="@Resources["OpenNavigationButton"]">
-    <Bars3Icon class="h-6 w-6 stroke-slate-500" aria-hidden="true"/>
+    <Bars3Icon class="h-6 w-6 stroke-slate-500"/>
 </button>
 <Dialog @bind-IsOpen="_isOpen"
         class="fixed inset-0 z-50 flex items-start overflow-y-auto bg-slate-900/50 pr-10 backdrop-blur lg:hidden"
@@ -16,7 +17,7 @@
             <button type="button"
                     @onclick="CloseNavigation"
                     aria-label="@Resources["CloseNavigationButton"]">
-                <XMarkIcon class="h-6 w-6 stroke-slate-500" aria-hidden="true"/>
+                <XMarkIcon class="h-6 w-6 stroke-slate-500"/>
             </button>
             <a href="/" class="ml-6" aria-label="@CommonResources["HomePageTitle"]">
                 <Logo class="h-9 w-9 fill-ignis-500"/>

@@ -37,7 +37,7 @@ internal class IconGenerator
     {
         var fileName = name.Replace(".svg", "Icon.razor");
 
-        var razorSvg = svg.Replace("aria-hidden=\"true\"", "@attributes=\"AdditionalAttributes\"");
+        var razorSvg = svg.Replace("aria-hidden=\"true\"", "aria-hidden=\"true\" @attributes=\"AdditionalAttributes\"");
         
         var builder = new StringBuilder();
         
