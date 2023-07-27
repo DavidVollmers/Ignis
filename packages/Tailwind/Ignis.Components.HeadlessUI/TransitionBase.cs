@@ -6,6 +6,7 @@ namespace Ignis.Components.HeadlessUI;
 public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAfterRender
 {
     // this is needed for the transition to work properly and no frames are skipped.
+    private const int TransitionGraceDurationFactor = 10;
     private const int TransitionGraceDuration = 10;
 
     private TransitionState _state = TransitionState.Default;
@@ -163,7 +164,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
         return duration < TransitionGraceDuration
             ? (0, duration)
-            : (TransitionGraceDuration, duration + TransitionGraceDuration);
+            : (TransitionGraceDuration, duration + TransitionGraceDuration * TransitionGraceDurationFactor);
     }
 
     private enum TransitionState
