@@ -70,7 +70,7 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
 #pragma warning disable CS0618
             () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
 #pragma warning restore CS0618
-            () => new KeyValuePair<string, object?>("aria-expanded", Disclosure.IsOpen),
+            () => new KeyValuePair<string, object?>("aria-expanded", Disclosure.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null), () =>
                 new KeyValuePair<string, object?>("aria-controls",
                     Disclosure.Panel == null ? null : Disclosure.Panel.Id ?? Disclosure.Id + "-panel")

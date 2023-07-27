@@ -74,7 +74,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
 #pragma warning disable CS0618
             () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
 #pragma warning restore CS0618
-            () => new KeyValuePair<string, object?>("aria-expanded", Listbox.IsOpen),
+            () => new KeyValuePair<string, object?>("aria-expanded", Listbox.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
             () => new KeyValuePair<string, object?>("aria-labelledby",
                 Listbox.Label == null ? null : Listbox.Label.Id ?? Listbox.Id + "-label")

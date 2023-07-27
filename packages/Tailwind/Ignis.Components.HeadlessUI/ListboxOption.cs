@@ -74,7 +74,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
         {
             () => new KeyValuePair<string, object?>("tabindex", -1),
             () => new KeyValuePair<string, object?>("role", "option"),
-            () => new KeyValuePair<string, object?>("aria-selected", IsSelected),
+            () => new KeyValuePair<string, object?>("aria-selected", IsSelected.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, OnClick)),
             () => new KeyValuePair<string, object?>("onmouseenter", EventCallback.Factory.Create(this, OnMouseEnter)),
             () => new KeyValuePair<string, object?>("onmouseleave", EventCallback.Factory.Create(this, OnMouseLeave))
