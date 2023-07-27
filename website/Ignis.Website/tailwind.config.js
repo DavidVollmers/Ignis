@@ -4,7 +4,8 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
     content: [
         '**/*.{razor,html,cshtml,js}',
-        '../../docs/**/*.md'
+        '../../docs/**/*.md',
+        '../Ignis.Website.WebAssembly/wwwroot/index.html',
     ],
     darkMode: 'class',
     theme: {
