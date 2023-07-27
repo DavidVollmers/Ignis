@@ -16,10 +16,10 @@ jobs:
         with:
           node-version: 18.x
       - run: npm i
-      - run: dotnet build website/Ignis.Website -c Release
       - run: |
           dotnet build tools/Ignis.Markdown.Processor -c Release
           dotnet tools/Ignis.Markdown.Processor/bin/Release/net6.0/Ignis.Markdown.Processor.dll
+      - run: dotnet build website/Ignis.Website.WebAssembly/Ignis.Website.WebAssembly.csproj -c Release
       - uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_AMBITIOUS_MOSS_09691210F }}
