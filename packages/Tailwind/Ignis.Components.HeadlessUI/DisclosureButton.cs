@@ -66,7 +66,7 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
         _attributes = new AttributeCollection(new[]
         {
             () => new KeyValuePair<string, object?>("onclick",
-                EventCallback.Factory.Create(this, () => Disclosure.Open())),
+                EventCallback.Factory.Create(this, Toggle)),
 #pragma warning disable CS0618
             () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
 #pragma warning restore CS0618
@@ -89,8 +89,11 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
 
     private void OnKeyDown(KeyboardEventArgs eventArgs)
     {
-        if (eventArgs.Code is not ("Space" or "Enter")) return;
+        if (eventArgs.Code is "Space" or "Enter") Toggle();
+    }
 
+    private void Toggle()
+    {
         if (Disclosure.IsOpen) Disclosure.Close();
         else Disclosure.Open();
     }

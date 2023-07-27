@@ -87,6 +87,8 @@ public sealed class DisclosurePanel : IgnisRigidComponentBase, IDisclosurePanel
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        if (!Disclosure.IsOpen) return;
+        
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         builder.AddChildContentFor<IDisclosurePanel, DisclosurePanel>(2, this, ChildContent);
