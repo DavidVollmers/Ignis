@@ -7,4 +7,6 @@ public interface IDisclosure : IDynamicParentComponent<IDisclosure>, IOpenClose
     string Id { get; }
 
     internal void SetPanel(IDisclosurePanel panel);
+
+    internal void SetTransition(ITransition transition);
 }

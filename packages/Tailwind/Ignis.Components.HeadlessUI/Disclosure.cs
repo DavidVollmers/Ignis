@@ -5,6 +5,7 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Disclosure : IgnisComponentBase, IDisclosure, IHandleAfterRender
 {
+    private ITransition? _transition;
     private Type? _asComponent;
     private string? _asElement;
     private bool _isOpen;
@@ -107,7 +108,8 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure, IHandleAfterRe
 
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
-        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, ForceUpdate);
+        if (_transition != null) FrameTracker.ExecuteOnNextFrame(() => _transition.Show(continueWith), ForceUpdate);
+        else if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, ForceUpdate);
 
         ForceUpdate();
     }
@@ -117,17 +119,34 @@ public sealed class Disclosure : IgnisComponentBase, IDisclosure, IHandleAfterRe
     {
         if (!_isOpen || FrameTracker.IsPending) return;
 
+        if (_transition != null)
+        {
+            _transition.Hide(() => CloseCore(continueWith, true));
+            return;
+        }
+
+        CloseCore(continueWith);
+    }
+
+    private void CloseCore(Action? continueWith, bool async = false)
+    {
         IsOpenChanged.InvokeAsync(_isOpen = false);
 
         if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, ForceUpdate);
 
-        ForceUpdate();
+        ForceUpdate(async);
     }
 
     /// <inheritdoc />
     public void SetPanel(IDisclosurePanel panel)
     {
         Panel = panel ?? throw new ArgumentNullException(nameof(panel));
+    }
+
+    /// <inheritdoc />
+    public void SetTransition(ITransition transition)
+    {
+        _transition = transition ?? throw new ArgumentNullException(nameof(transition));
     }
 
     /// <inheritdoc />

@@ -57,6 +57,8 @@ public sealed class Transition : TransitionBase, ITransition
 
     [CascadingParameter] public IListbox? Listbox { get; set; }
 
+    [CascadingParameter] public IDisclosure? Disclosure { get; set; }
+
     /// <inheritdoc />
     [Parameter]
     public RenderFragment<ITransition>? _ { get; set; }
@@ -78,6 +80,8 @@ public sealed class Transition : TransitionBase, ITransition
     protected override void OnInitialized()
     {
         Listbox?.SetTransition(this);
+        
+        Disclosure?.SetTransition(this);
     }
 
     /// <inheritdoc />

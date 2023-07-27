@@ -12,6 +12,24 @@ api:
   - Ignis.Components.HeadlessUI.DisclosurePanel, Ignis.Components.HeadlessUI
 ---
 
+## Closing disclosures manually
+
+To close a disclosure manually when clicking a child of its panel, render that child as a `DisclosureButton`. You can
+use the `AsElement` or `AsComponent` prop to customize which element is being rendered.
+
+This is especially useful when using disclosures for things like mobile menus that contain links where you want the
+disclosure to close when navigating to the next page.
+
+Alternatively, `Disclosure` expose a `Close()` method which you can use to imperatively close the panel, say after
+running an async action.
+
+## Transitions
+
+To animate the opening/closing of the menu panel, use the provided `Transition` component. All you need to do is wrap
+the `DisclosurePanel` in a `Transition`, and the transition will be applied automatically.
+
+You can read more about transitions [here](/components/headlessUI/transition).
+
 ## Rendering a different element for a component
 
 `Disclosure` and its subcomponents each render a default element that is sensible for that component:
