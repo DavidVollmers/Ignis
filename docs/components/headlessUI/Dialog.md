@@ -11,6 +11,7 @@ api:
   - Ignis.Components.HeadlessUI.DialogPanel, Ignis.Components.HeadlessUI
   - Ignis.Components.HeadlessUI.DialogTitle, Ignis.Components.HeadlessUI
   - Ignis.Components.HeadlessUI.DialogDescription, Ignis.Components.HeadlessUI
+  - Ignis.Components.HeadlessUI.DialogOutlet, Ignis.Components.HeadlessUI
 ---
 
 ## Styling the dialog
@@ -25,6 +26,18 @@ apply to which elements.
 
 If you'd like to add an overlay or backdrop behind your `DialogPanel` to bring attention to the panel itself, we
 recommend using a dedicated element just for the backdrop and making it a sibling to your panel container:
+
+## Outlet
+
+Since Dialogs and their backdrops take up the full page, you typically want to render them as a sibling to the root-most
+node of your application. That way you can rely on natural DOM ordering to ensure that their content is rendered on top
+of your existing application UI. This also makes it easy to apply scroll locking to the rest of your application, as
+well as ensure that your Dialog's contents and backdrop are unobstructed to receive focus and click events.
+
+Because of these accessibility concerns, we recommend using the `DialogOutlet` component to render your Dialogs. You can
+put your `DialogOutlet` anywhere in your application, but we recommend putting it as a sibling to your root-most node.
+By default all dialogs will be rendered inside the `DialogOutlet` component. You can use the `IgnoreOutlet` prop on the
+`Dialog` to render it outside of the `DialogOutlet` if needed.
 
 ## Transitions
 
