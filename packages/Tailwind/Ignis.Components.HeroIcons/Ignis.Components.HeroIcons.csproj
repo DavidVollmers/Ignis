@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Mini\" />
     <Folder Include="Outline\" />
     <Folder Include="Solid\" />
   </ItemGroup>
