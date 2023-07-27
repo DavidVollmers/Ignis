@@ -5,6 +5,9 @@ namespace Ignis.Components.HeadlessUI;
 
 public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAfterRender
 {
+    // this is needed for the transition to work properly and no frames are skipped.
+    private const int TransitionGraceDuration = 10;
+
     private TransitionState _state = TransitionState.Default;
 
     protected bool RenderContent { get; private set; }
@@ -72,12 +75,12 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
         UpdateState(TransitionState.Entering, () =>
         {
-            Task.Delay(1).ContinueWith(_ =>
+            var (graceDuration, transitionDuration) = ParseDuration(Leave);
+            Task.Delay(graceDuration).ContinueWith(_ =>
             {
                 UpdateState(TransitionState.Entered, () =>
                 {
-                    var duration = ParseDuration(Enter);
-                    Task.Delay(duration ?? 0).ContinueWith(_ =>
+                    Task.Delay(transitionDuration).ContinueWith(_ =>
                     {
                         UpdateState(TransitionState.CanLeave, continueWith);
                     });
@@ -94,12 +97,12 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
         UpdateState(TransitionState.Leaving, () =>
         {
-            Task.Delay(1).ContinueWith(_ =>
+            var (graceDuration, transitionDuration) = ParseDuration(Leave);
+            Task.Delay(graceDuration).ContinueWith(_ =>
             {
                 UpdateState(TransitionState.Left, () =>
                 {
-                    var duration = ParseDuration(Leave);
-                    Task.Delay(duration ?? 0).ContinueWith(_ =>
+                    Task.Delay(transitionDuration).ContinueWith(_ =>
                     {
                         RenderContent = false;
 
@@ -129,12 +132,12 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         return Task.CompletedTask;
     }
 
-    private static int? ParseDuration(string? classString)
+    private static (int, int) ParseDuration(string? classString)
     {
         var durationClass = classString?.Split(' ')
             .Select(v => v.Trim().Split(':').Last())
             .FirstOrDefault(v => v.StartsWith("duration-"));
-        if (durationClass == null) return null;
+        if (durationClass == null) return (0, 0);
 
         var factor = 1;
 
@@ -152,10 +155,15 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
                 durationString = durationString[..^1];
                 factor = 1000;
             }
-            else return null;
+            else return (0, 0);
         }
 
-        return int.Parse(durationString) * factor;
+        var duration = int.Parse(durationString) * factor;
+        if (duration <= 0) return (0, 0);
+
+        return duration < TransitionGraceDuration
+            ? (0, duration)
+            : (TransitionGraceDuration, duration + TransitionGraceDuration);
     }
 
     private enum TransitionState
