@@ -9,7 +9,6 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
 {
     private readonly AttributeCollection _attributes;
 
-    private bool _preventKeyDownDefault;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -70,7 +69,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
         {
             () => new KeyValuePair<string, object?>("aria-haspopup", "listbox"),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, () => Listbox.Open())),
-            () => new KeyValuePair<string, object?>("__internal_preventDefault_onkeydown", _preventKeyDownDefault),
+            () => new KeyValuePair<string, object?>("__internal_preventDefault_onkeydown", Listbox.IsOpen),
 #pragma warning disable CS0618
             () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
 #pragma warning restore CS0618
@@ -108,10 +107,6 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
 
     private void OnKeyDown(KeyboardEventArgs eventArgs)
     {
-        var oldPreventKeyDownDefault = _preventKeyDownDefault;
-
-        _preventKeyDownDefault = true;
-
         switch (eventArgs.Code)
         {
             case "Escape":
@@ -148,14 +143,6 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent,
                 Listbox.Open();
                 break;
             }
-            default:
-                _preventKeyDownDefault = false;
-                break;
-        }
-
-        if (oldPreventKeyDownDefault != _preventKeyDownDefault)
-        {
-            ForceUpdate();
         }
     }
 

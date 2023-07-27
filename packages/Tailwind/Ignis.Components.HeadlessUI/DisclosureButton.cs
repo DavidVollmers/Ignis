@@ -65,11 +65,7 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
 
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("onclick",
-                EventCallback.Factory.Create(this, Toggle)),
-#pragma warning disable CS0618
-            () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
-#pragma warning restore CS0618
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Toggle)),
             () => new KeyValuePair<string, object?>("aria-expanded", Disclosure.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null), () =>
                 new KeyValuePair<string, object?>("aria-controls",
@@ -85,11 +81,6 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
         builder.AddChildContentFor<IDynamicComponent, DisclosureButton>(3, this, ChildContent);
 
         builder.CloseAs(this);
-    }
-
-    private void OnKeyDown(KeyboardEventArgs eventArgs)
-    {
-        if (eventArgs.Code is "Space" or "Enter") Toggle();
     }
 
     private void Toggle()
