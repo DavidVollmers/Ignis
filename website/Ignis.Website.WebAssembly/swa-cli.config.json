@@ -1,0 +1,14 @@
+{
+  "$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
+  "configurations": {
+    "ignis.website.web-assembly": {
+      "appLocation": ".",
+      "outputLocation": "bin\\wwwroot",
+      "appBuildCommand": "dotnet publish -c Release -o bin",
+      "run": "dotnet watch run",
+      "appDevserverUrl": "http://localhost:8000",
+      "appName": "ignis-website-wasm",
+      "resourceGroup": "ignis-website-wasm-rg"
+    }
+  }
+}

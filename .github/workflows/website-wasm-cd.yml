@@ -1,0 +1,23 @@
+name: Website (WebAssembly) CD
+
+on:
+  push:
+    branches: [ 'website' ]
+
+jobs:
+  Publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - run: npm i
+      - run: dotnet build website/Ignis.Website -c Release
+      - run: |
+          dotnet build tools/Ignis.Markdown.Processor -c Release
+          dotnet tools/Ignis.Markdown.Processor/bin/Release/net6.0/Ignis.Markdown.Processor.dll
+      - run: swa deploy website/Ignis.Website.WebAssembly -d ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
