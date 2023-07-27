@@ -12,6 +12,15 @@ api:
   - Ignis.Components.HeadlessUI.DisclosurePanel, Ignis.Components.HeadlessUI
 ---
 
+## Rendering a different element for a component
+
+`Disclosure` and its subcomponents each render a default element that is sensible for that component:
+All `DisclosureButton` renders a `button`, `DisclosurePanel` renders a `div`. By contrast, the root `Disclosure`
+component does not render an element, and instead renders its children directly by default.
+
+This is easy to change using the `AsElement` or `AsComponent` prop, which exists on every component.
+You can read more about this [here](/components/dynamic).
+
 ## Accessibility notes
 
 ### Mouse interaction
