@@ -11,3 +11,19 @@ api:
   - Ignis.Components.HeadlessUI.DisclosureButton, Ignis.Components.HeadlessUI
   - Ignis.Components.HeadlessUI.DisclosurePanel, Ignis.Components.HeadlessUI
 ---
+
+## Accessibility notes
+
+### Mouse interaction
+
+Clicking a `DisclosureButton` toggles the Disclosure's panel open and closed.
+
+### Keyboard interaction
+
+| Command                                                                 | Description    |
+|-------------------------------------------------------------------------|----------------|
+| <kbd>Enter</kbd> <kbd>Space</kbd> when a `DisclosureButton` is focused. | Toggles panel. |
+
+### Other
+
+All relevant ARIA attributes are automatically managed.
