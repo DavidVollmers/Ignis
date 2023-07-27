@@ -11,3 +11,5 @@ var outputPath = Path.Combine(assemblyLocation, "..", "..", "..", "..", "..", "p
     "Ignis.Components.HeroIcons");
 
 await generator.GenerateAsync("optimized/24/solid", Path.Combine(outputPath, "Solid"));
+await generator.GenerateAsync("optimized/24/outline", Path.Combine(outputPath, "Outline"));
+await generator.GenerateAsync("optimized/20/solid", Path.Combine(outputPath, "Mini"));
