@@ -3,8 +3,8 @@
   "configurations": {
     "ignis.website.web-assembly": {
       "appLocation": ".",
-      "outputLocation": "bin\\wwwroot",
-      "appBuildCommand": "dotnet publish -c Release -o bin",
+      "outputLocation": "bin/Release/net7.0/publish/wwwroot",
+      "appBuildCommand": "dotnet publish -c Release",
       "run": "dotnet watch run",
       "appDevserverUrl": "http://localhost:8000",
       "appName": "ignis-website-wasm",
