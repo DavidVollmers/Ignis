@@ -72,12 +72,15 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
         UpdateState(TransitionState.Entering, () =>
         {
-            UpdateState(TransitionState.Entered, () =>
+            Task.Delay(1).ContinueWith(_ =>
             {
-                var duration = ParseDuration(Enter);
-                Task.Delay(duration ?? 0).ContinueWith(_ =>
+                UpdateState(TransitionState.Entered, () =>
                 {
-                    UpdateState(TransitionState.CanLeave, continueWith);
+                    var duration = ParseDuration(Enter);
+                    Task.Delay(duration ?? 0).ContinueWith(_ =>
+                    {
+                        UpdateState(TransitionState.CanLeave, continueWith);
+                    });
                 });
             });
         });
@@ -91,14 +94,17 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
         UpdateState(TransitionState.Leaving, () =>
         {
-            UpdateState(TransitionState.Left, () =>
+            Task.Delay(1).ContinueWith(_ =>
             {
-                var duration = ParseDuration(Leave);
-                Task.Delay(duration ?? 0).ContinueWith(_ =>
+                UpdateState(TransitionState.Left, () =>
                 {
-                    RenderContent = false;
+                    var duration = ParseDuration(Leave);
+                    Task.Delay(duration ?? 0).ContinueWith(_ =>
+                    {
+                        RenderContent = false;
 
-                    UpdateState(TransitionState.CanEnter, continueWith);
+                        UpdateState(TransitionState.CanEnter, continueWith);
+                    });
                 });
             });
         });
