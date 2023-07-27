@@ -19,6 +19,7 @@
   <ItemGroup>
     <Content Update="swa-cli.config.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
 
