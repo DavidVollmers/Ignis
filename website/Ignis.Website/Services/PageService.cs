@@ -68,7 +68,7 @@ internal class PageService : IPageService
     {
         const string path = "/docs/sitemap.json";
 
-        return await _staticFileService.GetFileContentAsync<Section[]>(path, cancellationToken);
+        return await _staticFileService.GetFileContentAsJsonAsync<Section[]>(path, cancellationToken);
     }
 
     private async Task ReloadSectionsAsync(CancellationToken cancellationToken)

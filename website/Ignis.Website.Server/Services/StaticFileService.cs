@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Xml.XPath;
 using Ignis.Website.Services;
 
 namespace Ignis.Website.Server.Services;
@@ -14,15 +15,24 @@ internal class StaticFileService : IStaticFileService
         return await File.ReadAllTextAsync(file.FullName, cancellationToken);
     }
 
-    public async Task<T?> GetFileContentAsync<T>(string path, CancellationToken cancellationToken = default)
+    public async Task<T?> GetFileContentAsJsonAsync<T>(string path, CancellationToken cancellationToken = default)
     {
         var json = await GetFileContentAsync(path, cancellationToken);
 
         return json == null ? default : JsonSerializer.Deserialize<T>(json);
     }
 
+    public XPathDocument? GetFileContentAsXml(string path)
+    {
+        var file = new FileInfo(BuildPath(path));
+
+        return !file.Exists ? null : new XPathDocument(file.FullName);
+    }
+
     private static string BuildPath(string path)
     {
+        if (new FileInfo(path).Exists) return path;
+
         return Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",
             Path.Combine(path.Replace("/docs/", "/_docs/").Split('/')));
     }

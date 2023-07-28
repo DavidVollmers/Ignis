@@ -2,8 +2,10 @@
 @using System.Reflection
 @using System.Text
 @using System.Web
+@using Ignis.Website.Services
 @inherits IgnisComponentBase
 @inject IStringLocalizer<ClassDocumentation> Resources
+@inject IStaticFileService StaticFileService
 
 <h2>
     @Type.SanitizeTypeName()
@@ -15,72 +17,72 @@
         @Resources["ViewApiReference"]
     </a>
 }
-
-<h3>
-    @Resources["DefinitionHeading"]
-</h3>
-<dl class="flex gap-x-2">
-    <dt>
-        @Resources["NamespaceLabel"]:
-    </dt>
-    <dd>
-        @Type.Namespace
-    </dd>
-</dl>
-
-@if (_typeComments != null)
+else
 {
-    <p>
-        @_typeComments.Summary
-    </p>
-}
+    <h3>
+        @Resources["DefinitionHeading"]
+    </h3>
+    <dl class="flex gap-x-2">
+        <dt>
+            @Resources["NamespaceLabel"]:
+        </dt>
+        <dd>
+            @Type.Namespace
+        </dd>
+    </dl>
 
-<pre class="whitespace-normal"><code class="language-csharp">
-@GetTypeDefinition(Type)
-</code></pre>
-
-@if (Type.GenericTypeParameters.Any())
-{
-    <h4>
-        @Resources["TypeParametersHeading"]
-    </h4>
-
-    @foreach (var typeParam in Type.GenericTypeParameters)
+    if (_typeComments != null)
     {
         <p>
-            <code>@typeParam.Name</code>
+            @_typeComments.Summary
         </p>
     }
-}
 
-@if (!IsComponent && Type.DeclaredConstructors.Any())
-{
-    <h4>
-        @Resources["ConstructorsHeading"]
-    </h4>
+    <pre class="whitespace-normal"><code class="language-csharp">@GetTypeDefinition(Type)</code></pre>
 
-    <table>
-        <thead>
-        <tr>
-            <td></td>
-            <td></td>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var ctor in Type.DeclaredConstructors)
+    if (Type.GenericTypeParameters.Any())
+    {
+        <h4>
+            @Resources["TypeParametersHeading"]
+        </h4>
+
+        @foreach (var typeParam in Type.GenericTypeParameters)
         {
-            var methodComments = _reader!.GetMethodComments(ctor);
-            <tr>
-                <td>
-                    <code>@GetConstructorDefinition(ctor)</code>
-                </td>
-                <td>
-                    @methodComments.Summary
-                </td>
-            </tr>
+            <p>
+                <code>@typeParam.Name</code>
+            </p>
         }
-        </tbody>
-    </table>
+    }
+
+    if (Type.DeclaredConstructors.Any())
+    {
+        <h4>
+            @Resources["ConstructorsHeading"]
+        </h4>
+
+        <table>
+            <thead>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var ctor in Type.DeclaredConstructors)
+            {
+                var methodComments = _reader!.GetMethodComments(ctor);
+                <tr>
+                    <td>
+                        <code>@GetConstructorDefinition(ctor)</code>
+                    </td>
+                    <td>
+                        @methodComments.Summary
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
 }
 
 @code
@@ -96,7 +98,17 @@
 
     protected override void OnInitialized()
     {
-        _reader = new DocXmlReader(new[] { Type.Assembly });
+        var path = Path.ChangeExtension(Type.Assembly.Location, ".xml");
+
+        // WebAssembly
+        if (string.IsNullOrEmpty(path))
+        {
+            path = $"/_content/Ignis.Website/xml/{Type.Assembly.GetName().Name}.xml";
+        }
+        
+        var xml = StaticFileService.GetFileContentAsXml(path);
+        
+        _reader = new DocXmlReader(xml);
 
         _typeComments = _reader.GetTypeComments(Type);
     }

@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
+using System.Xml.XPath;
 using Ignis.Website.Services;
 
 namespace Ignis.Website.WebAssembly.Services;
@@ -27,9 +28,14 @@ internal class StaticFileService : IStaticFileService
         }
     }
 
-    public Task<T?> GetFileContentAsync<T>(string path, CancellationToken cancellationToken = default)
+    public Task<T?> GetFileContentAsJsonAsync<T>(string path, CancellationToken cancellationToken = default)
     {
         return _httpClient.GetFromJsonAsync<T>(BuildPath(path), cancellationToken);
+    }
+
+    public XPathDocument? GetFileContentAsXml(string path)
+    {
+        throw new NotImplementedException();
     }
 
     private static string BuildPath(string path)
