@@ -1,7 +1,4 @@
 ﻿@inherits IgnisRigidComponentBase
-@implements IHandleAfterRender
-@* ReSharper disable once InconsistentNaming *@
-@inject IJSRuntime JSRuntime
 
 <MainHeader/>
 
@@ -13,9 +10,4 @@
 {
     [Parameter]
     public RenderFragment? Body { get; set; }
-
-    public async Task OnAfterRenderAsync()
-    {
-        await JSRuntime.InvokeVoidAsync("OnPageLoad");
-    }
 }

@@ -2,6 +2,9 @@
 @using System.Reflection
 @using System.Web
 @inherits IgnisComponentBase
+@implements IHandleAfterRender
+@* ReSharper disable once InconsistentNaming *@
+@inject IJSRuntime JSRuntime
 
 <PageTitle>
     @_type?.SanitizeTypeName(true)
@@ -29,5 +32,10 @@
         if (type == null) return;
 
         _type = type.GetTypeInfo();
+    }
+
+    public async Task OnAfterRenderAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("OnPageLoad");
     }
 }

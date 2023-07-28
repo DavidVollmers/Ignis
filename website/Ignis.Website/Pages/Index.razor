@@ -5,6 +5,9 @@
 @using Ignis.Markdown.Processor.Contracts
 @using System.Reflection
 @inherits Ignis.Components.IgnisAsyncComponentBase
+@implements IHandleAfterRender
+@* ReSharper disable once InconsistentNaming *@
+@inject IJSRuntime JSRuntime
 @inject NavigationManager Router
 @inject IPageService PageService
 @inject IStringLocalizer<CommonResources> CommonResources
@@ -102,5 +105,10 @@
         if (_page.Inject == null) return;
 
         _injectType = Type.GetType(_page.Inject.TypeName);
+    }
+
+    public async Task OnAfterRenderAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("OnPageLoad");
     }
 }
