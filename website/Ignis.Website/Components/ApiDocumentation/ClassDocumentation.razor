@@ -6,7 +6,7 @@
 @inject IStringLocalizer<ClassDocumentation> Resources
 
 <h2>
-    @SanitizeTypeName(Type)
+    @Type.SanitizeTypeName()
 </h2>
 
 @if (IsComponent)
@@ -90,7 +90,7 @@
 
     [Parameter, EditorRequired]
     public TypeInfo Type { get; set; } = null!;
-    
+
     [Parameter]
     public bool IsComponent { get; set; }
 
@@ -99,23 +99,6 @@
         _reader = new DocXmlReader(new[] { Type.Assembly });
 
         _typeComments = _reader.GetTypeComments(Type);
-    }
-
-    private string SanitizeTypeName(TypeInfo type, bool withNamespace = false)
-    {
-        var name = withNamespace ? type.FullName! : type.Name;
-    // ReSharper disable once InvertIf
-        if (type.IsGenericType)
-        {
-            var index = name.LastIndexOf('`');
-            name = name[..index];
-
-            var args = type.GenericTypeParameters.Select(p => p.Name).ToList();
-            args.AddRange(type.GenericTypeArguments.Select(a => SanitizeTypeName(a.GetTypeInfo(), true)));
-            name += $"<{string.Join(", ", args)}>";
-        }
-
-        return name;
     }
 
     private string GetTypeDefinition(TypeInfo type)
@@ -133,18 +116,18 @@
         else if (type.IsValueType) builder.Append(" struct");
 
         builder.Append(' ');
-        builder.Append(SanitizeTypeName(type));
+        builder.Append(type.SanitizeTypeName());
 
         var types = new List<string>();
 
         if (type.BaseType != null && type.BaseType != typeof(object))
         {
-            types.Add(SanitizeTypeName(type.BaseType.GetTypeInfo(), true));
+            types.Add(type.BaseType.GetTypeInfo().SanitizeTypeName(true));
         }
 
         if (type.ImplementedInterfaces.Any())
         {
-            types.AddRange(type.ImplementedInterfaces.Select(i => SanitizeTypeName(i.GetTypeInfo(), true)));
+            types.AddRange(type.ImplementedInterfaces.Select(i => i.GetTypeInfo().SanitizeTypeName(true)));
         }
 
         if (types.Any())
@@ -159,13 +142,13 @@
     public string GetConstructorDefinition(ConstructorInfo ctor)
     {
         var definition = new StringBuilder();
-        definition.Append(SanitizeTypeName(Type));
+        definition.Append(Type.SanitizeTypeName());
         definition.Append("(");
 
         var parameter = ctor.GetParameters();
         foreach (var param in parameter)
         {
-            definition.Append(SanitizeTypeName(param.ParameterType.GetTypeInfo()));
+            definition.Append(param.ParameterType.GetTypeInfo().SanitizeTypeName());
             definition.Append(" ");
             definition.Append(param.Name);
 

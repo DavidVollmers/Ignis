@@ -3,6 +3,10 @@
 @using System.Web
 @inherits IgnisComponentBase
 
+<PageTitle>
+    @_type?.SanitizeTypeName(true)
+</PageTitle>
+
 <Prose>
     @if (_type != null)
     {
