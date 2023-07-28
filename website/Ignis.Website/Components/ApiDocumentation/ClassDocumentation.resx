@@ -27,4 +27,7 @@
   <data name="TypeParametersHeading" xml:space="preserve">
     <value>Type Parameters</value>
   </data>
+  <data name="ConstructorsHeading" xml:space="preserve">
+    <value>Constructors</value>
+  </data>
 </root>

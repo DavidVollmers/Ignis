@@ -1,0 +1,118 @@
+﻿@using Ignis.Components
+@using Ignis.Website.Components
+@using Ignis.Website.Components.ApiDocumentation
+@using Ignis.Website.Resources
+@using Ignis.Website.Services
+@using Ignis.Markdown.Processor.Contracts
+@using System.Reflection
+@inherits Ignis.Components.IgnisAsyncComponentBase
+@implements IHandleAfterRender
+@inject NavigationManager Router
+@inject IPageService PageService
+@inject IStringLocalizer<CommonResources> CommonResources
+@* ReSharper disable once InconsistentNaming *@
+@inject IJSRuntime JSRuntime
+
+<PageTitle>
+    @CommonResources["WebsiteTitle"] - @_page?.Title
+</PageTitle>
+
+<CommonLayout>
+    <PreContent>
+        @if (_link == "/")
+        {
+            <Hero/>
+        }
+    </PreContent>
+    <ChildContent>
+        @if (_section != null && _page != null)
+        {
+            <header class="mb-9 space-y-1">
+                <p class="font-display text-sm font-medium text-sky-500">
+                    @_section.Title
+                </p>
+                <h1 class="font-display text-3xl tracking-tight text-slate-900 dark:text-white">
+                    @_page.Title
+                </h1>
+            </header>
+            @if (_page.Inject != null)
+            {
+                <Prose>
+                    <p>
+                        @_page.Inject.Description
+                    </p>
+                </Prose>
+                @if (_injectType != null)
+                {
+                    <Dynamic AsComponent="_injectType"/>
+                }
+            }
+            @if (_content != null)
+            {
+                <Prose>
+                    @((MarkupString)_content)
+                </Prose>
+
+                <br/>
+                <br/>
+            }
+            @if (_page.ApiTypeNames != null)
+            {
+                <Prose>
+                    <h2>
+                        @CommonResources["ApiReferenceHeading"]
+                    </h2>
+
+                    @foreach (var typeName in _page.ApiTypeNames)
+                    {
+                        var type = Type.GetType(typeName)?.GetTypeInfo();
+                        if (type == null) continue;
+
+                        <ClassDocumentation @key="typeName" Type="type"/>
+                    }
+                </Prose>
+            }
+        }
+    </ChildContent>
+</CommonLayout>
+
+@code
+{
+    private Section? _section;
+    private string? _content;
+    private string? _link;
+    private Page? _page;
+    private Type? _injectType;
+
+    [Parameter]
+    public RenderFragment? Body { get; set; }
+
+    protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
+    {
+        await LoadPageAsync(cancellationToken);
+    }
+
+    private async Task LoadPageAsync(CancellationToken cancellationToken)
+    {
+        _link = ('/' + Router.ToBaseRelativePath(Router.Uri)).Split('#')[0];
+
+        _section = await PageService.GetSectionByLinkAsync(_link, cancellationToken);
+
+        if (_section == null) return;
+
+        _page = _section?.Links.FirstOrDefault(s => s.Link == _link);
+
+        if (_page == null) return;
+
+        _content = await PageService.GetPageContentAsync(_page, cancellationToken);
+
+        if (_page.Inject == null) return;
+
+        _injectType = Type.GetType(_page.Inject.TypeName);
+    }
+
+    public async Task OnAfterRenderAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("OnPageLoad");
+    }
+}

@@ -2,7 +2,7 @@
 @using System.Reflection
 @using System.Text
 @inherits IgnisComponentBase
-@inject IStringLocalizer<ApiDocumentation> Resources
+@inject IStringLocalizer<ClassDocumentation> Resources
 
 <h2>
     @SanitizeTypeName(Type)
@@ -45,8 +45,39 @@
     }
 }
 
+@if (Type.DeclaredConstructors.Any())
+{
+    <h4>
+        @Resources["ConstructorsHeading"]
+    </h4>
+
+    <table>
+        <thead>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var ctor in Type.DeclaredConstructors)
+        {
+            var methodComments = _reader!.GetMethodComments(ctor);
+            <tr>
+                <td>
+                    <code>@GetConstructorDefinition(ctor)</code>
+                </td>
+                <td>
+                    @methodComments.Summary
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
 @code
 {
+    private DocXmlReader? _reader;
     private TypeComments? _typeComments;
 
     [Parameter, EditorRequired]
@@ -54,9 +85,9 @@
 
     protected override void OnInitialized()
     {
-        var reader = new DocXmlReader(new[] { Type.Assembly });
+        _reader = new DocXmlReader(new[] { Type.Assembly });
 
-        _typeComments = reader.GetTypeComments(Type);
+        _typeComments = _reader.GetTypeComments(Type);
     }
 
     private string SanitizeTypeName(TypeInfo type, bool withNamespace = false)
@@ -112,5 +143,34 @@
         }
 
         return builder.ToString();
+    }
+
+    public string GetConstructorDefinition(ConstructorInfo ctor)
+    {
+        var definition = new StringBuilder();
+        definition.Append(SanitizeTypeName(Type));
+        definition.Append("(");
+
+        var parameter = ctor.GetParameters();
+        foreach (var param in parameter)
+        {
+            definition.Append(SanitizeTypeName(param.ParameterType.GetTypeInfo()));
+            definition.Append(" ");
+            definition.Append(param.Name);
+
+            if (param.HasDefaultValue)
+            {
+                definition.Append(" = ");
+                definition.Append(param.DefaultValue);
+            }
+            if (param != parameter.Last())
+            {
+                definition.Append(", ");
+            }
+        }
+
+        definition.Append(")");
+
+        return definition.ToString();
     }
 }
