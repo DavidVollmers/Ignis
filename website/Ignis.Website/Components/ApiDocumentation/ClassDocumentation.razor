@@ -4,6 +4,9 @@
 @using System.Web
 @using Ignis.Website.Services
 @inherits IgnisAsyncComponentBase
+@implements IHandleAfterRender
+@* ReSharper disable once InconsistentNaming *@
+@inject IJSRuntime JSRuntime
 @inject IStringLocalizer<ClassDocumentation> Resources
 @inject IStaticFileService StaticFileService
 
@@ -145,7 +148,7 @@ else
         return builder.ToString();
     }
 
-    public string GetConstructorDefinition(ConstructorInfo ctor)
+    private string GetConstructorDefinition(ConstructorInfo ctor)
     {
         var definition = new StringBuilder();
         definition.Append(Type.SanitizeTypeName());
@@ -172,5 +175,10 @@ else
         definition.Append(")");
 
         return definition.ToString();
+    }
+
+    public async Task OnAfterRenderAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("OnPageLoad");
     }
 }

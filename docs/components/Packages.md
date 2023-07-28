@@ -53,10 +53,23 @@ Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components.Web) for more 
     </div>
 </div>
 
+## Ignis.Components.WebAssembly
+
+**This package is required if you want to use Ignis components in your Blazor WebAssembly application.**
+
+Provides classes for using Ignis components within a Blazor WebAssembly application.
+
+You can easily install this package using the following command:
+
+```shell
+dotnet add package Ignis.Components.WebAssembly
+```
+
 ## Ignis.Components.Server
 
-Provides classes for using Ignis components within a Blazor Server application. This package is required if you want to
-use Ignis components in your Blazor Server application.
+**This package is required if you want to use Ignis components in your Blazor Server application.**
+
+Provides classes for using Ignis components within a Blazor Server application.
 
 You can easily install this package using the following command:
 
