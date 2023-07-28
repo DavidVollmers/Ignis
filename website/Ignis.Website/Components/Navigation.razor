@@ -16,16 +16,16 @@
                     </h2>
                     <ul role="list"
                         class="mt-2 space-y-2 border-l-2 border-slate-100 dark:border-slate-800 lg:mt-4 lg:space-y-4 lg:border-slate-200">
-                        @foreach (var link in item.Links)
+                        @foreach (var pageItem in item.Links)
                         {
-                            var routerLink = Link;
-                            var docsLink = "/docs" + link.Link;
+                            var routerLink = ('/' + Router.ToBaseRelativePath(Router.Uri)).Split('#')[0];
                             if (routerLink == "/") routerLink = "/docs/";
+                            var docsLink = "/docs" + pageItem.Link;
                             var isCurrentPage = routerLink == docsLink;
-                            <li @key="link.Link" class="relative">
-                                <a href="@docsLink"
+                            <li @key="pageItem.Link" class="relative">
+                                <a href="" @onclick:preventDefault @onclick="@(() => OpenPage(pageItem))"
                                    class="@Css.Class("block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full", isCurrentPage ? "font-semibold text-sky-500 before:bg-sky-500" : "text-slate-500 before:hidden before:bg-slate-300 hover:text-slate-600 hover:before:block dark:text-slate-400 dark:before:bg-slate-700 dark:hover:text-slate-300")">
-                                    @link.Title
+                                    @pageItem.Title
                                 </a>
                             </li>
                         }
@@ -39,9 +39,9 @@
 @code
 {
     private Section[]? _sections;
-
-    [Parameter, EditorRequired]
-    public string Link { get; set; }
+    
+    [Parameter]
+    public EventCallback<Page> OnOpenPage { get; set; }
     
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
@@ -51,5 +51,14 @@
     protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
     {
         _sections = await PageService.GetSectionsAsync(cancellationToken);
+    }
+
+    private void OpenPage(Page pageItem)
+    {
+        OnOpenPage.InvokeAsync(pageItem);
+        
+        Router.NavigateTo("/docs" + pageItem.Link);
+        
+        ForceUpdate();
     }
 }

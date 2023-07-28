@@ -3,9 +3,9 @@
 @inject IStringLocalizer<MobileNavigation> Resources
 @inject IStringLocalizer<CommonResources> CommonResources
 
-<button type="button" 
+<button type="button"
         @onclick="OpenNavigation"
-        class="relative" 
+        class="relative"
         aria-label="@Resources["OpenNavigationButton"]">
     <Bars3Icon class="h-6 w-6 stroke-slate-500"/>
 </button>
@@ -23,7 +23,7 @@
                 <Logo class="h-9 w-9 fill-ignis-500"/>
             </a>
         </div>
-        <Navigation class="mt-5 px-1"/>
+        <Navigation OnOpenPage="_ => CloseNavigation()" class="mt-5 px-1"/>
     </DialogPanel>
 </Dialog>
 
@@ -37,7 +37,7 @@
 
         ForceUpdate();
     }
-    
+
     private void CloseNavigation()
     {
         _isOpen = false;
