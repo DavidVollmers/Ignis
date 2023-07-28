@@ -17,7 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\packages\Ignis.Utils\Ignis.Utils.csproj" />
     <ProjectReference Include="..\..\packages\Tailwind\Ignis.Components.HeadlessUI\Ignis.Components.HeadlessUI.csproj" />
-    <ProjectReference Include="..\..\packages\Tailwind\Ignis.Components.HeroIcons\Ignis.Components.HeroIcons.csproj" />
     <ProjectReference Include="..\..\tools\Ignis.Markdown.Processor.Contracts\Ignis.Markdown.Processor.Contracts.csproj" />
   </ItemGroup>
 
