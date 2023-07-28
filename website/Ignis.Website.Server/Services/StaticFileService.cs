@@ -22,11 +22,11 @@ internal class StaticFileService : IStaticFileService
         return json == null ? default : JsonSerializer.Deserialize<T>(json);
     }
 
-    public XPathDocument? GetFileContentAsXml(string path)
+    public Task<XPathDocument?> GetFileContentAsXmlAsync(string path, CancellationToken cancellationToken = default)
     {
         var file = new FileInfo(BuildPath(path));
 
-        return !file.Exists ? null : new XPathDocument(file.FullName);
+        return Task.FromResult(!file.Exists ? null : new XPathDocument(file.FullName));
     }
 
     private static string BuildPath(string path)

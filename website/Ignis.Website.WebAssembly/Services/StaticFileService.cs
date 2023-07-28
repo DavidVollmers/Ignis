@@ -13,7 +13,7 @@ internal class StaticFileService : IStaticFileService
     {
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
     }
-    
+
     public async Task<string?> GetFileContentAsync(string path, CancellationToken cancellationToken = default)
     {
         try
@@ -33,9 +33,12 @@ internal class StaticFileService : IStaticFileService
         return _httpClient.GetFromJsonAsync<T>(BuildPath(path), cancellationToken);
     }
 
-    public XPathDocument? GetFileContentAsXml(string path)
+    public async Task<XPathDocument?> GetFileContentAsXmlAsync(string path,
+        CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        var content = await GetFileContentAsync(path, cancellationToken);
+
+        return content == null ? null : new XPathDocument(new StringReader(content));
     }
 
     private static string BuildPath(string path)

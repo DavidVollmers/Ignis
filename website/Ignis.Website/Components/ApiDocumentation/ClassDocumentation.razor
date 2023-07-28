@@ -3,7 +3,7 @@
 @using System.Text
 @using System.Web
 @using Ignis.Website.Services
-@inherits IgnisComponentBase
+@inherits IgnisAsyncComponentBase
 @inject IStringLocalizer<ClassDocumentation> Resources
 @inject IStaticFileService StaticFileService
 
@@ -96,18 +96,12 @@ else
     [Parameter]
     public bool IsComponent { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
     {
-        var path = Path.ChangeExtension(Type.Assembly.Location, ".xml");
+        var path = $"/_api/{Type.Assembly.GetName().Name}.xml";
 
-        // WebAssembly
-        if (string.IsNullOrEmpty(path))
-        {
-            path = $"/_api/{Type.Assembly.GetName().Name}.xml";
-        }
-        
-        var xml = StaticFileService.GetFileContentAsXml(path);
-        
+        var xml = await StaticFileService.GetFileContentAsXmlAsync(path, cancellationToken);
+
         _reader = new DocXmlReader(xml);
 
         _typeComments = _reader.GetTypeComments(Type);

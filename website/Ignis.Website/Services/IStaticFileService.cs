@@ -8,5 +8,5 @@ public interface IStaticFileService
     
     Task<T?> GetFileContentAsJsonAsync<T>(string path, CancellationToken cancellationToken = default);
     
-    XPathDocument? GetFileContentAsXml(string path);
+    Task<XPathDocument?> GetFileContentAsXmlAsync(string path, CancellationToken cancellationToken = default);
 }
