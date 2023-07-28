@@ -103,7 +103,7 @@ else
         // WebAssembly
         if (string.IsNullOrEmpty(path))
         {
-            path = $"/_content/Ignis.Website/xml/{Type.Assembly.GetName().Name}.xml";
+            path = $"/_api/{Type.Assembly.GetName().Name}.xml";
         }
         
         var xml = StaticFileService.GetFileContentAsXml(path);

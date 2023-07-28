@@ -5,7 +5,7 @@ using Markdig.Extensions.Yaml;
 using Markdig.Syntax;
 using YamlDotNet.Serialization;
 
-namespace Ignis.Markdown.Processor;
+namespace Ignis.Website.Generator;
 
 internal class DocsBuilder
 {

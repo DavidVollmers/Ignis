@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Ignis.Markdown.Processor;
+using Ignis.Website.Generator;
 
 var assemblyFile = new FileInfo(Assembly.GetExecutingAssembly().Location);
 var markdownDirectory =
@@ -12,3 +12,13 @@ var outputDirectoryWebAssembly = new DirectoryInfo(Path.Combine(assemblyFile.Dir
 var builder = new DocsBuilder();
 builder.Build(markdownDirectory, outputDirectoryServer);
 builder.Build(markdownDirectory, outputDirectoryWebAssembly);
+
+var sourceDirectory = new DirectoryInfo(Path.Combine(assemblyFile.DirectoryName!, "..", "..", "..", "..", "..",
+    "website", "Ignis.Website", "bin", "Release", "net7.0"));
+outputDirectoryServer = new DirectoryInfo(Path.Combine(assemblyFile.DirectoryName!, "..", "..", "..", "..", "..",
+    "website", "Ignis.Website.Server", "wwwroot", "_api"));
+outputDirectoryWebAssembly = new DirectoryInfo(Path.Combine(assemblyFile.DirectoryName!, "..", "..", "..", "..",
+    "..", "website", "Ignis.Website.WebAssembly", "wwwroot", "_api"));
+
+XmlCopy.Copy(sourceDirectory, outputDirectoryServer);
+XmlCopy.Copy(sourceDirectory, outputDirectoryWebAssembly);

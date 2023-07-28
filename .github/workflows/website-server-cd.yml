@@ -18,8 +18,8 @@ jobs:
       - run: npm i
       - run: dotnet build website/Ignis.Website -c Release
       - run: |
-          dotnet build tools/Ignis.Markdown.Processor -c Release
-          dotnet tools/Ignis.Markdown.Processor/bin/Release/net6.0/Ignis.Markdown.Processor.dll
+          dotnet build tools/Ignis.Website.Generator -c Release
+          dotnet tools/Ignis.Website.Generator/bin/Release/net6.0/Ignis.Website.Generator.dll
       - run: dotnet publish website/Ignis.Website.Server/Ignis.Website.Server.csproj -c Release
       - uses: azure/docker-login@v1
         with:

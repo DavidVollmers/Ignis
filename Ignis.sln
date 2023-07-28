@@ -26,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Components.Web", "pac
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{80B7BBBD-6FAB-4A17-A18E-46558A696C19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Markdown.Processor", "tools\Ignis.Markdown.Processor\Ignis.Markdown.Processor.csproj", "{B62AEFAC-8F61-4993-9C8C-D43C6A5068EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Website.Generator", "tools\Ignis.Website.Generator\Ignis.Website.Generator.csproj", "{B62AEFAC-8F61-4993-9C8C-D43C6A5068EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Components.HeroIcons", "packages\Tailwind\Ignis.Components.HeroIcons\Ignis.Components.HeroIcons.csproj", "{F3457565-E8DE-4CFA-A4F3-9B53D2ADA59F}"
 EndProject
