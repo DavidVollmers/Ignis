@@ -17,7 +17,7 @@ internal class StaticFileService : IStaticFileService
     {
         try
         {
-            return await _httpClient.GetStringAsync(path, cancellationToken);
+            return await _httpClient.GetStringAsync(BuildPath(path), cancellationToken);
         }
         catch (HttpRequestException exception)
         {
@@ -29,6 +29,11 @@ internal class StaticFileService : IStaticFileService
 
     public Task<T?> GetFileContentAsync<T>(string path, CancellationToken cancellationToken = default)
     {
-        return _httpClient.GetFromJsonAsync<T>(path, cancellationToken);
+        return _httpClient.GetFromJsonAsync<T>(BuildPath(path), cancellationToken);
+    }
+
+    private static string BuildPath(string path)
+    {
+        return path.Replace("/docs/", "/_docs/");
     }
 }
