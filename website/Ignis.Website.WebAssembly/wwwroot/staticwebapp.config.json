@@ -1,15 +1,6 @@
 ﻿{
   "$schema": "https://json.schemastore.org/staticwebapp.config.json",
   "trailingSlash": "never",
-  "routes": [
-    {
-      "route": "/docs/*.html"
-    },
-    {
-      "route": "/docs*",
-      "rewrite": "index.html"
-    }
-  ],
   "navigationFallback": {
     "rewrite": "index.html"
   }
