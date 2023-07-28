@@ -1,9 +1,10 @@
-﻿@using Index = Ignis.Website.Index
-<Router AppAssembly="@typeof(Index).Assembly">
+﻿@using Ignis.Website.Pages
+@using Index = Ignis.Website.Index
+<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new[] { typeof(Index).Assembly }">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(Index)"/>
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(PageLayout)"/>
     </Found>
     <NotFound>
-        <LayoutView Layout="@typeof(Index)" />
+        <LayoutView Layout="@typeof(Index)"/>
     </NotFound>
 </Router>

@@ -1,12 +1,20 @@
 ﻿@using LoxSmoke.DocXml
 @using System.Reflection
 @using System.Text
+@using System.Web
 @inherits IgnisComponentBase
 @inject IStringLocalizer<ClassDocumentation> Resources
 
 <h2>
     @SanitizeTypeName(Type)
 </h2>
+
+@if (IsComponent)
+{
+    <a href="/api/@(HttpUtility.UrlEncode(Type.AssemblyQualifiedName))/_">
+        @Resources["ViewApiReference"]
+    </a>
+}
 
 <h3>
     @Resources["DefinitionHeading"]
@@ -45,7 +53,7 @@
     }
 }
 
-@if (Type.DeclaredConstructors.Any())
+@if (!IsComponent && Type.DeclaredConstructors.Any())
 {
     <h4>
         @Resources["ConstructorsHeading"]
@@ -82,6 +90,9 @@
 
     [Parameter, EditorRequired]
     public TypeInfo Type { get; set; } = null!;
+    
+    [Parameter]
+    public bool IsComponent { get; set; }
 
     protected override void OnInitialized()
     {

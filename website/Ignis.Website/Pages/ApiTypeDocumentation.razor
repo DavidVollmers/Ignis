@@ -1,0 +1,29 @@
+﻿@page "/api/{type}/_"
+@using System.Reflection
+@using System.Web
+@inherits IgnisComponentBase
+
+<Prose>
+    @if (_type != null)
+    {
+        <ClassDocumentation Type="_type"/>
+    }
+</Prose>
+
+@code
+{
+    private TypeInfo? _type;
+
+    [Parameter]
+    public string Type { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        var type = System.Type.GetType(HttpUtility.UrlDecode(Type));
+
+    //TODO NotFound
+        if (type == null) return;
+
+        _type = type.GetTypeInfo();
+    }
+}

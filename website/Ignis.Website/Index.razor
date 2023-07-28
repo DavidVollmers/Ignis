@@ -6,12 +6,9 @@
 @using Ignis.Markdown.Processor.Contracts
 @using System.Reflection
 @inherits Ignis.Components.IgnisAsyncComponentBase
-@implements IHandleAfterRender
 @inject NavigationManager Router
 @inject IPageService PageService
 @inject IStringLocalizer<CommonResources> CommonResources
-@* ReSharper disable once InconsistentNaming *@
-@inject IJSRuntime JSRuntime
 
 <PageTitle>
     @CommonResources["WebsiteTitle"] - @_page?.Title
@@ -68,7 +65,7 @@
                         var type = Type.GetType(typeName)?.GetTypeInfo();
                         if (type == null) continue;
 
-                        <ClassDocumentation @key="typeName" Type="type"/>
+                        <ClassDocumentation @key="typeName" Type="type" IsComponent/>
                     }
                 </Prose>
             }
@@ -98,10 +95,12 @@
 
         _section = await PageService.GetSectionByLinkAsync(_link, cancellationToken);
 
+    //TODO NotFound
         if (_section == null) return;
 
         _page = _section?.Links.FirstOrDefault(s => s.Link == _link);
 
+    //TODO NotFound
         if (_page == null) return;
 
         _content = await PageService.GetPageContentAsync(_page, cancellationToken);
@@ -109,10 +108,5 @@
         if (_page.Inject == null) return;
 
         _injectType = Type.GetType(_page.Inject.TypeName);
-    }
-
-    public async Task OnAfterRenderAsync()
-    {
-        await JSRuntime.InvokeVoidAsync("OnPageLoad");
     }
 }
