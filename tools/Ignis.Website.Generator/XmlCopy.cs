@@ -10,17 +10,11 @@ internal class XmlCopy
 
         foreach (var xmlFile in xmlFiles)
         {
-            Console.WriteLine($"XML: {xmlFile.FullName}");
-            
             var relativePath = xmlFile.FullName.Replace(sourceDirectory.FullName, string.Empty)
                 .TrimStart(Path.DirectorySeparatorChar);
 
-            Console.WriteLine($"RP: {relativePath}");
-            
             var destinationPath = Path.Combine(outputDirectory.FullName, relativePath);
 
-            Console.WriteLine($"DP: {destinationPath}");
-            
             var destinationDirectory = new FileInfo(destinationPath).Directory!;
 
             if (!destinationDirectory.Exists)
