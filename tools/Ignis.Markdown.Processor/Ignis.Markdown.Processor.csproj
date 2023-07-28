@@ -1,19 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Markdig" Version="0.31.0" />
-      <PackageReference Include="YamlDotNet" Version="13.1.1" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.31.0" />
+    <PackageReference Include="YamlDotNet" Version="13.1.1" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\Ignis.Markdown.Processor.Contracts\Ignis.Markdown.Processor.Contracts.csproj" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\website\Ignis.Website.Contracts\Ignis.Website.Contracts.csproj" />
+  </ItemGroup>
 
 </Project>

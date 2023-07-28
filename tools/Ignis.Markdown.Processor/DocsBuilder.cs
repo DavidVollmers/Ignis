@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using Ignis.Markdown.Processor.Contracts;
+using Ignis.Website.Contracts;
 using Markdig;
 using Markdig.Extensions.Yaml;
 using Markdig.Syntax;

@@ -1,4 +1,4 @@
-﻿namespace Ignis.Markdown.Processor.Contracts;
+﻿namespace Ignis.Website.Contracts;
 
 public class Page
 {

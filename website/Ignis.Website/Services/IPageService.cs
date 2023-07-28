@@ -1,4 +1,4 @@
-﻿using Ignis.Markdown.Processor.Contracts;
+﻿using Ignis.Website.Contracts;
 
 namespace Ignis.Website.Services;
 
