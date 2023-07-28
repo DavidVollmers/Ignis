@@ -3,6 +3,9 @@
   "trailingSlash": "never",
   "routes": [
     {
+      "route": "/docs/*.html"
+    },
+    {
       "route": "/docs*",
       "rewrite": "index.html"
     }
