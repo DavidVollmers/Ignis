@@ -19,16 +19,16 @@
                     LeaveFrom="opacity-100 translate-y-0"
                     LeaveTo="opacity-0 translate-y-1"
                     Context="transition">
-            <PopoverPanel class="@Css.Class("absolute left-1/2 z-10 mt-3 w-screen max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl", transition)">
+            <PopoverPanel class="@Css.Class("absolute left-1/2 z-10 mt-3 w-full max-w-sm -translate-x-1/2 transform px-4 sm:px-0 lg:max-w-3xl", transition)">
                 <div class="overflow-hidden rounded-lg shadow-lg ring-1 ring-black ring-opacity-5">
-                    <div class="relative grid gap-8 bg-white p-7 lg:grid-cols-2">
+                    <div class="relative grid gap-8 bg-white p-7">
                         @foreach (var solution in _solutions)
                         {
                             <a @key="solution.Name"
                                href="@solution.HRef"
                                class="-m-3 flex items-center rounded-lg p-2 transition duration-150 ease-in-out hover:bg-gray-50 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50">
                                 <div class="flex h-10 w-10 shrink-0 items-center justify-center text-white sm:h-12 sm:w-12">
-                                    <Dynamic AsComponent="solution.Icon" aria-hidden="true"/>
+                                    <Dynamic AsComponent="solution.Icon"/>
                                 </div>
                                 <div class="ml-4">
                                     <p class="text-sm font-medium text-gray-900">
@@ -76,7 +76,7 @@
         protected override void BuildRenderTree(RenderTreeBuilder builder)
         {
             var svg = new StringBuilder();
-            svg.Append(@"<svg width=""48"" height=""48"" viewBox=""0 0 48 48"" fill=""none"" xmlns=""http://www.w3.org/2000/svg"">");
+            svg.Append(@"<svg width=""48"" height=""48"" viewBox=""0 0 48 48"" fill=""none"" xmlns=""http://www.w3.org/2000/svg"" aria-hidden=""true"">");
             svg.Append(@"<rect width=""48"" height=""48"" rx=""8"" fill=""#FFEDD5"" />");
             svg.Append(@"<path d=""M24 11L35.2583 17.5V30.5L24 37L12.7417 30.5V17.5L24 11Z"" stroke=""#FB923C"" strokeWidth=""2""/>");
             svg.Append(@"<path fillRule=""evenodd"" clipRule=""evenodd"" d=""M16.7417 19.8094V28.1906L24 32.3812L31.2584 28.1906V19.8094L24 15.6188L16.7417 19.8094Z"" stroke=""#FDBA74"" strokeWidth=""2""/>");
