@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.Web;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosure
+public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
 {
     private Type? _asComponent;
     private string? _asElement;
-    private bool _isOpen;
 
     /// <inheritdoc />
     [Parameter]
@@ -35,18 +35,18 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDisclosure>? _ { get; set; }
+    public RenderFragment<IMenu>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IDisclosure>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<IMenu>? ChildContent { get; set; }
 
+    /// <summary>
+    /// Additional attributes to be applied to the listbox.
+    /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
-    public IDisclosurePanel? Panel { get; private set; }
-
-    /// <inheritdoc />
-    public string Id { get; } = "ignis-hui-disclosure-" + Guid.NewGuid().ToString("N");
+    public string Id { get; } = "ignis-hui-menu-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc />
     public ElementReference? Element { get; set; }
@@ -57,7 +57,7 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
-    public Disclosure()
+    public Menu()
     {
         AsComponent = typeof(Fragment);
     }
@@ -70,21 +70,24 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<IDisclosure>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IDisclosure>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<IDisclosure>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IDisclosure>.ChildContent),
-                this.GetChildContent(ChildContent));
+            builder.OpenComponent<FocusDetector>(3);
+            builder.AddAttribute(4, nameof(FocusDetector.Id), Id);
+            builder.AddAttribute(6, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, () => Close()));
+            // ReSharper disable once VariableHidesOuterVariable
+            builder.AddAttribute(7, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
+            {
+                builder.OpenComponent<CascadingValue<IMenu>>(8);
+                builder.AddAttribute(9, nameof(CascadingValue<IMenu>.IsFixed), true);
+                builder.AddAttribute(10, nameof(CascadingValue<IMenu>.Value), this);
+                builder.AddAttribute(11, nameof(CascadingValue<IMenu>.ChildContent),
+                    this.GetChildContent(ChildContent));
+
+                builder.CloseComponent();
+            }));
 
             builder.CloseComponent();
         });
 
         builder.CloseAs(this);
-    }
-
-    /// <inheritdoc />
-    public void SetPanel(IDisclosurePanel panel)
-    {
-        Panel = panel ?? throw new ArgumentNullException(nameof(panel));
     }
 }

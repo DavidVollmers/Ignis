@@ -5,7 +5,7 @@ namespace Ignis.Components.HeadlessUI;
 /// <summary>
 /// Provides functionality to an object to be used as a listbox.
 /// </summary>
-public interface IListbox : IDynamicParentComponent<IListbox>, IOpenClose, IFocus
+public interface IListbox : IDynamicParentComponent<IListbox>, IOpenClose, IWithTransition, IFocus
 {
     internal IListboxOption[] Options { get; }
 
@@ -42,6 +42,4 @@ public interface IListbox : IDynamicParentComponent<IListbox>, IOpenClose, IFocu
     internal void SetButton(IFocus button);
 
     internal void SetLabel(IListboxLabel label);
-
-    internal void SetTransition(ITransition transition);
 }

@@ -8,11 +8,10 @@ namespace Ignis.Components.HeadlessUI;
 /// Renders a listbox which can be used to select one or more values.
 /// </summary>
 /// <typeparam name="TValue">The value type.</typeparam>
-public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfterRender
+public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, IListbox
 {
     private readonly IList<IListboxOption> _options = new List<IListboxOption>();
 
-    private ITransition? _transition;
     private Type? _asComponent;
     private string? _asElement;
     private IFocus? _button;
@@ -56,22 +55,6 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
 
     /// <inheritdoc />
     [Parameter]
-    public bool IsOpen
-    {
-        get => _isOpen;
-        set
-        {
-            if (value) Open();
-            else Close();
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public EventCallback<bool> IsOpenChanged { get; set; }
-
-    /// <inheritdoc />
-    [Parameter]
     public RenderFragment<IListbox>? _ { get; set; }
 
     [Parameter] public RenderFragment<IListbox>? ChildContent { get; set; }
@@ -102,8 +85,6 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
 
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
-
-    [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Listbox{TValue}"/> class.
@@ -142,54 +123,10 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
         builder.CloseAs(this);
     }
 
-    /// <inheritdoc />
-    public void Open(Action? continueWith = null)
+    protected override void OnAfterOpen()
     {
-        if (_isOpen || FrameTracker.IsPending) return;
-
-        IsOpenChanged.InvokeAsync(_isOpen = true);
-
-        FrameTracker.ExecuteOnNextFrame(() =>
-        {
-            var selectedOption = Options.FirstOrDefault(x => x.IsSelected);
-            if (selectedOption != null) SetOptionActive(selectedOption, true);
-
-            if (_transition != null) _transition.Show(continueWith);
-            else continueWith?.Invoke();
-        }, ForceUpdate);
-        
-        ForceUpdate();
-    }
-
-    /// <inheritdoc />
-    public void Close(Action? continueWith = null)
-    {
-        if (!_isOpen || FrameTracker.IsPending) return;
-
-        if (_transition != null)
-        {
-            _transition.Hide(() => CloseCore(continueWith, true));
-            return;
-        }
-
-        CloseCore(continueWith);
-    }
-
-    private void CloseCore(Action? continueWith, bool async = false)
-    {
-        IsOpenChanged.InvokeAsync(_isOpen = false);
-
-        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, ForceUpdate);
-
-        ForceUpdate(async);
-    }
-
-    /// <inheritdoc />
-    public async Task FocusAsync()
-    {
-        if (_button == null) return;
-
-        await _button.FocusAsync();
+        var selectedOption = Options.FirstOrDefault(x => x.IsSelected);
+        if (selectedOption != null) SetOptionActive(selectedOption, true);
     }
 
     /// <inheritdoc />
@@ -250,16 +187,10 @@ public sealed class Listbox<TValue> : IgnisComponentBase, IListbox, IHandleAfter
     }
 
     /// <inheritdoc />
-    public void SetTransition(ITransition transition)
+    public async Task FocusAsync()
     {
-        _transition = transition ?? throw new ArgumentNullException(nameof(transition));
-    }
+        if (_button == null) return;
 
-    /// <inheritdoc />
-    public Task OnAfterRenderAsync()
-    {
-        FrameTracker.OnAfterRender();
-        
-        return Task.CompletedTask;
+        await _button.FocusAsync();
     }
 }
