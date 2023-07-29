@@ -6,6 +6,8 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
 {
+    private readonly IList<IMenuItem> _items = new List<IMenuItem>();
+    
     private Type? _asComponent;
     private string? _asElement;
 
@@ -44,6 +46,9 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
+
+    /// <inheritdoc />
+    public IMenuItem? ActiveItem { get; private set; }
 
     /// <inheritdoc />
     public IMenuButton? Button { get; private set; }
@@ -92,6 +97,37 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
         });
 
         builder.CloseAs(this);
+    }
+
+    /// <inheritdoc />
+    public void SetItemActive(IMenuItem item, bool isActive)
+    {
+        if (isActive)
+        {
+            ActiveItem = item;
+        }
+        else if (ActiveItem == item)
+        {
+            ActiveItem = null;
+        }
+
+        ForceUpdate();
+    }
+
+    /// <inheritdoc />
+    public void AddItem(IMenuItem item)
+    {
+        if (item == null) throw new ArgumentNullException(nameof(item));
+
+        if (!_items.Contains(item)) _items.Add(item);
+    }
+
+    /// <inheritdoc />
+    public void RemoveItem(IMenuItem item)
+    {
+        if (item == null) throw new ArgumentNullException(nameof(item));
+
+        _items.Remove(item);
     }
 
     /// <inheritdoc />
