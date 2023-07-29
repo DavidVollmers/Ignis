@@ -55,6 +55,8 @@ public sealed class Transition : TransitionBase, ITransition
 
     [Parameter] public bool Appear { get; set; }
 
+    [CascadingParameter] public IMenu? Menu { get; set; }
+
     [CascadingParameter] public IListbox? Listbox { get; set; }
 
     [CascadingParameter] public IDisclosure? Disclosure { get; set; }
@@ -79,6 +81,8 @@ public sealed class Transition : TransitionBase, ITransition
     /// <inheritdoc />
     protected override void OnInitialized()
     {
+        Menu?.SetTransition(this);
+        
         Listbox?.SetTransition(this);
         
         Disclosure?.SetTransition(this);
