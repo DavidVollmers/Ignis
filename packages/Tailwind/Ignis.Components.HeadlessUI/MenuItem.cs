@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, IDisposable
+public sealed class MenuItem : IgnisComponentBase, IMenuItem, IDisposable
 {
     private readonly AttributeCollection _attributes;
 
@@ -34,15 +34,13 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
         }
     }
 
-    [CascadingParameter] public IListbox Listbox { get; set; } = null!;
-
-    [Parameter, EditorRequired] public TValue? Value { get; set; }
+    [CascadingParameter] public IMenu Menu { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IListboxOption>? _ { get; set; }
+    public RenderFragment<IMenuItem>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IListboxOption>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<IMenuItem>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
@@ -52,10 +50,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     }
 
     /// <inheritdoc />
-    public bool IsActive => Listbox.ActiveOption == this;
-
-    /// <inheritdoc />
-    public bool IsSelected => Listbox.IsValueSelected(Value);
+    public bool IsActive => Menu.ActiveItem == this;
 
     /// <inheritdoc />
     public ElementReference? Element { get; set; }
@@ -66,18 +61,17 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
-    public ListboxOption()
+    public MenuItem()
     {
-        AsElement = "li";
+        AsComponent = typeof(Fragment);
 
         _attributes = new AttributeCollection(new[]
         {
             () => new KeyValuePair<string, object?>("tabindex", -1),
-            () => new KeyValuePair<string, object?>("role", "option"),
-            () => new KeyValuePair<string, object?>("aria-selected", IsSelected.ToString().ToLowerInvariant()),
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, OnClick)),
-            () => new KeyValuePair<string, object?>("onmouseenter",
-                EventCallback.Factory.Create(this, OnMouseEnter)),
+            () => new KeyValuePair<string, object?>("role", "menuitem"),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, OnClick)), () =>
+                new KeyValuePair<string, object?>("onmouseenter",
+                    EventCallback.Factory.Create(this, OnMouseEnter)),
             () => new KeyValuePair<string, object?>("onmouseleave",
                 EventCallback.Factory.Create(this, OnMouseLeave))
         });
@@ -86,13 +80,12 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     /// <inheritdoc />
     protected override void OnInitialized()
     {
-        if (Listbox == null)
+        if (Menu == null)
         {
-            throw new InvalidOperationException(
-                $"{nameof(ListboxOption<object>)} must be used inside a {nameof(Listbox<object>)}.");
+            throw new InvalidOperationException($"{nameof(MenuItem)} must be used inside a {nameof(HeadlessUI.Menu)}.");
         }
 
-        Listbox.AddOption(this);
+        Menu.AddItem(this);
     }
 
     /// <inheritdoc />
@@ -100,36 +93,30 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IListboxOption, ListboxOption<TValue>>(2, this, ChildContent?.Invoke(this));
+        builder.AddChildContentFor<IMenuItem, MenuItem>(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }
 
     private void OnClick()
     {
-        Listbox.SelectValue(Value);
-
-        Listbox.Close();
+        //TODO OnClick
+        
+        Menu.Close();
     }
 
     private void OnMouseEnter()
     {
-        Listbox.SetOptionActive(this, true);
+        Menu.SetItemActive(this, true);
     }
 
     private void OnMouseLeave()
     {
-        Listbox.SetOptionActive(this, false);
-    }
-
-    /// <inheritdoc />
-    public void Select()
-    {
-        Listbox.SelectValue(Value);
+        Menu.SetItemActive(this, false);
     }
 
     public void Dispose()
     {
-        Listbox.RemoveOption(this);
+        Menu.RemoveItem(this);
     }
 }
