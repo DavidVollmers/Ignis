@@ -125,6 +125,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
         builder.CloseAs(this);
     }
 
+    /// <inheritdoc />
     protected override void OnAfterOpen(Action? continueWith)
     {
         var selectedOption = Options.FirstOrDefault(x => x.IsSelected);

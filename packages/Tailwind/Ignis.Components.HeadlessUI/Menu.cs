@@ -7,7 +7,7 @@ namespace Ignis.Components.HeadlessUI;
 public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
 {
     private readonly IList<IMenuItem> _items = new List<IMenuItem>();
-    
+
     private Type? _asComponent;
     private string? _asElement;
 
@@ -100,6 +100,15 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
         });
 
         builder.CloseAs(this);
+    }
+
+    /// <inheritdoc />
+    protected override void OnAfterOpen(Action? continueWith)
+    {
+        var firstItem = Items.FirstOrDefault();
+        if (firstItem != null) SetItemActive(firstItem, true);
+
+        base.OnAfterOpen(continueWith);
     }
 
     /// <inheritdoc />
