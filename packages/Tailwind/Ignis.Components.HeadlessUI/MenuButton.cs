@@ -107,5 +107,43 @@ public sealed class MenuButton : IgnisComponentBase, IMenuButton
 
     private void OnKeyDown(KeyboardEventArgs eventArgs)
     {
+        switch (eventArgs.Code)
+        {
+            case "Escape":
+                Menu.Close();
+                break;
+            case "Space" or "Enter":
+                if (Menu.IsOpen)
+                {
+                    Menu.ActiveItem?.Click();
+                    
+                    Menu.Close();
+                }
+                else
+                {
+                    Menu.Open();
+                }
+
+                break;
+            case "ArrowUp" when Menu.ActiveItem == null:
+            case "ArrowDown" when Menu.ActiveItem == null:
+                if (Menu.Items.Any()) Menu.SetItemActive(Menu.Items[0], true);
+                Menu.Open();
+                break;
+            case "ArrowDown":
+            {
+                var index = Array.IndexOf(Menu.Items, Menu.ActiveItem) + 1;
+                if (index < Menu.Items.Length) Menu.SetItemActive(Menu.Items[index], true);
+                Menu.Open();
+                break;
+            }
+            case "ArrowUp":
+            {
+                var index = Array.IndexOf(Menu.Items, Menu.ActiveItem) - 1;
+                if (index >= 0) Menu.SetItemActive(Menu.Items[index], true);
+                Menu.Open();
+                break;
+            }
+        }
     }
 }

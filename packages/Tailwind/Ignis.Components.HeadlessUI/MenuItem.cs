@@ -34,6 +34,9 @@ public sealed class MenuItem : IgnisComponentBase, IMenuItem, IDisposable
         }
     }
 
+    /// <inheritdoc />
+    [Parameter] public EventCallback OnClick { get; set; }
+
     [CascadingParameter] public IMenu Menu { get; set; } = null!;
 
     /// <inheritdoc />
@@ -69,7 +72,7 @@ public sealed class MenuItem : IgnisComponentBase, IMenuItem, IDisposable
         {
             () => new KeyValuePair<string, object?>("tabindex", -1),
             () => new KeyValuePair<string, object?>("role", "menuitem"),
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, OnClick)), () =>
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)), () =>
                 new KeyValuePair<string, object?>("onmouseenter",
                     EventCallback.Factory.Create(this, OnMouseEnter)),
             () => new KeyValuePair<string, object?>("onmouseleave",
@@ -98,9 +101,10 @@ public sealed class MenuItem : IgnisComponentBase, IMenuItem, IDisposable
         builder.CloseAs(this);
     }
 
-    private void OnClick()
+    /// <inheritdoc />
+    public void Click()
     {
-        //TODO OnClick
+        OnClick.InvokeAsync();
         
         Menu.Close();
     }

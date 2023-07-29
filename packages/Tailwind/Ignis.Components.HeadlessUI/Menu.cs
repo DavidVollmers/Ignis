@@ -65,6 +65,9 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
+    /// <inheritdoc />
+    public IMenuItem[] Items => _items.ToArray();
+
     public Menu()
     {
         AsComponent = typeof(Fragment);
