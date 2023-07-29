@@ -17,8 +17,9 @@
                     EnterTo="transform opacity-100 scale-100"
                     Leave="transition ease-in duration-75"
                     LeaveFrom="transform opacity-100 scale-100"
-                    LeaveTo="transform opacity-0 scale-95">
-            <MenuItems class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                    LeaveTo="transform opacity-0 scale-95"
+                    Context="transition">
+            <MenuItems class="@Css.Class("absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none", transition)">
                 <div class="px-1 py-1">
                     @* <MenuItem Context="item"> *@
                     @*     <button type="button" *@
