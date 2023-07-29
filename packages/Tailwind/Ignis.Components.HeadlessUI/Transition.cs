@@ -58,6 +58,8 @@ public sealed class Transition : TransitionBase, ITransition
     [CascadingParameter] public IMenu? Menu { get; set; }
 
     [CascadingParameter] public IListbox? Listbox { get; set; }
+    
+    [CascadingParameter] public IPopover? Popover { get; set; }
 
     [CascadingParameter] public IDisclosure? Disclosure { get; set; }
 
@@ -84,6 +86,8 @@ public sealed class Transition : TransitionBase, ITransition
         Menu?.SetTransition(this);
         
         Listbox?.SetTransition(this);
+        
+        Popover?.SetTransition(this);
         
         Disclosure?.SetTransition(this);
     }
