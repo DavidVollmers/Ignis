@@ -33,18 +33,17 @@ public abstract class OpenCloseWithTransitionComponentBase : IgnisComponentBase,
 
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
-        FrameTracker.ExecuteOnNextFrame(() =>
-        {
-            OnAfterOpen();
-
-            if (_transition != null) _transition.Show(continueWith);
-            else continueWith?.Invoke();
-        }, ForceUpdate);
+        if (_transition != null)
+            FrameTracker.ExecuteOnNextFrame(() => _transition.Show(() => OnAfterOpen(continueWith)), ForceUpdate);
+        else if (continueWith != null) FrameTracker.ExecuteOnNextFrame(() => OnAfterOpen(continueWith), ForceUpdate);
 
         ForceUpdate();
     }
 
-    protected virtual void OnAfterOpen() { }
+    protected virtual void OnAfterOpen(Action? continueWith)
+    {
+        continueWith?.Invoke();
+    }
 
     /// <inheritdoc />
     public void Close(Action? continueWith = null)
