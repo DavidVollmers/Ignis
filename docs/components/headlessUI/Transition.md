@@ -54,4 +54,4 @@ rendered.
 By default, the `Transition` component does not render an element, and instead renders its children directly.
 
 This is easy to change using the `AsElement` or `AsComponent` prop, which exists on every component.
-You can read more about this [here](/components/dynamic).
+You can read more about this [here](/docs/components/dynamic).

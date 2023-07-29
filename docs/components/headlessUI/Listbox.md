@@ -34,7 +34,7 @@ tracked within the `Listbox` component itself.
 To animate the opening/closing of the listbox panel, use the provided `Transition` component. All you need to do is wrap
 the `ListboxOptions` in a `Transition`, and the transition will be applied automatically.
 
-You can read more about transitions [here](/components/headlessUI/transition).
+You can read more about transitions [here](/docs/components/headlessUI/transition).
 
 ## Rendering a different element for a component
 
@@ -45,7 +45,7 @@ a `ul`, and `ListboxOption` renders a `li`. By contrast, `Listbox` does not rend
 children directly.
 
 This is easy to change using the `AsElement` or `AsComponent` prop, which exists on every component.
-You can read more about this [here](/components/dynamic).
+You can read more about this [here](/docs/components/dynamic).
 
 ## Accessibility notes
 

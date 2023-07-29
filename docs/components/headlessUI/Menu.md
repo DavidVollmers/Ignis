@@ -31,7 +31,7 @@ For example, `MenuButton` renders a `button` by default, and `MenuItems` renders
 `MenuItem` do not render an element, and instead render their children directly by default.
 
 This is easy to change using the `AsElement` or `AsComponent` prop, which exists on every component.
-You can read more about this [here](/components/dynamic).
+You can read more about this [here](/docs/components/dynamic).
 
 ## Accessibility notes
 

@@ -12,7 +12,7 @@ The following packages are available for building Ignis components:
 ## Ignis.Components
 
 The core components package, containing abstract component bases which implement the
-Ignis [component lifecycle](/components/lifecycle) and common components like `Dynamic` and `Fragment`.
+Ignis [component lifecycle](/docs/components/lifecycle) and common components like `Dynamic` and `Fragment`.
 
 You can easily install this package using the following command:
 
@@ -96,7 +96,7 @@ Visit [nuget.org](https://www.nuget.org/packages/Ignis.Utils) for more informati
 
 This package contains a set of components that are based on the [HeadlessUI](https://headlessui.com) project.
 
-You can read more about it [here](/components/headlessUI).
+You can read more about it [here](/docs/components/headlessUI).
 
 ## Ignis.Components.HeroIcons
 

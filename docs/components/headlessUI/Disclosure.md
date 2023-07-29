@@ -28,7 +28,7 @@ running an async action.
 To animate the opening/closing of the menu panel, use the provided `Transition` component. All you need to do is wrap
 the `DisclosurePanel` in a `Transition`, and the transition will be applied automatically.
 
-You can read more about transitions [here](/components/headlessUI/transition).
+You can read more about transitions [here](/docs/components/headlessUI/transition).
 
 ## Rendering a different element for a component
 
@@ -37,7 +37,7 @@ All `DisclosureButton` renders a `button`, `DisclosurePanel` renders a `div`. By
 component does not render an element, and instead renders its children directly by default.
 
 This is easy to change using the `AsElement` or `AsComponent` prop, which exists on every component.
-You can read more about this [here](/components/dynamic).
+You can read more about this [here](/docs/components/dynamic).
 
 ## Accessibility notes
 

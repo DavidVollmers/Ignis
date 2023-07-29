@@ -47,7 +47,7 @@ a `Transition`, and dialog will transition automatically based on the state of t
 When using `Transition` with your dialogs, you can remove the `IsOpen` prop, as the dialog will read the `Show` state
 from the `Transition` automatically.
 
-You can read more about transitions [here](/components/headlessUI/transition).
+You can read more about transitions [here](/docs/components/headlessUI/transition).
 
 ## Accessibility notes
 
