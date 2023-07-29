@@ -1,5 +1,6 @@
 ﻿@using Ignis.Website.Services
 @using Ignis.Website.Contracts
+@using Microsoft.AspNetCore.Components.Routing
 @inherits IgnisAsyncComponentBase
 @inject NavigationManager Router
 @inject IPageService PageService
@@ -39,10 +40,10 @@
 @code
 {
     private Section[]? _sections;
-    
+
     [Parameter]
     public EventCallback<Page> OnOpenPage { get; set; }
-    
+
     [Parameter(CaptureUnmatchedValues = true)]
     public IReadOnlyDictionary<string, object?>? AdditionalAttributes { get; set; }
 
@@ -51,14 +52,31 @@
     protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
     {
         _sections = await PageService.GetSectionsAsync(cancellationToken);
+
+        Router.LocationChanged += RouterOnLocationChanged;
+    }
+
+    private void RouterOnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        ForceUpdate();
     }
 
     private void OpenPage(Page pageItem)
     {
         OnOpenPage.InvokeAsync(pageItem);
-        
+
         Router.NavigateTo("/docs" + pageItem.Link);
-        
+
         ForceUpdate();
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            Router.LocationChanged -= RouterOnLocationChanged;
+        }
+        
+        base.Dispose(disposing);
     }
 }
