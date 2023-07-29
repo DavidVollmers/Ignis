@@ -2,7 +2,9 @@
 
 public interface IMenu : IDynamicParentComponent<IMenu>, IOpenClose, IWithTransition
 {
-    string Id { get; }
+    internal IMenuButton? Button { get; }
     
-    internal void SetButton()
+    string Id { get; }
+
+    internal void SetButton(IMenuButton button);
 }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class MenuButton : IgnisComponentBase, IDynamicParentComponent
+public sealed class MenuButton : IgnisComponentBase, IMenuButton
 {
     private readonly AttributeCollection _attributes;
 
@@ -36,11 +36,15 @@ public sealed class MenuButton : IgnisComponentBase, IDynamicParentComponent
         }
     }
 
+    /// <inheritdoc />
+    [Parameter]
+    public string? Id { get; set; }
+
     [CascadingParameter] public IMenu Menu { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDynamicComponent>? _ { get; set; }
+    public RenderFragment<IMenuButton>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -67,6 +71,7 @@ public sealed class MenuButton : IgnisComponentBase, IDynamicParentComponent
         //TODO aria-controls
         _attributes = new AttributeCollection(new[]
         {
+            () => new KeyValuePair<string, object?>("id", Id ?? Menu.Id + "-button"),
             () => new KeyValuePair<string, object?>("aria-haspopup", "true"),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, () => Menu.Open())),
             () => new KeyValuePair<string, object?>("__internal_preventDefault_onkeydown", Menu.IsOpen),
@@ -95,7 +100,7 @@ public sealed class MenuButton : IgnisComponentBase, IDynamicParentComponent
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IDynamicComponent, MenuButton>(3, this, ChildContent);
+        builder.AddChildContentFor<IMenuButton, MenuButton>(3, this, ChildContent);
 
         builder.CloseAs(this);
     }

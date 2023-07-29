@@ -46,6 +46,9 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
+    public IMenuButton? Button { get; private set; }
+
+    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-menu-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc />
@@ -89,5 +92,11 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
         });
 
         builder.CloseAs(this);
+    }
+
+    /// <inheritdoc />
+    public void SetButton(IMenuButton button)
+    {
+        Button = button ?? throw new ArgumentNullException(nameof(button));
     }
 }
