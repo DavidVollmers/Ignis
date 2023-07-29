@@ -45,7 +45,7 @@ internal class IconGenerator
         builder.AppendLine();
         builder.AppendLine(razorSvg);
         
-        var content = builder.ToString();
+        var content = builder.ToString().Trim();
         
         using var fileStream = File.Create(Path.Combine(outputPath, fileName));
         using var writer = new StreamWriter(fileStream);
