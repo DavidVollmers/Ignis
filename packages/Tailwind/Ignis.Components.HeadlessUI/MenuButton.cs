@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.Web;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComponent
+public sealed class MenuButton : IgnisComponentBase, IDynamicParentComponent
 {
     private readonly AttributeCollection _attributes;
 
@@ -34,7 +36,7 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
         }
     }
 
-    [CascadingParameter] public IListbox Listbox { get; set; } = null!;
+    [CascadingParameter] public IMenu Menu { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
@@ -58,40 +60,47 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
-    public ListboxOptions()
+    public MenuButton()
     {
-        AsElement = "ul";
+        AsElement = "button";
 
-        //TODO aria-active-descendant
+        //TODO aria-controls
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("tabindex", -1),
-            () => new KeyValuePair<string, object?>("role", "listbox"),
-            () => new KeyValuePair<string, object?>("aria-orientation", "vertical"), () =>
-                new KeyValuePair<string, object?>("aria-labelledby",
-                    Listbox.Button == null ? null : Listbox.Button.Id ?? Listbox.Id + "-button")
+            () => new KeyValuePair<string, object?>("aria-haspopup", "true"),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, () => Menu.Open())),
+            () => new KeyValuePair<string, object?>("__internal_preventDefault_onkeydown", Menu.IsOpen),
+#pragma warning disable CS0618
+            () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
+#pragma warning restore CS0618
+            () => new KeyValuePair<string, object?>("aria-expanded", Menu.IsOpen.ToString().ToLowerInvariant()),
+            () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
         });
     }
 
     /// <inheritdoc />
-    protected override void OnRender()
+    protected override void OnInitialized()
     {
-        if (Listbox == null)
+        if (Menu == null)
         {
             throw new InvalidOperationException(
-                $"{nameof(ListboxOptions)} must be used inside a {nameof(Listbox<object>)}.");
+                $"{nameof(MenuButton)} must be used inside a {nameof(HeadlessUI.Menu)}.");
         }
+
+        Menu.SetButton(this);
     }
 
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        if (!Listbox.IsOpen) return;
-
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IDynamicComponent, ListboxOptions>(2, this, ChildContent);
+        builder.AddChildContentFor<IDynamicComponent, MenuButton>(3, this, ChildContent);
 
         builder.CloseAs(this);
+    }
+
+    private void OnKeyDown(KeyboardEventArgs eventArgs)
+    {
     }
 }

@@ -14,7 +14,6 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
 
     private Type? _asComponent;
     private string? _asElement;
-    private IFocus? _button;
     private bool _isOpen;
 
     /// <inheritdoc />
@@ -73,6 +72,9 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
 
     /// <inheritdoc />
     public IListboxLabel? Label { get; private set; }
+
+    /// <inheritdoc />
+    public IListboxButton? Button { get; private set; }
 
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-listbox-" + Guid.NewGuid().ToString("N");
@@ -177,9 +179,9 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     }
 
     /// <inheritdoc />
-    public void SetButton(IFocus button)
+    public void SetButton(IListboxButton button)
     {
-        _button = button ?? throw new ArgumentNullException(nameof(button));
+        Button = button ?? throw new ArgumentNullException(nameof(button));
     }
 
     /// <inheritdoc />
@@ -191,8 +193,8 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     /// <inheritdoc />
     public async Task FocusAsync()
     {
-        if (_button == null) return;
+        if (Button == null) return;
 
-        await _button.FocusAsync();
+        await Button.FocusAsync();
     }
 }
