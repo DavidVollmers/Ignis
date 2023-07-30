@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
+public sealed class SwitchLabel : IgnisRigidComponentBase, ISwitchLabel
 {
     private readonly AttributeCollection _attributes;
 
@@ -38,14 +38,17 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public IListbox Listbox { get; set; } = null!;
+    [CascadingParameter] public ISwitchGroup SwitchGroup { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IListboxLabel>? _ { get; set; }
+    public RenderFragment<ISwitchLabel>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>
+    /// Additional attributes to be applied to the switch label.
+    /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
     {
@@ -62,28 +65,28 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
-    public ListboxLabel()
+    public SwitchLabel()
     {
         AsElement = "label";
 
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id ?? Listbox.Id + "-label"), () =>
+            () => new KeyValuePair<string, object?>("id", Id ?? SwitchGroup.Id + "-label"), () =>
                 new KeyValuePair<string, object?>("onclick",
-                    EventCallback.Factory.Create(this, Listbox.FocusAsync))
+                    EventCallback.Factory.Create(this, SwitchGroup.FocusAsync))
         });
     }
 
     /// <inheritdoc />
     protected override void OnRender()
     {
-        if (Listbox == null)
+        if (SwitchGroup == null)
         {
             throw new InvalidOperationException(
-                $"{nameof(ListboxLabel)} must be used inside a {nameof(Listbox<object>)}.");
+                $"{nameof(SwitchLabel)} must be used inside a {nameof(HeadlessUI.SwitchGroup)}.");
         }
 
-        Listbox.SetLabel(this);
+        SwitchGroup.SetLabel(this);
     }
 
     /// <inheritdoc />
@@ -91,7 +94,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IListboxLabel, ListboxLabel>(2, this, ChildContent);
+        builder.AddChildContentFor<ISwitchLabel, SwitchLabel>(2, this, ChildContent);
 
         builder.CloseAs(this);
     }

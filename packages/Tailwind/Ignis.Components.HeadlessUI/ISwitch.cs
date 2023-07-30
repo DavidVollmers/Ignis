@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.Web;
+using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
-public interface ISwitch : IDynamicParentComponent<ISwitch>
+public interface ISwitch : IDynamicParentComponent<ISwitch>, IFocus
 {
     string? Id { get; set; }
 
