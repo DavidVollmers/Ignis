@@ -79,7 +79,7 @@ public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutle
 
         dialog.SetOutlet(this);
 
-        Update();
+        base.Update();
     }
 
     /// <inheritdoc />
@@ -93,13 +93,13 @@ public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutle
 
         dialog.SetFree();
 
-        Update();
+        base.Update();
     }
 
     /// <inheritdoc />
-    public void Update(bool async = false)
+    public new void Update(bool async = false)
     {
-        Update(async);
+        base.Update(async);
     }
 
     public void Dispose()
