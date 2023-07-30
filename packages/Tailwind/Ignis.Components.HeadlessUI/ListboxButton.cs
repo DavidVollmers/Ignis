@@ -132,20 +132,20 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
             case "ArrowUp" when Listbox.ActiveOption == null:
             case "ArrowDown" when Listbox.ActiveOption == null:
                 if (Listbox.Options.Any()) Listbox.SetOptionActive(Listbox.Options[0], true);
-                Listbox.Open();
+                else if (!Listbox.IsOpen) Listbox.Open();
                 break;
             case "ArrowDown":
             {
                 var index = Array.IndexOf(Listbox.Options, Listbox.ActiveOption) + 1;
                 if (index < Listbox.Options.Length) Listbox.SetOptionActive(Listbox.Options[index], true);
-                Listbox.Open();
+                else if (!Listbox.IsOpen) Listbox.Open();
                 break;
             }
             case "ArrowUp":
             {
                 var index = Array.IndexOf(Listbox.Options, Listbox.ActiveOption) - 1;
                 if (index >= 0) Listbox.SetOptionActive(Listbox.Options[index], true);
-                Listbox.Open();
+                else if (!Listbox.IsOpen) Listbox.Open();
                 break;
             }
         }

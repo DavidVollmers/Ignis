@@ -116,32 +116,56 @@ public sealed class MenuButton : IgnisComponentBase, IMenuButton
                 if (Menu.IsOpen)
                 {
                     Menu.ActiveItem?.Click();
-                    
                     Menu.Close();
                 }
                 else
                 {
-                    Menu.Open();
+                    Menu.Open(() =>
+                    {
+                        var firstItem = Menu.Items.FirstOrDefault();
+                        if (firstItem != null) Menu.SetItemActive(firstItem, true);
+                    });
                 }
 
                 break;
             case "ArrowUp" when Menu.ActiveItem == null:
             case "ArrowDown" when Menu.ActiveItem == null:
                 if (Menu.Items.Any()) Menu.SetItemActive(Menu.Items[0], true);
-                Menu.Open();
+                else if (!Menu.IsOpen)
+                {
+                    Menu.Open(() =>
+                    {
+                        if (Menu.Items.Any()) Menu.SetItemActive(Menu.Items[0], true);
+                    });
+                }
+
                 break;
             case "ArrowDown":
             {
                 var index = Array.IndexOf(Menu.Items, Menu.ActiveItem) + 1;
                 if (index < Menu.Items.Length) Menu.SetItemActive(Menu.Items[index], true);
-                Menu.Open();
+                else if (!Menu.IsOpen)
+                {
+                    Menu.Open(() =>
+                    {
+                        if (Menu.Items.Any()) Menu.SetItemActive(Menu.Items[0], true);
+                    });
+                }
+
                 break;
             }
             case "ArrowUp":
             {
                 var index = Array.IndexOf(Menu.Items, Menu.ActiveItem) - 1;
                 if (index >= 0) Menu.SetItemActive(Menu.Items[index], true);
-                Menu.Open();
+                else if (!Menu.IsOpen)
+                {
+                    Menu.Open(() =>
+                    {
+                        if (Menu.Items.Any()) Menu.SetItemActive(Menu.Items[0], true);
+                    });
+                }
+
                 break;
             }
         }

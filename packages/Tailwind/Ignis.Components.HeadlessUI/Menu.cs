@@ -103,15 +103,6 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     }
 
     /// <inheritdoc />
-    protected override void OnAfterOpen(Action? continueWith)
-    {
-        var firstItem = Items.FirstOrDefault();
-        if (firstItem != null) SetItemActive(firstItem, true);
-
-        base.OnAfterOpen(continueWith);
-    }
-
-    /// <inheritdoc />
     public void SetItemActive(IMenuItem item, bool isActive)
     {
         if (isActive)
