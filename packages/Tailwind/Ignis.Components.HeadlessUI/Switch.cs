@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
@@ -76,5 +77,15 @@ public sealed class Switch : IgnisComponentBase, ISwitch
             () => new KeyValuePair<string, object?>("aria-checked", Checked.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
         });
+    }
+
+    /// <inheritdoc />
+    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    {
+        builder.OpenAs(0, this);
+        builder.AddMultipleAttributes(1, Attributes!);
+        builder.AddChildContentFor<ISwitch, Switch>(2, this, ChildContent?.Invoke(this));
+
+        builder.CloseAs(this);
     }
 }

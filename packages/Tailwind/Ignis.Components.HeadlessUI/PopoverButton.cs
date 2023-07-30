@@ -98,7 +98,7 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IPopoverButton, PopoverButton>(3, this, ChildContent);
+        builder.AddChildContentFor<IPopoverButton, PopoverButton>(2, this, ChildContent);
 
         builder.CloseAs(this);
     }
