@@ -45,6 +45,12 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, ISwitchGroup
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
+    public ISwitchLabel? Label { get; private set; }
+
+    /// <inheritdoc />
+    public ISwitchDescription? Description { get; private set; }
+
+    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-switch-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc />
@@ -79,5 +85,17 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, ISwitchGroup
         });
 
         builder.CloseAs(this);
+    }
+
+    /// <inheritdoc />
+    public void SetLabel(ISwitchLabel label)
+    {
+        Label = label ?? throw new ArgumentNullException(nameof(label));
+    }
+
+    /// <inheritdoc />
+    public void SetDescription(ISwitchDescription description)
+    {
+        Description = description ?? throw new ArgumentNullException(nameof(description));
     }
 }

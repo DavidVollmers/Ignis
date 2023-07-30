@@ -81,7 +81,11 @@ public sealed class Switch : IgnisComponentBase, ISwitch
             () => new KeyValuePair<string, object?>("role", "switch"),
             () => new KeyValuePair<string, object?>("aria-checked", Checked.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Toggle)),
-            () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
+            () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null), () =>
+                new KeyValuePair<string, object?>("aria-labelledby",
+                    SwitchGroup?.Label == null ? null : SwitchGroup.Label.Id ?? SwitchGroup.Id + "-label"),
+            () => new KeyValuePair<string, object?>("aria-describedby",
+                SwitchGroup?.Description == null ? null : SwitchGroup.Description.Id ?? SwitchGroup.Id + "-description")
         });
     }
 
