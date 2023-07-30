@@ -1,0 +1,17 @@
+﻿@using Ignis.Components.HeadlessUI
+@using Ignis.Utils
+
+<div class="py-16">
+    <Switch @bind-Checked="_enabled"
+            class="@Css.Class("relative inline-flex h-[38px] w-[74px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75", _enabled ? "bg-teal-900" : "bg-teal-700")">
+        <span class="sr-only">Use setting</span>
+        <span aria-hidden="true"
+              class="@Css.Class("pointer-events-none inline-block h-[34px] w-[34px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out", _enabled ? "translate-x-9" : "translate-x-0")">
+        </span>
+    </Switch>
+</div>
+
+@code
+{
+    private bool _enabled;
+}
