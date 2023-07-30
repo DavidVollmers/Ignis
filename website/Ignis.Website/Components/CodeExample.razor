@@ -37,7 +37,7 @@
     }
     else
     {
-        <div class="w-full h-[392px]">
+        <div class="w-full h-[@(Height)px]">
             <div class="absolute inset-0">
                 <div class="flex w-full flex-col items-center justify-center">
                     @ExampleContent
@@ -52,6 +52,9 @@
     private bool _isCodeShowing;
     private string? _code;
 
+    [Parameter, EditorRequired]
+    public int Height { get; set; }
+    
     [Parameter, EditorRequired]
     public RenderFragment ExampleContent { get; set; } = null!;
 

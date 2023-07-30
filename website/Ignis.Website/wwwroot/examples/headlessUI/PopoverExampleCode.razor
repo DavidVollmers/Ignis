@@ -41,6 +41,19 @@
                             </a>
                         }
                     </div>
+                    <div class="bg-gray-50 p-4">
+                        <a href="##"
+                           class="flow-root rounded-md px-2 py-2 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none focus-visible:ring focus-visible:ring-orange-500 focus-visible:ring-opacity-50">
+                            <span class="flex items-center">
+                                <span class="text-sm font-medium text-gray-900">
+                                    Documentation
+                                </span>
+                            </span>
+                            <span class="block text-sm text-gray-500">
+                                Start integrating products and tools
+                            </span>
+                        </a>
+                    </div>
                 </div>
             </PopoverPanel>
         </Transition>
@@ -57,6 +70,20 @@
             Description = "Measure actions your users take",
             HRef = "##",
             Icon = typeof(IconOne)
+        },
+        new()
+        {
+            Name = "Automations",
+            Description = "Create your own targeted content",
+            HRef = "##",
+            Icon = typeof(IconTwo)
+        },
+        new()
+        {
+            Name = "Reports",
+            Description = "Keep track of your growth",
+            HRef = "##",
+            Icon = typeof(IconThree)
         }
     };
 
@@ -71,6 +98,7 @@
         public Type Icon { get; set; } = null!;
     }
 
+    // Normally these would be in their own .razor files
     private class IconOne : IgnisRigidComponentBase
     {
         protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -83,6 +111,42 @@
             svg.Append(@"<path fillRule=""evenodd"" clipRule=""evenodd"" d=""M20.7417 22.1196V25.882L24 27.7632L27.2584 25.882V22.1196L24 20.2384L20.7417 22.1196Z"" stroke=""#FDBA74"" strokeWidth=""2""/>");
             svg.Append(@"</svg>");
 
+            builder.AddMarkupContent(0, svg.ToString());
+        }
+    }
+
+    // Normally these would be in their own .razor files
+    private class IconTwo : IgnisRigidComponentBase
+    {
+        protected override void BuildRenderTree(RenderTreeBuilder builder)
+        {
+            var svg = new StringBuilder();
+            svg.Append(@"<svg width=""48"" height=""48"" viewBox=""0 0 48 48"" fill=""none"" xmlns=""http://www.w3.org/2000/svg"" aria-hidden=""true"">");
+            svg.Append(@"<rect width=""48"" height=""48"" rx=""8"" fill=""#FFEDD5""/>");
+            svg.Append(@"<path d=""M28.0413 20L23.9998 13L19.9585 20M32.0828 27.0001L36.1242 34H28.0415M19.9585 34H11.8755L15.9171 27"" stroke=""#FB923C"" strokeWidth=""2""/>");
+            svg.Append(@"<path fillRule=""evenodd"" clipRule=""evenodd"" d=""M18.804 30H29.1963L24.0001 21L18.804 30Z"" stroke=""#FDBA74"" strokeWidth=""2""/>");
+            svg.Append(@"</svg>");
+
+            builder.AddMarkupContent(0, svg.ToString());
+        }
+    }
+
+    // Normally these would be in their own .razor files
+    private class IconThree : IgnisRigidComponentBase
+    {
+        protected override void BuildRenderTree(RenderTreeBuilder builder)
+        {
+            var svg = new StringBuilder();
+            svg.Append(@"<svg width=""48"" height=""48"" viewBox=""0 0 48 48"" fill=""none"" xmlns=""http://www.w3.org/2000/svg"">");
+            svg.Append(@"<rect width=""48"" height=""48"" rx=""8"" fill=""#FFEDD5""/>");
+            svg.Append(@"<rect x=""13"" y=""32"" width=""2"" height=""4"" fill=""#FDBA74""/>");
+            svg.Append(@"<rect x=""17"" y=""28"" width=""2"" height=""8"" fill=""#FDBA74""/>");
+            svg.Append(@"<rect x=""21"" y=""24"" width=""2"" height=""12"" fill=""#FDBA74""/>");
+            svg.Append(@"<rect x=""25"" y=""20"" width=""2"" height=""16"" fill=""#FDBA74""/>");
+            svg.Append(@"<rect x=""29"" y=""16"" width=""2"" height=""20"" fill=""#FB923C""/>");
+            svg.Append(@"<rect x=""33"" y=""12"" width=""2"" height=""24"" fill=""#FB923C""/>");
+            svg.Append(@"</svg>");
+    
             builder.AddMarkupContent(0, svg.ToString());
         }
     }
