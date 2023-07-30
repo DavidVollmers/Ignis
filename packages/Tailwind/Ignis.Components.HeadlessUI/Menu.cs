@@ -42,7 +42,7 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     [Parameter] public RenderFragment<IMenu>? ChildContent { get; set; }
 
     /// <summary>
-    /// Additional attributes to be applied to the listbox.
+    /// Additional attributes to be applied to the menu.
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }

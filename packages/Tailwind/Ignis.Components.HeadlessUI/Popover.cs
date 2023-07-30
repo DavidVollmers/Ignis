@@ -40,7 +40,7 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
     [Parameter] public RenderFragment<IPopover>? ChildContent { get; set; }
 
     /// <summary>
-    /// Additional attributes to be applied to the listbox.
+    /// Additional attributes to be applied to the popover.
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
