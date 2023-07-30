@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
@@ -72,6 +73,9 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
             () => new KeyValuePair<string, object?>("id", Id ?? Popover.Id + "-button"), () =>
                 new KeyValuePair<string, object?>("onclick",
                     EventCallback.Factory.Create(this, () => Popover.Open())),
+#pragma warning disable CS0618
+            () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
+#pragma warning restore CS0618
             () => new KeyValuePair<string, object?>("aria-expanded", Popover.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
         });
@@ -97,5 +101,12 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
         builder.AddChildContentFor<IPopoverButton, PopoverButton>(3, this, ChildContent);
 
         builder.CloseAs(this);
+    }
+
+    private void OnKeyDown(KeyboardEventArgs eventArgs)
+    {
+        if (eventArgs.Code != "Escape") return;
+        
+        Popover.Close();
     }
 }

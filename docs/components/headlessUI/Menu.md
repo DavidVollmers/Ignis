@@ -23,6 +23,8 @@ tracked within the `Menu` component itself.
 To animate the opening/closing of the menu panel, use the provided `Transition` component. All you need to do is wrap
 the `MenuItems` in a `Transition`, and the transition will be applied automatically.
 
+You can read more about transitions [here](/docs/components/headlessUI/transition).
+
 ## Rendering a different element for a component
 
 By default, the `Menu` and its subcomponents each render a default element that is sensible for that component.
@@ -66,6 +68,11 @@ buttons. Focus is trapped in an open menu, so you cannot Tab through the content
 arrow keys navigate through a Menu's items.
 
 Here's when you might use other similar components from Headless UI:
+
+- `Popover`. Popovers are general-purpose floating menus. They appear near the button that triggers them, and you can
+  put arbitrary markup in them like images or non-clickable content. The Tab key navigates the contents of a Popover
+  like it would any other normal markup. They're great for building header nav items with expandable content and flyout
+  panels.
 
 - `Disclosure`. Disclosures are useful for elements that expand to reveal additional information, like a toggleable FAQ
   section. They are typically rendered inline and reflow the document when they're shown or hidden.
