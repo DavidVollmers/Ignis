@@ -9,6 +9,8 @@ public static class IgnisServerExtensions
     {
         if (serviceCollection is null) throw new ArgumentNullException(nameof(serviceCollection));
 
+        serviceCollection.AddIgnis();
+        
         serviceCollection.AddHttpContextAccessor();
 
         serviceCollection.TryAddSingleton<IHostContext, ServerHostContext>();

@@ -9,6 +9,8 @@ public static class IgnisWebAssemblyExtensions
     {
         if (serviceCollection is null) throw new ArgumentNullException(nameof(serviceCollection));
 
+        serviceCollection.AddIgnis();
+
         serviceCollection.TryAddSingleton<IHostContext, WebAssemblyHostContext>();
 
         return serviceCollection;

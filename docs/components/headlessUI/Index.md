@@ -19,11 +19,7 @@ Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components.HeadlessUI) fo
 
 ## Setup
 
-Add the following line to your `Program.cs` file.
-
-```cs
-builder.Services.AddIgnis();
-```
+**Make sure to follow our [quickstart guide](/docs) to setup Ignis in your project.**
 
 We recommend to add the `Ignis.Components.HeadlessUI` namespace to the `_Imports.razor` file in your project.
 
