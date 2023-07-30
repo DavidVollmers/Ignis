@@ -58,7 +58,7 @@
 
     private void RouterOnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
-        ForceUpdate();
+        Update();
     }
 
     private void OpenPage(Page pageItem)
@@ -67,7 +67,7 @@
 
         Router.NavigateTo("/docs" + pageItem.Link);
 
-        ForceUpdate();
+        Update();
     }
 
     protected override void Dispose(bool disposing)

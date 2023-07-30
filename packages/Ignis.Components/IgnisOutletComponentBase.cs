@@ -34,10 +34,10 @@ public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComp
         if (!IgnoreOutlet) OutletRegistry.RegisterComponent(this);
     }
 
-    protected new void ForceUpdate(bool async = false)
+    protected new void Update(bool async = false)
     {
         if (_outlet != null) _outlet.Update(async);
-        else base.ForceUpdate(async);
+        else base.Update(async);
     }
 
     public void SetOutlet(IOutlet outlet)

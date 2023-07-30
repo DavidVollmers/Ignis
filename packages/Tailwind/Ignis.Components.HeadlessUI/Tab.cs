@@ -131,7 +131,7 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
 
         if (oldPreventKeyDownDefault != _preventKeyDownDefault)
         {
-            ForceUpdate();
+            Update();
         }
     }
 
@@ -152,7 +152,7 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
             await focus.FocusAsync();
         }
 
-        ForceUpdate();
+        Update();
     }
 
     public void Dispose()

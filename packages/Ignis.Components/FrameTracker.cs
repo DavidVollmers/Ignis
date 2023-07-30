@@ -13,7 +13,7 @@ internal class FrameTracker
         _hostContext = hostContext ?? throw new ArgumentNullException(nameof(hostContext));
     }
 
-    public void ExecuteOnNextFrame(Action action, Action<bool> forceUpdate)
+    public void ExecuteOnNextFrame(Action action, Action<bool> update)
     {
         if (action == null) throw new ArgumentNullException(nameof(action));
 
@@ -24,7 +24,7 @@ internal class FrameTracker
             {
                 _action = action;
 
-                forceUpdate(false);
+                update(false);
             };
     }
 

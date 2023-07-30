@@ -43,17 +43,17 @@ public abstract class IgnisComponentBase : IComponent
 
         if (!_isInitialized)
         {
-            await InitializeAsync();
+            await OnInitializeCoreAsync();
         }
         else
         {
-            await UpdateAsync();
+            await OnUpdateCoreAsync();
         }
 
-        ForceUpdate();
+        Update();
     }
 
-    protected void ForceUpdate(bool async = false)
+    protected void Update(bool async = false)
     {
         if (async)
         {
@@ -93,7 +93,7 @@ public abstract class IgnisComponentBase : IComponent
     {
     }
 
-    internal virtual Task InitializeAsync()
+    internal virtual Task OnInitializeCoreAsync()
     {
         _isInitialized = true;
 
@@ -102,7 +102,7 @@ public abstract class IgnisComponentBase : IComponent
         return Task.CompletedTask;
     }
 
-    internal virtual Task UpdateAsync()
+    internal virtual Task OnUpdateCoreAsync()
     {
         OnUpdated();
 

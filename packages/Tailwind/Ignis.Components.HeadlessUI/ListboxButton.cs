@@ -163,6 +163,6 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
             await focus.FocusAsync();
         }
 
-        ForceUpdate();
+        Update();
     }
 }

@@ -34,10 +34,10 @@ public abstract class OpenCloseWithTransitionComponentBase : IgnisComponentBase,
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
         if (_transition != null)
-            FrameTracker.ExecuteOnNextFrame(() => _transition.Show(() => OnAfterOpen(continueWith)), ForceUpdate);
-        else if (continueWith != null) FrameTracker.ExecuteOnNextFrame(() => OnAfterOpen(continueWith), ForceUpdate);
+            FrameTracker.ExecuteOnNextFrame(() => _transition.Show(() => OnAfterOpen(continueWith)), Update);
+        else if (continueWith != null) FrameTracker.ExecuteOnNextFrame(() => OnAfterOpen(continueWith), Update);
 
-        ForceUpdate();
+        Update();
     }
 
     protected virtual void OnAfterOpen(Action? continueWith)
@@ -63,9 +63,9 @@ public abstract class OpenCloseWithTransitionComponentBase : IgnisComponentBase,
     {
         IsOpenChanged.InvokeAsync(_isOpen = false);
 
-        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, ForceUpdate);
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, Update);
 
-        ForceUpdate(async);
+        Update(async);
     }
 
     /// <inheritdoc />

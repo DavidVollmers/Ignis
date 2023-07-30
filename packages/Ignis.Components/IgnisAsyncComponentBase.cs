@@ -14,16 +14,16 @@ public abstract class IgnisAsyncComponentBase : IgnisComponentBase, IDisposable
         return Task.CompletedTask;
     }
 
-    internal override async Task InitializeAsync()
+    internal override async Task OnInitializeCoreAsync()
     {
-        await base.InitializeAsync();
+        await base.OnInitializeCoreAsync();
 
         await OnInitializedAsync(_cancellationTokenSource.Token);
     }
 
-    internal override async Task UpdateAsync()
+    internal override async Task OnUpdateCoreAsync()
     {
-        await base.UpdateAsync();
+        await base.OnUpdateCoreAsync();
 
         await OnUpdatedAsync(_cancellationTokenSource.Token);
     }

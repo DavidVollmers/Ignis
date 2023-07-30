@@ -122,7 +122,7 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
 
         tab.FocusAsync();
 
-        ForceUpdate();
+        Update();
     }
 
     /// <inheritdoc />

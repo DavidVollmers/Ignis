@@ -145,7 +145,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     {
         ValueChanged.InvokeAsync(Value = (TValue?)(object?)value);
 
-        ForceUpdate();
+        Update();
     }
 
     /// <inheritdoc />
@@ -160,7 +160,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
             ActiveOption = null;
         }
 
-        ForceUpdate();
+        Update();
     }
 
     /// <inheritdoc />

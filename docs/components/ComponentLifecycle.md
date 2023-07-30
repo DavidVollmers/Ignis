@@ -19,7 +19,7 @@ flowchart TD
     C --> D[Render]
     B ---->|No| E[OnUpdated]
     E --> D
-    F([ForceUpdate]) --> D
+    F([Update]) --> D
 ```
 
 You can read more about when parameters are

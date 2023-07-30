@@ -60,7 +60,7 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender, IAsy
             {
                 var _ = JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusDetector",
                     DotNetObjectReference.Create(this), Id, _element);
-            }, ForceUpdate);
+            }, Update);
         });
         builder.AddContent(4, ChildContent);
 

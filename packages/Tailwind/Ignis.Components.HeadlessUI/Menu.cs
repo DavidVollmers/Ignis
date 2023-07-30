@@ -123,7 +123,7 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
             ActiveItem = null;
         }
 
-        ForceUpdate();
+        Update();
     }
 
     /// <inheritdoc />

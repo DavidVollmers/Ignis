@@ -94,6 +94,6 @@ public sealed class Switch : IgnisComponentBase, ISwitch
     {
         CheckedChanged.InvokeAsync(Checked = !Checked);
         
-        ForceUpdate();
+        Update();
     }
 }

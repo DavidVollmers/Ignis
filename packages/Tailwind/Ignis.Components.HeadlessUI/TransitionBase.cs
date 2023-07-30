@@ -119,9 +119,9 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
         _state = state;
 
-        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, ForceUpdate);
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, Update);
 
-        ForceUpdate(true);
+        Update(true);
     }
 
     /// <inheritdoc />
