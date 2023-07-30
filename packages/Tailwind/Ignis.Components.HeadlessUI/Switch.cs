@@ -75,6 +75,7 @@ public sealed class Switch : IgnisComponentBase, ISwitch
             () => new KeyValuePair<string, object?>("tabindex", "0"),
             () => new KeyValuePair<string, object?>("role", "switch"),
             () => new KeyValuePair<string, object?>("aria-checked", Checked.ToString().ToLowerInvariant()),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Toggle)),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
         });
     }
@@ -87,5 +88,12 @@ public sealed class Switch : IgnisComponentBase, ISwitch
         builder.AddChildContentFor<ISwitch, Switch>(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
+    }
+
+    private void Toggle()
+    {
+        CheckedChanged.InvokeAsync(Checked = !Checked);
+        
+        ForceUpdate();
     }
 }
