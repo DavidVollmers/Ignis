@@ -73,7 +73,7 @@ public sealed class SwitchLabel : IgnisRigidComponentBase, ISwitchLabel
         {
             () => new KeyValuePair<string, object?>("id", Id ?? SwitchGroup.Id + "-label"), () =>
                 new KeyValuePair<string, object?>("onclick",
-                    EventCallback.Factory.Create(this, SwitchGroup.FocusAsync))
+                    EventCallback.Factory.Create(this, SwitchGroup.ToggleSwitch))
         });
     }
 

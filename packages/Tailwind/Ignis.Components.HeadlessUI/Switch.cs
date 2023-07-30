@@ -1,5 +1,4 @@
-﻿using Ignis.Components.Web;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
@@ -93,13 +92,7 @@ public sealed class Switch : IgnisComponentBase, ISwitch
     /// <inheritdoc />
     protected override void OnInitialized()
     {
-        if (SwitchGroup == null)
-        {
-            throw new InvalidOperationException(
-                $"{nameof(Switch)} must be used inside a {nameof(HeadlessUI.SwitchGroup)}.");
-        }
-
-        SwitchGroup.SetSwitch(this);
+        SwitchGroup?.SetSwitch(this);
     }
 
     /// <inheritdoc />
@@ -112,24 +105,10 @@ public sealed class Switch : IgnisComponentBase, ISwitch
         builder.CloseAs(this);
     }
 
-    private void Toggle()
+    /// <inheritdoc />
+    public void Toggle()
     {
         CheckedChanged.InvokeAsync(Checked = !Checked);
-
-        Update();
-    }
-
-    /// <inheritdoc />
-    public async Task FocusAsync()
-    {
-        if (Element.HasValue)
-        {
-            await Element.Value.FocusAsync();
-        }
-        else if (Component is IFocus focus)
-        {
-            await focus.FocusAsync();
-        }
 
         Update();
     }

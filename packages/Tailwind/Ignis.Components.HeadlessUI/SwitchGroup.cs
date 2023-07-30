@@ -1,5 +1,4 @@
-﻿using Ignis.Components.Web;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
@@ -49,7 +48,7 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, ISwitchGroup
     public ISwitchLabel? Label { get; private set; }
 
     /// <inheritdoc />
-    public IFocus? Switch { get; private set; }
+    public ISwitch? Switch { get; private set; }
 
     /// <inheritdoc />
     public ISwitchDescription? Description { get; private set; }
@@ -92,7 +91,7 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, ISwitchGroup
     }
 
     /// <inheritdoc />
-    public void SetSwitch(IFocus @switch)
+    public void SetSwitch(ISwitch @switch)
     {
         Switch = @switch ?? throw new ArgumentNullException(nameof(@switch));
     }
@@ -110,10 +109,8 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, ISwitchGroup
     }
 
     /// <inheritdoc />
-    public async Task FocusAsync()
+    public void ToggleSwitch()
     {
-        if (Switch == null) return;
-
-        await Switch.FocusAsync();
+        Switch?.Toggle();
     }
 }

@@ -1,20 +1,20 @@
-﻿using Ignis.Components.Web;
+﻿namespace Ignis.Components.HeadlessUI;
 
-namespace Ignis.Components.HeadlessUI;
-
-public interface ISwitchGroup : IDynamicParentComponent<ISwitchGroup>, IFocus
+public interface ISwitchGroup : IDynamicParentComponent<ISwitchGroup>
 {
     internal ISwitchDescription? Description { get; }
     
     internal ISwitchLabel? Label { get; }
     
-    internal IFocus? Switch { get; }
+    internal ISwitch? Switch { get; }
     
     string Id { get; }
     
-    internal void SetSwitch(IFocus button);
+    internal void SetSwitch(ISwitch button);
 
     internal void SetLabel(ISwitchLabel label);
 
     internal void SetDescription(ISwitchDescription description);
+
+    internal void ToggleSwitch();
 }
