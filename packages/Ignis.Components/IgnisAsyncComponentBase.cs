@@ -3,6 +3,8 @@
 public abstract class IgnisAsyncComponentBase : IgnisComponentBase, IDisposable
 {
     private readonly CancellationTokenSource _cancellationTokenSource = new();
+    
+    protected CancellationToken CancellationToken => _cancellationTokenSource.Token;
 
     protected virtual Task OnInitializedAsync(CancellationToken cancellationToken)
     {
