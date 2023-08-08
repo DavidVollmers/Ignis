@@ -75,12 +75,7 @@
     [Parameter]
     public string? Path { get; set; }
 
-    protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
-    {
-        await LoadPageAsync(cancellationToken);
-    }
-
-    protected override async Task OnUpdatedAsync(CancellationToken cancellationToken)
+    protected override async Task OnUpdateAsync(CancellationToken cancellationToken)
     {
         await LoadPageAsync(cancellationToken);
     }

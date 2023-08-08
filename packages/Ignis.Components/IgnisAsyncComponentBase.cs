@@ -11,14 +11,14 @@ public abstract class IgnisAsyncComponentBase : IgnisComponentBase, IDisposable
         return Task.CompletedTask;
     }
 
-    protected virtual Task OnUpdatedAsync(CancellationToken cancellationToken)
+    protected virtual Task OnUpdateAsync(CancellationToken cancellationToken)
     {
         return Task.CompletedTask;
     }
 
-    internal override async Task OnInitializeCoreAsync()
+    internal override async Task OnInitializedCoreAsync()
     {
-        await base.OnInitializeCoreAsync();
+        await base.OnInitializedCoreAsync();
 
         await OnInitializedAsync(_cancellationTokenSource.Token);
     }
@@ -27,7 +27,7 @@ public abstract class IgnisAsyncComponentBase : IgnisComponentBase, IDisposable
     {
         await base.OnUpdateCoreAsync();
 
-        await OnUpdatedAsync(_cancellationTokenSource.Token);
+        await OnUpdateAsync(_cancellationTokenSource.Token);
     }
 
     protected virtual void Dispose(bool disposing)

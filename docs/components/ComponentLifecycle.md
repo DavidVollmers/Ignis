@@ -16,11 +16,14 @@ if you need to perform asynchronous operations in your component.
 flowchart TD
     A([SetParametersAsync]) --> B{First Call?}
     B -->|Yes| C[OnInitialized]
-    C --> D[Render]
-    B ---->|No| E[OnUpdated]
-    E --> D
-    F([Update]) --> D
+    C --> D[OnUpdate]
+    B -->|No| D
+    D --> E([Update])
+    E --> F[Render]
 ```
+
+You **should** always call the `Update` method when you want to update the component outside of this lifecycle. This
+will trigger a re-render of the component.
 
 You can read more about when parameters are
 set [here](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/lifecycle?view=aspnetcore-7.0#when-parameters-are-set-setparametersasync).
@@ -54,9 +57,6 @@ the `IHandleEvent` interface.
 ```csharp
 public class MyComponent : IgnisComponentBase, IHandleAfterRender, IHandleEvent
 {
-    [Parameter]
-    public string MyParameter { get; set; }
-
     public Task OnAfterRenderAsync()
     {
         // This will be called after the component has been rendered.

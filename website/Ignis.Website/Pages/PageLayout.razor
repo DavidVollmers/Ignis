@@ -32,13 +32,8 @@
 
     [Parameter]
     public RenderFragment? Body { get; set; }
-
-    protected override void OnInitialized()
-    {
-        ParseLink();
-    }
-
-    protected override void OnUpdated()
+    
+    protected override void OnUpdate()
     {
         ParseLink();
     }

@@ -43,12 +43,10 @@ public abstract class IgnisComponentBase : IComponent
 
         if (!_isInitialized)
         {
-            await OnInitializeCoreAsync();
+            await OnInitializedCoreAsync();
         }
-        else
-        {
-            await OnUpdateCoreAsync();
-        }
+        
+        await OnUpdateCoreAsync();
 
         Update();
     }
@@ -89,11 +87,11 @@ public abstract class IgnisComponentBase : IComponent
     {
     }
 
-    protected virtual void OnUpdated()
+    protected virtual void OnUpdate()
     {
     }
 
-    internal virtual Task OnInitializeCoreAsync()
+    internal virtual Task OnInitializedCoreAsync()
     {
         _isInitialized = true;
 
@@ -104,7 +102,7 @@ public abstract class IgnisComponentBase : IComponent
 
     internal virtual Task OnUpdateCoreAsync()
     {
-        OnUpdated();
+        OnUpdate();
 
         return Task.CompletedTask;
     }
