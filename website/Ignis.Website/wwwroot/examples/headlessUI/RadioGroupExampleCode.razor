@@ -1,4 +1,5 @@
 ﻿@using Ignis.Components
+@using Ignis.Components.HeadlessUI
 @using Ignis.Components.HeroIcons.Outline
 @using Ignis.Utils
 
@@ -8,7 +9,7 @@
     <div class="mx-auto w-full max-w-md">
         <RadioGroup @bind-Value="_selected">
             <RadioGroupLabel class="sr-only">Server size</RadioGroupLabel>
-            <div class="space-y-2">
+            <div class="space-y-2" role="none">
                 @foreach (var plan in _plans)
                 {
                     <RadioGroupOption @key="plan.Name"
