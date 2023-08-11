@@ -73,14 +73,14 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
         {
             builder.OpenComponent<FocusDetector>(3);
             builder.AddAttribute(4, nameof(FocusDetector.Id), Id);
-            builder.AddAttribute(6, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, () => Close()));
+            builder.AddAttribute(5, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, () => Close()));
             // ReSharper disable once VariableHidesOuterVariable
-            builder.AddAttribute(7, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
+            builder.AddAttribute(6, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
             {
-                builder.OpenComponent<CascadingValue<IPopover>>(8);
-                builder.AddAttribute(9, nameof(CascadingValue<IPopover>.IsFixed), true);
-                builder.AddAttribute(10, nameof(CascadingValue<IPopover>.Value), this);
-                builder.AddAttribute(11, nameof(CascadingValue<IPopover>.ChildContent),
+                builder.OpenComponent<CascadingValue<IPopover>>(7);
+                builder.AddAttribute(8, nameof(CascadingValue<IPopover>.IsFixed), true);
+                builder.AddAttribute(9, nameof(CascadingValue<IPopover>.Value), this);
+                builder.AddAttribute(10, nameof(CascadingValue<IPopover>.ChildContent),
                     this.GetChildContent(ChildContent));
 
                 builder.CloseComponent();

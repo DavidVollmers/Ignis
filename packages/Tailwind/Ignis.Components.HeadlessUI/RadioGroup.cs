@@ -104,34 +104,16 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IRadioGroup
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<FocusDetector>(3);
-            builder.AddAttribute(4, nameof(FocusDetector.Id), Id);
-            builder.AddAttribute(6, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, OnBlur));
-            // ReSharper disable once VariableHidesOuterVariable
-            builder.AddAttribute(7, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
-            {
-                builder.OpenComponent<CascadingValue<IRadioGroup>>(8);
-                builder.AddAttribute(9, nameof(CascadingValue<IRadioGroup>.IsFixed), true);
-                builder.AddAttribute(10, nameof(CascadingValue<IRadioGroup>.Value), this);
-                builder.AddAttribute(11, nameof(CascadingValue<IRadioGroup>.ChildContent),
-                    this.GetChildContent<IRadioGroup, RadioGroup<TValue>>(ChildContent));
-
-                builder.CloseComponent();
-            }));
+            builder.OpenComponent<CascadingValue<IRadioGroup>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<IRadioGroup>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<IRadioGroup>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<IRadioGroup>.ChildContent),
+                this.GetChildContent<IRadioGroup, RadioGroup<TValue>>(ChildContent));
 
             builder.CloseComponent();
         });
 
         builder.CloseAs(this);
-    }
-
-    private void OnBlur()
-    {
-        if (ActiveOption == null) return;
-
-        ActiveOption = null;
-            
-        Update();
     }
     
     /// <inheritdoc />

@@ -106,14 +106,14 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
         {
             builder.OpenComponent<FocusDetector>(3);
             builder.AddAttribute(4, nameof(FocusDetector.Id), Id);
-            builder.AddAttribute(6, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, () => Close()));
+            builder.AddAttribute(5, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, () => Close()));
             // ReSharper disable once VariableHidesOuterVariable
-            builder.AddAttribute(7, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
+            builder.AddAttribute(6, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
             {
-                builder.OpenComponent<CascadingValue<IListbox>>(8);
-                builder.AddAttribute(9, nameof(CascadingValue<IListbox>.IsFixed), true);
-                builder.AddAttribute(10, nameof(CascadingValue<IListbox>.Value), this);
-                builder.AddAttribute(11, nameof(CascadingValue<IListbox>.ChildContent),
+                builder.OpenComponent<CascadingValue<IListbox>>(7);
+                builder.AddAttribute(8, nameof(CascadingValue<IListbox>.IsFixed), true);
+                builder.AddAttribute(9, nameof(CascadingValue<IListbox>.Value), this);
+                builder.AddAttribute(10, nameof(CascadingValue<IListbox>.ChildContent),
                     this.GetChildContent(ChildContent));
 
                 builder.CloseComponent();
