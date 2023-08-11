@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroup<TValue> : IgnisRigidComponentBase,  IRadioGroup
+public sealed class RadioGroup<TValue> : IgnisRigidComponentBase, IRadioGroup
 {
     private readonly AttributeCollection _attributes;
-    
+
     private Type? _asComponent;
     private string? _asElement;
 
@@ -50,7 +50,7 @@ public sealed class RadioGroup<TValue> : IgnisRigidComponentBase,  IRadioGroup
     [Parameter]
     public RenderFragment<IRadioGroup>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IRadioGroup>? ChildContent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
     /// Additional attributes to be applied to the radio group.
@@ -61,6 +61,12 @@ public sealed class RadioGroup<TValue> : IgnisRigidComponentBase,  IRadioGroup
         get => _attributes.AdditionalAttributes;
         set => _attributes.AdditionalAttributes = value;
     }
+
+    /// <inheritdoc />
+    public IRadioGroupLabel? Label { get; private set; }
+
+    /// <inheritdoc />
+    public string Id { get; } = "ignis-hui-radiogroup-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc />
     public ElementReference? Element { get; set; }
@@ -74,10 +80,13 @@ public sealed class RadioGroup<TValue> : IgnisRigidComponentBase,  IRadioGroup
     public RadioGroup()
     {
         AsElement = "div";
-        
-        _attributes = new AttributeCollection(new []
+
+        _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("role", "radiogroup")
+            () => new KeyValuePair<string, object?>("id", Id),
+            () => new KeyValuePair<string, object?>("role", "radiogroup"),
+            () => new KeyValuePair<string, object?>("aria-labelledby",
+                Label == null ? null : Label.Id ?? Id + "-label")
         });
     }
 
@@ -93,11 +102,17 @@ public sealed class RadioGroup<TValue> : IgnisRigidComponentBase,  IRadioGroup
             builder.AddAttribute(4, nameof(CascadingValue<IRadioGroup>.IsFixed), true);
             builder.AddAttribute(5, nameof(CascadingValue<IRadioGroup>.Value), this);
             builder.AddAttribute(6, nameof(CascadingValue<IRadioGroup>.ChildContent),
-                this.GetChildContent(ChildContent));
+                this.GetChildContent<IRadioGroup, RadioGroup<TValue>>(ChildContent));
 
             builder.CloseComponent();
         });
 
         builder.CloseAs(this);
+    }
+
+    /// <inheritdoc />
+    public void SetLabel(IRadioGroupLabel label)
+    {
+        Label = label ?? throw new ArgumentNullException(nameof(label));
     }
 }
