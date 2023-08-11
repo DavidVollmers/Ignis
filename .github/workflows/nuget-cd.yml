@@ -46,11 +46,11 @@ jobs:
       - uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 7.0.x
-      - run: dotnet nuget add source --username DavidVollmers --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github https://nuget.pkg.github.com/DavidVollmers/index.json
+      # - run: dotnet nuget add source --username DavidVollmers --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github https://nuget.pkg.github.com/DavidVollmers/index.json
       - uses: actions/download-artifact@v3
         with:
           name: NuGet
           path: ./nuget
-      - run: |
-          dotnet nuget push ./nuget/**.nupkg --source nuget.org --api-key ${{ secrets.NUGET_API_KEY }}
-          dotnet nuget push ./nuget/**.nupkg --source github --api-key ${{ secrets.PAT_GITHUB }}
+      - run: dotnet nuget push ./nuget/**.nupkg --source nuget.org --api-key ${{ secrets.NUGET_API_KEY }}
+      # Currently does not work (403). Probably not used anyways...
+      # dotnet nuget push ./nuget/**.nupkg --source github --api-key ${{ secrets.PAT_GITHUB }}
