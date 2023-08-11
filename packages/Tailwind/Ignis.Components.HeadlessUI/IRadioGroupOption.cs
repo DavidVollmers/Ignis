@@ -9,4 +9,6 @@ public interface IRadioGroupOption : IDynamicParentComponent<IRadioGroupOption>,
     bool IsChecked { get; }
     
     internal void SetLabel(IRadioGroupLabel label);
+
+    internal void Check();
 }

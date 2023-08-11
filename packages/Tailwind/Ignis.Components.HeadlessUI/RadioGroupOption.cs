@@ -1,6 +1,7 @@
 ﻿using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
@@ -76,7 +77,11 @@ public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOp
         {
             () => new KeyValuePair<string, object?>("role", "radio"),
             () => new KeyValuePair<string, object?>("tabindex", IsChecked ? 0 : -1),
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, OnClick)),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Check)),
+            () => new KeyValuePair<string, object?>("__internal_preventDefault_onkeydown", IsActive),
+#pragma warning disable CS0618
+            () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
+#pragma warning restore CS0618
             () => new KeyValuePair<string, object?>("aria-checked", IsChecked.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("aria-labelledby", _label?.Id)
         });
@@ -107,13 +112,39 @@ public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOp
         builder.CloseAs(this);
     }
 
-    private void OnClick()
+    private void OnKeyDown(KeyboardEventArgs eventArgs)
+    {
+        switch (eventArgs.Code)
+        {
+            case "ArrowUp" when RadioGroup.ActiveOption == null:
+            case "ArrowDown" when RadioGroup.ActiveOption == null:
+                if (RadioGroup.Options.Any()) RadioGroup.Options[0].Check();
+                break;
+            case "ArrowDown":
+            {
+                if (RadioGroup.Options.Any()) break;
+                var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) + 1;
+                if (index < RadioGroup.Options.Length) RadioGroup.Options[index].Check();
+                else RadioGroup.Options[0].Check();
+                break;
+            }
+            case "ArrowUp":
+            {
+                if (RadioGroup.Options.Any()) break;
+                var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) - 1;
+                if (index >= 0) RadioGroup.Options[index].Check();
+                else RadioGroup.Options[^1].Check();
+                break;
+            }
+        }
+    }
+
+    /// <inheritdoc />
+    public void Check()
     {
         RadioGroup.CheckValue(Value);
         
         RadioGroup.SetOptionActive(this, true);
-        
-        Update();
     }
 
     /// <inheritdoc />
