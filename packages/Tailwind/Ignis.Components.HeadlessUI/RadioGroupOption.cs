@@ -1,9 +1,10 @@
 ﻿using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOption
+public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOption, IDisposable
 {
     private readonly AttributeCollection _attributes;
 
@@ -36,7 +37,7 @@ public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOp
     }
 
     [Parameter] public TValue? Value { get; set; }
-    
+
     [CascadingParameter] public IRadioGroup RadioGroup { get; set; } = null!;
 
     /// <inheritdoc />
@@ -93,6 +94,16 @@ public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOp
     }
 
     /// <inheritdoc />
+    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    {
+        builder.OpenAs(0, this);
+        builder.AddMultipleAttributes(1, Attributes!);
+        builder.AddChildContentFor<IRadioGroupOption, RadioGroupOption<TValue>>(2, this, ChildContent?.Invoke(this));
+
+        builder.CloseAs(this);
+    }
+
+    /// <inheritdoc />
     public void SetLabel(IRadioGroupLabel label)
     {
         _label = label ?? throw new ArgumentNullException(nameof(label));
@@ -111,5 +122,10 @@ public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOp
         }
 
         Update();
+    }
+
+    public void Dispose()
+    {
+        RadioGroup.RemoveOption(this);
     }
 }

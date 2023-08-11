@@ -151,6 +151,8 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     /// <inheritdoc />
     public void SetOptionActive(IListboxOption option, bool isActive)
     {
+        if (option == null) throw new ArgumentNullException(nameof(option));
+        
         if (isActive)
         {
             ActiveOption = option;

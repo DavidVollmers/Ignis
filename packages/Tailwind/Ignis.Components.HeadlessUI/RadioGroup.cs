@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroup<TValue> : IgnisRigidComponentBase, IRadioGroup
+public sealed class RadioGroup<TValue> : IgnisComponentBase, IRadioGroup
 {
+    private readonly IList<IRadioGroupOption> _options = new List<IRadioGroupOption>();
     private readonly AttributeCollection _attributes;
 
     private IRadioGroupLabel? _label;
@@ -64,6 +65,12 @@ public sealed class RadioGroup<TValue> : IgnisRigidComponentBase, IRadioGroup
     }
 
     /// <inheritdoc />
+    public IRadioGroupOption[] Options => _options.ToArray();
+
+    /// <inheritdoc />
+    public IRadioGroupOption? ActiveOption { get; private set; }
+
+    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-radiogroup-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc />
@@ -106,6 +113,45 @@ public sealed class RadioGroup<TValue> : IgnisRigidComponentBase, IRadioGroup
         });
 
         builder.CloseAs(this);
+    }
+
+    /// <inheritdoc />
+    public bool IsValueChecked<TValue1>(TValue1? value)
+    {
+        return value?.Equals(Value) ?? Value?.Equals(value) ?? false;
+    }
+
+    /// <inheritdoc />
+    public void SetOptionActive(IRadioGroupOption option, bool isActive)
+    {
+        if (option == null) throw new ArgumentNullException(nameof(option));
+        
+        if (isActive)
+        {
+            ActiveOption = option;
+        }
+        else if (ActiveOption == option)
+        {
+            ActiveOption = null;
+        }
+
+        Update();
+    }
+
+    /// <inheritdoc />
+    public void AddOption(IRadioGroupOption option)
+    {
+        if (option == null) throw new ArgumentNullException(nameof(option));
+
+        if (!_options.Contains(option)) _options.Add(option);
+    }
+
+    /// <inheritdoc />
+    public void RemoveOption(IRadioGroupOption option)
+    {
+        if (option == null) throw new ArgumentNullException(nameof(option));
+
+        _options.Remove(option);
     }
 
     /// <inheritdoc />
