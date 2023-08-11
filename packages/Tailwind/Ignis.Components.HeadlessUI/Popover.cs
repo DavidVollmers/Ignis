@@ -6,6 +6,7 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
 {
+    private IPopoverButton? _button;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -44,9 +45,6 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
-
-    /// <inheritdoc />
-    public IPopoverButton? Button { get; private set; }
 
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-popover-" + Guid.NewGuid().ToString("N");
@@ -97,6 +95,6 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
     /// <inheritdoc />
     public void SetButton(IPopoverButton button)
     {
-        Button = button ?? throw new ArgumentNullException(nameof(button));
+        _button = button ?? throw new ArgumentNullException(nameof(button));
     }
 }

@@ -7,6 +7,7 @@ public sealed class RadioGroup<TValue> : IgnisRigidComponentBase, IRadioGroup
 {
     private readonly AttributeCollection _attributes;
 
+    private IRadioGroupLabel? _label;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -63,9 +64,6 @@ public sealed class RadioGroup<TValue> : IgnisRigidComponentBase, IRadioGroup
     }
 
     /// <inheritdoc />
-    public IRadioGroupLabel? Label { get; private set; }
-
-    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-radiogroup-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc />
@@ -86,7 +84,7 @@ public sealed class RadioGroup<TValue> : IgnisRigidComponentBase, IRadioGroup
             () => new KeyValuePair<string, object?>("id", Id),
             () => new KeyValuePair<string, object?>("role", "radiogroup"),
             () => new KeyValuePair<string, object?>("aria-labelledby",
-                Label == null ? null : Label.Id ?? Id + "-label")
+                _label == null ? null : _label.Id ?? Id + "-label")
         });
     }
 
@@ -113,6 +111,6 @@ public sealed class RadioGroup<TValue> : IgnisRigidComponentBase, IRadioGroup
     /// <inheritdoc />
     public void SetLabel(IRadioGroupLabel label)
     {
-        Label = label ?? throw new ArgumentNullException(nameof(label));
+        _label = label ?? throw new ArgumentNullException(nameof(label));
     }
 }

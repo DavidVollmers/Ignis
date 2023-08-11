@@ -40,6 +40,8 @@ public sealed class RadioGroupLabel : IgnisRigidComponentBase, IRadioGroupLabel
 
     [CascadingParameter] public IRadioGroup RadioGroup { get; set; } = null!;
 
+    [CascadingParameter] public IRadioGroupOption? RadioGroupOption { get; set; }
+
     /// <inheritdoc />
     [Parameter]
     public RenderFragment<IRadioGroupLabel>? _ { get; set; }

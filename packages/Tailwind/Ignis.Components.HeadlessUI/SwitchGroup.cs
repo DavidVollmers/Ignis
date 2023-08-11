@@ -7,6 +7,7 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, ISwitchGroup
 {
     private Type? _asComponent;
     private string? _asElement;
+    private ISwitch? _switch;
 
     /// <inheritdoc />
     [Parameter]
@@ -46,9 +47,6 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, ISwitchGroup
 
     /// <inheritdoc />
     public ISwitchLabel? Label { get; private set; }
-
-    /// <inheritdoc />
-    public ISwitch? Switch { get; private set; }
 
     /// <inheritdoc />
     public ISwitchDescription? Description { get; private set; }
@@ -93,7 +91,7 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, ISwitchGroup
     /// <inheritdoc />
     public void SetSwitch(ISwitch @switch)
     {
-        Switch = @switch ?? throw new ArgumentNullException(nameof(@switch));
+        _switch = @switch ?? throw new ArgumentNullException(nameof(@switch));
     }
 
     /// <inheritdoc />
@@ -111,6 +109,6 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, ISwitchGroup
     /// <inheritdoc />
     public void ToggleSwitch()
     {
-        Switch?.Toggle();
+        _switch?.Toggle();
     }
 }
