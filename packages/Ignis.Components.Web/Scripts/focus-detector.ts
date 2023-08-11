@@ -4,8 +4,8 @@ export class FocusDetector extends ComponentBase {
     private _isInitialized: boolean = false;
     private _isFocused: boolean = true;
 
-    private readonly _onClick = () => {
-        const _ = this.onClick();
+    private readonly _onClick = (event: MouseEvent) => {
+        const _ = this.onClick(event);
     };
 
     public constructor($ref: DotNet.DotNetObject, id: string, private readonly _element: HTMLElement) {
@@ -19,9 +19,9 @@ export class FocusDetector extends ComponentBase {
         }
     }
 
-    private async onClick(): Promise<void> {
+    private async onClick(event: MouseEvent): Promise<void> {
         if (!this._isInitialized) return;
-        if (this._element.contains(document.activeElement)) {
+        if (this._element.contains(<Node>event.target)) {
             if (this._isFocused) return;
             this._isFocused = true;
             await this.$ref.invokeMethodAsync('OnFocusAsync', false);
