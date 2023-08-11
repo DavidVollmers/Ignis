@@ -76,6 +76,7 @@ public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOp
         {
             () => new KeyValuePair<string, object?>("role", "radio"),
             () => new KeyValuePair<string, object?>("tabindex", IsChecked ? 0 : -1),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, OnClick)),
             () => new KeyValuePair<string, object?>("aria-checked", IsChecked.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("aria-labelledby", _label?.Id)
         });
@@ -98,9 +99,21 @@ public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOp
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IRadioGroupOption, RadioGroupOption<TValue>>(2, this, ChildContent?.Invoke(this));
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddChildContentFor<IRadioGroupOption, RadioGroupOption<TValue>>(3, this, ChildContent?.Invoke(this));
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
+    }
+
+    private void OnClick()
+    {
+        RadioGroup.CheckValue(Value);
+        
+        RadioGroup.SetOptionActive(this, true);
+        
+        Update();
     }
 
     /// <inheritdoc />
@@ -112,6 +125,8 @@ public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOp
     /// <inheritdoc />
     public async Task FocusAsync()
     {
+        RadioGroup.SetOptionActive(this, true);
+        
         if (Element.HasValue)
         {
             await Element.Value.FocusAsync();
@@ -123,7 +138,7 @@ public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOp
 
         Update();
     }
-
+    
     public void Dispose()
     {
         RadioGroup.RemoveOption(this);

@@ -19,6 +19,13 @@ public interface IRadioGroup : IDynamicParentComponent<IRadioGroup>
     /// <returns>`true` if the value is checked; otherwise `false`.</returns>
     bool IsValueChecked<TValue>(TValue? value);
 
+    /// <summary>
+    /// Checks the given value.
+    /// </summary>
+    /// <param name="value">The value to check.</param>
+    /// <typeparam name="TValue">The value type.</typeparam>
+    void CheckValue<TValue>(TValue? value);
+
     internal void SetOptionActive(IRadioGroupOption option, bool isActive);
 
     internal void AddOption(IRadioGroupOption option);
