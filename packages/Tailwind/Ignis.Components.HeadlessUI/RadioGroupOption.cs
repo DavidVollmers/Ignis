@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.Web;
+using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroupOption : IgnisComponentBase, IRadioGroupOption
+public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOption
 {
     private readonly AttributeCollection _attributes;
 
+    private IRadioGroupLabel? _label;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -33,6 +35,8 @@ public sealed class RadioGroupOption : IgnisComponentBase, IRadioGroupOption
         }
     }
 
+    [Parameter] public TValue? Value { get; set; }
+    
     [CascadingParameter] public IRadioGroup RadioGroup { get; set; } = null!;
 
     /// <inheritdoc />
@@ -47,6 +51,9 @@ public sealed class RadioGroupOption : IgnisComponentBase, IRadioGroupOption
         get => _attributes.AdditionalAttributes;
         set => _attributes.AdditionalAttributes = value;
     }
+
+    /// <inheritdoc />
+    public bool IsActive => RadioGroup.ActiveOption == this;
 
     /// <inheritdoc />
     public bool IsChecked => RadioGroup.IsValueChecked(Value);
@@ -67,7 +74,9 @@ public sealed class RadioGroupOption : IgnisComponentBase, IRadioGroupOption
         _attributes = new AttributeCollection(new[]
         {
             () => new KeyValuePair<string, object?>("role", "radio"),
-            () => new KeyValuePair<string, object?>("aria-checked", IsChecked.ToString().ToLowerInvariant())
+            () => new KeyValuePair<string, object?>("tabindex", IsChecked ? 0 : -1),
+            () => new KeyValuePair<string, object?>("aria-checked", IsChecked.ToString().ToLowerInvariant()),
+            () => new KeyValuePair<string, object?>("aria-labelledby", _label?.Id)
         });
     }
 
@@ -77,9 +86,30 @@ public sealed class RadioGroupOption : IgnisComponentBase, IRadioGroupOption
         if (RadioGroup == null)
         {
             throw new InvalidOperationException(
-                $"{nameof(RadioGroupOption)} must be used inside a {nameof(RadioGroup<object>)}.");
+                $"{nameof(RadioGroupOption<TValue>)} must be used inside a {nameof(RadioGroup<object>)}.");
         }
 
         RadioGroup.AddOption(this);
+    }
+
+    /// <inheritdoc />
+    public void SetLabel(IRadioGroupLabel label)
+    {
+        _label = label ?? throw new ArgumentNullException(nameof(label));
+    }
+
+    /// <inheritdoc />
+    public async Task FocusAsync()
+    {
+        if (Element.HasValue)
+        {
+            await Element.Value.FocusAsync();
+        }
+        else if (Component is IFocus focus)
+        {
+            await focus.FocusAsync();
+        }
+
+        Update();
     }
 }
