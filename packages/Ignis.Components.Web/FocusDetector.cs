@@ -54,7 +54,7 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender, IAsy
         builder.AddAttribute(2, "id", Id);
         builder.AddElementReferenceCapture(3, element =>
         {
-            _isFocused = true;
+            _isFocused = false;
             _element = element;
             FrameTracker.ExecuteOnNextFrame(() =>
             {
