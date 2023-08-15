@@ -5,12 +5,19 @@ namespace Ignis.Components.Web;
 
 public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAfterRender, IDisposable
 {
+    private readonly DotNetObjectReference<FocusComponentBase> _reference;
+
     private bool _isFocused;
 
     protected abstract IEnumerable<ElementReference> TargetElements { get; }
 
     // ReSharper disable once InconsistentNaming
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
+
+    protected FocusComponentBase()
+    {
+        _reference = DotNetObjectReference.Create(this);
+    }
 
     protected virtual void OnFocus()
     {
@@ -66,7 +73,7 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
     {
         if (!TargetElements.Any()) throw new InvalidOperationException("No element to focus.");
 
-        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.focus", TargetElements);
+        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.focus", _reference);
     }
 
     /// <inheritdoc />
@@ -74,8 +81,8 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
     {
         if (!TargetElements.Any()) return;
 
-        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.onAfterRender", TargetElements,
-            _isFocused, DotNetObjectReference.Create(this));
+        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.onAfterRender", _reference,
+            TargetElements, _isFocused);
     }
 
     protected virtual void Dispose(bool disposing)
@@ -83,8 +90,10 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
         if (!disposing) return;
 
 #pragma warning disable CA2012
-        JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.dispose", TargetElements);
+        JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.dispose", _reference);
 #pragma warning restore CA2012
+
+        _reference.Dispose();
     }
 
     public void Dispose()
