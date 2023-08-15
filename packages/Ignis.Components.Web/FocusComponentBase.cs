@@ -11,6 +11,8 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
 
     protected abstract IEnumerable<ElementReference> TargetElements { get; }
 
+    protected virtual bool FocusOnRender => false;
+
     // ReSharper disable once InconsistentNaming
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
 
@@ -82,7 +84,7 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
         if (!TargetElements.Any()) return;
 
         await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.onAfterRender", _reference,
-            TargetElements, _isFocused);
+            TargetElements, _isFocused, FocusOnRender);
     }
 
     protected virtual void Dispose(bool disposing)

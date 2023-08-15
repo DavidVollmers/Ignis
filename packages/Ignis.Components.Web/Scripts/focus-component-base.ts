@@ -13,23 +13,30 @@ export abstract class FocusComponentBase {
         const target = FocusComponentBase._instances[(<any>$ref)._id];
         if (target == null || target.isFocused) return;
         target.isFocused = true;
-        if (target.elements.length) target.elements[0].focus();
+        for (const element of target.elements) {
+            element.focus();
+            if (document.activeElement === element) break;
+        }
         await target.$ref.invokeMethodAsync('InvokeFocusAsync');
     }
 
-    public static async onAfterRender($ref: DotNet.DotNetObject, elements: HTMLElement[], isFocused: boolean): Promise<void> {
+    public static async onAfterRender($ref: DotNet.DotNetObject, elements: HTMLElement[], isFocused: boolean, focusOnRender: boolean): Promise<void> {
         await FocusComponentBase.initialize();
-        FocusComponentBase._instances[(<any>$ref)._id] = {
+        const id = (<any>$ref)._id;
+        if (FocusComponentBase._instances.length > id && !FocusComponentBase._instances[id]) return;
+        const focusImmediately = focusOnRender && !FocusComponentBase._instances[id];
+        FocusComponentBase._instances[id] = {
             isFocused: isFocused,
             elements: elements,
             $ref: $ref
         };
+        if (focusImmediately) await FocusComponentBase.focus($ref);
     }
 
     public static dispose($ref: DotNet.DotNetObject): void {
-        console.log('dispose', $ref);
-        FocusComponentBase._instances[(<any>$ref)._id] = <any>undefined;
-        delete FocusComponentBase._instances[(<any>$ref)._id];
+        const id = (<any>$ref)._id;
+        FocusComponentBase._instances[id] = <any>undefined;
+        delete FocusComponentBase._instances[id];
     }
 
     private static async onFocus(event: Event): Promise<void> {
@@ -42,7 +49,6 @@ export abstract class FocusComponentBase {
                 if (element !== target || !element.contains(target)) continue;
                 isMatch = true;
             }
-            console.log(instance, isMatch);
             if (isMatch) {
                 if (instance.isFocused) return;
                 instance.isFocused = true;
