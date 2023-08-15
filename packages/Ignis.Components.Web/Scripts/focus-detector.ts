@@ -42,6 +42,7 @@ export class FocusDetector extends ComponentBase {
     }
 
     private async onClick(event: MouseEvent): Promise<void> {
+        console.log(this._element, event.target);
         if (this._element.contains(<Node>event.target)) {
             await this.onFocus();
         } else {
@@ -50,12 +51,14 @@ export class FocusDetector extends ComponentBase {
     }
 
     private async onFocus(): Promise<void> {
+        console.log('TRY onFocus');
         if (!this._isInitialized || this._isFocused) return;
         this._isFocused = true;
         await this.$ref.invokeMethodAsync('OnFocusAsync', true);
     }
 
     private async onBlur(event: FocusEvent): Promise<void> {
+        console.log('TRY onBlur');
         if (!this._isInitialized || !this._isFocused) return;
         if (event.relatedTarget && this._element.contains(<Node>event.relatedTarget)) return;
         this._isFocused = false;

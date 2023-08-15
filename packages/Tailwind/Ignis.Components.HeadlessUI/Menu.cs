@@ -81,20 +81,10 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<FocusDetector>(3);
-            builder.AddAttribute(4, nameof(FocusDetector.Id), Id);
-            builder.AddAttribute(5, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, () => Close()));
-            // ReSharper disable once VariableHidesOuterVariable
-            builder.AddAttribute(6, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
-            {
-                builder.OpenComponent<CascadingValue<IMenu>>(7);
-                builder.AddAttribute(8, nameof(CascadingValue<IMenu>.IsFixed), true);
-                builder.AddAttribute(9, nameof(CascadingValue<IMenu>.Value), this);
-                builder.AddAttribute(10, nameof(CascadingValue<IMenu>.ChildContent),
-                    this.GetChildContent(ChildContent));
-
-                builder.CloseComponent();
-            }));
+            builder.OpenComponent<CascadingValue<IMenu>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<IMenu>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<IMenu>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<IMenu>.ChildContent), this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });

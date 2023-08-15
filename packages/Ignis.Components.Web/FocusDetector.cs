@@ -5,7 +5,7 @@ using Microsoft.JSInterop;
 namespace Ignis.Components.Web;
 
 
-public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender, IAsyncDisposable
+public sealed class FocusDetector_TODO_REMOVE : IgnisComponentBase, IHandleAfterRender, IAsyncDisposable
 {
     private ElementReference? _element;
     private bool? _isFocused;
@@ -31,20 +31,24 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender, IAsy
     [JSInvokable]
     public async Task OnFocusAsync()
     {
+        Console.WriteLine("TRY OnFocusAsync");
         if (_isFocused.HasValue && _isFocused.Value) return;
 
         _isFocused = true;
 
+        Console.WriteLine("OnFocusAsync");
         await OnFocus.InvokeAsync();
     }
 
     [JSInvokable]
     public async Task OnBlurAsync()
     {
+        Console.WriteLine("TRY OnBlurAsync");
         if (_isFocused.HasValue && !_isFocused.Value) return;
 
         _isFocused = false;
 
+        Console.WriteLine("OnBlurAsync");
         await OnBlur.InvokeAsync();
     }
 

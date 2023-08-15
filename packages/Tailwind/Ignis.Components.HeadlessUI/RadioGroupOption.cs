@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOption, IDisposable
+public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOption, IDisposable
 {
     private readonly AttributeCollection _attributes;
 
@@ -113,25 +113,15 @@ public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOp
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(3, this, builder =>
         {
-            builder.OpenComponent<FocusDetector>(4);
-            builder.AddAttribute(5, nameof(FocusDetector.Id), GetId());
-            builder.AddAttribute(6, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, () => RadioGroup.SetOptionActive(this, false)));
-            builder.AddAttribute(7, nameof(FocusDetector.OnFocus), EventCallback.Factory.Create(this, () => RadioGroup.SetOptionActive(this, true)));
-            // ReSharper disable once VariableHidesOuterVariable
-            builder.AddAttribute(8, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
-            {
-                builder.OpenComponent<CascadingValue<IRadioGroupOption>>(9);
-                builder.AddAttribute(10, nameof(CascadingValue<IRadioGroupOption>.IsFixed), true);
-                builder.AddAttribute(11, nameof(CascadingValue<IRadioGroupOption>.Value), this);
-                builder.AddAttribute(12, nameof(CascadingValue<IRadioGroupOption>.ChildContent),
-                    this.GetChildContent(ChildContent));
-
-                builder.CloseComponent();
-            }));
+            builder.OpenComponent<CascadingValue<IRadioGroupOption>>(4);
+            builder.AddAttribute(5, nameof(CascadingValue<IRadioGroupOption>.IsFixed), true);
+            builder.AddAttribute(6, nameof(CascadingValue<IRadioGroupOption>.Value), this);
+            builder.AddAttribute(7, nameof(CascadingValue<IRadioGroupOption>.ChildContent),
+                this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });
-        
+
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 
@@ -141,14 +131,14 @@ public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOp
     private string GetId()
     {
         if (Id != null) return Id;
-        
+
         return RadioGroup.Id + "-option-" + Array.IndexOf(RadioGroup.Options, this);
     }
 
     private void OnKeyDown(KeyboardEventArgs eventArgs)
     {
         if (!RadioGroup.Options.Any()) return;
-        
+
         switch (eventArgs.Code)
         {
             case "ArrowUp" when RadioGroup.ActiveOption == null:
@@ -176,7 +166,7 @@ public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOp
     public void Check()
     {
         RadioGroup.CheckValue(Value);
-        
+
         RadioGroup.SetOptionActive(this, true);
     }
 
@@ -200,7 +190,7 @@ public sealed class RadioGroupOption<TValue> : IgnisComponentBase, IRadioGroupOp
 
         Update();
     }
-    
+
     public void Dispose()
     {
         RadioGroup.RemoveOption(this);

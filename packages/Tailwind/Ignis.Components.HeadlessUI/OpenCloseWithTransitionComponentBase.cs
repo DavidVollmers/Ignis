@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.Web;
+using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
-public abstract class OpenCloseWithTransitionComponentBase : IgnisComponentBase, IOpenClose, IWithTransition,
+public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase, IOpenClose, IWithTransition,
     IHandleAfterRender
 {
     private ITransition? _transition;

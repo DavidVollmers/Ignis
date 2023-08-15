@@ -104,20 +104,10 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<FocusDetector>(3);
-            builder.AddAttribute(4, nameof(FocusDetector.Id), Id);
-            builder.AddAttribute(5, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, () => Close()));
-            // ReSharper disable once VariableHidesOuterVariable
-            builder.AddAttribute(6, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
-            {
-                builder.OpenComponent<CascadingValue<IListbox>>(7);
-                builder.AddAttribute(8, nameof(CascadingValue<IListbox>.IsFixed), true);
-                builder.AddAttribute(9, nameof(CascadingValue<IListbox>.Value), this);
-                builder.AddAttribute(10, nameof(CascadingValue<IListbox>.ChildContent),
-                    this.GetChildContent(ChildContent));
-
-                builder.CloseComponent();
-            }));
+            builder.OpenComponent<CascadingValue<IListbox>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<IListbox>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<IListbox>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<IListbox>.ChildContent), this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });
@@ -152,7 +142,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     public void SetOptionActive(IListboxOption option, bool isActive)
     {
         if (option == null) throw new ArgumentNullException(nameof(option));
-        
+
         if (isActive)
         {
             ActiveOption = option;

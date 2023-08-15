@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DialogPanel : IgnisRigidComponentBase, IDynamicParentComponent
+public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -73,18 +73,7 @@ public sealed class DialogPanel : IgnisRigidComponentBase, IDynamicParentCompone
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
-        {
-            builder.OpenComponent<FocusDetector>(3);
-            builder.AddAttribute(4, nameof(FocusDetector.Id), Dialog.Id);
-            builder.AddAttribute(5, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, () => Dialog.Close()));
-            // ReSharper disable once VariableHidesOuterVariable
-            builder.AddAttribute(6, nameof(FocusDetector.ChildContent),
-                this.GetChildContent<IDynamicComponent, DialogPanel>(ChildContent));
-
-            builder.CloseComponent();
-        });
+        builder.AddContentFor(2, this, ChildContent);
 
         builder.CloseAs(this);
     }
