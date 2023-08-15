@@ -1,6 +1,6 @@
 ﻿import {ComponentBase} from '@ignis.net/components';
 
-export class FocusDetector extends ComponentBase {
+export class FocusDetector_TODO_REMOVE extends ComponentBase {
     private _isInitialized: boolean = false;
     private _isFocused: boolean = true;
 

@@ -5,6 +5,12 @@ export interface ComponentConstructor<T extends ComponentBase> {
 }
 
 export function registerComponent<T extends ComponentBase>(name: string, component: ComponentConstructor<T>): void {
+    registerStaticComponent(name, ($ref: DotNet.DotNetObject, ...args: any[]) => {
+        return new component($ref, ...args);
+    });
+}
+
+export function registerStaticComponent(name: string, component: object): void {
     let scope: any = window;
     const nameParts = name.split('.');
     while (nameParts.length > 1) {
@@ -13,7 +19,5 @@ export function registerComponent<T extends ComponentBase>(name: string, compone
         scope = scope[namePart];
     }
     const lastNamePart = <string>nameParts.shift();
-    scope[lastNamePart] = ($ref: DotNet.DotNetObject, ...args: any[]) => {
-        return new component($ref, ...args);
-    };
+    scope[lastNamePart] = component;
 }

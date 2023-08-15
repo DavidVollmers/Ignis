@@ -1,6 +1,7 @@
-import {registerComponent} from "@ignis.net/components";
+import {registerComponent, registerStaticComponent} from "@ignis.net/components";
+import {FocusComponentBase} from './focus-component-base';
 import {ScrollDetector} from './scroll-detector';
-import {FocusDetector} from "./focus-detector";
 
-registerComponent('Ignis.Components.Web.FocusDetector', FocusDetector);
+registerStaticComponent('Ignis.Components.Web.FocusComponentBase', FocusComponentBase);
+
 registerComponent('Ignis.Components.Web.ScrollDetector', ScrollDetector);
