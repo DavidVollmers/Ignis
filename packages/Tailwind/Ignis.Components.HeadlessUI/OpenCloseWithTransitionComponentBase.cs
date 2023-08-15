@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
-public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase, IOpenClose, IWithTransition,
-    IHandleAfterRender
+public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase, IOpenClose, IWithTransition
 {
     private ITransition? _transition;
     private bool _isOpen;
@@ -76,10 +75,10 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
     }
 
     /// <inheritdoc />
-    public Task OnAfterRenderAsync()
+    public override async Task OnAfterRenderAsync()
     {
         FrameTracker.OnAfterRender();
 
-        return Task.CompletedTask;
+        await base.OnAfterRenderAsync();
     }
 }

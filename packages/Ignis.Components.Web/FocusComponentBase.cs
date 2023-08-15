@@ -68,12 +68,14 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
 
         await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.focus", TargetElement);
     }
-
-    public async Task OnAfterRenderAsync()
+    
+    /// <inheritdoc />
+    public virtual async Task OnAfterRenderAsync()
     {
         if (!TargetElement.HasValue) return;
-        
-        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.onAfterRender", TargetElement, _isFocused);
+
+        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.onAfterRender", TargetElement,
+            _isFocused, DotNetObjectReference.Create(this));
     }
 
     protected virtual void Dispose(bool disposing)
