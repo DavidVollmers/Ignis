@@ -14,7 +14,15 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
     private string? _asElement;
 
     /// <inheritdoc />
-    protected override ElementReference? TargetElement => Element;
+    protected override IEnumerable<ElementReference> TargetElements
+    {
+        get
+        {
+            //TODO label & description
+
+            if (Element.HasValue) yield return Element.Value;
+        }
+    }
 
     /// <inheritdoc />
     [Parameter]

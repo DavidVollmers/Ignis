@@ -12,7 +12,15 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     private string? _asElement;
 
     /// <inheritdoc />
-    protected override ElementReference? TargetElement => Element;
+    protected override IEnumerable<ElementReference> TargetElements
+    {
+        get
+        {
+            //TODO button & items
+
+            if (Element.HasValue) yield return Element.Value;
+        }
+    }
 
     /// <inheritdoc />
     [Parameter]

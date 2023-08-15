@@ -10,7 +10,15 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
     private bool _isOpen;
 
     /// <inheritdoc />
-    protected override ElementReference? TargetElement => Element;
+    protected override IEnumerable<ElementReference> TargetElements
+    {
+        get
+        {
+            //TODO button & panel
+
+            if (Element.HasValue) yield return Element.Value;
+        }
+    }
 
     /// <inheritdoc />
     [Parameter]

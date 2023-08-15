@@ -1,22 +1,22 @@
 export abstract class FocusComponentBase {
     private static readonly _elements: {
         [id: string]: {
-            element: Element;
-            isFocused: boolean;
-            $ref: DotNet.DotNetObject;
+            isFocused: boolean,
+            elements: Element[],
+            $ref: DotNet.DotNetObject
         }
     } = {};
 
     private constructor() {
     }
 
-    public static focus(element: Element): void {
+    public static focus(elements: Element[]): void {
     }
 
-    public static onAfterRender(element: Element, isFocused: boolean, $ref: DotNet.DotNetObject): void {
+    public static onAfterRender(elements: Element[], isFocused: boolean, $ref: DotNet.DotNetObject): void {
         console.log($ref);
     }
 
-    public static dispose(element: Element): void {
+    public static dispose(elements: Element[]): void {
     }
 }

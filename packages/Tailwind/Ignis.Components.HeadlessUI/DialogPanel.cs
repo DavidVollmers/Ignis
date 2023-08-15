@@ -10,7 +10,15 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
     private string? _asElement;
 
     /// <inheritdoc />
-    protected override ElementReference? TargetElement => Element;
+    protected override IEnumerable<ElementReference> TargetElements
+    {
+        get
+        {
+            //TODO title & description
+
+            if (Element.HasValue) yield return Element.Value;
+        }
+    }
 
     /// <inheritdoc />
     [Parameter]
@@ -76,7 +84,8 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddContentFor(2, this, ChildContent);
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddContentFor(3, this, ChildContent);
 
         builder.CloseAs(this);
     }

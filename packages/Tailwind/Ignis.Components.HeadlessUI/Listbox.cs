@@ -17,7 +17,15 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     private bool _isOpen;
 
     /// <inheritdoc />
-    protected override ElementReference? TargetElement => Element;
+    protected override IEnumerable<ElementReference> TargetElements
+    {
+        get
+        {
+            //TODO button, label & options
+
+            if (Element.HasValue) yield return Element.Value;
+        }
+    }
 
     /// <inheritdoc />
     [Parameter]

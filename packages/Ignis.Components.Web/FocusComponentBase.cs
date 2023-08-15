@@ -7,7 +7,7 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
 {
     private bool _isFocused;
 
-    protected abstract ElementReference? TargetElement { get; }
+    protected abstract IEnumerable<ElementReference> TargetElements { get; }
 
     // ReSharper disable once InconsistentNaming
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
@@ -64,17 +64,17 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
 
     public async Task FocusAsync()
     {
-        if (!TargetElement.HasValue) throw new InvalidOperationException("No element to focus.");
+        if (!TargetElements.Any()) throw new InvalidOperationException("No element to focus.");
 
-        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.focus", TargetElement);
+        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.focus", TargetElements);
     }
-    
+
     /// <inheritdoc />
     public virtual async Task OnAfterRenderAsync()
     {
-        if (!TargetElement.HasValue) return;
+        if (!TargetElements.Any()) return;
 
-        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.onAfterRender", TargetElement,
+        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.onAfterRender", TargetElements,
             _isFocused, DotNetObjectReference.Create(this));
     }
 
@@ -83,7 +83,7 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
         if (!disposing) return;
 
 #pragma warning disable CA2012
-        JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.dispose", TargetElement);
+        JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.dispose", TargetElements);
 #pragma warning restore CA2012
     }
 

@@ -35,10 +35,6 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
         }
     }
 
-    /// <inheritdoc />
-    [Parameter]
-    public string? Id { get; set; }
-
     [CascadingParameter] public IPopover Popover { get; set; } = null!;
 
     /// <inheritdoc />
@@ -70,9 +66,8 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
         //TODO aria-controls
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id ?? Popover.Id + "-button"), () =>
-                new KeyValuePair<string, object?>("onclick",
-                    EventCallback.Factory.Create(this, () => Popover.Open())),
+            () => new KeyValuePair<string, object?>("onclick",
+                EventCallback.Factory.Create(this, () => Popover.Open())),
 #pragma warning disable CS0618
             () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
 #pragma warning restore CS0618
@@ -106,7 +101,7 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
     private void OnKeyDown(KeyboardEventArgs eventArgs)
     {
         if (eventArgs.Code != "Escape") return;
-        
+
         Popover.Close();
     }
 }
