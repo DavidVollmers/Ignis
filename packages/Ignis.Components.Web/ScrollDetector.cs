@@ -3,7 +3,7 @@ using Microsoft.JSInterop;
 
 namespace Ignis.Components.Web;
 
-public sealed class ScrollDetector : IgnisComponentBase
+public sealed class ScrollDetector : IgnisAsyncComponentBase
 {
     [Parameter] public EventCallback<ScrollEventArgs> OnScroll { get; set; }
 
@@ -16,8 +16,9 @@ public sealed class ScrollDetector : IgnisComponentBase
         await OnScroll.InvokeAsync(new ScrollEventArgs(scrollX, scrollY));
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
     {
-        var _ = JSRuntime.InvokeVoidAsync("Ignis.Components.Web.ScrollDetector", DotNetObjectReference.Create(this));
+        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.ScrollDetector", cancellationToken,
+            DotNetObjectReference.Create(this));
     }
 }
