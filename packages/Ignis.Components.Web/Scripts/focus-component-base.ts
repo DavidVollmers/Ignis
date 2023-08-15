@@ -1,18 +1,16 @@
 export abstract class FocusComponentBase {
     private static _isInitialized: boolean = false;
-    private static _elements: {
-        [id: number]: {
-            isFocused: boolean,
-            elements: HTMLElement[],
-            $ref: DotNet.DotNetObject
-        }
-    } = {};
+    private static _instances: {
+        isFocused: boolean,
+        elements: HTMLElement[],
+        $ref: DotNet.DotNetObject
+    }[] = [];
 
     private constructor() {
     }
 
     public static async focus($ref: DotNet.DotNetObject): Promise<void> {
-        const target = FocusComponentBase._elements[(<any>$ref)._id];
+        const target = FocusComponentBase._instances[(<any>$ref)._id];
         if (target == null || target.isFocused) return;
         target.isFocused = true;
         if (target.elements.length) target.elements[0].focus();
@@ -21,7 +19,7 @@ export abstract class FocusComponentBase {
 
     public static async onAfterRender($ref: DotNet.DotNetObject, elements: HTMLElement[], isFocused: boolean): Promise<void> {
         await FocusComponentBase.initialize();
-        FocusComponentBase._elements[(<any>$ref)._id] = {
+        FocusComponentBase._instances[(<any>$ref)._id] = {
             isFocused: isFocused,
             elements: elements,
             $ref: $ref
@@ -29,27 +27,30 @@ export abstract class FocusComponentBase {
     }
 
     public static dispose($ref: DotNet.DotNetObject): void {
-        delete FocusComponentBase._elements[(<any>$ref)._id];
+        console.log('dispose', $ref);
+        FocusComponentBase._instances[(<any>$ref)._id] = <any>undefined;
+        delete FocusComponentBase._instances[(<any>$ref)._id];
     }
 
     private static async onFocus(event: Event): Promise<void> {
         const target = <Node>event.target;
         if (target == null) return;
-        for (const key in FocusComponentBase._elements) {
-            const current = FocusComponentBase._elements[key];
+        for (const key in FocusComponentBase._instances) {
+            const instance = FocusComponentBase._instances[key];
             let isMatch = false;
-            for (const element of current.elements) {
+            for (const element of instance.elements) {
                 if (element !== target || !element.contains(target)) continue;
                 isMatch = true;
             }
+            console.log(instance, isMatch);
             if (isMatch) {
-                if (current.isFocused) return;
-                current.isFocused = true;
-                await current.$ref.invokeMethodAsync('InvokeFocusAsync');
+                if (instance.isFocused) return;
+                instance.isFocused = true;
+                await instance.$ref.invokeMethodAsync('InvokeFocusAsync');
             } else {
-                if (!current.isFocused) return;
-                current.isFocused = false;
-                await current.$ref.invokeMethodAsync('InvokeBlurAsync');
+                if (!instance.isFocused) return;
+                instance.isFocused = false;
+                await instance.$ref.invokeMethodAsync('InvokeBlurAsync');
             }
         }
     }
