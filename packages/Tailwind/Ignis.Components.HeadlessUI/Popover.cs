@@ -90,4 +90,10 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
     {
         _button = button ?? throw new ArgumentNullException(nameof(button));
     }
+
+    /// <inheritdoc />
+    protected override void OnBlur()
+    {
+        Close();
+    }
 }

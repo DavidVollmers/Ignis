@@ -187,10 +187,16 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     }
 
     /// <inheritdoc />
-    public async Task FocusAsync()
+    protected override async Task OnFocusAsync()
     {
         if (Button == null) return;
 
         await Button.FocusAsync();
+    }
+
+    /// <inheritdoc />
+    protected override void OnBlur()
+    {
+        Close();
     }
 }

@@ -131,4 +131,10 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     {
         Button = button ?? throw new ArgumentNullException(nameof(button));
     }
+
+    /// <inheritdoc />
+    protected override void OnBlur()
+    {
+        Close();
+    }
 }

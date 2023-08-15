@@ -180,18 +180,15 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
     }
 
     /// <inheritdoc />
-    public async Task FocusAsync()
+    protected override void OnFocus()
     {
-        if (Element.HasValue)
-        {
-            await Element.Value.FocusAsync();
-        }
-        else if (Component is IFocus focus)
-        {
-            await focus.FocusAsync();
-        }
+        RadioGroup.SetOptionActive(this, true);
+    }
 
-        Update();
+    /// <inheritdoc />
+    protected override void OnBlur()
+    {
+        RadioGroup.SetOptionActive(this, false);
     }
 
     public void Dispose()
