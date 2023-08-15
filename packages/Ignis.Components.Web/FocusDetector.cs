@@ -4,10 +4,11 @@ using Microsoft.JSInterop;
 
 namespace Ignis.Components.Web;
 
+
 public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender, IAsyncDisposable
 {
     private ElementReference? _element;
-    private bool _isFocused;
+    private bool? _isFocused;
 
     [Parameter] public EventCallback OnFocus { get; set; }
 
@@ -30,7 +31,7 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender, IAsy
     [JSInvokable]
     public async Task OnFocusAsync()
     {
-        if (_isFocused) return;
+        if (_isFocused.HasValue && _isFocused.Value) return;
 
         _isFocused = true;
 
@@ -40,7 +41,7 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender, IAsy
     [JSInvokable]
     public async Task OnBlurAsync()
     {
-        if (!_isFocused) return;
+        if (_isFocused.HasValue && !_isFocused.Value) return;
 
         _isFocused = false;
 
@@ -54,7 +55,7 @@ public sealed class FocusDetector : IgnisComponentBase, IHandleAfterRender, IAsy
         builder.AddAttribute(2, "id", Id);
         builder.AddElementReferenceCapture(3, element =>
         {
-            _isFocused = false;
+            _isFocused = null;
             _element = element;
             FrameTracker.ExecuteOnNextFrame(() =>
             {

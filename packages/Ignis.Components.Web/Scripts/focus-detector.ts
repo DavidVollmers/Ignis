@@ -5,23 +5,32 @@ export class FocusDetector extends ComponentBase {
     private _isFocused: boolean = true;
 
     private readonly _onClick = async (event: MouseEvent) => {
-        await this.onClick(event);
+        // https://github.com/dotnet/aspnetcore/issues/26809
+        window.setTimeout(async () => {
+            await this.onClick(event);
+        }, 0);
     };
 
-    private readonly _onFocus = async () => {
-        await this.onFocus();
+    private readonly _onFocus = () => {
+        // https://github.com/dotnet/aspnetcore/issues/26809
+        window.setTimeout(async () => {
+            await this.onFocus();
+        }, 0);
     };
 
-    private readonly _onBlur = async () => {
-        await this.onBlur();
+    private readonly _onBlur = async (event: FocusEvent) => {
+        // https://github.com/dotnet/aspnetcore/issues/26809
+        window.setTimeout(async () => {
+            await this.onBlur(event);
+        }, 0);
     };
 
     public constructor($ref: DotNet.DotNetObject, id: string, private readonly _element: HTMLElement) {
         super($ref, id);
         if ($ref != null) {
             (<any>window).addEventListener('click', this._onClick);
-            this._element.addEventListener('blur', this._onBlur);
-            this._element.addEventListener('focus', this._onFocus);
+            this._element.addEventListener('focusin', this._onFocus);
+            this._element.addEventListener('focusout', this._onBlur);
             window.setTimeout(() => {
                 if (this._element.contains(document.activeElement)) {
                     this._isFocused = true;
@@ -36,20 +45,19 @@ export class FocusDetector extends ComponentBase {
         if (this._element.contains(<Node>event.target)) {
             await this.onFocus();
         } else {
-            await this.onBlur();
+            await this.onBlur(new FocusEvent('blur'));
         }
     }
 
     private async onFocus(): Promise<void> {
-        if (!this._isInitialized) return;
-        if (this._isFocused) return;
+        if (!this._isInitialized || this._isFocused) return;
         this._isFocused = true;
         await this.$ref.invokeMethodAsync('OnFocusAsync', true);
     }
-    
-    private async onBlur(): Promise<void> {
-        if (!this._isInitialized) return;
-        if (!this._isFocused) return;
+
+    private async onBlur(event: FocusEvent): Promise<void> {
+        if (!this._isInitialized || !this._isFocused) return;
+        if (event.relatedTarget && this._element.contains(<Node>event.relatedTarget)) return;
         this._isFocused = false;
         await this.$ref.invokeMethodAsync('OnBlurAsync', false);
     }
@@ -57,6 +65,7 @@ export class FocusDetector extends ComponentBase {
     protected dispose(): void {
         super.dispose();
         (<any>window).removeEventListener('click', this._onClick);
-        this._element.removeEventListener('focus', this._onFocus)
+        this._element.removeEventListener('focusin', this._onFocus)
+        this._element.removeEventListener('focusout', this._onBlur)
     }
 }
