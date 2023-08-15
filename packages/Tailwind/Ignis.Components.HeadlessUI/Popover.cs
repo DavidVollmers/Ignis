@@ -11,6 +11,9 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
     private string? _asElement;
 
     /// <inheritdoc />
+    protected override ElementReference? TargetElement => Element;
+
+    /// <inheritdoc />
     [Parameter]
     public string? AsElement
     {

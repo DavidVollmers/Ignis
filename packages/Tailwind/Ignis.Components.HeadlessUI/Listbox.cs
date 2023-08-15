@@ -17,6 +17,9 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     private bool _isOpen;
 
     /// <inheritdoc />
+    protected override ElementReference? TargetElement => Element;
+
+    /// <inheritdoc />
     [Parameter]
     public string? AsElement
     {

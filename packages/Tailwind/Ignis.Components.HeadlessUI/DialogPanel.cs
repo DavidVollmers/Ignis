@@ -10,6 +10,9 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
     private string? _asElement;
 
     /// <inheritdoc />
+    protected override ElementReference? TargetElement => Element;
+
+    /// <inheritdoc />
     [Parameter]
     public string? AsElement
     {
@@ -59,7 +62,7 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
     }
 
     /// <inheritdoc />
-    protected override void OnRender()
+    protected override void OnInitialized()
     {
         if (Dialog == null)
         {

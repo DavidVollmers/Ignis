@@ -12,6 +12,9 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     private string? _asElement;
 
     /// <inheritdoc />
+    protected override ElementReference? TargetElement => Element;
+
+    /// <inheritdoc />
     [Parameter]
     public string? AsElement
     {
