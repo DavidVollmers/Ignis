@@ -57,7 +57,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     /// <inheritdoc />
     public bool IsSelected => Listbox.IsValueSelected(Value);
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

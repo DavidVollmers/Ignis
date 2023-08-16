@@ -55,7 +55,7 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

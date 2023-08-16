@@ -98,7 +98,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-listbox-" + Guid.NewGuid().ToString("N");
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

@@ -14,13 +14,13 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
     private string? _asElement;
 
     /// <inheritdoc />
-    protected override IEnumerable<ElementReference> TargetElements
+    protected override IEnumerable<object> Targets
     {
         get
         {
-            if (Element.HasValue) yield return Element.Value;
-            
-            //TODO label & description
+            yield return this;
+
+            if (_label != null) yield return _label;
         }
     }
 
@@ -75,7 +75,7 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
     /// <inheritdoc />
     public bool IsChecked => RadioGroup.IsValueChecked(Value);
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

@@ -49,7 +49,7 @@ public sealed class MenuItems : IgnisRigidComponentBase, IDynamicParentComponent
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

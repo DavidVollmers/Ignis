@@ -60,7 +60,7 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-disclosure-" + Guid.NewGuid().ToString("N");
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

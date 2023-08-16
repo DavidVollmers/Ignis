@@ -69,7 +69,7 @@ public sealed class Transition : TransitionBase, ITransition
 
     [Parameter] public RenderFragment<ITransition>? ChildContent { get; set; }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

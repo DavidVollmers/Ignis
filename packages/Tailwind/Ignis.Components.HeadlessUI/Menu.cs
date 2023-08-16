@@ -73,7 +73,7 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-menu-" + Guid.NewGuid().ToString("N");
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

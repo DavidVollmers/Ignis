@@ -55,7 +55,7 @@ public sealed class RadioGroupLabel : IgnisRigidComponentBase, IRadioGroupLabel
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -100,8 +100,11 @@ public sealed class RadioGroupLabel : IgnisRigidComponentBase, IRadioGroupLabel
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IRadioGroupLabel, RadioGroupLabel>(2, this, ChildContent);
-
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddChildContentFor<IRadioGroupLabel, RadioGroupLabel>(3, this, ChildContent);
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
+        
         builder.CloseAs(this);
     }
 }

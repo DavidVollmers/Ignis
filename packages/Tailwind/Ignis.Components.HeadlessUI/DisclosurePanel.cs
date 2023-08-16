@@ -53,7 +53,7 @@ public sealed class DisclosurePanel : IgnisRigidComponentBase, IDisclosurePanel
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
