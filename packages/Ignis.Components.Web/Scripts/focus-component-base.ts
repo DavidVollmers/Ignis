@@ -1,11 +1,15 @@
 export abstract class FocusComponentBase {
+    private static readonly _instances: {
+        [id: number]: {
+            isFocused: boolean,
+            elements: HTMLElement[],
+            $ref: DotNet.DotNetObject
+        }
+    } = {};
+    
     private static _isInitialized: boolean = false;
-    private static _instances: {
-        isFocused: boolean,
-        elements: HTMLElement[],
-        $ref: DotNet.DotNetObject
-    }[] = [];
-
+    private static _lastId: number = 0;
+    
     private constructor() {
     }
 
@@ -25,13 +29,14 @@ export abstract class FocusComponentBase {
         // delay registration so that components don't get blurred if shown by a click outside of the component.
         window.setTimeout(async () => {
             const id = (<any>$ref)._id;
-            if (FocusComponentBase._instances.length > id && !FocusComponentBase._instances[id]) return;
+            if (FocusComponentBase._lastId >= id && !FocusComponentBase._instances[id]) return;
             const focusImmediately = focusOnRender && !FocusComponentBase._instances[id];
             FocusComponentBase._instances[id] = {
                 isFocused: isFocused,
                 elements: elements,
                 $ref: $ref
             };
+            if (id > FocusComponentBase._lastId) FocusComponentBase._lastId = id;
             if (focusImmediately) await FocusComponentBase.focus($ref);
         }, 0);
     }
@@ -45,11 +50,12 @@ export abstract class FocusComponentBase {
     private static async onFocus(event: Event): Promise<void> {
         const target = <Node>event.target;
         if (target == null) return;
-        for (const instance of FocusComponentBase._instances) {
+        for (const id in FocusComponentBase._instances) {
+            const instance = FocusComponentBase._instances[id];
             if (instance == null) continue;
             let isMatch = false;
             for (const element of instance.elements) {
-                if (!element.contains(target)) continue;
+                if (!element || !element.contains(target)) continue;
                 isMatch = true;
             }
             if (isMatch) {
