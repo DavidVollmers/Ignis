@@ -62,7 +62,7 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
     [JSInvokable]
     public async Task InvokeKeyDownAsync(KeyboardEventArgs args)
     {
-        if (!_isFocused || !KeysToCapture.Contains(args.Key)) return;
+        if (!_isFocused || !KeysToCapture.Contains(args.Code)) return;
 
         // ReSharper disable once MethodHasAsyncOverload
         OnKeyDown(args);

@@ -82,7 +82,7 @@ export abstract class FocusComponentBase {
 
     private static async onKey(event: KeyboardEvent): Promise<void> {
         FocusComponentBase.checkEvent(event, async (instance, isMatch) => {
-            if (!isMatch || !instance.isFocused || !instance.keysToCapture.includes(event.key)) return;
+            if (!isMatch || !instance.isFocused || !instance.keysToCapture.includes(event.code)) return;
             event.preventDefault();
             // Microsoft.AspNetCore.Components.Web.KeyboardEventArgs
             await instance.$ref.invokeMethodAsync('InvokeKeyDownAsync', {
