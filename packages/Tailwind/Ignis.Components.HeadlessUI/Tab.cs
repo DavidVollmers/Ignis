@@ -5,12 +5,22 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Tab : IgnisComponentBase, ITab, IDisposable
+public sealed class Tab : FocusComponentBase, ITab, IDisposable
 {
     private readonly AttributeCollection _attributes;
+
     private bool _preventKeyDownDefault;
     private Type? _asComponent;
     private string? _asElement;
+
+    /// <inheritdoc />
+    protected override IEnumerable<object> Targets
+    {
+        get
+        {
+            yield return this;
+        }
+    }
 
     /// <inheritdoc />
     [Parameter]
@@ -138,21 +148,6 @@ public sealed class Tab : IgnisComponentBase, ITab, IDisposable
     private void OnClick()
     {
         TabGroup.SelectTab(this);
-    }
-
-    /// <inheritdoc />
-    public async Task FocusAsync()
-    {
-        if (Element.HasValue)
-        {
-            await Element.Value.FocusAsync();
-        }
-        else if (Component is IFocus focus)
-        {
-            await focus.FocusAsync();
-        }
-
-        Update();
     }
 
     public void Dispose()
