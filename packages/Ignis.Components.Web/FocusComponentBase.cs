@@ -11,6 +11,8 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
 
     protected abstract IEnumerable<object> Targets { get; }
 
+    protected virtual IEnumerable<string> KeysToCapture => Enumerable.Empty<string>();
+
     protected virtual bool FocusOnRender => false;
 
     // ReSharper disable once InconsistentNaming
@@ -89,7 +91,7 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
     protected async Task UpdateTargetsAsync()
     {
         await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.updateTargets", _reference,
-            GetElementReferences(), _isFocused, FocusOnRender);
+            GetElementReferences(), _isFocused, FocusOnRender, KeysToCapture);
     }
 
     private IEnumerable<ElementReference> GetElementReferences()

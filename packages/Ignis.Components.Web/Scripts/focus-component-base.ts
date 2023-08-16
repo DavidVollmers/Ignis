@@ -1,10 +1,13 @@
+interface FocusComponentBaseInstance {
+    isFocused: boolean,
+    elements: HTMLElement[],
+    keysToCapture: string[],
+    $ref: DotNet.DotNetObject
+}
+
 export abstract class FocusComponentBase {
     private static readonly _instances: {
-        [id: number]: {
-            isFocused: boolean,
-            elements: HTMLElement[],
-            $ref: DotNet.DotNetObject
-        }
+        [id: number]: FocusComponentBaseInstance
     } = {};
 
     private static _isInitialized: boolean = false;
@@ -24,7 +27,7 @@ export abstract class FocusComponentBase {
         await target.$ref.invokeMethodAsync('InvokeFocusAsync');
     }
 
-    public static async updateTargets($ref: DotNet.DotNetObject, elements: HTMLElement[], isFocused: boolean, focusOnRender: boolean): Promise<void> {
+    public static async updateTargets($ref: DotNet.DotNetObject, elements: HTMLElement[], isFocused: boolean, focusOnRender: boolean, keysToCapture: string[]): Promise<void> {
         await FocusComponentBase.initialize();
         // delay registration so that components don't get blurred if shown by a click outside of the component.
         window.setTimeout(async () => {
@@ -32,6 +35,7 @@ export abstract class FocusComponentBase {
             if (FocusComponentBase._lastId >= id && !FocusComponentBase._instances[id]) return;
             const focusImmediately = focusOnRender && !FocusComponentBase._instances[id];
             FocusComponentBase._instances[id] = {
+                keysToCapture: keysToCapture,
                 isFocused: isFocused,
                 elements: elements,
                 $ref: $ref
@@ -47,7 +51,7 @@ export abstract class FocusComponentBase {
         delete FocusComponentBase._instances[id];
     }
 
-    private static async onFocus(event: Event): Promise<void> {
+    private static checkEvent(event: Event, callback: (instance: FocusComponentBaseInstance, isMatch: boolean) => void): void {
         const target = <Node>event.target;
         if (target == null) return;
         for (const id in FocusComponentBase._instances) {
@@ -58,16 +62,30 @@ export abstract class FocusComponentBase {
                 if (!element || !element.contains(target)) continue;
                 isMatch = true;
             }
+            callback(instance, isMatch);
+        }
+    }
+
+    private static async onFocus(event: Event): Promise<void> {
+        FocusComponentBase.checkEvent(event, async (instance, isMatch) => {
             if (isMatch) {
-                if (instance.isFocused) continue;
+                if (instance.isFocused) return;
                 instance.isFocused = true;
                 await instance.$ref.invokeMethodAsync('InvokeFocusAsync');
             } else {
-                if (!instance.isFocused) continue;
+                if (!instance.isFocused) return;
                 instance.isFocused = false;
                 await instance.$ref.invokeMethodAsync('InvokeBlurAsync');
             }
-        }
+        });
+    }
+
+    private static async onKey(event: KeyboardEvent): Promise<void> {
+        FocusComponentBase.checkEvent(event, async (instance, isMatch) => {
+            if (!isMatch || !instance.isFocused || !instance.keysToCapture.includes(event.key)) return;
+            event.preventDefault();
+            await instance.$ref.invokeMethodAsync('InvokeKeyDownAsync', event.key);
+        });
     }
 
     private static async initialize(): Promise<void> {
@@ -75,5 +93,6 @@ export abstract class FocusComponentBase {
         FocusComponentBase._isInitialized = true;
         document.addEventListener('click', FocusComponentBase.onFocus);
         document.addEventListener('focusin', FocusComponentBase.onFocus);
+        document.addEventListener('keydown', FocusComponentBase.onKey);
     }
 }
