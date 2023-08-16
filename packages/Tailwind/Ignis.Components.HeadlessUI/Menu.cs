@@ -30,7 +30,8 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     }
 
     /// <inheritdoc />
-    protected override IEnumerable<string> KeysToCapture { get; } = new[] { "Escape", "Space", "ArrowUp", "ArrowDown" };
+    protected override IEnumerable<string> KeysToCapture { get; } =
+        new[] { "Escape", "Space", "Enter", "ArrowUp", "ArrowDown" };
 
     /// <inheritdoc />
     [Parameter]
