@@ -85,7 +85,17 @@ export abstract class FocusComponentBase {
             if (!isMatch || !instance.isFocused || !instance.keysToCapture.includes(event.key)) return;
             event.preventDefault();
             // Microsoft.AspNetCore.Components.Web.KeyboardEventArgs
-            await instance.$ref.invokeMethodAsync('InvokeKeyDownAsync', event);
+            await instance.$ref.invokeMethodAsync('InvokeKeyDownAsync', {
+                Key: event.key,
+                Code: event.code,
+                Location: event.location,
+                Repeat: event.repeat,
+                CtrlKey: event.ctrlKey,
+                ShiftKey: event.shiftKey,
+                AltKey: event.altKey,
+                MetaKey: event.metaKey,
+                Type: event.type
+            });
         });
     }
 
