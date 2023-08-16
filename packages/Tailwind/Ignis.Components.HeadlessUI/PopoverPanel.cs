@@ -73,6 +73,8 @@ public sealed class PopoverPanel : IgnisRigidComponentBase, IDynamicParentCompon
             throw new InvalidOperationException(
                 $"{nameof(PopoverPanel)} must be used inside a {nameof(HeadlessUI.Popover)}.");
         }
+
+        Popover.SetPanel(this);
     }
 
     /// <inheritdoc />
@@ -84,6 +86,8 @@ public sealed class PopoverPanel : IgnisRigidComponentBase, IDynamicParentCompon
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
         builder.AddChildContentFor<IDynamicComponent, PopoverPanel>(3, this, ChildContent);
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
     }

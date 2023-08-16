@@ -7,4 +7,6 @@ public interface IPopover : IDynamicParentComponent<IPopover>, IOpenClose, IWith
     string Id { get; }
 
     internal void SetButton(IPopoverButton button);
+    
+    internal void SetPanel(IDynamicParentComponent panel);
 }

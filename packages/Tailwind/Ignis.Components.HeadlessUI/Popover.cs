@@ -6,16 +6,19 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
 {
+    private IDynamicParentComponent? _panel;
     private IPopoverButton? _button;
     private Type? _asComponent;
     private string? _asElement;
 
     /// <inheritdoc />
-    protected override IEnumerable<ElementReference> TargetElements
+    protected override IEnumerable<object> Targets
     {
         get
         {
-            //TODO button & panel
+            if (_button != null) yield return _button;
+            
+            if (_panel != null) yield return _panel;
         }
     }
 
@@ -95,6 +98,12 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
     public void SetButton(IPopoverButton button)
     {
         _button = button ?? throw new ArgumentNullException(nameof(button));
+    }
+
+    /// <inheritdoc />
+    public void SetPanel(IDynamicParentComponent panel)
+    {
+        _panel = panel ?? throw new ArgumentNullException(nameof(panel));
     }
 
     /// <inheritdoc />
