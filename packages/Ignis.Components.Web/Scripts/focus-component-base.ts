@@ -22,6 +22,7 @@ export abstract class FocusComponentBase {
 
     public static async onAfterRender($ref: DotNet.DotNetObject, elements: HTMLElement[], isFocused: boolean, focusOnRender: boolean): Promise<void> {
         await FocusComponentBase.initialize();
+        // delay registration so that components don't get blurred if shown by a click outside of the component.
         window.setTimeout(async () => {
             const id = (<any>$ref)._id;
             if (FocusComponentBase._instances.length > id && !FocusComponentBase._instances[id]) return;
@@ -32,7 +33,7 @@ export abstract class FocusComponentBase {
                 $ref: $ref
             };
             if (focusImmediately) await FocusComponentBase.focus($ref);
-        }, 10);
+        }, 0);
     }
 
     public static dispose($ref: DotNet.DotNetObject): void {
