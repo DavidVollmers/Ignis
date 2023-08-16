@@ -45,19 +45,19 @@ export abstract class FocusComponentBase {
     private static async onFocus(event: Event): Promise<void> {
         const target = <Node>event.target;
         if (target == null) return;
-        for (const key in FocusComponentBase._instances) {
-            const instance = FocusComponentBase._instances[key];
+        for (const instance of FocusComponentBase._instances) {
+            if (instance == null) continue;
             let isMatch = false;
             for (const element of instance.elements) {
                 if (!element.contains(target)) continue;
                 isMatch = true;
             }
             if (isMatch) {
-                if (instance.isFocused) return;
+                if (instance.isFocused) continue;
                 instance.isFocused = true;
                 await instance.$ref.invokeMethodAsync('InvokeFocusAsync');
             } else {
-                if (!instance.isFocused) return;
+                if (!instance.isFocused) continue;
                 instance.isFocused = false;
                 await instance.$ref.invokeMethodAsync('InvokeBlurAsync');
             }
