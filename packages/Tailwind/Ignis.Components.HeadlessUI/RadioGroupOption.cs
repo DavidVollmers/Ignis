@@ -22,10 +22,13 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
             yield return this;
 
             if (_label != null) yield return _label;
-            
+
             if (_description != null) yield return _description;
         }
     }
+
+    /// <inheritdoc />
+    protected override IEnumerable<string> KeysToCapture { get; } = new[] { "ArrowUp", "ArrowDown" };
 
     /// <inheritdoc />
     [Parameter]
@@ -96,11 +99,6 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
             () => new KeyValuePair<string, object?>("role", "radio"),
             () => new KeyValuePair<string, object?>("tabindex", IsChecked ? 0 : -1),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Check)),
-            //TODO track on RadioGroup
-            // () => new KeyValuePair<string, object?>("__internal_preventDefault_onkeydown", IsActive),
-#pragma warning disable CS0618
-            () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
-#pragma warning restore CS0618
             () => new KeyValuePair<string, object?>("aria-checked", IsChecked.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("aria-labelledby", _label?.Id)
         });
@@ -149,7 +147,8 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
         return RadioGroup.Id + "-option-" + Array.IndexOf(RadioGroup.Options, this);
     }
 
-    private void OnKeyDown(KeyboardEventArgs eventArgs)
+    /// <inheritdoc />
+    protected override void OnKeyDown(KeyboardEventArgs eventArgs)
     {
         if (!RadioGroup.Options.Any()) return;
 
