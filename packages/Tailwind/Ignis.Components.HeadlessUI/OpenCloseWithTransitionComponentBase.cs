@@ -42,6 +42,10 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
 
     protected virtual void OnAfterOpen(Action? continueWith)
     {
+#pragma warning disable CS4014
+        UpdateTargetsAsync();
+#pragma warning restore CS4014
+        
         continueWith?.Invoke();
     }
 

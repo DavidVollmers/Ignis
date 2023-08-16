@@ -83,7 +83,12 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
     {
         if (!Targets.Any()) return;
 
-        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.onAfterRender", _reference,
+        await UpdateTargetsAsync();
+    }
+
+    protected async Task UpdateTargetsAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.updateTargets", _reference,
             GetElementReferences(), _isFocused, FocusOnRender);
     }
 

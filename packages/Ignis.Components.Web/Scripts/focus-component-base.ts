@@ -6,10 +6,10 @@ export abstract class FocusComponentBase {
             $ref: DotNet.DotNetObject
         }
     } = {};
-    
+
     private static _isInitialized: boolean = false;
     private static _lastId: number = 0;
-    
+
     private constructor() {
     }
 
@@ -24,7 +24,7 @@ export abstract class FocusComponentBase {
         await target.$ref.invokeMethodAsync('InvokeFocusAsync');
     }
 
-    public static async onAfterRender($ref: DotNet.DotNetObject, elements: HTMLElement[], isFocused: boolean, focusOnRender: boolean): Promise<void> {
+    public static async updateTargets($ref: DotNet.DotNetObject, elements: HTMLElement[], isFocused: boolean, focusOnRender: boolean): Promise<void> {
         await FocusComponentBase.initialize();
         // delay registration so that components don't get blurred if shown by a click outside of the component.
         window.setTimeout(async () => {
