@@ -18,19 +18,19 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     private bool _isOpen;
 
     /// <inheritdoc />
-    protected override IEnumerable<ElementReference> TargetElements
+    protected override IEnumerable<object> Targets
     {
         get
         {
-            if (Button?.Element.HasValue == true) yield return Button.Element.Value;
+            if (Button != null) yield return Button;
 
-            if (Label?.Element.HasValue == true) yield return Label.Element.Value;
+            if (Label != null) yield return Label;
 
-            if (_optionsComponent?.Element.HasValue == true) yield return _optionsComponent.Element.Value;
+            if (_optionsComponent != null) yield return _optionsComponent;
 
             foreach (var option in _options)
             {
-                if (option.Element.HasValue) yield return option.Element.Value;
+                yield return option;
             }
         }
     }

@@ -102,6 +102,8 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
         builder.AddChildContentFor<IListboxOption, ListboxOption<TValue>>(3, this, ChildContent?.Invoke(this));
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
     }
