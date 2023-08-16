@@ -150,19 +150,4 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
             }
         }
     }
-
-    /// <inheritdoc />
-    public async Task FocusAsync()
-    {
-        if (Element.HasValue)
-        {
-            await Element.Value.FocusAsync();
-        }
-        else if (Component is IFocus focus)
-        {
-            await focus.FocusAsync();
-        }
-
-        Update();
-    }
 }

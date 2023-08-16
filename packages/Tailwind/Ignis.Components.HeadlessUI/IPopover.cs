@@ -1,6 +1,8 @@
-﻿namespace Ignis.Components.HeadlessUI;
+﻿using Ignis.Components.Web;
 
-public interface IPopover : IDynamicParentComponent<IPopover>, IOpenClose, IWithTransition
+namespace Ignis.Components.HeadlessUI;
+
+public interface IPopover : IDynamicParentComponent<IPopover>, IOpenClose, IWithTransition, IFocus
 {
     string Id { get; }
 

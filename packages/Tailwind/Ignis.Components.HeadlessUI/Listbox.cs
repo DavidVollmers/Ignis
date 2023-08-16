@@ -12,6 +12,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
 {
     private readonly IList<IListboxOption> _options = new List<IListboxOption>();
 
+    private IDynamicParentComponent? _optionsComponent;
     private Type? _asComponent;
     private string? _asElement;
     private bool _isOpen;
@@ -21,9 +22,18 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     {
         get
         {
-            //TODO button, label & options
-
             if (Element.HasValue) yield return Element.Value;
+
+            if (Button?.Element.HasValue == true) yield return Button.Element.Value;
+
+            if (Label?.Element.HasValue == true) yield return Label.Element.Value;
+
+            if (_optionsComponent?.Element.HasValue == true) yield return _optionsComponent.Element.Value;
+
+            foreach (var option in _options)
+            {
+                if (option.Element.HasValue) yield return option.Element.Value;
+            }
         }
     }
 
@@ -195,11 +205,9 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     }
 
     /// <inheritdoc />
-    protected override async Task OnFocusAsync()
+    public void SetOptions(IDynamicParentComponent options)
     {
-        if (Button == null) return;
-
-        await Button.FocusAsync();
+        _optionsComponent = options ?? throw new ArgumentNullException(nameof(options));
     }
 
     /// <inheritdoc />
