@@ -10,7 +10,9 @@ public interface IRadioGroupOption : IDynamicParentComponent<IRadioGroupOption>,
     
     string? Id { get; set; }
     
+    internal void Check();
+    
     internal void SetLabel(IRadioGroupLabel label);
 
-    internal void Check();
+    internal void SetDescription(IRadioGroupDescription description);
 }

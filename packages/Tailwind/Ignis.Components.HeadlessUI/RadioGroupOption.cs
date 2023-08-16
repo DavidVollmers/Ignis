@@ -9,6 +9,7 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
 {
     private readonly AttributeCollection _attributes;
 
+    private IRadioGroupDescription? _description;
     private IRadioGroupLabel? _label;
     private Type? _asComponent;
     private string? _asElement;
@@ -21,6 +22,8 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
             yield return this;
 
             if (_label != null) yield return _label;
+            
+            if (_description != null) yield return _description;
         }
     }
 
@@ -185,6 +188,12 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
     public void SetLabel(IRadioGroupLabel label)
     {
         _label = label ?? throw new ArgumentNullException(nameof(label));
+    }
+
+    /// <inheritdoc />
+    public void SetDescription(IRadioGroupDescription description)
+    {
+        _description = description ?? throw new ArgumentNullException(nameof(description));
     }
 
     /// <inheritdoc />
