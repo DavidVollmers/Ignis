@@ -9,7 +9,7 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
 
     private bool _isFocused;
 
-    protected abstract IEnumerable<ElementReference> TargetElements { get; }
+    protected abstract IEnumerable<object> Targets { get; }
 
     protected virtual bool FocusOnRender => false;
 
@@ -73,7 +73,7 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
 
     public async Task FocusAsync()
     {
-        if (!TargetElements.Any()) throw new InvalidOperationException("No element to focus.");
+        if (!Targets.Any()) throw new InvalidOperationException("No element to focus.");
 
         await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.focus", _reference);
     }
@@ -81,10 +81,29 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
     /// <inheritdoc />
     public virtual async Task OnAfterRenderAsync()
     {
-        if (!TargetElements.Any()) return;
+        if (!Targets.Any()) return;
 
         await JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.onAfterRender", _reference,
-            TargetElements, _isFocused, FocusOnRender);
+            GetElementReferences(), _isFocused, FocusOnRender);
+    }
+
+    private IEnumerable<ElementReference> GetElementReferences()
+    {
+        foreach (var target in Targets)
+        {
+            switch (target)
+            {
+                case ElementReference elementReference:
+                    yield return elementReference;
+                    break;
+                case IElementReferenceProvider elementReferenceProvider:
+                    if (elementReferenceProvider.Element.HasValue) yield return elementReferenceProvider.Element.Value;
+                    break;
+                default:
+                    throw new InvalidOperationException(
+                        $"The type {target.GetType()} is not supported as a target. Only {nameof(ElementReference)} and {nameof(IElementReferenceProvider)} are supported.");
+            }
+        }
     }
 
     protected virtual void Dispose(bool disposing)

@@ -9,14 +9,14 @@ public interface IDynamicComponent : IComponent
     Type? AsComponent { get; set; }
 }
 
-public interface IDynamicParentComponent<T> : IDynamicComponent where T : IDynamicComponent
+public interface IDynamicParentComponent<T> : IDynamicComponent, IElementReferenceProvider where T : IDynamicComponent
 {
-    ElementReference? Element { get; set; }
-    
+    new ElementReference? Element { get; set; }
+
     object? Component { get; set; }
-    
+
     RenderFragment<T>? _ { get; set; }
-    
+
     IEnumerable<KeyValuePair<string, object?>>? Attributes { get; }
 }
 
