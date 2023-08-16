@@ -81,6 +81,8 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
             throw new InvalidOperationException(
                 $"{nameof(ListboxOptions)} must be used inside a {nameof(Listbox<object>)}.");
         }
+        
+        Listbox.SetOptions(this);
     }
 
     /// <inheritdoc />
