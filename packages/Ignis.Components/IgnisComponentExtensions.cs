@@ -131,15 +131,15 @@ public static class IgnisComponentExtensions
     }
 #pragma warning restore ASP0006
 
-    public static ElementReference? TryProvideElementReference(this IDynamicParentComponent dynamicParentComponent)
+    public static ElementReference? TryProvideElementReference(this IDynamicComponent dynamicComponent)
     {
-        if (dynamicParentComponent == null) throw new ArgumentNullException(nameof(dynamicParentComponent));
+        if (dynamicComponent == null) throw new ArgumentNullException(nameof(dynamicComponent));
 
-        return dynamicParentComponent.Component switch
+        return dynamicComponent.Component switch
         {
             IDynamicParentComponent component => component.TryProvideElementReference(),
             IElementReferenceProvider elementReferenceProvider => elementReferenceProvider.Element,
-            _ => dynamicParentComponent.Element
+            _ => dynamicComponent.Element
         };
     }
 }

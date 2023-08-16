@@ -2,19 +2,19 @@
 
 namespace Ignis.Components;
 
-public interface IDynamicComponent : IComponent
+public interface IDynamicComponent : IComponent, IElementReferenceProvider
 {
+    new ElementReference? Element { get; set; }
+
+    object? Component { get; set; }
+    
     string? AsElement { get; set; }
 
     Type? AsComponent { get; set; }
 }
 
-public interface IDynamicParentComponent<T> : IDynamicComponent, IElementReferenceProvider where T : IDynamicComponent
+public interface IDynamicParentComponent<T> : IDynamicComponent where T : IDynamicComponent
 {
-    new ElementReference? Element { get; set; }
-
-    object? Component { get; set; }
-
     RenderFragment<T>? _ { get; set; }
 
     IEnumerable<KeyValuePair<string, object?>>? Attributes { get; }
