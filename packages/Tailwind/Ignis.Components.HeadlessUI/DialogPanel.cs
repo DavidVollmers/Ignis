@@ -10,15 +10,15 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
     private string? _asElement;
 
     /// <inheritdoc />
-    protected override IEnumerable<ElementReference> TargetElements
+    protected override IEnumerable<object> Targets
     {
         get
         {
-            if (Element.HasValue) yield return Element.Value;
-            
-            if (Dialog.Title?.Element.HasValue == true) yield return Dialog.Title.Element.Value;
+            yield return this;
 
-            if (Dialog.Description?.Element.HasValue == true) yield return Dialog.Description.Element.Value;
+            if (Dialog.Title != null) yield return Dialog.Title;
+
+            if (Dialog.Description != null) yield return Dialog.Description;
         }
     }
 
@@ -91,6 +91,8 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
         builder.AddContentFor(3, this, ChildContent);
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
     }

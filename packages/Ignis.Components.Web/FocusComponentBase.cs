@@ -96,8 +96,9 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
                 case ElementReference elementReference:
                     yield return elementReference;
                     break;
-                case IElementReferenceProvider elementReferenceProvider:
-                    if (elementReferenceProvider.Element.HasValue) yield return elementReferenceProvider.Element.Value;
+                case IDynamicParentComponent dynamicParentComponent:
+                    var reference = dynamicParentComponent.TryProvideElementReference();
+                    if (reference.HasValue) yield return reference.Value;
                     break;
                 default:
                     throw new InvalidOperationException(
