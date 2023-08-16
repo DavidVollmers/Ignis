@@ -5,6 +5,7 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosure
 {
+    private IDynamicParentComponent? _button;
     private Type? _asComponent;
     private string? _asElement;
     private bool _isOpen;
@@ -14,9 +15,11 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
     {
         get
         {
-            //TODO button & panel
-
             if (Element.HasValue) yield return Element.Value;
+
+            if (_button?.Element.HasValue == true) yield return _button.Element.Value;
+
+            if (Panel?.Element.HasValue == true) yield return Panel.Element.Value;
         }
     }
 
@@ -97,5 +100,11 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
     public void SetPanel(IDisclosurePanel panel)
     {
         Panel = panel ?? throw new ArgumentNullException(nameof(panel));
+    }
+
+    /// <inheritdoc />
+    public void SetButton(IDynamicParentComponent button)
+    {
+        _button = button ?? throw new ArgumentNullException(nameof(button));
     }
 }

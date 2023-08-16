@@ -74,6 +74,18 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
     }
 
     /// <inheritdoc />
+    protected override void OnRender()
+    {
+        if (Disclosure == null)
+        {
+            throw new InvalidOperationException(
+                $"{nameof(DisclosureButton)} must be used inside a {nameof(HeadlessUI.Disclosure)}.");
+        }
+        
+        Disclosure.SetButton(this);
+    }
+
+    /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);

@@ -14,6 +14,8 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
     {
         get
         {
+            if (Dialog.Element.HasValue) yield return Dialog.Element.Value;
+            
             if (Element.HasValue) yield return Element.Value;
             
             if (Dialog.Title?.Element.HasValue == true) yield return Dialog.Title.Element.Value;
