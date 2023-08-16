@@ -17,8 +17,6 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
         get
         {
             //TODO button & items
-
-            if (Element.HasValue) yield return Element.Value;
         }
     }
 

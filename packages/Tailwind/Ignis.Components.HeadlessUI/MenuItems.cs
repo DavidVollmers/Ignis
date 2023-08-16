@@ -88,7 +88,8 @@ public sealed class MenuItems : IgnisRigidComponentBase, IDynamicParentComponent
 
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IDynamicComponent, MenuItems>(2, this, ChildContent);
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddChildContentFor<IDynamicComponent, MenuItems>(3, this, ChildContent);
 
         builder.CloseAs(this);
     }

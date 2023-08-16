@@ -96,7 +96,8 @@ public sealed class MenuItem : IgnisComponentBase, IMenuItem, IDisposable
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IMenuItem, MenuItem>(2, this, ChildContent?.Invoke(this));
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddChildContentFor<IMenuItem, MenuItem>(3, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }

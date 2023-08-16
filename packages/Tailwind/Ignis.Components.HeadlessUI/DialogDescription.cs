@@ -89,7 +89,8 @@ public sealed class DialogDescription : IgnisRigidComponentBase, IDialogDescript
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IDialogDescription, DialogDescription>(2, this, ChildContent);
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddChildContentFor<IDialogDescription, DialogDescription>(3, this, ChildContent);
 
         builder.CloseAs(this);
     }

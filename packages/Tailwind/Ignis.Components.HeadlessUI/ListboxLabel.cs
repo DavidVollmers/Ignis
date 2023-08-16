@@ -91,7 +91,8 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IListboxLabel, ListboxLabel>(2, this, ChildContent);
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddChildContentFor<IListboxLabel, ListboxLabel>(3, this, ChildContent);
 
         builder.CloseAs(this);
     }

@@ -15,8 +15,6 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
     {
         get
         {
-            if (Element.HasValue) yield return Element.Value;
-
             if (_button?.Element.HasValue == true) yield return _button.Element.Value;
 
             if (Panel?.Element.HasValue == true) yield return Panel.Element.Value;

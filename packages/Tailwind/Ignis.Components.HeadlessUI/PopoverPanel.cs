@@ -82,7 +82,8 @@ public sealed class PopoverPanel : IgnisRigidComponentBase, IDynamicParentCompon
 
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IDynamicComponent, PopoverPanel>(2, this, ChildContent);
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddChildContentFor<IDynamicComponent, PopoverPanel>(3, this, ChildContent);
 
         builder.CloseAs(this);
     }

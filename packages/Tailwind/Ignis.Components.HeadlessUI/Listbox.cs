@@ -22,8 +22,6 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     {
         get
         {
-            if (Element.HasValue) yield return Element.Value;
-
             if (Button?.Element.HasValue == true) yield return Button.Element.Value;
 
             if (Label?.Element.HasValue == true) yield return Label.Element.Value;

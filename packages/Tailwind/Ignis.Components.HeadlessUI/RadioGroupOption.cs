@@ -18,9 +18,9 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
     {
         get
         {
-            //TODO label & description
-
             if (Element.HasValue) yield return Element.Value;
+            
+            //TODO label & description
         }
     }
 

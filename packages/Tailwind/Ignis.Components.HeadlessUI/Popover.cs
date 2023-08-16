@@ -16,8 +16,6 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
         get
         {
             //TODO button & panel
-
-            if (Element.HasValue) yield return Element.Value;
         }
     }
 

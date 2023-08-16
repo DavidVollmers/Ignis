@@ -92,7 +92,8 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
 
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IDynamicComponent, ListboxOptions>(2, this, ChildContent);
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddChildContentFor<IDynamicComponent, ListboxOptions>(3, this, ChildContent);
 
         builder.CloseAs(this);
     }
