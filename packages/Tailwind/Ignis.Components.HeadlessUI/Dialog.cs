@@ -7,8 +7,6 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
 {
     private readonly AttributeCollection _attributes;
 
-    private IDialogDescription? _description;
-    private IDialogTitle? _title;
     private Type? _asComponent;
     private string? _asElement;
     private bool _isOpen;
@@ -69,6 +67,12 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     }
 
     /// <inheritdoc />
+    public IDialogDescription? Description { get; private set; }
+
+    /// <inheritdoc />
+    public IDialogTitle? Title { get; private set; }
+
+    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-dialog-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc />
@@ -90,10 +94,9 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
         {
             () => new KeyValuePair<string, object?>("id", Id), () => new KeyValuePair<string, object>("role", "dialog"),
             () => new KeyValuePair<string, object>("aria-modal", "true"), () => new KeyValuePair<string, object?>(
-                "aria-labelledby",
-                _title == null ? null : _title.Id ?? Id + "-title"),
+                "aria-labelledby", Title == null ? null : Title.Id ?? Id + "-title"),
             () => new KeyValuePair<string, object?>("aria-describedby",
-                _description == null ? null : _description.Id ?? Id + "-description")
+                Description == null ? null : Description.Id ?? Id + "-description")
         });
     }
 
@@ -164,13 +167,13 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     /// <inheritdoc />
     public void SetTitle(IDialogTitle title)
     {
-        _title = title ?? throw new ArgumentNullException(nameof(title));
+        Title = title ?? throw new ArgumentNullException(nameof(title));
     }
 
     /// <inheritdoc />
     public void SetDescription(IDialogDescription description)
     {
-        _description = description ?? throw new ArgumentNullException(nameof(description));
+        Description = description ?? throw new ArgumentNullException(nameof(description));
     }
 
     /// <inheritdoc />
