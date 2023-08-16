@@ -68,9 +68,6 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
         {
             () => new KeyValuePair<string, object?>("onclick",
                 EventCallback.Factory.Create(this, () => Popover.Open())),
-#pragma warning disable CS0618
-            () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
-#pragma warning restore CS0618
             () => new KeyValuePair<string, object?>("aria-expanded", Popover.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
         });
@@ -99,12 +96,5 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
             builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
-    }
-
-    private void OnKeyDown(KeyboardEventArgs eventArgs)
-    {
-        if (eventArgs.Code != "Escape") return;
-
-        Popover.Close();
     }
 }

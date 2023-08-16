@@ -1,6 +1,7 @@
 ﻿using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
@@ -34,6 +35,9 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
             }
         }
     }
+
+    /// <inheritdoc />
+    protected override IEnumerable<string> KeysToCapture { get; } = new[] { "Escape", "Space", "ArrowUp", "ArrowDown" };
 
     /// <inheritdoc />
     [Parameter]
@@ -212,5 +216,47 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     protected override void OnBlur()
     {
         Close();
+    }
+
+    /// <inheritdoc />
+    protected override void OnKeyDown(KeyboardEventArgs eventArgs)
+    {
+        switch (eventArgs.Code)
+        {
+            case "Escape":
+                Close();
+                break;
+            case "Space" or "Enter":
+                if (IsOpen)
+                {
+                    ActiveOption?.Select();
+                    Close();
+                }
+                else
+                {
+                    Open();
+                }
+
+                break;
+            case "ArrowUp" when ActiveOption == null:
+            case "ArrowDown" when ActiveOption == null:
+                if (Options.Any()) SetOptionActive(Options[0], true);
+                else if (!IsOpen) Open();
+                break;
+            case "ArrowDown":
+            {
+                var index = Array.IndexOf(Options, ActiveOption) + 1;
+                if (index < Options.Length) SetOptionActive(Options[index], true);
+                else if (!IsOpen) Open();
+                break;
+            }
+            case "ArrowUp":
+            {
+                var index = Array.IndexOf(Options, ActiveOption) - 1;
+                if (index >= 0) SetOptionActive(Options[index], true);
+                else if (!IsOpen) Open();
+                break;
+            }
+        }
     }
 }

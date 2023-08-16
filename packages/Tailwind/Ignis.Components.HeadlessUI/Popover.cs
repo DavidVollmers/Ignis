@@ -1,6 +1,7 @@
 ﻿using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
@@ -21,6 +22,9 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
             if (_panel != null) yield return _panel;
         }
     }
+
+    /// <inheritdoc />
+    protected override IEnumerable<string> KeysToCapture { get; } = new[] { "Escape" };
 
     /// <inheritdoc />
     [Parameter]
@@ -109,6 +113,14 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
     /// <inheritdoc />
     protected override void OnBlur()
     {
+        Close();
+    }
+
+    /// <inheritdoc />
+    protected override void OnKeyDown(KeyboardEventArgs eventArgs)
+    {
+        if (eventArgs.Code != "Escape") return;
+
         Close();
     }
 }

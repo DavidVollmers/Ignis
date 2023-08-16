@@ -74,10 +74,6 @@ public sealed class MenuButton : IgnisComponentBase, IMenuButton
             () => new KeyValuePair<string, object?>("id", Id ?? Menu.Id + "-button"),
             () => new KeyValuePair<string, object?>("aria-haspopup", "true"),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, () => Menu.Open())),
-            () => new KeyValuePair<string, object?>("__internal_preventDefault_onkeydown", Menu.IsOpen),
-#pragma warning disable CS0618
-            () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
-#pragma warning restore CS0618
             () => new KeyValuePair<string, object?>("aria-expanded", Menu.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
         });
@@ -106,71 +102,5 @@ public sealed class MenuButton : IgnisComponentBase, IMenuButton
             builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
-    }
-
-    private void OnKeyDown(KeyboardEventArgs eventArgs)
-    {
-        switch (eventArgs.Code)
-        {
-            case "Escape":
-                Menu.Close();
-                break;
-            case "Space" or "Enter":
-                if (Menu.IsOpen)
-                {
-                    Menu.ActiveItem?.Click();
-                    Menu.Close();
-                }
-                else
-                {
-                    Menu.Open(() =>
-                    {
-                        var firstItem = Menu.Items.FirstOrDefault();
-                        if (firstItem != null) Menu.SetItemActive(firstItem, true);
-                    });
-                }
-
-                break;
-            case "ArrowUp" when Menu.ActiveItem == null:
-            case "ArrowDown" when Menu.ActiveItem == null:
-                if (Menu.Items.Any()) Menu.SetItemActive(Menu.Items[0], true);
-                else if (!Menu.IsOpen)
-                {
-                    Menu.Open(() =>
-                    {
-                        if (Menu.Items.Any()) Menu.SetItemActive(Menu.Items[0], true);
-                    });
-                }
-
-                break;
-            case "ArrowDown":
-            {
-                var index = Array.IndexOf(Menu.Items, Menu.ActiveItem) + 1;
-                if (index < Menu.Items.Length) Menu.SetItemActive(Menu.Items[index], true);
-                else if (!Menu.IsOpen)
-                {
-                    Menu.Open(() =>
-                    {
-                        if (Menu.Items.Any()) Menu.SetItemActive(Menu.Items[0], true);
-                    });
-                }
-
-                break;
-            }
-            case "ArrowUp":
-            {
-                var index = Array.IndexOf(Menu.Items, Menu.ActiveItem) - 1;
-                if (index >= 0) Menu.SetItemActive(Menu.Items[index], true);
-                else if (!Menu.IsOpen)
-                {
-                    Menu.Open(() =>
-                    {
-                        if (Menu.Items.Any()) Menu.SetItemActive(Menu.Items[0], true);
-                    });
-                }
-
-                break;
-            }
-        }
     }
 }

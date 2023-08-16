@@ -1,6 +1,7 @@
 ﻿using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
@@ -18,15 +19,18 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
         get
         {
             if (Button != null) yield return Button;
-            
+
             if (_itemsComponent != null) yield return _itemsComponent;
-            
+
             foreach (var item in Items)
             {
                 yield return item;
             }
         }
     }
+
+    /// <inheritdoc />
+    protected override IEnumerable<string> KeysToCapture { get; } = new[] { "Escape", "Space", "ArrowUp", "ArrowDown" };
 
     /// <inheritdoc />
     [Parameter]
@@ -156,5 +160,72 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     protected override void OnBlur()
     {
         Close();
+    }
+
+    /// <inheritdoc />
+    protected override void OnKeyDown(KeyboardEventArgs eventArgs)
+    {
+        switch (eventArgs.Code)
+        {
+            case "Escape":
+                Close();
+                break;
+            case "Space" or "Enter":
+                if (IsOpen)
+                {
+                    ActiveItem?.Click();
+                    Close();
+                }
+                else
+                {
+                    Open(() =>
+                    {
+                        var firstItem = Items.FirstOrDefault();
+                        if (firstItem != null) SetItemActive(firstItem, true);
+                    });
+                }
+
+                break;
+            case "ArrowUp" when ActiveItem == null:
+            case "ArrowDown" when ActiveItem == null:
+                if (Items.Any()) SetItemActive(Items[0], true);
+                else if (!IsOpen)
+                {
+                    Open(() =>
+                    {
+                        if (Items.Any()) SetItemActive(Items[0], true);
+                    });
+                }
+
+                break;
+            case "ArrowDown":
+            {
+                var index = Array.IndexOf(Items, ActiveItem) + 1;
+                if (index < Items.Length) SetItemActive(Items[index], true);
+                else if (!IsOpen)
+                {
+                    Open(() =>
+                    {
+                        if (Items.Any()) SetItemActive(Items[0], true);
+                    });
+                }
+
+                break;
+            }
+            case "ArrowUp":
+            {
+                var index = Array.IndexOf(Items, ActiveItem) - 1;
+                if (index >= 0) SetItemActive(Items[index], true);
+                else if (!IsOpen)
+                {
+                    Open(() =>
+                    {
+                        if (Items.Any()) SetItemActive(Items[0], true);
+                    });
+                }
+
+                break;
+            }
+        }
     }
 }

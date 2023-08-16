@@ -9,7 +9,6 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
 {
     private readonly AttributeCollection _attributes;
 
-    private bool _preventKeyDownDefault;
     private Type? _asComponent;
     private string? _asElement;
 

@@ -74,10 +74,6 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
             () => new KeyValuePair<string, object?>("id", Id ?? Listbox.Id + "-button"),
             () => new KeyValuePair<string, object?>("aria-haspopup", "listbox"),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, () => Listbox.Open())),
-            () => new KeyValuePair<string, object?>("__internal_preventDefault_onkeydown", Listbox.IsOpen),
-#pragma warning disable CS0618
-            () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
-#pragma warning restore CS0618
             () => new KeyValuePair<string, object?>("aria-expanded", Listbox.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
             () => new KeyValuePair<string, object?>("aria-labelledby",
@@ -108,46 +104,5 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
             builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
-    }
-
-    private void OnKeyDown(KeyboardEventArgs eventArgs)
-    {
-        switch (eventArgs.Code)
-        {
-            case "Escape":
-                Listbox.Close();
-                break;
-            case "Space" or "Enter":
-                if (Listbox.IsOpen)
-                {
-                    Listbox.ActiveOption?.Select();
-                    Listbox.Close();
-                }
-                else
-                {
-                    Listbox.Open();
-                }
-
-                break;
-            case "ArrowUp" when Listbox.ActiveOption == null:
-            case "ArrowDown" when Listbox.ActiveOption == null:
-                if (Listbox.Options.Any()) Listbox.SetOptionActive(Listbox.Options[0], true);
-                else if (!Listbox.IsOpen) Listbox.Open();
-                break;
-            case "ArrowDown":
-            {
-                var index = Array.IndexOf(Listbox.Options, Listbox.ActiveOption) + 1;
-                if (index < Listbox.Options.Length) Listbox.SetOptionActive(Listbox.Options[index], true);
-                else if (!Listbox.IsOpen) Listbox.Open();
-                break;
-            }
-            case "ArrowUp":
-            {
-                var index = Array.IndexOf(Listbox.Options, Listbox.ActiveOption) - 1;
-                if (index >= 0) Listbox.SetOptionActive(Listbox.Options[index], true);
-                else if (!Listbox.IsOpen) Listbox.Open();
-                break;
-            }
-        }
     }
 }
