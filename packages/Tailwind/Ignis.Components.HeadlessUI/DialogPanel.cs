@@ -21,6 +21,9 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
     }
 
     /// <inheritdoc />
+    protected override bool FocusOnRender => true;
+
+    /// <inheritdoc />
     [Parameter]
     public string? AsElement
     {

@@ -22,15 +22,17 @@ export abstract class FocusComponentBase {
 
     public static async onAfterRender($ref: DotNet.DotNetObject, elements: HTMLElement[], isFocused: boolean, focusOnRender: boolean): Promise<void> {
         await FocusComponentBase.initialize();
-        const id = (<any>$ref)._id;
-        if (FocusComponentBase._instances.length > id && !FocusComponentBase._instances[id]) return;
-        const focusImmediately = focusOnRender && !FocusComponentBase._instances[id];
-        FocusComponentBase._instances[id] = {
-            isFocused: isFocused,
-            elements: elements,
-            $ref: $ref
-        };
-        if (focusImmediately) await FocusComponentBase.focus($ref);
+        window.setTimeout(async () => {
+            const id = (<any>$ref)._id;
+            if (FocusComponentBase._instances.length > id && !FocusComponentBase._instances[id]) return;
+            const focusImmediately = focusOnRender && !FocusComponentBase._instances[id];
+            FocusComponentBase._instances[id] = {
+                isFocused: isFocused,
+                elements: elements,
+                $ref: $ref
+            };
+            if (focusImmediately) await FocusComponentBase.focus($ref);
+        }, 10);
     }
 
     public static dispose($ref: DotNet.DotNetObject): void {
@@ -46,7 +48,7 @@ export abstract class FocusComponentBase {
             const instance = FocusComponentBase._instances[key];
             let isMatch = false;
             for (const element of instance.elements) {
-                if (element !== target || !element.contains(target)) continue;
+                if (!element.contains(target)) continue;
                 isMatch = true;
             }
             if (isMatch) {
