@@ -102,6 +102,8 @@ public sealed class MenuButton : IgnisComponentBase, IMenuButton
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
         builder.AddChildContentFor<IMenuButton, MenuButton>(3, this, ChildContent);
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
     }

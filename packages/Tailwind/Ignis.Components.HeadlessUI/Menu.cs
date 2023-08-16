@@ -8,15 +8,23 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
 {
     private readonly IList<IMenuItem> _items = new List<IMenuItem>();
 
+    private IDynamicParentComponent? _itemsComponent;
     private Type? _asComponent;
     private string? _asElement;
 
     /// <inheritdoc />
-    protected override IEnumerable<ElementReference> TargetElements
+    protected override IEnumerable<object> Targets
     {
         get
         {
-            //TODO button & items
+            if (Button != null) yield return Button;
+            
+            if (_itemsComponent != null) yield return _itemsComponent;
+            
+            foreach (var item in Items)
+            {
+                yield return item;
+            }
         }
     }
 
@@ -136,6 +144,12 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     public void SetButton(IMenuButton button)
     {
         Button = button ?? throw new ArgumentNullException(nameof(button));
+    }
+
+    /// <inheritdoc />
+    public void SetItems(IDynamicParentComponent items)
+    {
+        _itemsComponent = items ?? throw new ArgumentNullException(nameof(items));
     }
 
     /// <inheritdoc />
