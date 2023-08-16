@@ -23,6 +23,9 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
     }
 
     /// <inheritdoc />
+    protected override IEnumerable<string> KeysToCapture { get; } = new[] { "ArrowLeft", "ArrowRight" };
+
+    /// <inheritdoc />
     [Parameter]
     public string? AsElement
     {
@@ -84,10 +87,6 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
             () => new KeyValuePair<string, object?>("aria-selected", IsSelected.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("tabindex", IsSelected ? 0 : -1),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, OnClick)),
-            () => new KeyValuePair<string, object?>("__internal_preventDefault_onkeydown", _preventKeyDownDefault),
-#pragma warning disable CS0618
-            () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
-#pragma warning restore CS0618
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null)
         });
     }
@@ -116,12 +115,9 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
         builder.CloseAs(this);
     }
 
-    private void OnKeyDown(KeyboardEventArgs eventArgs)
+    /// <inheritdoc />
+    protected override void OnKeyDown(KeyboardEventArgs eventArgs)
     {
-        var oldPreventKeyDownDefault = _preventKeyDownDefault;
-
-        _preventKeyDownDefault = true;
-
         switch (eventArgs.Code)
         {
             case "ArrowLeft":
@@ -134,14 +130,6 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
                     ? TabGroup.Tabs[0]
                     : TabGroup.Tabs[TabGroup.SelectedIndex + 1]);
                 break;
-            default:
-                _preventKeyDownDefault = false;
-                break;
-        }
-
-        if (oldPreventKeyDownDefault != _preventKeyDownDefault)
-        {
-            Update();
         }
     }
 

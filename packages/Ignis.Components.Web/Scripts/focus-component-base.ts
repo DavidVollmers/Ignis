@@ -84,7 +84,8 @@ export abstract class FocusComponentBase {
         FocusComponentBase.checkEvent(event, async (instance, isMatch) => {
             if (!isMatch || !instance.isFocused || !instance.keysToCapture.includes(event.key)) return;
             event.preventDefault();
-            await instance.$ref.invokeMethodAsync('InvokeKeyDownAsync', event.key);
+            // Microsoft.AspNetCore.Components.Web.KeyboardEventArgs
+            await instance.$ref.invokeMethodAsync('InvokeKeyDownAsync', event);
         });
     }
 

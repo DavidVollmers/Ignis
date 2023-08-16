@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
 
 namespace Ignis.Components.Web;
@@ -21,24 +22,6 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
     protected FocusComponentBase()
     {
         _reference = DotNetObjectReference.Create(this);
-    }
-
-    protected virtual void OnFocus()
-    {
-    }
-
-    protected virtual Task OnFocusAsync()
-    {
-        return Task.CompletedTask;
-    }
-
-    protected virtual void OnBlur()
-    {
-    }
-
-    protected virtual Task OnBlurAsync()
-    {
-        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -71,6 +54,20 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
         OnBlur();
 
         await OnBlurAsync();
+    }
+
+    /// <summary>
+    /// For internal use only.
+    /// </summary>
+    [JSInvokable]
+    public async Task InvokeKeyDownAsync(KeyboardEventArgs args)
+    {
+        if (!_isFocused || !KeysToCapture.Contains(args.Key)) return;
+
+        // ReSharper disable once MethodHasAsyncOverload
+        OnKeyDown(args);
+        
+        await OnKeyDownAsync(args);
     }
 
     public async Task FocusAsync()
@@ -112,6 +109,33 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
                         $"The type {target.GetType()} is not supported as a target. Only {nameof(ElementReference)} and {nameof(IElementReferenceProvider)} are supported.");
             }
         }
+    }
+
+    protected virtual void OnFocus()
+    {
+    }
+
+    protected virtual Task OnFocusAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    protected virtual void OnBlur()
+    {
+    }
+
+    protected virtual Task OnBlurAsync()
+    {
+        return Task.CompletedTask;
+    }
+
+    protected virtual void OnKeyDown(KeyboardEventArgs args)
+    {
+    }
+
+    protected virtual Task OnKeyDownAsync(KeyboardEventArgs args)
+    {
+        return Task.CompletedTask;
     }
 
     protected virtual void Dispose(bool disposing)
