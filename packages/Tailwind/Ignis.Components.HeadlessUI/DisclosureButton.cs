@@ -92,6 +92,8 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
         builder.AddChildContentFor<IDynamicComponent, DisclosureButton>(3, this, ChildContent);
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
     }

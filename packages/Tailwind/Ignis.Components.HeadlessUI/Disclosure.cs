@@ -11,13 +11,13 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
     private bool _isOpen;
 
     /// <inheritdoc />
-    protected override IEnumerable<ElementReference> TargetElements
+    protected override IEnumerable<object> Targets
     {
         get
         {
-            if (_button?.Element.HasValue == true) yield return _button.Element.Value;
+            if (_button != null) yield return _button;
 
-            if (Panel?.Element.HasValue == true) yield return Panel.Element.Value;
+            if (Panel != null) yield return Panel;
         }
     }
 
