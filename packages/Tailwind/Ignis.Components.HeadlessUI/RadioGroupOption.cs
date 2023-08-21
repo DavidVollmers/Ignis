@@ -181,6 +181,10 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
         RadioGroup.CheckValue(Value);
 
         RadioGroup.SetOptionActive(this, true);
+
+#pragma warning disable CS4014
+        FocusAsync();
+#pragma warning restore CS4014
     }
 
     /// <inheritdoc />
