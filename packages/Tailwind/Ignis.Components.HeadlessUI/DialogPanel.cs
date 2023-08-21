@@ -4,10 +4,26 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DialogPanel : IgnisRigidComponentBase, IDynamicParentComponent
+public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
 {
     private Type? _asComponent;
     private string? _asElement;
+
+    /// <inheritdoc />
+    protected override IEnumerable<object> Targets
+    {
+        get
+        {
+            yield return this;
+
+            if (Dialog.Title != null) yield return Dialog.Title;
+
+            if (Dialog.Description != null) yield return Dialog.Description;
+        }
+    }
+
+    /// <inheritdoc />
+    protected override bool FocusOnRender => true;
 
     /// <inheritdoc />
     [Parameter]
@@ -44,7 +60,7 @@ public sealed class DialogPanel : IgnisRigidComponentBase, IDynamicParentCompone
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -59,7 +75,7 @@ public sealed class DialogPanel : IgnisRigidComponentBase, IDynamicParentCompone
     }
 
     /// <inheritdoc />
-    protected override void OnRender()
+    protected override void OnInitialized()
     {
         if (Dialog == null)
         {
@@ -73,19 +89,17 @@ public sealed class DialogPanel : IgnisRigidComponentBase, IDynamicParentCompone
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
-        {
-            builder.OpenComponent<FocusDetector>(3);
-            builder.AddAttribute(4, nameof(FocusDetector.Id), Dialog.Id);
-            builder.AddAttribute(5, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, () => Dialog.Close()));
-            // ReSharper disable once VariableHidesOuterVariable
-            builder.AddAttribute(6, nameof(FocusDetector.ChildContent),
-                this.GetChildContent<IDynamicComponent, DialogPanel>(ChildContent));
-
-            builder.CloseComponent();
-        });
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddContentFor(3, this, ChildContent);
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
+    }
+
+    /// <inheritdoc />
+    protected override void OnBlur()
+    {
+        Dialog.Close();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
@@ -12,9 +13,32 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
 {
     private readonly IList<IListboxOption> _options = new List<IListboxOption>();
 
+    private IDynamicParentComponent? _optionsComponent;
     private Type? _asComponent;
     private string? _asElement;
     private bool _isOpen;
+
+    /// <inheritdoc />
+    protected override IEnumerable<object> Targets
+    {
+        get
+        {
+            if (Button != null) yield return Button;
+
+            if (Label != null) yield return Label;
+
+            if (_optionsComponent != null) yield return _optionsComponent;
+
+            foreach (var option in _options)
+            {
+                yield return option;
+            }
+        }
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<string> KeysToCapture { get; } =
+        new[] { "Escape", "Space", "Enter", "ArrowUp", "ArrowDown" };
 
     /// <inheritdoc />
     [Parameter]
@@ -79,7 +103,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-listbox-" + Guid.NewGuid().ToString("N");
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -104,20 +128,10 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<FocusDetector>(3);
-            builder.AddAttribute(4, nameof(FocusDetector.Id), Id);
-            builder.AddAttribute(6, nameof(FocusDetector.OnBlur), EventCallback.Factory.Create(this, () => Close()));
-            // ReSharper disable once VariableHidesOuterVariable
-            builder.AddAttribute(7, nameof(FocusDetector.ChildContent), (RenderFragment)(builder =>
-            {
-                builder.OpenComponent<CascadingValue<IListbox>>(8);
-                builder.AddAttribute(9, nameof(CascadingValue<IListbox>.IsFixed), true);
-                builder.AddAttribute(10, nameof(CascadingValue<IListbox>.Value), this);
-                builder.AddAttribute(11, nameof(CascadingValue<IListbox>.ChildContent),
-                    this.GetChildContent(ChildContent));
-
-                builder.CloseComponent();
-            }));
+            builder.OpenComponent<CascadingValue<IListbox>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<IListbox>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<IListbox>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<IListbox>.ChildContent), this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });
@@ -151,6 +165,8 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     /// <inheritdoc />
     public void SetOptionActive(IListboxOption option, bool isActive)
     {
+        if (option == null) throw new ArgumentNullException(nameof(option));
+
         if (isActive)
         {
             ActiveOption = option;
@@ -192,10 +208,56 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     }
 
     /// <inheritdoc />
-    public async Task FocusAsync()
+    public void SetOptions(IDynamicParentComponent options)
     {
-        if (Button == null) return;
+        _optionsComponent = options ?? throw new ArgumentNullException(nameof(options));
+    }
 
-        await Button.FocusAsync();
+    /// <inheritdoc />
+    protected override void OnBlur()
+    {
+        Close();
+    }
+
+    /// <inheritdoc />
+    protected override void OnKeyDown(KeyboardEventArgs eventArgs)
+    {
+        switch (eventArgs.Code)
+        {
+            case "Escape":
+                Close();
+                break;
+            case "Space" or "Enter":
+                if (IsOpen)
+                {
+                    ActiveOption?.Select();
+                    Close();
+                }
+                else
+                {
+                    Open();
+                }
+
+                break;
+            case "ArrowUp" when ActiveOption == null:
+            case "ArrowDown" when ActiveOption == null:
+                if (Options.Any()) SetOptionActive(Options[0], true);
+                else if (!IsOpen) Open();
+                break;
+            case "ArrowDown":
+            {
+                var index = Array.IndexOf(Options, ActiveOption) + 1;
+                if (index < Options.Length) SetOptionActive(Options[index], true);
+                else if (!IsOpen) Open();
+                break;
+            }
+            case "ArrowUp":
+            {
+                var index = Array.IndexOf(Options, ActiveOption) - 1;
+                if (index >= 0) SetOptionActive(Options[index], true);
+                else if (!IsOpen) Open();
+                break;
+            }
+        }
     }
 }

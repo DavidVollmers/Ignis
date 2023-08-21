@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.Web;
+using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
-public abstract class OpenCloseWithTransitionComponentBase : IgnisComponentBase, IOpenClose, IWithTransition,
-    IHandleAfterRender
+public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase, IOpenClose, IWithTransition
 {
     private ITransition? _transition;
     private bool _isOpen;
@@ -42,6 +42,10 @@ public abstract class OpenCloseWithTransitionComponentBase : IgnisComponentBase,
 
     protected virtual void OnAfterOpen(Action? continueWith)
     {
+#pragma warning disable CS4014
+        UpdateTargetsAsync();
+#pragma warning restore CS4014
+        
         continueWith?.Invoke();
     }
 
@@ -75,10 +79,10 @@ public abstract class OpenCloseWithTransitionComponentBase : IgnisComponentBase,
     }
 
     /// <inheritdoc />
-    public Task OnAfterRenderAsync()
+    public override async Task OnAfterRenderAsync()
     {
         FrameTracker.OnAfterRender();
 
-        return Task.CompletedTask;
+        await base.OnAfterRenderAsync();
     }
 }

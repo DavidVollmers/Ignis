@@ -12,6 +12,13 @@ api:
   - Ignis.Components.HeadlessUI.DisclosurePanel, Ignis.Components.HeadlessUI
 ---
 
+## Basic usage
+
+Disclosures are built using the `Disclosure`, `DisclosureButton` and `DisclosurePanel` components.
+
+The button will automatically open/close the panel when clicked, and all components will receive the appropriate aria-*
+related attributes like `aria-expanded` and `aria-controls`.
+
 ## Closing disclosures manually
 
 To close a disclosure manually when clicking a child of its panel, render that child as a `DisclosureButton`. You can

@@ -14,6 +14,14 @@ api:
   - Ignis.Components.HeadlessUI.ListboxOption`1, Ignis.Components.HeadlessUI
 ---
 
+## Basic usage
+
+Listboxes are built using the `Listbox`, `ListboxButton`, `ListboxOptions`, `ListboxOption` and `ListboxLabel`
+components.
+
+The `ListboxButton` will automatically open/close the `ListboxOptions` when clicked, and when the menu is open, the list
+of items receives focus and is automatically navigable via the keyboard.
+
 ## Binding objects as values
 
 Unlike native HTML form controls which only allow you to provide strings as values, Headless UI supports binding complex

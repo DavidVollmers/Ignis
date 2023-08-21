@@ -49,6 +49,12 @@ public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutle
         }
     }
 
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    public ElementReference? Element { get; set; }
+
+    /// <inheritdoc />
+    public object? Component { get; set; }
+
     public DialogOutlet()
     {
         AsComponent = typeof(Fragment);

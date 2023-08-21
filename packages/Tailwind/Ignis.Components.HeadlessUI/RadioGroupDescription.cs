@@ -1,11 +1,9 @@
-﻿using Ignis.Components.Web;
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
-using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class MenuButton : IgnisComponentBase, IMenuButton
+public sealed class RadioGroupDescription : IgnisRigidComponentBase, IRadioGroupDescription
 {
     private readonly AttributeCollection _attributes;
 
@@ -40,11 +38,13 @@ public sealed class MenuButton : IgnisComponentBase, IMenuButton
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public IMenu Menu { get; set; } = null!;
+    [CascadingParameter] public IRadioGroup RadioGroup { get; set; } = null!;
+
+    [CascadingParameter] public IRadioGroupOption? RadioGroupOption { get; set; }
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IMenuButton>? _ { get; set; }
+    public RenderFragment<IRadioGroupDescription>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -64,31 +64,26 @@ public sealed class MenuButton : IgnisComponentBase, IMenuButton
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
-    public MenuButton()
+    public RadioGroupDescription()
     {
-        AsElement = "button";
+        AsElement = "div";
 
-        //TODO aria-controls
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id ?? Menu.Id + "-button"),
-            () => new KeyValuePair<string, object?>("aria-haspopup", "true"),
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, () => Menu.Open())),
-            () => new KeyValuePair<string, object?>("aria-expanded", Menu.IsOpen.ToString().ToLowerInvariant()),
-            () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
+            () => new KeyValuePair<string, object?>("id", Id ?? RadioGroup.Id + "-description")
         });
     }
 
     /// <inheritdoc />
-    protected override void OnInitialized()
+    protected override void OnRender()
     {
-        if (Menu == null)
+        if (RadioGroup == null)
         {
             throw new InvalidOperationException(
-                $"{nameof(MenuButton)} must be used inside a {nameof(HeadlessUI.Menu)}.");
+                $"{nameof(RadioGroupDescription)} must be used inside a {nameof(RadioGroup<object>)}.");
         }
 
-        Menu.SetButton(this);
+        RadioGroupOption?.SetDescription(this);
     }
 
     /// <inheritdoc />
@@ -97,10 +92,10 @@ public sealed class MenuButton : IgnisComponentBase, IMenuButton
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IMenuButton, MenuButton>(3, this, ChildContent);
+        builder.AddChildContentFor<IRadioGroupDescription, RadioGroupDescription>(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
-
+        
         builder.CloseAs(this);
     }
 }

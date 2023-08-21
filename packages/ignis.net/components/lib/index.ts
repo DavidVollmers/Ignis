@@ -1,2 +1,2 @@
 export {ComponentBase} from './component-base';
-export {registerComponent} from './register-component';
+export {registerComponent, registerStaticComponent} from './register-component';

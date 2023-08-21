@@ -12,12 +12,12 @@ public static class IgnisComponentExtensions
         if (serviceCollection == null) throw new ArgumentNullException(nameof(serviceCollection));
 
         serviceCollection.AddTransient<FrameTracker>();
-        
+
         serviceCollection.TryAddScoped<IOutletRegistry, OutletRegistry>();
-        
+
         return serviceCollection;
     }
-    
+
 #pragma warning disable ASP0006
     public static void OpenAs(this RenderTreeBuilder builder, int sequence, IDynamicComponent dynamicComponent)
     {
@@ -130,4 +130,16 @@ public static class IgnisComponentExtensions
         }
     }
 #pragma warning restore ASP0006
+
+    public static ElementReference? TryProvideElementReference(this IDynamicComponent dynamicComponent)
+    {
+        if (dynamicComponent == null) throw new ArgumentNullException(nameof(dynamicComponent));
+
+        return dynamicComponent.Component switch
+        {
+            IDynamicParentComponent component => component.TryProvideElementReference(),
+            IElementReferenceProvider elementReferenceProvider => elementReferenceProvider.Element,
+            _ => dynamicComponent.Element
+        };
+    }
 }

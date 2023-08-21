@@ -49,7 +49,7 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -81,6 +81,8 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
             throw new InvalidOperationException(
                 $"{nameof(ListboxOptions)} must be used inside a {nameof(Listbox<object>)}.");
         }
+        
+        Listbox.SetOptions(this);
     }
 
     /// <inheritdoc />
@@ -90,7 +92,10 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
 
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IDynamicComponent, ListboxOptions>(2, this, ChildContent);
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddChildContentFor<IDynamicComponent, ListboxOptions>(3, this, ChildContent);
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
     }

@@ -49,7 +49,7 @@ public sealed class PopoverPanel : IgnisRigidComponentBase, IDynamicParentCompon
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -73,6 +73,8 @@ public sealed class PopoverPanel : IgnisRigidComponentBase, IDynamicParentCompon
             throw new InvalidOperationException(
                 $"{nameof(PopoverPanel)} must be used inside a {nameof(HeadlessUI.Popover)}.");
         }
+
+        Popover.SetPanel(this);
     }
 
     /// <inheritdoc />
@@ -82,7 +84,10 @@ public sealed class PopoverPanel : IgnisRigidComponentBase, IDynamicParentCompon
 
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IDynamicComponent, PopoverPanel>(2, this, ChildContent);
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddChildContentFor<IDynamicComponent, PopoverPanel>(3, this, ChildContent);
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
     }

@@ -14,6 +14,10 @@ api:
   - Ignis.Components.HeadlessUI.DialogOutlet, Ignis.Components.HeadlessUI
 ---
 
+## Basic Usage
+
+Dialogs are built using the `Dialog`, `DialogPanel`, `DialogTitle` and `DialogDescription` components.
+
 ## Styling the dialog
 
 Style the `Dialog` and `DialogPanel` components using the `class` or `style` props like you would with any other

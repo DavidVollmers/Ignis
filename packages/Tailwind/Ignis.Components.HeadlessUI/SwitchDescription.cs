@@ -56,7 +56,7 @@ public sealed class SwitchDescription : IgnisRigidComponentBase, ISwitchDescript
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

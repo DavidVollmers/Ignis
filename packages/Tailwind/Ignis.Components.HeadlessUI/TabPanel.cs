@@ -52,7 +52,7 @@ public sealed class TabPanel : IgnisComponentBase, ITabPanel, IDisposable
     /// <inheritdoc />
     public bool IsSelected => TabGroup.IsTabPanelSelected(this);
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

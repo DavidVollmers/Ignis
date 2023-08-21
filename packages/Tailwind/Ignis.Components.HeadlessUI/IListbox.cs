@@ -44,4 +44,6 @@ public interface IListbox : IDynamicParentComponent<IListbox>, IOpenClose, IWith
     internal void SetButton(IListboxButton button);
 
     internal void SetLabel(IListboxLabel label);
+
+    internal void SetOptions(IDynamicParentComponent options);
 }

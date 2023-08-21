@@ -14,6 +14,11 @@ api:
   - Ignis.Components.HeadlessUI.TabPanel, Ignis.Components.HeadlessUI
 ---
 
+## Basic usage
+
+Tabs are built using the `TabGroup`, `TabList`, `Tab`, `TabPanels`, and `TabPanel` components. By default the first tab
+is selected, and clicking on any tab or selecting it with the keyboard will activate the corresponding panel.
+
 ## Specifying the default tab
 
 To change which tab is selected by default, use the `DefaultIndex` prop on the `TabGroup` component.

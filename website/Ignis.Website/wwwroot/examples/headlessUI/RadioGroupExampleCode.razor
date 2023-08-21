@@ -1,0 +1,98 @@
+﻿@using Ignis.Components
+@using Ignis.Components.HeadlessUI
+@using Ignis.Components.HeroIcons.Outline
+@using Ignis.Utils
+
+@inherits IgnisComponentBase
+
+<div class="w-full px-4 py-16">
+    <div class="mx-auto w-full max-w-md">
+        <RadioGroup @bind-Value="_selected">
+            <RadioGroupLabel class="sr-only">Server size</RadioGroupLabel>
+            <div class="space-y-2" role="none">
+                @foreach (var plan in _plans)
+                {
+                    <RadioGroupOption @key="plan.Name"
+                                      AsComponent="typeof(Fragment)"
+                                      Value="plan"
+                                      Context="option">
+                        <div @ref="option.Element"
+                             @attributes="option.Attributes"
+                             class="@Css.Class("relative flex cursor-pointer rounded-lg px-5 py-4 shadow-md focus:outline-none", option.IsActive ? "ring-2 ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-300" : "", option.IsChecked ? "bg-sky-900 bg-opacity-75 text-white" : "bg-white")">
+                            <div class="flex w-full items-center justify-between">
+                                <div class="flex items-center">
+                                    <div class="text-sm">
+                                        <RadioGroupLabel AsElement="p"
+                                                         class="@Css.Class("font-medium", option.IsChecked ? "text-white" : "text-gray-900")">
+                                            @plan.Name
+                                        </RadioGroupLabel>
+                                        <RadioGroupDescription AsElement="span"
+                                                               class="@Css.Class("inline", option.IsChecked ? "text-sky-100" : "text-gray-500")">
+                                            <span>
+                                                @plan.Ram/@plan.Cpus
+                                            </span>@(' ')
+                                            <span aria-hidden="true">&middot;</span>@(' ')
+                                            <span>@plan.Disk</span>
+                                        </RadioGroupDescription>
+                                    </div>
+                                </div>
+                                @if (option.IsChecked)
+                                {
+                                    <div class="shrink-0 text-white">
+                                        <CheckIcon class="h-6 w-6"/>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </RadioGroupOption>
+                }
+            </div>
+        </RadioGroup>
+    </div>
+</div>
+
+@code
+{
+    private readonly Plan[] _plans =
+    {
+        new()
+        {
+            Name = "Startup",
+            Ram = "12GB",
+            Cpus = "6 CPUs",
+            Disk = "160 GB SSD disk"
+        },
+        new()
+        {
+            Name = "Business",
+            Ram = "16GB",
+            Cpus = "8 CPUs",
+            Disk = "512 GB SSD disk"
+        },
+        new()
+        {
+            Name = "Enterprise",
+            Ram = "32GB",
+            Cpus = "12 CPUs",
+            Disk = "1024 GB SSD disk"
+        }
+    };
+
+    private Plan _selected = null!;
+
+    protected override void OnInitialized()
+    {
+        _selected = _plans[0];
+    }
+
+    private class Plan
+    {
+        public string Name { get; set; } = null!;
+
+        public string Ram { get; set; } = null!;
+
+        public string Disk { get; set; } = null!;
+
+        public string Cpus { get; set; } = null!;
+    }
+}

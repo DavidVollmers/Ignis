@@ -40,7 +40,7 @@ public sealed class TransitionChild : TransitionBase, ITransitionChild, IDisposa
 
     [Parameter] public RenderFragment<ITransitionChild>? ChildContent { get; set; }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

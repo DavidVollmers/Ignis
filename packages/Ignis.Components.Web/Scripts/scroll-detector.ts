@@ -7,16 +7,16 @@ export class ScrollDetector extends ComponentBase {
 
     public constructor($ref: DotNet.DotNetObject) {
         super($ref, 'Ignis.Components.Web.ScrollDetector');
-        (<any>window).addEventListener('scroll', this._onScroll);
+        window.addEventListener('scroll', this._onScroll);
         this._onScroll();
     }
 
     private async onScroll(): Promise<void> {
-        await this.$ref.invokeMethodAsync('OnScrollAsync', window.scrollX, window.scrollY);
+        await this.$ref.invokeMethodAsync('InvokeScrollAsync', window.scrollX, window.scrollY);
     }
 
     protected dispose(): void {
         super.dispose();
-        (<any>window).removeEventListener('scroll', this._onScroll);
+        window.removeEventListener('scroll', this._onScroll);
     }
 }

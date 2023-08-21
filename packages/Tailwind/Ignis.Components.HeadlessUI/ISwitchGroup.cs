@@ -6,8 +6,6 @@ public interface ISwitchGroup : IDynamicParentComponent<ISwitchGroup>
     
     internal ISwitchLabel? Label { get; }
     
-    internal ISwitch? Switch { get; }
-    
     string Id { get; }
     
     internal void SetSwitch(ISwitch button);

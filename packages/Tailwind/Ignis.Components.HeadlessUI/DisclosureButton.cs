@@ -50,7 +50,7 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -74,11 +74,26 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
     }
 
     /// <inheritdoc />
+    protected override void OnRender()
+    {
+        if (Disclosure == null)
+        {
+            throw new InvalidOperationException(
+                $"{nameof(DisclosureButton)} must be used inside a {nameof(HeadlessUI.Disclosure)}.");
+        }
+        
+        Disclosure.SetButton(this);
+    }
+
+    /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IDynamicComponent, DisclosureButton>(2, this, ChildContent);
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddChildContentFor<IDynamicComponent, DisclosureButton>(3, this, ChildContent);
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
     }

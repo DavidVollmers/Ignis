@@ -35,10 +35,6 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
         }
     }
 
-    /// <inheritdoc />
-    [Parameter]
-    public string? Id { get; set; }
-
     [CascadingParameter] public IPopover Popover { get; set; } = null!;
 
     /// <inheritdoc />
@@ -54,7 +50,7 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -70,12 +66,8 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
         //TODO aria-controls
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id ?? Popover.Id + "-button"), () =>
-                new KeyValuePair<string, object?>("onclick",
-                    EventCallback.Factory.Create(this, () => Popover.Open())),
-#pragma warning disable CS0618
-            () => new KeyValuePair<string, object?>("onkeydown", EventCallback.Factory.Create(this, OnKeyDown)),
-#pragma warning restore CS0618
+            () => new KeyValuePair<string, object?>("onclick",
+                EventCallback.Factory.Create(this, () => Popover.Open())),
             () => new KeyValuePair<string, object?>("aria-expanded", Popover.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
         });
@@ -98,15 +90,11 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IPopoverButton, PopoverButton>(2, this, ChildContent);
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddChildContentFor<IPopoverButton, PopoverButton>(3, this, ChildContent);
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
-    }
-
-    private void OnKeyDown(KeyboardEventArgs eventArgs)
-    {
-        if (eventArgs.Code != "Escape") return;
-        
-        Popover.Close();
     }
 }

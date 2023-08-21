@@ -57,7 +57,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     /// <inheritdoc />
     public bool IsSelected => Listbox.IsValueSelected(Value);
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -100,7 +100,10 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IListboxOption, ListboxOption<TValue>>(2, this, ChildContent?.Invoke(this));
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddChildContentFor<IListboxOption, ListboxOption<TValue>>(3, this, ChildContent?.Invoke(this));
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
     }

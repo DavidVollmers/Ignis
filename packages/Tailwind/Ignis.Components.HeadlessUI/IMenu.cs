@@ -1,6 +1,8 @@
-﻿namespace Ignis.Components.HeadlessUI;
+﻿using Ignis.Components.Web;
 
-public interface IMenu : IDynamicParentComponent<IMenu>, IOpenClose, IWithTransition
+namespace Ignis.Components.HeadlessUI;
+
+public interface IMenu : IDynamicParentComponent<IMenu>, IOpenClose, IWithTransition, IFocus
 {
     internal IMenuItem[] Items { get; }
 
@@ -10,6 +12,8 @@ public interface IMenu : IDynamicParentComponent<IMenu>, IOpenClose, IWithTransi
 
     string Id { get; }
 
+    internal void SetItems(IDynamicParentComponent items);
+    
     internal void SetButton(IMenuButton button);
 
     internal void SetItemActive(IMenuItem item, bool isActive);

@@ -55,7 +55,7 @@ public sealed class MenuItem : IgnisComponentBase, IMenuItem, IDisposable
     /// <inheritdoc />
     public bool IsActive => Menu.ActiveItem == this;
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -96,7 +96,10 @@ public sealed class MenuItem : IgnisComponentBase, IMenuItem, IDisposable
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IMenuItem, MenuItem>(2, this, ChildContent?.Invoke(this));
+        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.AddChildContentFor<IMenuItem, MenuItem>(3, this, ChildContent?.Invoke(this));
+        if (AsComponent != null && AsComponent != typeof(Fragment))
+            builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
     }
