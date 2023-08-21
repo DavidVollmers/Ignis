@@ -10,6 +10,11 @@ api:
   - Ignis.Components.HeadlessUI.Transition, Ignis.Components.HeadlessUI
 ---
 
+## Basic usage
+
+The `Transition` accepts a `Show` prop that controls whether the children should be shown or hidden, and a set of
+lifecycle props (like `EnterFrom`, and `LeaveTo`) that let you add CSS classes at specific phases of a transition.
+
 ## Showing and hiding content
 
 Wrap the content that should be conditionally rendered in a `Transition` component, and use the `Show` prop to control

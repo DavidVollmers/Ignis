@@ -12,6 +12,13 @@ api:
   - Ignis.Components.HeadlessUI.PopoverPanel, Ignis.Components.HeadlessUI
 ---
 
+## Basic usage
+
+Popovers are built using the `Popover`, `PopoverButton`, and `PopoverPanel` components.
+
+Clicking the `PopoverButton` will automatically open/close the `PopoverPanel`. When the panel is open, clicking anywhere
+outside of its contents, pressing the Escape key, or tabbing away from it will close the Popover.
+
 ## Showing/hiding the popover
 
 By default, your `PopoverPanel` will be shown/hidden automatically based on the internal `IsOpen` state tracked within

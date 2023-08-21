@@ -13,6 +13,11 @@ api:
   - Ignis.Components.HeadlessUI.SwitchGroup, Ignis.Components.HeadlessUI
 ---
 
+## Basic usage
+
+Switches are built using the `Switch` component. You can toggle your Switch by clicking directly on the component, or by
+pressing the spacebar while its focused.
+
 ## Using a custom label
 
 By default, a `Switch` renders a `button` as well as whatever children you pass into it. This can make it harder to

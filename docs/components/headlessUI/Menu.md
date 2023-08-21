@@ -13,6 +13,13 @@ api:
   - Ignis.Components.HeadlessUI.MenuItem, Ignis.Components.HeadlessUI
 ---
 
+## Basic usage
+
+Menu Buttons are built using the `Menu`, `MenuButton`, `MenuItems`, and `MenuItem` components.
+
+The `MenuButton` will automatically open/close the `MenuItems` when clicked, and when the menu is open, the list of
+items receives focus and is automatically navigable via the keyboard.
+
 ## Showing/hiding the menu
 
 By default, your `MenuItems` instance will be shown/hidden automatically based on the internal `IsOpen` state
