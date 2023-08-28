@@ -1,0 +1,43 @@
+﻿@using Ignis.Components
+@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void Button_OnClick()
+    {
+        Services.AddIgnis();
+        Services.AddSingleton<IHostContext, TestHostContext>();
+
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        
+        var fragment = Render(@<Popover>
+                                  <PopoverButton>
+                                  </PopoverButton>
+                              </Popover>);
+
+        fragment.Find("button").Click();
+
+        var popover = fragment.FindComponent<Popover>();
+        Assert.True(popover.Instance.IsOpen);
+    }
+    
+    [Fact]
+    public void Button_OnClick_PreventDefault()
+    {
+        Services.AddIgnis();
+        Services.AddSingleton<IHostContext, TestHostContext>();
+
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        
+        var fragment = Render(@<Popover>
+                                  <PopoverButton OnClick="e => e.PreventDefault()">
+                                  </PopoverButton>
+                              </Popover>);
+
+        fragment.Find("button").Click();
+
+        var popover = fragment.FindComponent<Popover>();
+        Assert.False(popover.Instance.IsOpen);
+    }
+}
