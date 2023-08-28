@@ -8,7 +8,6 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
     private IDisclosureButton? _button;
     private Type? _asComponent;
     private string? _asElement;
-    private bool _isOpen;
 
     /// <inheritdoc />
     protected override IEnumerable<object> Targets

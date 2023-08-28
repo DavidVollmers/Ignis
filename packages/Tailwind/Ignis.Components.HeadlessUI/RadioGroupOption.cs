@@ -215,8 +215,14 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
         RadioGroup.SetOptionActive(this, false);
     }
 
-    public void Dispose()
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
     {
-        RadioGroup.RemoveOption(this);
+        if (disposing)
+        {
+            RadioGroup.RemoveOption(this);
+        }
+        
+        base.Dispose(disposing);
     }
 }

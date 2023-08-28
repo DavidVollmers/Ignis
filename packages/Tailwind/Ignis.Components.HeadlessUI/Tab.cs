@@ -148,8 +148,14 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
         TabGroup.SelectTab(this);
     }
 
-    public void Dispose()
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
     {
-        TabGroup.RemoveTab(this);
+        if (disposing)
+        {
+            TabGroup.RemoveTab(this);
+        }
+        
+        base.Dispose(disposing);
     }
 }

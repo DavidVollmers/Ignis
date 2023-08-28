@@ -16,7 +16,6 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     private IDynamicParentComponent? _optionsComponent;
     private Type? _asComponent;
     private string? _asElement;
-    private bool _isOpen;
 
     /// <inheritdoc />
     protected override IEnumerable<object> Targets
