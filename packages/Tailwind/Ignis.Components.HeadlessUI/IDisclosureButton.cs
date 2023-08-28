@@ -2,9 +2,7 @@
 
 namespace Ignis.Components.HeadlessUI;
 
-public interface IListboxButton : IDynamicParentComponent<IListboxButton>
+public interface IDisclosureButton : IDynamicParentComponent
 {
-    string? Id { get; set; }
-    
     EventCallback<IComponentEvent> OnClick { get; set; }
 }

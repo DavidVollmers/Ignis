@@ -32,7 +32,7 @@ public sealed class TransitionChild : TransitionBase, ITransitionChild, IDisposa
         }
     }
 
-    [CascadingParameter] public ITransition Parent { get; set; }
+    [CascadingParameter] public ITransition Parent { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]

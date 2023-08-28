@@ -40,6 +40,10 @@ public sealed class MenuButton : IgnisComponentBase, IMenuButton
     [Parameter]
     public string? Id { get; set; }
 
+    /// <inheritdoc />
+    [Parameter]
+    public EventCallback<IComponentEvent> OnClick { get; set; }
+
     [CascadingParameter] public IMenu Menu { get; set; } = null!;
 
     /// <inheritdoc />
@@ -73,7 +77,7 @@ public sealed class MenuButton : IgnisComponentBase, IMenuButton
         {
             () => new KeyValuePair<string, object?>("id", Id ?? Menu.Id + "-button"),
             () => new KeyValuePair<string, object?>("aria-haspopup", "true"),
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, () => Menu.Open())),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("aria-expanded", Menu.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
         });
@@ -102,5 +106,16 @@ public sealed class MenuButton : IgnisComponentBase, IMenuButton
             builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
+    }
+
+    private void Click()
+    {
+        var @event = new ComponentEvent();
+
+        OnClick.InvokeAsync(@event);
+
+        if (@event.CancellationToken.IsCancellationRequested) return;
+        
+        Menu.Open();
     }
 }

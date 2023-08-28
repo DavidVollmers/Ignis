@@ -46,6 +46,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Components.HeroIcons.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Website.Contracts", "website\Ignis.Website.Contracts\Ignis.Website.Contracts.csproj", "{080DC704-BC20-49C3-B374-CBE9E72CCF57}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Tests.Components.HeadlessUI", "tests\Ignis.Tests.Components.HeadlessUI\Ignis.Tests.Components.HeadlessUI.csproj", "{4746A757-944D-4CD7-B1F5-8539AAE6137A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -120,6 +122,10 @@ Global
 		{080DC704-BC20-49C3-B374-CBE9E72CCF57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{080DC704-BC20-49C3-B374-CBE9E72CCF57}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{080DC704-BC20-49C3-B374-CBE9E72CCF57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4746A757-944D-4CD7-B1F5-8539AAE6137A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4746A757-944D-4CD7-B1F5-8539AAE6137A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4746A757-944D-4CD7-B1F5-8539AAE6137A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4746A757-944D-4CD7-B1F5-8539AAE6137A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5D3382FB-EADF-47D3-B8C3-736BE0B9338A} = {58B1C928-DCC7-4420-B5D2-259C7DB3417A}
@@ -139,5 +145,6 @@ Global
 		{F3F0E357-E427-4C7D-B15A-5186B5DD7369} = {333AA1BE-3105-4370-BB59-34463BD1F325}
 		{4AF64E1F-477D-4AAC-94B1-578F8DFF5A8C} = {80B7BBBD-6FAB-4A17-A18E-46558A696C19}
 		{080DC704-BC20-49C3-B374-CBE9E72CCF57} = {A92AF225-F718-4B02-AA3B-B47F26A3457F}
+		{4746A757-944D-4CD7-B1F5-8539AAE6137A} = {D95EEAB8-A600-4067-AFAD-F8CC39D412A2}
 	EndGlobalSection
 EndGlobal

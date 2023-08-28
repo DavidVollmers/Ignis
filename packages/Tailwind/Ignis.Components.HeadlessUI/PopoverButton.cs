@@ -35,6 +35,10 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
         }
     }
 
+    /// <inheritdoc />
+    [Parameter]
+    public EventCallback<IComponentEvent> OnClick { get; set; }
+
     [CascadingParameter] public IPopover Popover { get; set; } = null!;
 
     /// <inheritdoc />
@@ -66,8 +70,7 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
         //TODO aria-controls
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("onclick",
-                EventCallback.Factory.Create(this, () => Popover.Open())),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("aria-expanded", Popover.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
         });
@@ -96,5 +99,16 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
             builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
+    }
+
+    private void Click()
+    {
+        var @event = new ComponentEvent();
+
+        OnClick.InvokeAsync(@event);
+
+        if (@event.CancellationToken.IsCancellationRequested) return;
+        
+        Popover.Open();
     }
 }

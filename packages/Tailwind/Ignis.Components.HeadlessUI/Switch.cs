@@ -42,6 +42,10 @@ public sealed class Switch : IgnisComponentBase, ISwitch
 
     [Parameter] public EventCallback<bool> CheckedChanged { get; set; }
 
+    /// <inheritdoc />
+    [Parameter]
+    public EventCallback<IComponentEvent> OnClick { get; set; }
+
     [CascadingParameter] public ISwitchGroup? SwitchGroup { get; set; }
 
     /// <inheritdoc />
@@ -80,7 +84,7 @@ public sealed class Switch : IgnisComponentBase, ISwitch
             () => new KeyValuePair<string, object?>("tabindex", "0"),
             () => new KeyValuePair<string, object?>("role", "switch"),
             () => new KeyValuePair<string, object?>("aria-checked", Checked.ToString().ToLowerInvariant()),
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Toggle)),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null), () =>
                 new KeyValuePair<string, object?>("aria-labelledby",
                     SwitchGroup?.Label == null ? null : SwitchGroup.Label.Id ?? SwitchGroup.Id + "-label"),
@@ -111,5 +115,16 @@ public sealed class Switch : IgnisComponentBase, ISwitch
         CheckedChanged.InvokeAsync(Checked = !Checked);
 
         Update();
+    }
+
+    private void Click()
+    {
+        var @event = new ComponentEvent();
+
+        OnClick.InvokeAsync(@event);
+
+        if (@event.CancellationToken.IsCancellationRequested) return;
+        
+        Toggle();
     }
 }

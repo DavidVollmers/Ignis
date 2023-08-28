@@ -48,6 +48,10 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
         }
     }
 
+    /// <inheritdoc />
+    [Parameter]
+    public EventCallback<IComponentEvent> OnClick { get; set; }
+
     [CascadingParameter] public ITabGroup TabGroup { get; set; } = null!;
 
     /// <inheritdoc />
@@ -85,7 +89,7 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
             () => new KeyValuePair<string, object?>("role", "tab"),
             () => new KeyValuePair<string, object?>("aria-selected", IsSelected.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("tabindex", IsSelected ? 0 : -1),
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, OnClick)),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null)
         });
     }
@@ -120,25 +124,38 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
         switch (eventArgs.Code)
         {
             case "ArrowLeft":
-                TabGroup.SelectTab(TabGroup.SelectedIndex == 0
+                (TabGroup.SelectedIndex == 0
                     ? TabGroup.Tabs[^1]
-                    : TabGroup.Tabs[TabGroup.SelectedIndex - 1]);
+                    : TabGroup.Tabs[TabGroup.SelectedIndex - 1]).Click();
                 break;
             case "ArrowRight":
-                TabGroup.SelectTab(TabGroup.SelectedIndex == TabGroup.Tabs.Length - 1
+                (TabGroup.SelectedIndex == TabGroup.Tabs.Length - 1
                     ? TabGroup.Tabs[0]
-                    : TabGroup.Tabs[TabGroup.SelectedIndex + 1]);
+                    : TabGroup.Tabs[TabGroup.SelectedIndex + 1]).Click();
                 break;
         }
     }
 
-    private void OnClick()
+    /// <inheritdoc />
+    public void Click()
     {
+        var @event = new ComponentEvent();
+
+        OnClick.InvokeAsync(@event);
+
+        if (@event.CancellationToken.IsCancellationRequested) return;
+        
         TabGroup.SelectTab(this);
     }
 
-    public void Dispose()
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
     {
-        TabGroup.RemoveTab(this);
+        if (disposing)
+        {
+            TabGroup.RemoveTab(this);
+        }
+        
+        base.Dispose(disposing);
     }
 }

@@ -6,7 +6,7 @@ public interface IMenuItem : IDynamicParentComponent<IMenuItem>
 {
     bool IsActive { get; }
     
-    EventCallback OnClick { get; set; }
+    EventCallback<IComponentEvent> OnClick { get; set; }
 
     internal void Click();
 }

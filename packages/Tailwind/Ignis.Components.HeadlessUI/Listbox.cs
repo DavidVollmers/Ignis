@@ -16,7 +16,6 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     private IDynamicParentComponent? _optionsComponent;
     private Type? _asComponent;
     private string? _asElement;
-    private bool _isOpen;
 
     /// <inheritdoc />
     protected override IEnumerable<object> Targets
@@ -230,8 +229,8 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
             case "Space" or "Enter":
                 if (IsOpen)
                 {
-                    ActiveOption?.Select();
-                    Close();
+                    if (ActiveOption != null) ActiveOption.Click();
+                    else Close();
                 }
                 else
                 {

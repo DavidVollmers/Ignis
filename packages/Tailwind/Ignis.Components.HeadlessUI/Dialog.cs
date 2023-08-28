@@ -92,8 +92,8 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
 
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id), () => new KeyValuePair<string, object>("role", "dialog"),
-            () => new KeyValuePair<string, object>("aria-modal", "true"), () => new KeyValuePair<string, object?>(
+            () => new KeyValuePair<string, object?>("id", Id), () => new KeyValuePair<string, object?>("role", "dialog"),
+            () => new KeyValuePair<string, object?>("aria-modal", "true"), () => new KeyValuePair<string, object?>(
                 "aria-labelledby", Title == null ? null : Title.Id ?? Id + "-title"),
             () => new KeyValuePair<string, object?>("aria-describedby",
                 Description == null ? null : Description.Id ?? Id + "-description")

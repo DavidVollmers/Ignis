@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentComponent
+public sealed class DisclosureButton : IgnisRigidComponentBase, IDisclosureButton
 {
     private readonly AttributeCollection _attributes;
 
@@ -34,6 +34,10 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
             _asElement = null;
         }
     }
+
+    /// <inheritdoc />
+    [Parameter]
+    public EventCallback<IComponentEvent> OnClick { get; set; }
 
     [CascadingParameter] public IDisclosure Disclosure { get; set; } = null!;
 
@@ -65,7 +69,7 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
 
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Toggle)),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("aria-expanded", Disclosure.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null), () =>
                 new KeyValuePair<string, object?>("aria-controls",
@@ -98,6 +102,17 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
         builder.CloseAs(this);
     }
 
+    private void Click()
+    {
+        var @event = new ComponentEvent();
+
+        OnClick.InvokeAsync(@event);
+
+        if (@event.CancellationToken.IsCancellationRequested) return;
+        
+        Toggle();
+    }
+    
     private void Toggle()
     {
         if (Disclosure.IsOpen) Disclosure.Close();
