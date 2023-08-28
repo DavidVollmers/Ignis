@@ -5,7 +5,7 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosure
 {
-    private IDynamicParentComponent? _button;
+    private IDisclosureButton? _button;
     private Type? _asComponent;
     private string? _asElement;
     private bool _isOpen;
@@ -101,7 +101,7 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
     }
 
     /// <inheritdoc />
-    public void SetButton(IDynamicParentComponent button)
+    public void SetButton(IDisclosureButton button)
     {
         _button = button ?? throw new ArgumentNullException(nameof(button));
     }

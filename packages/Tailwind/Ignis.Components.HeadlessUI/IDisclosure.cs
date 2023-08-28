@@ -10,5 +10,5 @@ public interface IDisclosure : IDynamicParentComponent<IDisclosure>, IOpenClose,
 
     internal void SetPanel(IDisclosurePanel panel);
     
-    internal void SetButton(IDynamicParentComponent button);
+    internal void SetButton(IDisclosureButton button);
 }
