@@ -34,6 +34,10 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
         }
     }
 
+    /// <inheritdoc />
+    [Parameter]
+    public EventCallback<IComponentEvent> OnClick { get; set; }
+
     [CascadingParameter] public IListbox Listbox { get; set; } = null!;
 
     [Parameter, EditorRequired] public TValue? Value { get; set; }
@@ -75,7 +79,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
             () => new KeyValuePair<string, object?>("tabindex", -1),
             () => new KeyValuePair<string, object?>("role", "option"),
             () => new KeyValuePair<string, object?>("aria-selected", IsSelected.ToString().ToLowerInvariant()),
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, OnClick)),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("onmouseenter",
                 EventCallback.Factory.Create(this, OnMouseEnter)),
             () => new KeyValuePair<string, object?>("onmouseleave",
@@ -108,8 +112,15 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
         builder.CloseAs(this);
     }
 
-    private void OnClick()
+    /// <inheritdoc />
+    public void Click()
     {
+        var @event = new ComponentEvent();
+
+        OnClick.InvokeAsync(@event);
+
+        if (@event.CancellationToken.IsCancellationRequested) return;
+        
         Listbox.SelectValue(Value);
 
         Listbox.Close();
@@ -123,12 +134,6 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     private void OnMouseLeave()
     {
         Listbox.SetOptionActive(this, false);
-    }
-
-    /// <inheritdoc />
-    public void Select()
-    {
-        Listbox.SelectValue(Value);
     }
 
     public void Dispose()

@@ -230,8 +230,8 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
             case "Space" or "Enter":
                 if (IsOpen)
                 {
-                    ActiveOption?.Select();
-                    Close();
+                    if (ActiveOption != null) ActiveOption.Click();
+                    else Close();
                 }
                 else
                 {

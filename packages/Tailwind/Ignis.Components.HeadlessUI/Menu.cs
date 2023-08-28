@@ -174,8 +174,8 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
             case "Space" or "Enter":
                 if (IsOpen)
                 {
-                    ActiveItem?.Click();
-                    Close();
+                    if (ActiveItem != null) ActiveItem.Click();
+                    else Close();
                 }
                 else
                 {
