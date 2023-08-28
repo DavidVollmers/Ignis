@@ -22,7 +22,7 @@
     <value>Build UI that matters.</value>
   </data>
   <data name="Description" xml:space="preserve">
-    <value>The ASP.NET component framework for building modern web applications.</value>
+    <value>The Blazor framework for building modern web applications.</value>
   </data>
   <data name="GetStartedButton" xml:space="preserve">
     <value>Get Started</value>

@@ -1,6 +1,6 @@
 ﻿# Ignis.Utils
 
-Utilities for ASP.NET component based UI
+Utilities for Ignis based UI
 
 ## Installation
 

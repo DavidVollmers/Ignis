@@ -2,7 +2,7 @@
 
 Completely unstyled, fully accessible UI components, designed to integrate beautifully with Tailwind CSS
 
-> This package is a port of [headlessui](https://headlessui.com) based on Ignis components.
+> This package is a port of [Headless UI](https://headlessui.com) based on Ignis components.
 
 ## Installation
 

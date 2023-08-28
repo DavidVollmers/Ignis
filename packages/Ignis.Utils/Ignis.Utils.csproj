@@ -4,7 +4,7 @@
     <PackageId>Ignis.Utils</PackageId>
     <Authors>david@vollmers.org</Authors>
     <Copyright>David Vollmers</Copyright>
-    <Description>Utilities for ASP.NET component based UI</Description>
+    <Description>Utilities for Ignis based UI</Description>
     <PackageProjectUrl>https://github.com/DavidVollmers/Ignis/tree/master/packages/Ignis.Utils</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
