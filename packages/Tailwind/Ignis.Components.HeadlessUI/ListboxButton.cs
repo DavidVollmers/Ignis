@@ -40,6 +40,10 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
     [Parameter]
     public string? Id { get; set; }
 
+    /// <inheritdoc />
+    [Parameter]
+    public EventCallback<IComponentEvent> OnClick { get; set; }
+
     [CascadingParameter] public IListbox Listbox { get; set; } = null!;
 
     /// <inheritdoc />
@@ -73,7 +77,7 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
         {
             () => new KeyValuePair<string, object?>("id", Id ?? Listbox.Id + "-button"),
             () => new KeyValuePair<string, object?>("aria-haspopup", "listbox"),
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, () => Listbox.Open())),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("aria-expanded", Listbox.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
             () => new KeyValuePair<string, object?>("aria-labelledby",
@@ -104,5 +108,16 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
             builder.AddComponentReferenceCapture(4, c => Component = c);
 
         builder.CloseAs(this);
+    }
+
+    private void Click()
+    {
+        var @event = new ComponentEvent();
+
+        OnClick.InvokeAsync(@event);
+
+        if (@event.CancellationToken.IsCancellationRequested) return;
+        
+        Listbox.Open();
     }
 }
