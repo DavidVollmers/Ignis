@@ -58,7 +58,7 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
 
     /// <inheritdoc />
     [Parameter]
-    public string? Id { get; set; }
+    public EventCallback<IComponentEvent> OnClick { get; set; }
 
     [CascadingParameter] public IRadioGroup RadioGroup { get; set; } = null!;
 
@@ -98,7 +98,7 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
         {
             () => new KeyValuePair<string, object?>("role", "radio"),
             () => new KeyValuePair<string, object?>("tabindex", IsChecked ? 0 : -1),
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Check)),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("aria-checked", IsChecked.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("aria-labelledby", _label?.Id)
         });
@@ -140,13 +140,6 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
         builder.CloseAs(this);
     }
 
-    private string GetId()
-    {
-        if (Id != null) return Id;
-
-        return RadioGroup.Id + "-option-" + Array.IndexOf(RadioGroup.Options, this);
-    }
-
     /// <inheritdoc />
     protected override void OnKeyDown(KeyboardEventArgs eventArgs)
     {
@@ -185,6 +178,17 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
 #pragma warning disable CS4014
         FocusAsync();
 #pragma warning restore CS4014
+    }
+
+    private void Click()
+    {
+        var @event = new ComponentEvent();
+
+        OnClick.InvokeAsync(@event);
+
+        if (@event.CancellationToken.IsCancellationRequested) return;
+        
+        Check();
     }
 
     /// <inheritdoc />

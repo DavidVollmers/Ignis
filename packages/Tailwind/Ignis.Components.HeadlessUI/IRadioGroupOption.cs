@@ -1,4 +1,5 @@
 ﻿using Ignis.Components.Web;
+using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
@@ -8,7 +9,7 @@ public interface IRadioGroupOption : IDynamicParentComponent<IRadioGroupOption>,
     
     bool IsChecked { get; }
     
-    string? Id { get; set; }
+    EventCallback<IComponentEvent> OnClick { get; set; }
     
     internal void Check();
     
