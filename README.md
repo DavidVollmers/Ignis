@@ -9,7 +9,7 @@
 [![](https://img.shields.io/github/v/release/DavidVollmers/Ignis?include_prereleases&style=flat-square)](https://github.com/DavidVollmers/Ignis/releases)
 [![](https://img.shields.io/github/license/DavidVollmers/Ignis?style=flat-square)](https://github.com/DavidVollmers/Ignis/blob/master/LICENSE.txt)
 
-The ASP.NET component framework for building modern web applications.
+The Blazor framework for building modern web applications.
 
 ## Features
 
