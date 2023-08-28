@@ -35,7 +35,8 @@ public sealed class MenuItem : IgnisComponentBase, IMenuItem, IDisposable
     }
 
     /// <inheritdoc />
-    [Parameter] public EventCallback OnClick { get; set; }
+    [Parameter]
+    public EventCallback<IComponentEvent> OnClick { get; set; }
 
     [CascadingParameter] public IMenu Menu { get; set; } = null!;
 
@@ -107,8 +108,12 @@ public sealed class MenuItem : IgnisComponentBase, IMenuItem, IDisposable
     /// <inheritdoc />
     public void Click()
     {
-        OnClick.InvokeAsync();
-        
+        var @event = new ComponentEvent();
+
+        OnClick.InvokeAsync(@event);
+
+        if (@event.CancellationToken.IsCancellationRequested) return;
+
         Menu.Close();
     }
 
