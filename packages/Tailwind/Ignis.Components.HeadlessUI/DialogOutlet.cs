@@ -3,12 +3,8 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutletRegistrySubscriber, IOutlet,
-    IDisposable
+public sealed class DialogOutlet : OutletBase, IDynamicComponent
 {
-    private readonly IList<IDialog> _dialogs = new List<IDialog>();
-
-    private IOutletRegistry? _outletRegistry;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -36,18 +32,8 @@ public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutle
         }
     }
 
-    [Inject]
-    public IOutletRegistry? OutletRegistry
-    {
-        get => _outletRegistry;
-        set
-        {
-            _outletRegistry?.Unsubscribe(this);
-
-            _outletRegistry = value;
-            _outletRegistry?.Subscribe(this);
-        }
-    }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
     public ElementReference? Element { get; set; }
@@ -64,12 +50,13 @@ public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutle
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
+        builder.AddMultipleAttributes(1, AdditionalAttributes!);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(1, this, builder =>
+        builder.AddContentFor(2, this, builder =>
         {
-            foreach (var dialog in _dialogs)
+            foreach (var dialog in Components)
             {
-                builder.AddContent(2, dialog.OutletContent);
+                builder.AddContent(3, dialog.OutletContent);
             }
         });
 
@@ -77,47 +64,10 @@ public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutle
     }
 
     /// <inheritdoc />
-    public void OnComponentRegistered(IOutletComponent component)
+    public override void OnComponentRegistered(IOutletComponent component)
     {
-        if (component is not IDialog dialog) return;
+        if (component is not IDialog) return;
 
-        _dialogs.Add(dialog);
-
-        dialog.SetOutlet(this);
-
-        base.Update();
-    }
-
-    /// <inheritdoc />
-    public void OnComponentUnregistered(IOutletComponent component)
-    {
-        if (component is not IDialog dialog) return;
-
-        if (!_dialogs.Contains(dialog)) return;
-
-        _dialogs.Remove(dialog);
-
-        dialog.SetFree();
-
-        base.Update();
-    }
-
-    /// <inheritdoc />
-    public new void Update(bool async = false)
-    {
-        base.Update(async);
-    }
-
-    public void Dispose()
-    {
-        _outletRegistry?.Unsubscribe(this);
-        _outletRegistry = null;
-
-        foreach (var dialog in _dialogs)
-        {
-            dialog.SetFree();
-        }
-
-        _dialogs.Clear();
+        base.OnComponentRegistered(component);
     }
 }
