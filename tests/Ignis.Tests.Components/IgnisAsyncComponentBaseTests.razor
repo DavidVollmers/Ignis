@@ -1,0 +1,11 @@
+﻿@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void AlreadyDisposed()
+    {
+        Services.AddIgnis();
+        Services.AddSingleton<IHostContext, TestHostContext>();
+    }
+}
