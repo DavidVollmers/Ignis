@@ -36,6 +36,9 @@ public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutle
         }
     }
 
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
+
     [Inject]
     public IOutletRegistry? OutletRegistry
     {
@@ -64,12 +67,13 @@ public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutle
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
+        builder.AddMultipleAttributes(1, AdditionalAttributes!);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(1, this, builder =>
+        builder.AddContentFor(2, this, builder =>
         {
             foreach (var dialog in _dialogs)
             {
-                builder.AddContent(2, dialog.OutletContent);
+                builder.AddContent(3, dialog.OutletContent);
             }
         });
 
@@ -81,6 +85,8 @@ public sealed class DialogOutlet : IgnisComponentBase, IDynamicComponent, IOutle
     {
         if (component is not IDialog dialog) return;
 
+        if (_dialogs.Contains(dialog)) return;
+        
         _dialogs.Add(dialog);
 
         dialog.SetOutlet(this);

@@ -1,0 +1,72 @@
+﻿@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void Outlet()
+    {
+        Services.AddIgnis();
+        Services.AddSingleton<IHostContext, TestHostContext>();
+
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        const string dialogId = "dialog";
+        const string outletId = "dialog-outlet";
+
+        var cut = Render(@<div>
+                             <DialogOutlet AsElement="div" id="@outletId"/>
+                             <Dialog IsOpen id="@dialogId"></Dialog>
+                         </div>);
+
+        var dialogDiv = cut.Find($"#{dialogId}");
+        var outletDiv = cut.Find($"#{outletId}");
+        Assert.True(outletDiv.Contains(dialogDiv));
+    }
+
+    [Fact]
+    public void IgnoreOutlet()
+    {
+        Services.AddIgnis();
+        Services.AddSingleton<IHostContext, TestHostContext>();
+
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        const string dialogId = "dialog";
+        const string outletId = "dialog-outlet";
+
+        var cut = Render(@<div>
+                             <DialogOutlet AsElement="div" id="@outletId"/>
+                             <Dialog IgnoreOutlet IsOpen id="@dialogId"></Dialog>
+                         </div>);
+
+        var dialogDiv = cut.Find($"#{dialogId}");
+        var outletDiv = cut.Find($"#{outletId}");
+        Assert.False(outletDiv.Contains(dialogDiv));
+    }
+
+    [Fact]
+    public void OutletWithTransition()
+    {
+        Services.AddIgnis();
+        Services.AddSingleton<IHostContext, TestHostContext>();
+
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        const string dialogId = "dialog";
+        const string outletId = "dialog-outlet";
+        const string transitionId = "dialog-transition";
+
+        var cut = Render(@<div>
+                             <DialogOutlet AsElement="div" id="@outletId"/>
+                             <Transition Show id="@transitionId">
+                                 <Dialog IsOpen id="@dialogId"></Dialog>
+                             </Transition>
+                         </div>);
+        
+        var transitionDiv = cut.Find($"#{transitionId}");
+        var dialogDiv = cut.Find($"#{dialogId}");
+        var outletDiv = cut.Find($"#{outletId}");
+        Assert.True(outletDiv.Contains(transitionDiv));
+        Assert.True(transitionDiv.Contains(dialogDiv));
+    }
+}
