@@ -20,12 +20,16 @@ public abstract class IgnisAsyncComponentBase : IgnisComponentBase, IDisposable
     {
         await base.OnInitializedCoreAsync();
 
+        if (_cancellationTokenSource.IsCancellationRequested) return;
+        
         await OnInitializedAsync(_cancellationTokenSource.Token);
     }
 
     internal override async Task OnUpdateCoreAsync()
     {
         await base.OnUpdateCoreAsync();
+
+        if (_cancellationTokenSource.IsCancellationRequested) return;
 
         await OnUpdateAsync(_cancellationTokenSource.Token);
     }
