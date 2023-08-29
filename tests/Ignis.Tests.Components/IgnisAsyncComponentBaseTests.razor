@@ -46,5 +46,7 @@
 
         result = cut.Find("p").TextContent;
         Assert.Equal(echo1, result);
+
+        Assert.Throws<ObjectDisposedException>(() => cut.Instance.CancellationToken);
     }
 }
