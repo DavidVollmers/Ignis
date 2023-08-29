@@ -3,9 +3,48 @@
 @code
 {
     [Fact]
+    public void Cycle()
+    {
+        Services.AddIgnis();
+        Services.AddSingleton<IHostContext, TestHostContext>();
+
+        const string echo1 = "Hello World!";
+        const string echo2 = "Lorem Ipsum dolor sit amet.";
+
+        var cut = RenderComponent<AsyncTestComponent>(p => { p.Add(x => x.Echo, echo1); });
+        Assert.Equal(1, cut.RenderCount);
+
+        var result = cut.Find("p").TextContent;
+        Assert.Equal(echo1, result);
+
+        cut.SetParametersAndRender(p => { p.Add(x => x.Echo, echo2); });
+        Assert.Equal(2, cut.RenderCount);
+
+        result = cut.Find("p").TextContent;
+        Assert.Equal(echo2, result);
+    }
+    
+    [Fact]
     public void AlreadyDisposed()
     {
         Services.AddIgnis();
         Services.AddSingleton<IHostContext, TestHostContext>();
+
+        const string echo1 = "Hello World!";
+        const string echo2 = "Lorem Ipsum dolor sit amet.";
+
+        var cut = RenderComponent<AsyncTestComponent>(p => { p.Add(x => x.Echo, echo1); });
+        Assert.Equal(1, cut.RenderCount);
+
+        var result = cut.Find("p").TextContent;
+        Assert.Equal(echo1, result);
+
+        cut.Instance.Dispose();
+        
+        cut.SetParametersAndRender(p => { p.Add(x => x.Echo, echo2); });
+        Assert.Equal(2, cut.RenderCount);
+
+        result = cut.Find("p").TextContent;
+        Assert.Equal(echo1, result);
     }
 }

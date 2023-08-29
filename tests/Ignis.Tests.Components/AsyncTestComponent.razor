@@ -1,0 +1,20 @@
+﻿@inherits IgnisAsyncComponentBase
+
+<p>
+    @_echo
+</p>
+
+@code
+{
+    private string? _echo;
+
+    [Parameter]
+    public string? Echo { get; set; }
+    
+    protected override Task OnUpdateAsync(CancellationToken cancellationToken)
+    {
+        _echo = Echo;        
+
+        return Task.CompletedTask;
+    }
+}
