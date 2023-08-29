@@ -84,6 +84,9 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
+    /// <inheritdoc />
+    public override RenderFragment OutletContent => Transition?.RenderFragment ?? base.OutletContent;
+
     [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
 
     public Dialog()
