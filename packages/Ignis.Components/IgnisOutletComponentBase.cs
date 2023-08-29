@@ -24,7 +24,7 @@ public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComp
     }
 
     public virtual object Identifier => this;
-    
+
     public virtual RenderFragment OutletContent => BuildRenderTree;
 
     protected override bool ShouldRender => IgnoreOutlet || _outlet == null;
@@ -51,6 +51,8 @@ public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComp
         if (_outlet != null && outlet != _outlet) throw new InvalidOperationException("Component is already adopted.");
 
         _outlet = outlet;
+        
+        //TODO rerender the original component to not have the same content rendered twice
     }
 
     public void SetFree()
