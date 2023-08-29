@@ -1,5 +1,4 @@
-﻿@using Ignis.Components
-@inherits TestContext
+﻿@inherits TestContext
 
 @code
 {
@@ -10,18 +9,18 @@
         Services.AddSingleton<IHostContext, TestHostContext>();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
-        
-        var fragment = Render(@<Popover>
-                                  <PopoverButton>
-                                  </PopoverButton>
-                              </Popover>);
 
-        fragment.Find("button").Click();
+        var cut = Render(@<Popover>
+                             <PopoverButton>
+                             </PopoverButton>
+                         </Popover>);
 
-        var popover = fragment.FindComponent<Popover>();
+        cut.Find("button").Click();
+
+        var popover = cut.FindComponent<Popover>();
         Assert.True(popover.Instance.IsOpen);
     }
-    
+
     [Fact]
     public void Button_OnClick_PreventDefault()
     {
@@ -29,15 +28,15 @@
         Services.AddSingleton<IHostContext, TestHostContext>();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
-        
-        var fragment = Render(@<Popover>
-                                  <PopoverButton OnClick="e => e.PreventDefault()">
-                                  </PopoverButton>
-                              </Popover>);
 
-        fragment.Find("button").Click();
+        var cut = Render(@<Popover>
+                             <PopoverButton OnClick="e => e.PreventDefault()">
+                             </PopoverButton>
+                         </Popover>);
 
-        var popover = fragment.FindComponent<Popover>();
+        cut.Find("button").Click();
+
+        var popover = cut.FindComponent<Popover>();
         Assert.False(popover.Instance.IsOpen);
     }
 }

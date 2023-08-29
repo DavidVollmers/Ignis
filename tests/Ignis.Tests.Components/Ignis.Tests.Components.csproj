@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ignis.Tests.Common\Ignis.Tests.Common.csproj"/>
-    <ProjectReference Include="..\..\packages\Tailwind\Ignis.Components.HeadlessUI\Ignis.Components.HeadlessUI.csproj"/>
   </ItemGroup>
 
 </Project>

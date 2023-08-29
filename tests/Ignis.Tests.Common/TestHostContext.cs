@@ -1,6 +1,6 @@
 ﻿using Ignis.Components;
 
-namespace Ignis.Tests.Components.HeadlessUI;
+namespace Ignis.Tests.Common;
 
 public class TestHostContext : IHostContext
 {
