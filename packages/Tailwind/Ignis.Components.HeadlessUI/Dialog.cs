@@ -87,6 +87,9 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     /// <inheritdoc />
     public override RenderFragment OutletContent => Transition?.RenderFragment ?? base.OutletContent;
 
+    /// <inheritdoc />
+    public override object Identifier => Transition ?? (object)this;
+
     [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
 
     public Dialog()
@@ -95,7 +98,8 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
 
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id), () => new KeyValuePair<string, object?>("role", "dialog"),
+            () => new KeyValuePair<string, object?>("id", Id),
+            () => new KeyValuePair<string, object?>("role", "dialog"),
             () => new KeyValuePair<string, object?>("aria-modal", "true"), () => new KeyValuePair<string, object?>(
                 "aria-labelledby", Title == null ? null : Title.Id ?? Id + "-title"),
             () => new KeyValuePair<string, object?>("aria-describedby",

@@ -23,6 +23,8 @@ public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComp
         }
     }
 
+    public virtual object Identifier => this;
+    
     public virtual RenderFragment OutletContent => BuildRenderTree;
 
     protected override bool ShouldRender => IgnoreOutlet || _outlet == null;

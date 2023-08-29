@@ -5,9 +5,9 @@ namespace Ignis.Components;
 public abstract class OutletBase : IgnisComponentBase, IOutlet, IOutletRegistrySubscriber, IDisposable
 {
     private readonly IList<IOutletComponent> _components = new List<IOutletComponent>();
-    
+
     private IOutletRegistry? _outletRegistry;
-    
+
     protected IEnumerable<IOutletComponent> Components => _components;
 
     [Inject]
@@ -26,8 +26,8 @@ public abstract class OutletBase : IgnisComponentBase, IOutlet, IOutletRegistryS
     /// <inheritdoc />
     public virtual void OnComponentRegistered(IOutletComponent component)
     {
-        if (_components.Contains(component)) return;
-        
+        if (_components.Contains(component) || _components.Any(c => c.Identifier.Equals(component.Identifier))) return;
+
         _components.Add(component);
 
         component.SetOutlet(this);
@@ -46,7 +46,7 @@ public abstract class OutletBase : IgnisComponentBase, IOutlet, IOutletRegistryS
 
         base.Update();
     }
-    
+
     void IOutlet.Update(bool async)
     {
         base.Update(async);
@@ -55,7 +55,7 @@ public abstract class OutletBase : IgnisComponentBase, IOutlet, IOutletRegistryS
     protected virtual void Dispose(bool disposing)
     {
         if (!disposing) return;
-        
+
         _outletRegistry?.Unsubscribe(this);
         _outletRegistry = null;
 
