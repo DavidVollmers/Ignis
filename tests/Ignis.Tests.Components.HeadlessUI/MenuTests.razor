@@ -1,0 +1,46 @@
+﻿@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void Button_OnClick()
+    {
+        Services.AddIgnis();
+        Services.AddSingleton<IHostContext, TestHostContext>();
+
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var cut = Render(@<Menu>
+                             <MenuButton>
+                             </MenuButton>
+                         </Menu>);
+
+        cut.Find("button").Click();
+
+        var menu = cut.FindComponent<Menu>();
+        Assert.True(menu.Instance.IsOpen);
+
+        cut.Find("button").Click();
+
+        Assert.False(menu.Instance.IsOpen);
+    }
+
+    [Fact]
+    public void Button_OnClick_PreventDefault()
+    {
+        Services.AddIgnis();
+        Services.AddSingleton<IHostContext, TestHostContext>();
+
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var cut = Render(@<Menu>
+                             <MenuButton OnClick="e => e.PreventDefault()">
+                             </MenuButton>
+                         </Menu>);
+
+        cut.Find("button").Click();
+
+        var menu = cut.FindComponent<Menu>();
+        Assert.False(menu.Instance.IsOpen);
+    }
+}

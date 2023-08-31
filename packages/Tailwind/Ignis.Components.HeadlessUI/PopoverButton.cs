@@ -109,6 +109,7 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
 
         if (@event.CancellationToken.IsCancellationRequested) return;
         
-        Popover.Open();
+        if (Popover.IsOpen) Popover.Close();
+        else Popover.Open();
     }
 }

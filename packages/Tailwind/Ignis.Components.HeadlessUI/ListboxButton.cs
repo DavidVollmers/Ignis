@@ -118,6 +118,7 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
 
         if (@event.CancellationToken.IsCancellationRequested) return;
         
-        Listbox.Open();
+        if (Listbox.IsOpen) Listbox.Close();
+        else Listbox.Open();
     }
 }

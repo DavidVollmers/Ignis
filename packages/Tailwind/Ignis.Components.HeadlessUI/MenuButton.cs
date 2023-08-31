@@ -115,7 +115,8 @@ public sealed class MenuButton : IgnisComponentBase, IMenuButton
         OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
-        
-        Menu.Open();
+
+        if (Menu.IsOpen) Menu.Close();
+        else Menu.Open();
     }
 }

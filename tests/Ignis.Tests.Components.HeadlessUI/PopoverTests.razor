@@ -19,6 +19,10 @@
 
         var popover = cut.FindComponent<Popover>();
         Assert.True(popover.Instance.IsOpen);
+
+        cut.Find("button").Click();
+
+        Assert.False(popover.Instance.IsOpen);
     }
 
     [Fact]
