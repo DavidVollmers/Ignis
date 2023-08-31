@@ -2,7 +2,7 @@ name: NuGet Packages CI
 
 on:
   push:
-    branches-ignore: [ 'main', 'website' ]
+    branches-ignore: [ 'master', 'website' ]
     tags-ignore: [ '**' ]
   pull_request:
 
