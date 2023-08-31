@@ -3,6 +3,7 @@
 on:
   push:
     branches: [ 'website' ]
+    tags: [ '**' ]
 
 jobs:
   Publish:
