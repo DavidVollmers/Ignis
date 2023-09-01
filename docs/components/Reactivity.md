@@ -47,10 +47,10 @@ by using the `ReactiveSection` component.
 
 @inherits IgnisComponentBase
 
-<ReactiveSection AsElement="p" Value="_counter1" id="counter-1">
+<ReactiveSection AsElement="p" Value="_counter1">
     Counter 1: @_counter1.Value
 </ReactiveSection>
-<ReactiveSection AsElement="p" Value="_counter2" id="counter-2">
+<ReactiveSection AsElement="p" Value="_counter2">
     Counter 2: @_counter2.Value
 </ReactiveSection>
 
