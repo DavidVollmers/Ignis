@@ -7,7 +7,7 @@ internal class PageService : IPageService
 {
     private static readonly IDictionary<string, string?> Cache = new Dictionary<string, string?>();
     private static Section[]? _sections;
-    
+
     private readonly IStaticFileService _staticFileService;
     private readonly ILogger<PageService> _logger;
 
@@ -27,7 +27,7 @@ internal class PageService : IPageService
             await ReloadSectionsAsync(cancellationToken);
         }
 
-        var section = _sections?.FirstOrDefault(s => s.Links.Any(l => l.Link == link));
+        var section = _sections?.FirstOrDefault(s => s.Links.Any(l => CompareLinks(l.Link, link)));
         return section == null ? null : OrderSectionPages(section);
     }
 
@@ -60,7 +60,7 @@ internal class PageService : IPageService
         var path = page.Link;
         if (path == "/") path += "index";
         path = "/docs" + path + ".html";
-        
+
         return await _staticFileService.GetFileContentAsync(path, cancellationToken);
     }
 
@@ -84,6 +84,13 @@ internal class PageService : IPageService
         _sections = sections;
 
         Cache.Clear();
+    }
+
+    public bool CompareLinks(string link1, string link2)
+    {
+        if (link1.EndsWith("/")) link1 = link1[..^1];
+        if (link2.EndsWith("/")) link2 = link2[..^1];
+        return link1 == link2;
     }
 
     private static Section OrderSectionPages(Section section)
