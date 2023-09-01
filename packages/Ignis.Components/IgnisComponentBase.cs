@@ -20,7 +20,7 @@ public abstract class IgnisComponentBase : IComponent
         _renderFragment = builder =>
         {
             _hasPendingQueuedRender = false;
-            
+
             BuildRenderTree(builder);
         };
     }
@@ -45,13 +45,13 @@ public abstract class IgnisComponentBase : IComponent
         {
             await OnInitializedCoreAsync();
         }
-        
+
         await OnUpdateCoreAsync();
 
         Update();
     }
 
-    protected void Update(bool async = false)
+    protected internal void Update(bool async = false)
     {
         if (async)
         {

@@ -22,4 +22,12 @@
     <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Ignis.Components\Ignis.Components.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ignis.Components\Ignis.Components.csproj" />
+  </ItemGroup>
+
 </Project>
