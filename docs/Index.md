@@ -55,3 +55,13 @@ builder.Services.AddIgnisServer();
 builder.Services.AddIgnisWebAssembly();
 ```
 
+## Build your own components
+
+Ignis is built on top of the [Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor) framework, which means
+that you can easily build your own components using the same techniques that you would use to build a Blazor component.
+
+To fully understand and leverage the power of Ignis, you should have a basic understanding of the
+Ignis [component lifecycle](/docs/components/lifecycle).
+
+Furthermore, you can have a look at advanced topics like [dynamic components](/docs/components/dynamic) and the
+[reactivity system](/docs/components/reactivity).
