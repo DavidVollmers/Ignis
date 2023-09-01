@@ -4,7 +4,7 @@
     <PackageId>Ignis.Components.Reactivity</PackageId>
     <Authors>david@vollmers.org</Authors>
     <Copyright>David Vollmers</Copyright>
-    <Description>Provides utilities for reactive state management inside Ignis components</Description>
+    <Description>Provides the reactivity system for Ignis components</Description>
     <PackageProjectUrl>https://github.com/DavidVollmers/Ignis/tree/master/packages/Ignis.Components.Reactivity</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>

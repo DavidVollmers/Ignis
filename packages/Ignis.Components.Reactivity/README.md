@@ -1,6 +1,6 @@
 ﻿# Ignis.Components.Reactivity
 
-Provides utilities for reactive state management inside Ignis components
+Provides the reactivity system for Ignis components
 
 ## Installation
 
