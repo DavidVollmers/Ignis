@@ -7,7 +7,7 @@ permalink: /components/reactivity
 
 When you build your Ignis components you have full control over how they react to changes in their state. This is done
 by manually calling the `Update` method on the component. But this also means you need to call the `Update` method on
-every internal state changed which is not coming from a `Parameter` or `CascadingParameter`.
+every internal state change which is not coming from a `Parameter` or `CascadingParameter`.
 
 To make this easier, Ignis provides the `ReactiveValue<T>` class which will automatically call the `Update` method on
 the component when the value is changed.
