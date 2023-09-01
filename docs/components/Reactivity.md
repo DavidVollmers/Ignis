@@ -48,34 +48,28 @@ by using the `ReactiveSection` component.
 @inherits IgnisComponentBase
 
 <ReactiveSection AsElement="p" Value="_counter1" id="counter-1">
-    @_counter1.Value
+    Counter 1: @_counter1.Value
 </ReactiveSection>
 <ReactiveSection AsElement="p" Value="_counter2" id="counter-2">
-    @_counter2.Value
+    Counter 2: @_counter2.Value
 </ReactiveSection>
 
-<button @onclick="@AlternateIncrement">Increment</button>
+<button @onclick="@(() => ++_counter1.Value)">Increment Counter 1</button>
+<button @onclick="@(() => ++_counter2.Value)">Increment Counter 2</button>
 
 @code
 {
     private readonly ReactiveValue<int> _counter1;
     private readonly ReactiveValue<int> _counter2;
 
-    public AlternatingCounter()
+    public ReactiveSectionCounter()
     {
         _counter1 = new ReactiveValue<int>(this, 0);
         _counter2 = new ReactiveValue<int>(this, 0);
     }
-
-    private void AlternateIncrement()
-    {
-        if (_counter1.Value > _counter2.Value)
-            _counter2.Value++;
-        else
-            _counter1.Value++;
-    }
 }
 ```
 
-*This will render two paragraphs with the value `0` and a button with the text `Increment`. When the button is clicked,
-the paragraph with the lowest value will be updated with the new value.*
+*This will render two paragraphs with the values `0` and two buttons with the text `Increment Counter 1` and
+`Increment Counter 2`. When the buttons are clicked, only the paragraph with the corresponding value will be updated
+**and not the whole component**.*
