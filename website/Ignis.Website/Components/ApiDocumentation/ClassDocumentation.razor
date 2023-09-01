@@ -16,7 +16,7 @@
 
 @if (IsComponent)
 {
-    <a href="/api/@(HttpUtility.UrlEncode(Type.AssemblyQualifiedName))/_">
+    <a href="@Type.GetTypeDocumentationLink()">
         @Resources["ViewApiReference"]
     </a>
 }
@@ -37,7 +37,7 @@ else
     if (_typeComments != null)
     {
         <p>
-            @_typeComments.Summary
+            @_typeComments.Summary.ResolveCodeComment()
         </p>
     }
 
@@ -79,7 +79,7 @@ else
                         <code>@GetConstructorDefinition(ctor)</code>
                     </td>
                     <td>
-                        @methodComments.Summary
+                        @methodComments.Summary.ResolveCodeComment()
                     </td>
                 </tr>
             }
