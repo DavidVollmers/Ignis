@@ -18,8 +18,10 @@ The Blazor framework for building modern web applications.
   offer.
 - **Open-source:** Ignis is open-source and free to use. You can use it for both personal and commercial projects.
 - **Lightweight:** Ignis is lightweight and does not have any dependencies other than Blazor.
-- **Easy to use:** Ignis is easy to use and has a small learning curve. You can get started with Ignis in just a few
-  minutes.
+- **Integration:** You can use Ignis to build your application from scratch or use it to extend your existing
+  application.
+- **Control:** Ignis gives you full control over your application rendering. You can decide when to render your
+  components or rely on the Ignis reactivity system.
 - **HeadlessUI:** Ignis supports [Headless UI](https://headlessui.com). Headless UI is a set of unstyled, fully
   accessible UI components.
 
@@ -43,6 +45,10 @@ and `Fragment`.
 
 The web components package, containing components and interfaces that are specific to the web/browser,
 like `ScrollDetector` and `ILocalStorage` or `IFocus`.
+
+### Ignis.Components.Reactivity
+
+The reactivity package, containing components and classes that are specific to the Ignis [reactivity system](https://ignis.dvolper.dev/docs/components/reactivity).
 
 ### Ignis.Utils
 

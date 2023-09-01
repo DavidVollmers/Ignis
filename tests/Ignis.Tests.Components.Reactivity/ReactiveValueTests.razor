@@ -1,0 +1,44 @@
+﻿@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void SilentCounter()
+    {
+        Services.AddIgnis();
+        Services.AddSingleton<IHostContext, TestHostContext>();
+
+        var cut = RenderComponent<SilentCounter>();
+        Assert.Equal(1, cut.RenderCount);
+        
+        var result = cut.Find("p").TextContent;
+        Assert.Equal("0", result);
+        
+        cut.Find("button").Click();
+        
+        Assert.Equal(1, cut.RenderCount);
+        
+        result = cut.Find("p").TextContent;
+        Assert.Equal("0", result);
+    }
+    
+    [Fact]
+    public void ReactiveCounter()
+    {
+        Services.AddIgnis();
+        Services.AddSingleton<IHostContext, TestHostContext>();
+
+        var cut = RenderComponent<ReactiveCounter>();
+        Assert.Equal(1, cut.RenderCount);
+        
+        var result = cut.Find("p").TextContent;
+        Assert.Equal("0", result);
+        
+        cut.Find("button").Click();
+        
+        Assert.Equal(2, cut.RenderCount);
+        
+        result = cut.Find("p").TextContent;
+        Assert.Equal("1", result);
+    }
+}
