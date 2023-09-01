@@ -1,0 +1,15 @@
+﻿@inherits IgnisComponentBase
+
+<p>@_counter.Value</p>
+
+<button @onclick="@(() => _counter.SetSilently(_counter.Value + 1))">Increment</button>
+
+@code
+{
+    private readonly ReactiveValue<int> _counter;
+
+    public SilentCounter()
+    {
+        _counter = new ReactiveValue<int>(this, 0);
+    }
+}

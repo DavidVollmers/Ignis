@@ -3,7 +3,7 @@
 public sealed class ReactiveValue<T>
 {
     private readonly IgnisComponentBase _owner;
-    
+
     private T _value;
 
     public ReactiveValue(IgnisComponentBase owner, T value)
@@ -24,5 +24,10 @@ public sealed class ReactiveValue<T>
 
             _owner.Update();
         }
+    }
+
+    public void SetSilently(T value)
+    {
+        _value = value;
     }
 }
