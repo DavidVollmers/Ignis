@@ -27,7 +27,7 @@ internal class PageService : IPageService
             await ReloadSectionsAsync(cancellationToken);
         }
 
-        var section = _sections?.FirstOrDefault(s => s.Links.Any(l => CompareLinks(l.Link, link)));
+        var section = _sections?.FirstOrDefault(s => s.Pages.Any(l => CompareLinks(l.Link, link)));
         return section == null ? null : OrderSectionPages(section);
     }
 
@@ -39,7 +39,7 @@ internal class PageService : IPageService
         }
 
         return _sections?
-            .OrderBy(s => s.Links.MinBy(l => l.Order)?.Order ?? -1)
+            .OrderBy(s => s.Pages.MinBy(l => l.Order)?.Order ?? -1)
             .Select(OrderSectionPages)
             .ToArray();
     }
@@ -95,6 +95,6 @@ internal class PageService : IPageService
 
     private static Section OrderSectionPages(Section section)
     {
-        return new Section { Title = section.Title, Links = section.Links.OrderBy(l => l.Order).ToArray() };
+        return new Section { Title = section.Title, Pages = section.Pages.OrderBy(l => l.Order).ToArray() };
     }
 }

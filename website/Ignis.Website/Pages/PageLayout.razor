@@ -1,5 +1,10 @@
-﻿@inherits IgnisComponentBase
+﻿@using Ignis.Website.Services
+@using Ignis.Website.Contracts
+@using Microsoft.AspNetCore.Components.Routing
+@inherits IgnisAsyncComponentBase
 @inject NavigationManager Router
+@inject IPageService PageService
+@inject IStringLocalizer<CommonResources> CommonResources
 
 <CommonLayout>
     <Body>
@@ -21,6 +26,38 @@
             <article>
                 @Body
             </article>
+            <dl class="mt-12 flex border-t border-slate-200 pt-6 dark:border-slate-800">
+                @if (_previousPage != null)
+                {
+                    <div>
+                        <dt class="font-display text-sm font-medium text-slate-900 dark:text-white">
+                            @CommonResources["PreviousPage"]
+                        </dt>
+                        <dd class="mt-1">
+                            <a href="@("/docs" + _previousPage.Link)"
+                               class="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300">
+                                <span aria-hidden="true">&larr;</span>
+                                @_previousPage.Title
+                            </a>
+                        </dd>
+                    </div>
+                }
+                @if (_nextPage != null)
+                {
+                    <div class="ml-auto text-right">
+                        <dt class="font-display text-sm font-medium text-slate-900 dark:text-white">
+                            @CommonResources["NextPage"]
+                        </dt>
+                        <dd class="mt-1">
+                            <a href="@("/docs" + _nextPage.Link)"
+                               class="text-base font-semibold text-slate-500 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-300">
+                                @_nextPage.Title
+                                <span aria-hidden="true">&rarr;</span>
+                            </a>
+                        </dd>
+                    </div>
+                }
+            </dl>
         </div>
     </div>
     </Body>
@@ -29,17 +66,47 @@
 @code
 {
     private string _link = null!;
+    private Page? _previousPage;
+    private Page? _nextPage;
 
     [Parameter]
     public RenderFragment? Body { get; set; }
-    
-    protected override void OnUpdate()
+
+    protected override void OnInitialized()
     {
-        ParseLink();
+        Router.LocationChanged += RouterOnLocationChanged;
     }
 
-    private void ParseLink()
+    protected override async Task OnUpdateAsync(CancellationToken cancellationToken)
     {
-        _link = ('/' + Router.ToBaseRelativePath(Router.Uri)).Split('#')[0];
+        await ParseLinkAsync(cancellationToken);
+    }
+
+    private async Task ParseLinkAsync(CancellationToken cancellationToken)
+    {
+        var link = _link = ('/' + Router.ToBaseRelativePath(Router.Uri)).Split('#')[0];
+        if (link.StartsWith("/docs")) link = link["/docs".Length..];
+
+        var sections = await PageService.GetSectionsAsync(cancellationToken);
+
+        if (sections == null) return;
+
+        var currentSectionIndex = Array.FindIndex(sections, s => s.Pages.Any(p => PageService.CompareLinks(p.Link, link)));
+        if (currentSectionIndex == -1) return;
+
+        var currentSection = sections[currentSectionIndex];
+        var previousSection = currentSectionIndex > 0 ? sections[currentSectionIndex - 1] : null;
+        var nextSection = currentSectionIndex < sections.Length - 1 ? sections[currentSectionIndex + 1] : null;
+
+        var currentPageIndex = Array.FindIndex(currentSection.Pages, p => p.Link == link);
+        if (currentPageIndex == -1) return;
+
+        _previousPage = currentPageIndex > 0 ? currentSection.Pages[currentPageIndex - 1] : previousSection?.Pages.LastOrDefault();
+        _nextPage = currentPageIndex < currentSection.Pages.Length - 1 ? currentSection.Pages[currentPageIndex + 1] : nextSection?.Pages.FirstOrDefault();
+    }
+
+    private void RouterOnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        Update();
     }
 }
