@@ -29,7 +29,11 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
     /// <inheritdoc />
     public void Open(Action? continueWith = null)
     {
-        if (_isOpen || FrameTracker.IsPending) return;
+        if (_isOpen || FrameTracker.IsPending)
+        {
+            if (_isOpen) continueWith?.Invoke();
+            return;
+        }
 
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
@@ -52,7 +56,11 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
     /// <inheritdoc />
     public void Close(Action? continueWith = null)
     {
-        if (!_isOpen || FrameTracker.IsPending) return;
+        if (!_isOpen || FrameTracker.IsPending)
+        {
+            if (!_isOpen) continueWith?.Invoke();
+            return;
+        }
 
         if (_transition != null)
         {

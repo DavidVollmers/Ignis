@@ -25,7 +25,7 @@ public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComp
 
     public virtual RenderFragment OutletContent => BuildRenderTree;
 
-    protected override bool ShouldRender => IgnoreOutlet || _outlet == null;
+    protected override bool ShouldRender => IgnoreOutlet;
 
     [Inject] public IOutletRegistry OutletRegistry { get; set; } = null!;
 

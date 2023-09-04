@@ -183,6 +183,10 @@ public sealed class Transition : TransitionBase, ITransition
         var startedTransitions = new List<ITransitionChild>();
         var finishedTransitions = 0;
 
+        if (isEnter) base.EnterTransition(() => AggregateDialogs(true, ContinueWith));
+        else ContinueWith();
+        return;
+
         void ContinueWith()
         {
             ++finishedTransitions;
@@ -204,9 +208,6 @@ public sealed class Transition : TransitionBase, ITransition
                 else AggregateDialogs(false, () => base.LeaveTransition(continueWith));
             }
         }
-
-        if (isEnter) base.EnterTransition(() => AggregateDialogs(true, ContinueWith));
-        else ContinueWith();
     }
 
     private void AggregateDialogs(bool open, Action continueWith)
@@ -219,17 +220,19 @@ public sealed class Transition : TransitionBase, ITransition
 
         var count = _dialogs.Count;
 
+        foreach (var dialog in _dialogs)
+        {
+            if (open) dialog.Open(ContinueWith);
+            else dialog.CloseFromTransition(ContinueWith);
+        }
+
+        return;
+
         void ContinueWith()
         {
             --count;
 
             if (count == 0) continueWith();
-        }
-
-        foreach (var dialog in _dialogs)
-        {
-            if (open) dialog.Open(ContinueWith);
-            else dialog.CloseFromTransition(ContinueWith);
         }
     }
 
