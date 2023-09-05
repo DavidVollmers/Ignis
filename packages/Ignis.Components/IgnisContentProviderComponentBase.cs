@@ -16,7 +16,7 @@ public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IC
 
             _ignoreOutlet = value;
 
-            if (!_ignoreOutlet && Outlet == null) ContentRegistry.RegisterContentProvider(this);
+            RegisterAsContentProvider();
         }
     }
 
@@ -30,9 +30,14 @@ public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IC
 
     protected override void OnInitialized()
     {
-        if (!IgnoreOutlet && Outlet == null) ContentRegistry.RegisterContentProvider(this);
+        RegisterAsContentProvider();
     }
 
+    protected virtual void RegisterAsContentProvider()
+    {
+        if (!IgnoreOutlet && Outlet == null) ContentRegistry.RegisterContentProvider(this);
+    }
+    
     protected new void Update(bool async = false)
     {
         if (Outlet != null) Outlet.Update(async);

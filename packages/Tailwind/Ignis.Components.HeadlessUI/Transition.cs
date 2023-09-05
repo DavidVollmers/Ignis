@@ -93,8 +93,6 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     /// <inheritdoc />
     protected override void OnInitialized()
     {
-        if (Outlet == null) ContentRegistry.RegisterContentProvider(this);
-        
         Menu?.SetTransition(this);
         
         Listbox?.SetTransition(this);
@@ -177,6 +175,8 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
         if (dialog == null) throw new ArgumentNullException(nameof(dialog));
 
         if (!_dialogs.Contains(dialog)) _dialogs.Add(dialog);
+        
+        if (Outlet == null) ContentRegistry.RegisterContentProvider(this);
     }
 
     /// <inheritdoc />
@@ -185,6 +185,8 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
         if (dialog == null) throw new ArgumentNullException(nameof(dialog));
 
         _dialogs.Remove(dialog);
+        
+        ContentRegistry.UnregisterContentProvider(this);
     }
 
     private void WatchTransition(bool isEnter, Action? continueWith)

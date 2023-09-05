@@ -110,6 +110,14 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
     }
 
     /// <inheritdoc />
+    protected override void RegisterAsContentProvider()
+    {
+        if (Transition != null) return;
+        
+        base.RegisterAsContentProvider();
+    }
+
+    /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         if (!_isOpen) return;
