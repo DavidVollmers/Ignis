@@ -2,7 +2,7 @@
 
 namespace Ignis.Components;
 
-public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComponent, IDisposable
+public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IContentProvider, IDisposable
 {
     private bool _ignoreOutlet;
     
@@ -12,25 +12,25 @@ public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComp
         get => _ignoreOutlet;
         set
         {
-            OutletRegistry.UnregisterComponent(this);
+            ContentRegistry.UnregisterContentProvider(this);
 
             _ignoreOutlet = value;
 
-            if (!_ignoreOutlet && Outlet == null) OutletRegistry.RegisterComponent(this);
+            if (!_ignoreOutlet && Outlet == null) ContentRegistry.RegisterContentProvider(this);
         }
     }
 
-    [CascadingParameter] public IOutlet? Outlet { get; set; }
+    [CascadingParameter] public IContentHost? Outlet { get; set; }
     
-    public virtual RenderFragment Content => BuildRenderTree;
+    public RenderFragment Content => BuildRenderTree;
 
     protected override bool ShouldRender => IgnoreOutlet;
 
-    [Inject] public IOutletRegistry OutletRegistry { get; set; } = null!;
+    [Inject] public IContentRegistry ContentRegistry { get; set; } = null!;
 
     protected override void OnInitialized()
     {
-        if (!IgnoreOutlet && Outlet == null) OutletRegistry.RegisterComponent(this);
+        if (!IgnoreOutlet && Outlet == null) ContentRegistry.RegisterContentProvider(this);
     }
 
     protected new void Update(bool async = false)
@@ -43,7 +43,7 @@ public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComp
     {
         if (!disposing) return;
 
-        OutletRegistry.UnregisterComponent(this);
+        ContentRegistry.UnregisterContentProvider(this);
     }
 
     public void Dispose()
@@ -52,7 +52,7 @@ public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComp
         GC.SuppressFinalize(this);
     }
 
-    ~IgnisOutletComponentBase()
+    ~IgnisContentProviderComponentBase()
     {
         Dispose(false);
     }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DialogOutlet : OutletBase, IDynamicComponent
+public sealed class DialogOutlet : ContentHostBase, IDynamicComponent
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -54,11 +54,11 @@ public sealed class DialogOutlet : OutletBase, IDynamicComponent
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<IOutlet>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IOutlet>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<IOutlet>.Value), this);
+            builder.OpenComponent<CascadingValue<IContentHost>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<IContentHost>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<IContentHost>.Value), this);
             // ReSharper disable once VariableHidesOuterVariable
-            builder.AddAttribute(6, nameof(CascadingValue<IOutlet>.ChildContent), (RenderFragment)(builder =>
+            builder.AddAttribute(6, nameof(CascadingValue<IContentHost>.ChildContent), (RenderFragment)(builder =>
             {
                 foreach (var dialog in Components)
                 {
@@ -73,10 +73,10 @@ public sealed class DialogOutlet : OutletBase, IDynamicComponent
     }
 
     /// <inheritdoc />
-    public override void OnComponentRegistered(IOutletComponent component)
+    public override void OnProviderRegistered(IContentProvider component)
     {
         if (component is not IDialog) return;
 
-        base.OnComponentRegistered(component);
+        base.OnProviderRegistered(component);
     }
 }

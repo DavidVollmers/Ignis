@@ -55,6 +55,8 @@ public sealed class Transition : TransitionBase, ITransition
 
     [Parameter] public bool Appear { get; set; }
 
+    [CascadingParameter] public IContentHost? Outlet { get; set; }
+
     [CascadingParameter] public IMenu? Menu { get; set; }
 
     [CascadingParameter] public IListbox? Listbox { get; set; }

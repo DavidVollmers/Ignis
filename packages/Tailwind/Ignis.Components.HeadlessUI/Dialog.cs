@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRender
+public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandleAfterRender
 {
     private readonly AttributeCollection _attributes;
 
@@ -83,9 +83,6 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
 
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    /// <inheritdoc />
-    public override RenderFragment Content => Transition?.Content ?? base.Content;
 
     [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
 

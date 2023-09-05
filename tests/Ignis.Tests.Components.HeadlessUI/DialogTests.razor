@@ -68,12 +68,12 @@
                                  <Dialog IsOpen id="@dialogId"></Dialog>
                              </Transition>
                          </div>);
-
-        var dialogs = cut.FindAll($"#{dialogId}");
-        Assert.Single(dialogs);
         
         var transitions = cut.FindAll($"#{transitionId}");
         Assert.Single(transitions);
+
+        var dialogs = cut.FindAll($"#{dialogId}");
+        Assert.Single(dialogs);
         
         var dialogDiv = dialogs.Single();
         var transitionDiv = transitions.Single();
@@ -111,12 +111,12 @@
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, true); });
 
         await Task.Delay(1000);
-
-        var dialogs = cut.FindAll($"#{dialogId}");
-        Assert.Single(dialogs);
         
         var transitions = cut.FindAll($"#{transitionId}");
         Assert.Single(transitions);
+
+        var dialogs = cut.FindAll($"#{dialogId}");
+        Assert.Single(dialogs);
         
         var dialogDiv = dialogs.Single();
         var transitionDiv = transitions.Single();

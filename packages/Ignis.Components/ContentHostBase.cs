@@ -2,16 +2,16 @@
 
 namespace Ignis.Components;
 
-public abstract class OutletBase : IgnisComponentBase, IOutlet, IOutletRegistrySubscriber, IDisposable
+public abstract class ContentHostBase : IgnisComponentBase, IContentHost, IContentRegistrySubscriber, IDisposable
 {
-    private readonly IList<IOutletComponent> _components = new List<IOutletComponent>();
+    private readonly IList<IContentProvider> _components = new List<IContentProvider>();
 
-    private IOutletRegistry? _outletRegistry;
+    private IContentRegistry? _outletRegistry;
 
-    protected IEnumerable<IOutletComponent> Components => _components;
+    protected IEnumerable<IContentProvider> Components => _components;
 
     [Inject]
-    public IOutletRegistry? OutletRegistry
+    public IContentRegistry? OutletRegistry
     {
         get => _outletRegistry;
         set
@@ -24,7 +24,7 @@ public abstract class OutletBase : IgnisComponentBase, IOutlet, IOutletRegistryS
     }
 
     /// <inheritdoc />
-    public virtual void OnComponentRegistered(IOutletComponent component)
+    public virtual void OnProviderRegistered(IContentProvider component)
     {
         if (_components.Contains(component)) return;
 
@@ -34,7 +34,7 @@ public abstract class OutletBase : IgnisComponentBase, IOutlet, IOutletRegistryS
     }
 
     /// <inheritdoc />
-    public void OnComponentUnregistered(IOutletComponent component)
+    public void OnProviderUnregistered(IContentProvider component)
     {
         if (!_components.Contains(component)) return;
 
@@ -43,7 +43,7 @@ public abstract class OutletBase : IgnisComponentBase, IOutlet, IOutletRegistryS
         base.Update();
     }
 
-    void IOutlet.Update(bool async)
+    void IContentHost.Update(bool async)
     {
         base.Update(async);
     }
@@ -64,7 +64,7 @@ public abstract class OutletBase : IgnisComponentBase, IOutlet, IOutletRegistryS
         GC.SuppressFinalize(this);
     }
 
-    ~OutletBase()
+    ~ContentHostBase()
     {
         Dispose(false);
     }
