@@ -79,7 +79,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     public object? Component { get; set; }
 
     /// <inheritdoc />
-    public RenderFragment Content => BuildRenderTree;
+    public RenderFragment Content => BuildContentRenderTree;
 
     /// <inheritdoc />
     public bool HasDialogs => _dialogs.Any();
@@ -106,6 +106,13 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        if (Outlet != null) return;
+
+        BuildContentRenderTree(builder);
+    }
+    
+    private void BuildContentRenderTree(RenderTreeBuilder builder)
+    {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         // ReSharper disable once VariableHidesOuterVariable
@@ -122,6 +129,14 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
         });
 
         builder.CloseAs(this);
+    }
+
+    /// <inheritdoc />
+    public void HostedBy(IContentHost host)
+    {
+        Outlet = host ?? throw new ArgumentNullException(nameof(host));
+        
+        Update();
     }
 
     /// <inheritdoc />
@@ -247,7 +262,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
             if (count == 0) continueWith();
         }
     }
-
+    
     /// <inheritdoc />
     public override Task OnAfterRenderAsync()
     {

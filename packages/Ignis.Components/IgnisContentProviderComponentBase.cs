@@ -22,8 +22,8 @@ public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IC
     }
 
     [CascadingParameter] public IContentHost? Outlet { get; set; }
-    
-    public abstract RenderFragment Content { get; }
+
+    public RenderFragment Content => BuildContentRenderTree;
 
     [Inject] public IContentRegistry ContentRegistry { get; set; } = null!;
     
@@ -47,8 +47,17 @@ public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IC
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         if (Outlet != null) return;
+
+        BuildContentRenderTree(builder);
+    }
+
+    protected abstract void BuildContentRenderTree(RenderTreeBuilder builder);
+
+    public void HostedBy(IContentHost host)
+    {
+        Outlet = host ?? throw new ArgumentNullException(nameof(host));
         
-        builder.AddContent(0, Content);
+        base.Update();
     }
 
     protected virtual void Dispose(bool disposing)

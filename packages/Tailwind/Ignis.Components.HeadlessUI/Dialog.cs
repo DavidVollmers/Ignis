@@ -84,9 +84,6 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
-    /// <inheritdoc />
-    public override RenderFragment Content => BuildContentRenderTree;
-
     [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
 
     public Dialog()
@@ -118,6 +115,27 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
         if (Transition != null) return;
         
         base.RegisterAsContentProvider();
+    }
+
+    /// <inheritdoc />
+    protected override void BuildContentRenderTree(RenderTreeBuilder builder)
+    {
+        if (!_isOpen) return;
+
+        builder.OpenAs(0, this);
+        builder.AddMultipleAttributes(1, Attributes!);
+        // ReSharper disable once VariableHidesOuterVariable
+        builder.AddContentFor(2, this, builder =>
+        {
+            builder.OpenComponent<CascadingValue<IDialog>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<IDialog>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<IDialog>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<IDialog>.ChildContent), this.GetChildContent(ChildContent));
+
+            builder.CloseComponent();
+        });
+
+        builder.CloseAs(this);
     }
 
     /// <inheritdoc />
@@ -179,26 +197,6 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
     public void CloseFromTransition(Action? continueWith = null)
     {
         CloseCore(continueWith, true);
-    }
-
-    private void BuildContentRenderTree(RenderTreeBuilder builder)
-    {
-        if (!_isOpen) return;
-
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
-        // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
-        {
-            builder.OpenComponent<CascadingValue<IDialog>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IDialog>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<IDialog>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IDialog>.ChildContent), this.GetChildContent(ChildContent));
-
-            builder.CloseComponent();
-        });
-
-        builder.CloseAs(this);
     }
 
     /// <inheritdoc />
