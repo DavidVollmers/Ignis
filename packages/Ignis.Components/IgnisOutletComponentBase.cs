@@ -5,8 +5,7 @@ namespace Ignis.Components;
 public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComponent, IDisposable
 {
     private bool _ignoreOutlet;
-    private IOutlet? _outlet;
-
+    
     [Parameter]
     public bool IgnoreOutlet
     {
@@ -17,9 +16,11 @@ public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComp
 
             _ignoreOutlet = value;
 
-            if (!_ignoreOutlet) OutletRegistry.RegisterComponent(this);
+            if (!_ignoreOutlet && Outlet == null) OutletRegistry.RegisterComponent(this);
         }
     }
+
+    [CascadingParameter] public IOutlet? Outlet { get; set; }
     
     public virtual RenderFragment Content => BuildRenderTree;
 
@@ -29,29 +30,13 @@ public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComp
 
     protected override void OnInitialized()
     {
-        if (!IgnoreOutlet) OutletRegistry.RegisterComponent(this);
+        if (!IgnoreOutlet && Outlet == null) OutletRegistry.RegisterComponent(this);
     }
 
     protected new void Update(bool async = false)
     {
-        if (_outlet != null) _outlet.Update(async);
+        if (Outlet != null) Outlet.Update(async);
         else base.Update(async);
-    }
-
-    public void SetOutlet(IOutlet outlet)
-    {
-        if (outlet == null) throw new ArgumentNullException(nameof(outlet));
-
-        if (IgnoreOutlet) return;
-
-        if (_outlet != null && outlet != _outlet) throw new InvalidOperationException("Component is already adopted.");
-
-        _outlet = outlet;
-    }
-
-    public void SetFree()
-    {
-        _outlet = null;
     }
 
     protected virtual void Dispose(bool disposing)

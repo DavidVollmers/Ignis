@@ -54,10 +54,19 @@ public sealed class DialogOutlet : OutletBase, IDynamicComponent
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            foreach (var dialog in Components)
+            builder.OpenComponent<CascadingValue<IOutlet>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<IOutlet>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<IOutlet>.Value), this);
+            // ReSharper disable once VariableHidesOuterVariable
+            builder.AddAttribute(6, nameof(CascadingValue<IOutlet>.ChildContent), (RenderFragment)(builder =>
             {
-                builder.AddContent(3, dialog.Content);
-            }
+                foreach (var dialog in Components)
+                {
+                    builder.AddContent(7, dialog.Content);
+                }
+            }));
+
+            builder.CloseComponent();
         });
 
         builder.CloseAs(this);

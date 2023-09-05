@@ -30,8 +30,6 @@ public abstract class OutletBase : IgnisComponentBase, IOutlet, IOutletRegistryS
 
         _components.Add(component);
 
-        component.SetOutlet(this);
-
         base.Update();
     }
 
@@ -41,8 +39,6 @@ public abstract class OutletBase : IgnisComponentBase, IOutlet, IOutletRegistryS
         if (!_components.Contains(component)) return;
 
         _components.Remove(component);
-
-        component.SetFree();
 
         base.Update();
     }
@@ -58,11 +54,6 @@ public abstract class OutletBase : IgnisComponentBase, IOutlet, IOutletRegistryS
 
         _outletRegistry?.Unsubscribe(this);
         _outletRegistry = null;
-
-        foreach (var component in _components)
-        {
-            component.SetFree();
-        }
 
         _components.Clear();
     }
