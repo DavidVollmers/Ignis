@@ -32,6 +32,9 @@ public abstract class ContentHostBase : IgnisComponentBase, IContentHost, IConte
 
         _components.Add(provider);
 
+        // needs to be set here, because the provider might be rendered before the outlet is
+        provider.Outlet = this;
+
         base.Update();
     }
 

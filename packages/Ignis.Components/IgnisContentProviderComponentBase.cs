@@ -26,7 +26,7 @@ public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IC
     public abstract RenderFragment Content { get; }
 
     [Inject] public IContentRegistry ContentRegistry { get; set; } = null!;
-
+    
     protected override void OnInitialized()
     {
         RegisterAsContentProvider();
