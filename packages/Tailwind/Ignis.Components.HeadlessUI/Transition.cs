@@ -82,7 +82,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     public RenderFragment Content => BuildContentRenderTree;
 
     /// <inheritdoc />
-    public bool HasDialogs => _dialogs.Any();
+    public bool HasOutletDialogs => _dialogs.Any(d => !d.IgnoreOutlet);
 
     [Inject] public IContentRegistry ContentRegistry { get; set; } = null!;
 

@@ -1,11 +1,10 @@
 ﻿using Ignis.Components.Web;
-using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
 public interface ITransition : IDynamicParentComponent<ITransition>, ICssClass, IContentProvider
 {
-    internal bool HasDialogs { get; }
+    internal bool HasOutletDialogs { get; }
     
     void Hide(Action? continueWith = null);
 

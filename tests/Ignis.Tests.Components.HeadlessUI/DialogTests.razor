@@ -83,6 +83,38 @@
     }
 
     [Fact]
+    public void IgnoreOutletWithTransition()
+    {
+        Services.AddIgnis();
+        Services.AddSingleton<IHostContext, TestHostContext>();
+
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        const string dialogId = "dialog";
+        const string outletId = "dialog-outlet";
+        const string transitionId = "dialog-transition";
+
+        var cut = Render(@<div>
+                             <DialogOutlet AsElement="div" id="@outletId"/>
+                             <Transition Show Appear id="@transitionId">
+                                 <Dialog IsOpen IgnoreOutlet id="@dialogId"></Dialog>
+                             </Transition>
+                         </div>);
+        
+        var transitions = cut.FindAll($"#{transitionId}");
+        Assert.Single(transitions);
+
+        var dialogs = cut.FindAll($"#{dialogId}");
+        Assert.Single(dialogs);
+        
+        var dialogDiv = dialogs.Single();
+        var transitionDiv = transitions.Single();
+        var outletDiv = cut.Find($"#{outletId}");
+        Assert.False(outletDiv.Contains(transitionDiv));
+        Assert.True(transitionDiv.Contains(dialogDiv));
+    }
+
+    [Fact]
     public async Task OutletWithTransitionAndChildren()
     {
         Services.AddIgnis();
