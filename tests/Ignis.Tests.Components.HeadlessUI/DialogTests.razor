@@ -64,7 +64,7 @@
 
         var cut = Render(@<div>
                              <DialogOutlet AsElement="div" id="@outletId"/>
-                             <Transition Show id="@transitionId">
+                             <Transition Show Appear id="@transitionId">
                                  <Dialog IsOpen id="@dialogId"></Dialog>
                              </Transition>
                          </div>);
@@ -110,8 +110,8 @@
         var transition = cut.FindComponent<Transition>();
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, true); });
 
-        await Task.Delay(1000);
-        
+        await Task.Delay(100);
+
         var transitions = cut.FindAll($"#{transitionId}");
         Assert.Single(transitions);
 

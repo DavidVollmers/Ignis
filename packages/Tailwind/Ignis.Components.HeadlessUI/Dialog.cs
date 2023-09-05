@@ -118,6 +118,19 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
     }
 
     /// <inheritdoc />
+    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    {
+        // Always render the dialog if it's in a transition since the transition will be handled by DialogOutlet
+        if (Transition != null)
+        {
+            BuildContentRenderTree(builder);
+            return;
+        }
+        
+        base.BuildRenderTree(builder);
+    }
+
+    /// <inheritdoc />
     protected override void BuildContentRenderTree(RenderTreeBuilder builder)
     {
         if (!_isOpen) return;
