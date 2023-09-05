@@ -18,7 +18,10 @@
                              <Dialog IsOpen id="@dialogId"></Dialog>
                          </div>);
 
-        var dialogDiv = cut.Find($"#{dialogId}");
+        var dialogs = cut.FindAll($"#{dialogId}");
+        Assert.Single(dialogs);
+        
+        var dialogDiv = dialogs.Single();
         var outletDiv = cut.Find($"#{outletId}");
         Assert.True(outletDiv.Contains(dialogDiv));
     }
@@ -39,7 +42,10 @@
                              <Dialog IgnoreOutlet IsOpen id="@dialogId"></Dialog>
                          </div>);
 
-        var dialogDiv = cut.Find($"#{dialogId}");
+        var dialogs = cut.FindAll($"#{dialogId}");
+        Assert.Single(dialogs);
+        
+        var dialogDiv = dialogs.Single();
         var outletDiv = cut.Find($"#{outletId}");
         Assert.False(outletDiv.Contains(dialogDiv));
     }
@@ -63,8 +69,14 @@
                              </Transition>
                          </div>);
 
-        var transitionDiv = cut.Find($"#{transitionId}");
-        var dialogDiv = cut.Find($"#{dialogId}");
+        var dialogs = cut.FindAll($"#{dialogId}");
+        Assert.Single(dialogs);
+        
+        var transitions = cut.FindAll($"#{transitionId}");
+        Assert.Single(transitions);
+        
+        var dialogDiv = dialogs.Single();
+        var transitionDiv = transitions.Single();
         var outletDiv = cut.Find($"#{outletId}");
         Assert.True(outletDiv.Contains(transitionDiv));
         Assert.True(transitionDiv.Contains(dialogDiv));
@@ -99,9 +111,15 @@
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, true); });
 
         await Task.Delay(1000);
+
+        var dialogs = cut.FindAll($"#{dialogId}");
+        Assert.Single(dialogs);
         
-        var transitionDiv = cut.Find($"#{transitionId}");
-        var dialogDiv = cut.Find($"#{dialogId}");
+        var transitions = cut.FindAll($"#{transitionId}");
+        Assert.Single(transitions);
+        
+        var dialogDiv = dialogs.Single();
+        var transitionDiv = transitions.Single();
         var outletDiv = cut.Find($"#{outletId}");
         var transitionChildDiv = cut.Find($"#{transitionChildId}");
         var dialogPanelDiv = cut.Find($"#{dialogPanelId}");
