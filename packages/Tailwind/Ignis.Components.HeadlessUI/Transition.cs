@@ -55,6 +55,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
 
     [Parameter] public bool Appear { get; set; }
 
+    /// <inheritdoc />
     [CascadingParameter] public IContentHost? Outlet { get; set; }
 
     [CascadingParameter] public IMenu? Menu { get; set; }

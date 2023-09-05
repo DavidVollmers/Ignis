@@ -4,7 +4,7 @@ namespace Ignis.Components;
 
 public interface IContentProvider
 {
-    IContentHost Outlet { get; set; }
+    IContentHost? Outlet { get; set; }
     
     RenderFragment? Content { get; }
 }
