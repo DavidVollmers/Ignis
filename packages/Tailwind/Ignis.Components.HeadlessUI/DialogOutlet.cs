@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DialogOutlet : OutletBase, IDynamicComponent
+public sealed class DialogOutlet : ContentHostBase, IDynamicComponent
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -54,20 +54,32 @@ public sealed class DialogOutlet : OutletBase, IDynamicComponent
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            foreach (var dialog in Components)
+            builder.OpenComponent<CascadingValue<IContentHost>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<IContentHost>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<IContentHost>.Value), this);
+            // ReSharper disable once VariableHidesOuterVariable
+            builder.AddAttribute(6, nameof(CascadingValue<IContentHost>.ChildContent), (RenderFragment)(builder =>
             {
-                builder.AddContent(3, dialog.OutletContent);
-            }
+                foreach (var dialog in Components)
+                {
+                    builder.AddContent(7, dialog.Content);
+                }
+            }));
+
+            builder.CloseComponent();
         });
 
         builder.CloseAs(this);
     }
 
     /// <inheritdoc />
-    public override void OnComponentRegistered(IOutletComponent component)
+    public override void OnProviderRegistered(IContentProvider provider)
     {
-        if (component is not IDialog) return;
+        // ReSharper disable once ConvertIfStatementToSwitchStatement
+        if (provider == null) throw new ArgumentNullException(nameof(provider));
 
-        base.OnComponentRegistered(component);
+        if (provider is not IDialog and not ITransition { HasOutletDialogs: true }) return;
+
+        base.OnProviderRegistered(provider);
     }
 }

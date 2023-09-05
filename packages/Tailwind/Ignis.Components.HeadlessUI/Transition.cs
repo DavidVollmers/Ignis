@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Transition : TransitionBase, ITransition
+public sealed class Transition : TransitionBase, ITransition, IDisposable
 {
     private readonly IList<ITransitionChild> _children = new List<ITransitionChild>();
     private readonly IList<IDialog> _dialogs = new List<IDialog>();
@@ -55,6 +55,9 @@ public sealed class Transition : TransitionBase, ITransition
 
     [Parameter] public bool Appear { get; set; }
 
+    /// <inheritdoc />
+    [CascadingParameter] public IContentHost? Outlet { get; set; }
+
     [CascadingParameter] public IMenu? Menu { get; set; }
 
     [CascadingParameter] public IListbox? Listbox { get; set; }
@@ -76,7 +79,12 @@ public sealed class Transition : TransitionBase, ITransition
     public object? Component { get; set; }
 
     /// <inheritdoc />
-    public RenderFragment RenderFragment => BuildRenderTree;
+    public RenderFragment Content => BuildContentRenderTree;
+
+    /// <inheritdoc />
+    public bool HasOutletDialogs => _dialogs.Any(d => !d.IgnoreOutlet);
+
+    [Inject] public IContentRegistry ContentRegistry { get; set; } = null!;
 
     public Transition()
     {
@@ -98,6 +106,13 @@ public sealed class Transition : TransitionBase, ITransition
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        if (Outlet != null) return;
+
+        BuildContentRenderTree(builder);
+    }
+    
+    private void BuildContentRenderTree(RenderTreeBuilder builder)
+    {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         // ReSharper disable once VariableHidesOuterVariable
@@ -114,6 +129,14 @@ public sealed class Transition : TransitionBase, ITransition
         });
 
         builder.CloseAs(this);
+    }
+
+    /// <inheritdoc />
+    public void HostedBy(IContentHost host)
+    {
+        Outlet = host ?? throw new ArgumentNullException(nameof(host));
+        
+        Update();
     }
 
     /// <inheritdoc />
@@ -168,6 +191,8 @@ public sealed class Transition : TransitionBase, ITransition
         if (dialog == null) throw new ArgumentNullException(nameof(dialog));
 
         if (!_dialogs.Contains(dialog)) _dialogs.Add(dialog);
+        
+        if (Outlet == null) ContentRegistry.RegisterContentProvider(this);
     }
 
     /// <inheritdoc />
@@ -182,6 +207,10 @@ public sealed class Transition : TransitionBase, ITransition
     {
         var startedTransitions = new List<ITransitionChild>();
         var finishedTransitions = 0;
+
+        if (isEnter) base.EnterTransition(() => AggregateDialogs(true, ContinueWith));
+        else ContinueWith();
+        return;
 
         void ContinueWith()
         {
@@ -204,9 +233,6 @@ public sealed class Transition : TransitionBase, ITransition
                 else AggregateDialogs(false, () => base.LeaveTransition(continueWith));
             }
         }
-
-        if (isEnter) base.EnterTransition(() => AggregateDialogs(true, ContinueWith));
-        else ContinueWith();
     }
 
     private void AggregateDialogs(bool open, Action continueWith)
@@ -219,20 +245,22 @@ public sealed class Transition : TransitionBase, ITransition
 
         var count = _dialogs.Count;
 
+        foreach (var dialog in _dialogs)
+        {
+            if (open) dialog.Open(ContinueWith);
+            else dialog.CloseFromTransition(ContinueWith);
+        }
+
+        return;
+
         void ContinueWith()
         {
             --count;
 
             if (count == 0) continueWith();
         }
-
-        foreach (var dialog in _dialogs)
-        {
-            if (open) dialog.Open(ContinueWith);
-            else dialog.CloseFromTransition(ContinueWith);
-        }
     }
-
+    
     /// <inheritdoc />
     public override Task OnAfterRenderAsync()
     {
@@ -246,5 +274,10 @@ public sealed class Transition : TransitionBase, ITransition
         else LeaveTransition();
 
         return base.OnAfterRenderAsync();
+    }
+
+    public void Dispose()
+    {
+        ContentRegistry.UnregisterContentProvider(this);
     }
 }

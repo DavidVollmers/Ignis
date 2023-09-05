@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRender
+public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandleAfterRender
 {
     private readonly AttributeCollection _attributes;
 
@@ -84,12 +84,6 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
-    /// <inheritdoc />
-    public override RenderFragment OutletContent => Transition?.RenderFragment ?? base.OutletContent;
-
-    /// <inheritdoc />
-    public override object Identifier => Transition ?? (object)this;
-
     [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
 
     public Dialog()
@@ -116,7 +110,28 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     }
 
     /// <inheritdoc />
+    protected override void RegisterAsContentProvider()
+    {
+        if (Transition != null) return;
+        
+        base.RegisterAsContentProvider();
+    }
+
+    /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
+    {
+        // Always render the dialog if it's in a transition since the transition will be handled by DialogOutlet
+        if (Transition != null)
+        {
+            BuildContentRenderTree(builder);
+            return;
+        }
+        
+        base.BuildRenderTree(builder);
+    }
+
+    /// <inheritdoc />
+    protected override void BuildContentRenderTree(RenderTreeBuilder builder)
     {
         if (!_isOpen) return;
 
@@ -139,7 +154,11 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     /// <inheritdoc />
     public void Open(Action? continueWith = null)
     {
-        if (_isOpen || FrameTracker.IsPending) return;
+        if (_isOpen || FrameTracker.IsPending)
+        {
+            if (_isOpen) continueWith?.Invoke();
+            return;
+        }
 
         IsOpenChanged.InvokeAsync(_isOpen = true);
 
@@ -151,7 +170,11 @@ public sealed class Dialog : IgnisOutletComponentBase, IDialog, IHandleAfterRend
     /// <inheritdoc />
     public void Close(Action? continueWith = null)
     {
-        if (!_isOpen || FrameTracker.IsPending) return;
+        if (!_isOpen || FrameTracker.IsPending)
+        {
+            if (!_isOpen) continueWith?.Invoke();
+            return;
+        }
 
         if (Transition != null)
         {
