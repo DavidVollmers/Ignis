@@ -201,8 +201,6 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
         if (dialog == null) throw new ArgumentNullException(nameof(dialog));
 
         _dialogs.Remove(dialog);
-        
-        ContentRegistry.UnregisterContentProvider(this);
     }
 
     private void WatchTransition(bool isEnter, Action? continueWith)
