@@ -5,6 +5,8 @@ namespace Ignis.Components.HeadlessUI;
 
 public interface ITransition : IDynamicParentComponent<ITransition>, ICssClass, IContentProvider
 {
+    internal bool HasDialogs { get; }
+    
     void Hide(Action? continueWith = null);
 
     void Show(Action? continueWith = null);

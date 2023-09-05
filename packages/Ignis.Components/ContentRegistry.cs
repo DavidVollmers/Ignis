@@ -5,24 +5,24 @@ internal class ContentRegistry : IContentRegistry
     private readonly IList<IContentProvider> _components = new List<IContentProvider>();
     private readonly IList<IContentRegistrySubscriber> _subscribers = new List<IContentRegistrySubscriber>();
 
-    public void RegisterContentProvider(IContentProvider component)
+    public void RegisterContentProvider(IContentProvider provider)
     {
-        if (component == null) throw new ArgumentNullException(nameof(component));
+        if (provider == null) throw new ArgumentNullException(nameof(provider));
 
-        if (_components.Contains(component)) return;
+        if (_components.Contains(provider)) return;
 
-        _components.Add(component);
+        _components.Add(provider);
 
-        foreach (var subscriber in _subscribers) subscriber.OnProviderRegistered(component);
+        foreach (var subscriber in _subscribers) subscriber.OnProviderRegistered(provider);
     }
 
-    public void UnregisterContentProvider(IContentProvider component)
+    public void UnregisterContentProvider(IContentProvider provider)
     {
-        if (component == null) throw new ArgumentNullException(nameof(component));
+        if (provider == null) throw new ArgumentNullException(nameof(provider));
 
-        _components.Remove(component);
+        _components.Remove(provider);
 
-        foreach (var subscriber in _subscribers) subscriber.OnProviderUnregistered(component);
+        foreach (var subscriber in _subscribers) subscriber.OnProviderUnregistered(provider);
     }
 
     public void Subscribe(IContentRegistrySubscriber subscriber)

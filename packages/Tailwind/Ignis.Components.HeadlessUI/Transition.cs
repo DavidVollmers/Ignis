@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Transition : TransitionBase, ITransition
+public sealed class Transition : TransitionBase, ITransition, IDisposable
 {
     private readonly IList<ITransitionChild> _children = new List<ITransitionChild>();
     private readonly IList<IDialog> _dialogs = new List<IDialog>();
@@ -80,6 +80,11 @@ public sealed class Transition : TransitionBase, ITransition
     /// <inheritdoc />
     public RenderFragment Content => BuildRenderTree;
 
+    /// <inheritdoc />
+    public bool HasDialogs => _dialogs.Any();
+
+    [Inject] public IContentRegistry ContentRegistry { get; set; } = null!;
+
     public Transition()
     {
         AsElement = "div";
@@ -88,6 +93,8 @@ public sealed class Transition : TransitionBase, ITransition
     /// <inheritdoc />
     protected override void OnInitialized()
     {
+        if (Outlet == null) ContentRegistry.RegisterContentProvider(this);
+        
         Menu?.SetTransition(this);
         
         Listbox?.SetTransition(this);
@@ -251,5 +258,10 @@ public sealed class Transition : TransitionBase, ITransition
         else LeaveTransition();
 
         return base.OnAfterRenderAsync();
+    }
+
+    public void Dispose()
+    {
+        ContentRegistry.UnregisterContentProvider(this);
     }
 }

@@ -24,21 +24,25 @@ public abstract class ContentHostBase : IgnisComponentBase, IContentHost, IConte
     }
 
     /// <inheritdoc />
-    public virtual void OnProviderRegistered(IContentProvider component)
+    public virtual void OnProviderRegistered(IContentProvider provider)
     {
-        if (_components.Contains(component)) return;
+        if (provider == null) throw new ArgumentNullException(nameof(provider));
+        
+        if (_components.Contains(provider)) return;
 
-        _components.Add(component);
+        _components.Add(provider);
 
         base.Update();
     }
 
     /// <inheritdoc />
-    public void OnProviderUnregistered(IContentProvider component)
+    public void OnProviderUnregistered(IContentProvider provider)
     {
-        if (!_components.Contains(component)) return;
+        if (provider == null) throw new ArgumentNullException(nameof(provider));
 
-        _components.Remove(component);
+        if (!_components.Contains(provider)) return;
+
+        _components.Remove(provider);
 
         base.Update();
     }

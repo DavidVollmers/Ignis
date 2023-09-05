@@ -73,10 +73,12 @@ public sealed class DialogOutlet : ContentHostBase, IDynamicComponent
     }
 
     /// <inheritdoc />
-    public override void OnProviderRegistered(IContentProvider component)
+    public override void OnProviderRegistered(IContentProvider provider)
     {
-        if (component is not IDialog) return;
+        if (provider == null) throw new ArgumentNullException(nameof(provider));
 
-        base.OnProviderRegistered(component);
+        if (provider is not IDialog or ITransition { HasDialogs: true }) return;
+
+        base.OnProviderRegistered(provider);
     }
 }
