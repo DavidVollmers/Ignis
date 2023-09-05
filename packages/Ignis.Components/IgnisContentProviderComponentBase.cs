@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components;
 
@@ -22,9 +23,7 @@ public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IC
 
     [CascadingParameter] public IContentHost? Outlet { get; set; }
     
-    public RenderFragment Content => BuildRenderTree;
-
-    protected override bool ShouldRender => IgnoreOutlet;
+    public abstract RenderFragment Content { get; }
 
     [Inject] public IContentRegistry ContentRegistry { get; set; } = null!;
 
@@ -40,8 +39,16 @@ public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IC
     
     protected new void Update(bool async = false)
     {
-        if (Outlet != null) Outlet.Update(async);
-        else base.Update(async);
+        Outlet?.Update(async);
+        
+        base.Update(async);
+    }
+
+    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    {
+        if (Outlet != null) return;
+        
+        builder.AddContent(0, Content);
     }
 
     protected virtual void Dispose(bool disposing)
