@@ -20,10 +20,8 @@ public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComp
             if (!_ignoreOutlet) OutletRegistry.RegisterComponent(this);
         }
     }
-
-    public virtual object Identifier => this;
-
-    public virtual RenderFragment OutletContent => BuildRenderTree;
+    
+    public virtual RenderFragment Content => BuildRenderTree;
 
     protected override bool ShouldRender => IgnoreOutlet;
 
@@ -49,8 +47,6 @@ public abstract class IgnisOutletComponentBase : IgnisComponentBase, IOutletComp
         if (_outlet != null && outlet != _outlet) throw new InvalidOperationException("Component is already adopted.");
 
         _outlet = outlet;
-        
-        //TODO rerender the original component to not have the same content rendered twice
     }
 
     public void SetFree()

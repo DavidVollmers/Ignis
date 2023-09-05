@@ -3,11 +3,8 @@ using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
-public interface ITransition : IDynamicParentComponent<ITransition>, ICssClass
+public interface ITransition : IDynamicParentComponent<ITransition>, ICssClass, IContentProvider
 {
-    // required for outlet components to render within a transition (e.g. Dialog)
-    internal RenderFragment RenderFragment { get; }
-    
     void Hide(Action? continueWith = null);
 
     void Show(Action? continueWith = null);

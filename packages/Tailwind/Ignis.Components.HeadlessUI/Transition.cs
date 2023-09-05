@@ -76,7 +76,7 @@ public sealed class Transition : TransitionBase, ITransition
     public object? Component { get; set; }
 
     /// <inheritdoc />
-    public RenderFragment RenderFragment => BuildRenderTree;
+    public RenderFragment Content => BuildRenderTree;
 
     public Transition()
     {

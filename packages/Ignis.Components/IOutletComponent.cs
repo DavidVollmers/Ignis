@@ -2,13 +2,9 @@
 
 namespace Ignis.Components;
 
-public interface IOutletComponent : IComponent
+public interface IOutletComponent : IComponent, IContentProvider
 {
-    object Identifier { get; }
-    
-    RenderFragment? OutletContent { get; }
+    internal void SetOutlet(IOutlet outlet);
 
-    void SetOutlet(IOutlet outlet);
-
-    void SetFree();
+    internal void SetFree();
 }

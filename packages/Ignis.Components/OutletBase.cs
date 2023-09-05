@@ -26,7 +26,7 @@ public abstract class OutletBase : IgnisComponentBase, IOutlet, IOutletRegistryS
     /// <inheritdoc />
     public virtual void OnComponentRegistered(IOutletComponent component)
     {
-        if (_components.Contains(component) || _components.Any(c => c.Identifier.Equals(component.Identifier))) return;
+        if (_components.Contains(component)) return;
 
         _components.Add(component);
 

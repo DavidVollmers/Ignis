@@ -56,7 +56,7 @@ public sealed class DialogOutlet : OutletBase, IDynamicComponent
         {
             foreach (var dialog in Components)
             {
-                builder.AddContent(3, dialog.OutletContent);
+                builder.AddContent(3, dialog.Content);
             }
         });
 
