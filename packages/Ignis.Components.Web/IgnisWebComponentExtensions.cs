@@ -9,7 +9,7 @@ public static class IgnisWebComponentExtensions
     {
         if (serviceCollection is null) throw new ArgumentNullException(nameof(serviceCollection));
         
-        serviceCollection.TryAddScoped<ILocalStorage, LocalStorage>();
+        serviceCollection.TryAddSingleton<ILocalStorage, LocalStorage>();
         
         return serviceCollection;
     }
