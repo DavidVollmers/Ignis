@@ -1,0 +1,47 @@
+﻿@using System.Reflection
+@inherits TypeDocumentationBase
+@inject IStringLocalizer<ComponentDocumentation> Resources
+
+<h2>
+    @Type.SanitizeTypeName()
+</h2>
+
+@{
+    <a href="@Type.GetTypeDocumentationLink()">
+        @Resources["ViewApiReference"]
+    </a>
+
+    var parameterProperties = Type.DeclaredProperties.Where(p => p.GetMethod?.IsPublic == true || p.SetMethod?.IsPublic == true && p.GetCustomAttribute<ParameterAttribute>() != null).ToArray();
+    if (parameterProperties.Any())
+    {
+        <h4>
+            @Resources["ParametersHeading"]
+        </h4>
+
+        <table>
+            <thead>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var prop in parameterProperties)
+            {
+                var propComments = Reader!.GetMemberComments(prop);
+                <tr>
+                    <td>
+                        <code>@prop.Name</code>
+                    </td>
+                    <td>
+                        @if (propComments?.Summary != null)
+                        {
+                            @propComments.Summary.ResolveCodeComment()
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+}

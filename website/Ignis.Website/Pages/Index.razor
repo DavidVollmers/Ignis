@@ -59,7 +59,7 @@
                 var type = Type.GetType(typeName)?.GetTypeInfo();
                 if (type == null) continue;
 
-                <ClassDocumentation @key="typeName" Type="type" IsComponent/>
+                <ComponentDocumentation @key="typeName" Type="type"/>
             }
         </Prose>
     }

@@ -1,95 +1,81 @@
-﻿@using LoxSmoke.DocXml
-@using System.Reflection
+﻿@using System.Reflection
 @using System.Text
-@using System.Web
-@using Ignis.Website.Services
-@inherits IgnisAsyncComponentBase
-@implements IHandleAfterRender
-@* ReSharper disable once InconsistentNaming *@
-@inject IJSRuntime JSRuntime
+@inherits TypeDocumentationBase
 @inject IStringLocalizer<ClassDocumentation> Resources
-@inject IStaticFileService StaticFileService
 
 <h2>
     @Type.SanitizeTypeName()
 </h2>
 
-@if (IsComponent)
-{
-    <a href="@Type.GetTypeDocumentationLink()">
-        @Resources["ViewApiReference"]
-    </a>
-}
-else
-{
-    <h3>
-        @Resources["DefinitionHeading"]
-    </h3>
-    <dl class="flex gap-x-2">
-        <dt>
-            @Resources["NamespaceLabel"]:
-        </dt>
-        <dd>
-            @Type.Namespace
-        </dd>
-    </dl>
+<h3>
+    @Resources["DefinitionHeading"]
+</h3>
+<dl class="flex gap-x-2">
+    <dt>
+        @Resources["NamespaceLabel"]:
+    </dt>
+    <dd>
+        @Type.Namespace
+    </dd>
+</dl>
 
-    if (_typeComments?.Summary != null)
+@if (TypeComments?.Summary != null)
+{
+    <p>
+        @TypeComments.Summary.ResolveCodeComment()
+    </p>
+}
+
+<pre class="whitespace-normal"><code class="language-csharp">@GetTypeDefinition(Type)</code></pre>
+
+@if (Type.GenericTypeParameters.Any())
+{
+    <h4>
+        @Resources["TypeParametersHeading"]
+    </h4>
+
+    foreach (var typeParam in Type.GenericTypeParameters)
     {
         <p>
-            @_typeComments.Summary.ResolveCodeComment()
+            <code>@typeParam.Name</code>
         </p>
     }
+}
 
-    <pre class="whitespace-normal"><code class="language-csharp">@GetTypeDefinition(Type)</code></pre>
+@if (Type.DeclaredConstructors.Any())
+{
+    <h4>
+        @Resources["ConstructorsHeading"]
+    </h4>
 
-    if (Type.GenericTypeParameters.Any())
-    {
-        <h4>
-            @Resources["TypeParametersHeading"]
-        </h4>
-
-        @foreach (var typeParam in Type.GenericTypeParameters)
+    <table>
+        <thead>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var ctor in Type.DeclaredConstructors)
         {
-            <p>
-                <code>@typeParam.Name</code>
-            </p>
-        }
-    }
-
-    if (Type.DeclaredConstructors.Any())
-    {
-        <h4>
-            @Resources["ConstructorsHeading"]
-        </h4>
-
-        <table>
-            <thead>
+            var methodComments = Reader!.GetMethodComments(ctor);
             <tr>
-                <td></td>
-                <td></td>
+                <td>
+                    <code>@GetConstructorDefinition(ctor)</code>
+                </td>
+                <td>
+                    @if (methodComments?.Summary != null)
+                    {
+                        @methodComments.Summary.ResolveCodeComment()
+                    }
+                </td>
             </tr>
-            </thead>
-            <tbody>
-            @foreach (var ctor in Type.DeclaredConstructors)
-            {
-                var methodComments = _reader!.GetMethodComments(ctor);
-                <tr>
-                    <td>
-                        <code>@GetConstructorDefinition(ctor)</code>
-                    </td>
-                    <td>
-                        @if (methodComments?.Summary != null)
-                        {
-                            @methodComments.Summary.ResolveCodeComment()
-                        }
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
-    }
+        }
+        </tbody>
+    </table>
+}
 
+@{
     var publicProperties = Type.DeclaredProperties.Where(p => p.GetMethod?.IsPublic == true || p.SetMethod?.IsPublic == true).ToArray();
     if (publicProperties.Any())
     {
@@ -107,7 +93,7 @@ else
             <tbody>
             @foreach (var prop in publicProperties)
             {
-                var propComments = _reader!.GetMemberComments(prop);
+                var propComments = Reader!.GetMemberComments(prop);
                 <tr>
                     <td>
                         <code>@prop.Name</code>
@@ -141,7 +127,7 @@ else
             <tbody>
             @foreach (var method in publicMethods)
             {
-                var methodComments = _reader!.GetMethodComments(method);
+                var methodComments = Reader!.GetMethodComments(method);
                 <tr>
                     <td>
                         <code>@GetMethodDefinition(method)</code>
@@ -161,26 +147,6 @@ else
 
 @code
 {
-    private DocXmlReader? _reader;
-    private TypeComments? _typeComments;
-
-    [Parameter, EditorRequired]
-    public TypeInfo Type { get; set; } = null!;
-
-    [Parameter]
-    public bool IsComponent { get; set; }
-
-    protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
-    {
-        var path = $"/_api/{Type.Assembly.GetName().Name}.xml";
-
-        var xml = await StaticFileService.GetFileContentAsXmlAsync(path, cancellationToken);
-
-        _reader = new DocXmlReader(xml);
-
-        _typeComments = _reader.GetTypeComments(Type);
-    }
-
     private string GetTypeDefinition(TypeInfo type)
     {
         var builder = new StringBuilder();
@@ -267,10 +233,5 @@ else
         }
 
         definition.Append(")");
-    }
-
-    public async Task OnAfterRenderAsync()
-    {
-        await JSRuntime.InvokeVoidAsync("OnPageLoad");
     }
 }
