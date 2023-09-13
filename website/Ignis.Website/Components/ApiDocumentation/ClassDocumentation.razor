@@ -34,7 +34,7 @@ else
         </dd>
     </dl>
 
-    if (_typeComments != null)
+    if (_typeComments?.Summary != null)
     {
         <p>
             @_typeComments.Summary.ResolveCodeComment()
@@ -79,7 +79,10 @@ else
                         <code>@GetConstructorDefinition(ctor)</code>
                     </td>
                     <td>
-                        @methodComments.Summary.ResolveCodeComment()
+                        @if (methodComments?.Summary != null)
+                        {
+                            @methodComments.Summary.ResolveCodeComment()
+                        }
                     </td>
                 </tr>
             }
@@ -182,3 +185,4 @@ else
         await JSRuntime.InvokeVoidAsync("OnPageLoad");
     }
 }
+
