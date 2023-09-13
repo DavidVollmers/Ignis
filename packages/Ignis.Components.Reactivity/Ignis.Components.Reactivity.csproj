@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Ignis.Components.Reactivity</PackageId>
+    <Authors>david@vollmers.org</Authors>
+    <Copyright>David Vollmers</Copyright>
+    <Description>Provides the reactivity system for Ignis components</Description>
+    <PackageProjectUrl>https://github.com/DavidVollmers/Ignis/tree/master/packages/Ignis.Components.Reactivity</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/DavidVollmers/Ignis.git</RepositoryUrl>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <LangVersion>11</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageOutputPath>..\..\nuget</PackageOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ignis.Components\Ignis.Components.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ignis.Components\Ignis.Components.csproj" />
+  </ItemGroup>
+
+</Project>

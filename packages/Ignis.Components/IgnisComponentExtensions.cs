@@ -13,7 +13,7 @@ public static class IgnisComponentExtensions
 
         serviceCollection.AddTransient<FrameTracker>();
 
-        serviceCollection.TryAddScoped<IOutletRegistry, OutletRegistry>();
+        serviceCollection.TryAddScoped<IContentRegistry, ContentRegistry>();
 
         return serviceCollection;
     }

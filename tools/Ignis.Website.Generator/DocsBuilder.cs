@@ -79,7 +79,7 @@ internal class DocsBuilder
 
         var sitemapJson = JsonSerializer.Serialize(sections.Select(s => new Section
         {
-            Title = s.Key, Links = s.Value.ToArray()
+            Title = s.Key, Pages = s.Value.ToArray()
         }));
 
         var sitemapOutputFile = new FileInfo(Path.Combine(outputDirectory.FullName, "sitemap.json"));

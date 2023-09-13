@@ -9,4 +9,6 @@ public interface IPageService
     Task<Section[]?> GetSectionsAsync(CancellationToken cancellationToken = default);
     
     Task<string?> GetPageContentAsync(Page page, CancellationToken cancellationToken = default);
+
+    bool CompareLinks(string link1, string link2);
 }

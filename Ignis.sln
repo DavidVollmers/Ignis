@@ -52,6 +52,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Tests.Components", "t
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Tests.Common", "tests\Ignis.Tests.Common\Ignis.Tests.Common.csproj", "{FF27E64C-AAFB-499D-9D37-DB814D28DE7D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Components.Reactivity", "packages\Ignis.Components.Reactivity\Ignis.Components.Reactivity.csproj", "{9E52038D-CFA5-4B08-AD82-20FC63312044}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Tests.Components.Reactivity", "tests\Ignis.Tests.Components.Reactivity\Ignis.Tests.Components.Reactivity.csproj", "{7E899D92-6A18-4AD0-9A96-3A50AFC5D654}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -138,6 +142,14 @@ Global
 		{FF27E64C-AAFB-499D-9D37-DB814D28DE7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF27E64C-AAFB-499D-9D37-DB814D28DE7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF27E64C-AAFB-499D-9D37-DB814D28DE7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E52038D-CFA5-4B08-AD82-20FC63312044}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E52038D-CFA5-4B08-AD82-20FC63312044}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E52038D-CFA5-4B08-AD82-20FC63312044}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E52038D-CFA5-4B08-AD82-20FC63312044}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E899D92-6A18-4AD0-9A96-3A50AFC5D654}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E899D92-6A18-4AD0-9A96-3A50AFC5D654}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E899D92-6A18-4AD0-9A96-3A50AFC5D654}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E899D92-6A18-4AD0-9A96-3A50AFC5D654}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5D3382FB-EADF-47D3-B8C3-736BE0B9338A} = {58B1C928-DCC7-4420-B5D2-259C7DB3417A}
@@ -160,5 +172,7 @@ Global
 		{4746A757-944D-4CD7-B1F5-8539AAE6137A} = {D95EEAB8-A600-4067-AFAD-F8CC39D412A2}
 		{ABDC578A-8638-48B3-BB00-9259E3FDD4AA} = {D95EEAB8-A600-4067-AFAD-F8CC39D412A2}
 		{FF27E64C-AAFB-499D-9D37-DB814D28DE7D} = {D95EEAB8-A600-4067-AFAD-F8CC39D412A2}
+		{9E52038D-CFA5-4B08-AD82-20FC63312044} = {333AA1BE-3105-4370-BB59-34463BD1F325}
+		{7E899D92-6A18-4AD0-9A96-3A50AFC5D654} = {D95EEAB8-A600-4067-AFAD-F8CC39D412A2}
 	EndGlobalSection
 EndGlobal

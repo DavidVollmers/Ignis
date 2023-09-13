@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
-namespace Ignis.Components;
+namespace Ignis.Components.Reactivity;
 
-public sealed class Dynamic : IgnisRigidComponentBase, IDynamicParentComponent
+public sealed class ReactiveSection<T> : IgnisComponentBase, IDynamicParentComponent, IDisposable
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -30,8 +30,10 @@ public sealed class Dynamic : IgnisRigidComponentBase, IDynamicParentComponent
         }
     }
 
+    [Parameter, EditorRequired] public ReactiveValue<T> Value { get; set; } = null!;
+
     [Parameter] public RenderFragment<IDynamicComponent>? _ { get; set; }
-    
+
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
@@ -45,12 +47,22 @@ public sealed class Dynamic : IgnisRigidComponentBase, IDynamicParentComponent
 
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
+    protected override void OnUpdate()
+    {
+        Value.Adopt(this);
+    }
+
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IDynamicComponent, Dynamic>(2, this, ChildContent);
+        builder.AddChildContentFor<IDynamicComponent, ReactiveSection<T>>(2, this, ChildContent);
 
         builder.CloseAs(this);
+    }
+
+    public void Dispose()
+    {
+        Value.SetFree(this);
     }
 }

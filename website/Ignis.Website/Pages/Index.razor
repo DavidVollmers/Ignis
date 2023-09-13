@@ -90,7 +90,7 @@
     //TODO NotFound
         if (_section == null) return;
 
-        _page = _section?.Links.FirstOrDefault(s => s.Link == link);
+        _page = _section.Pages.FirstOrDefault(s => PageService.CompareLinks(s.Link, link));
 
     //TODO NotFound
         if (_page == null) return;

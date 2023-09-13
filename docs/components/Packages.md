@@ -53,6 +53,17 @@ Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components.Web) for more 
     </div>
 </div>
 
+## Ignis.Components.Reactivity
+
+The reactivity package, containing components and classes that are specific to the
+Ignis [reactivity system](/docs/components/reactivity).
+
+You can easily install this package using the following command:
+
+```shell
+dotnet add package Ignis.Components.Reactivity
+```
+
 ## Ignis.Components.WebAssembly
 
 **This package is required if you want to use Ignis components in your Blazor WebAssembly application.**

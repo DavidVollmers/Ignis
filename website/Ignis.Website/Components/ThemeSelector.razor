@@ -59,7 +59,7 @@
 
     protected override async Task OnInitializedAsync(CancellationToken cancellationToken)
     {
-        _selectedTheme = await LocalStorage.GetItemAsync<Theme?>("theme") ?? Theme.System;
+        _selectedTheme = await LocalStorage.GetItemAsync<Theme?>("theme", cancellationToken) ?? Theme.System;
     }
 
     private Type GetThemeIcon(Theme theme)

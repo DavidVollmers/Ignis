@@ -1,0 +1,30 @@
+﻿@inherits IgnisComponentBase
+
+<ReactiveSection AsElement="p" Value="_counter1" id="counter-1">
+    @_counter1.Value
+</ReactiveSection>
+<ReactiveSection AsElement="p" Value="_counter2" id="counter-2">
+    @_counter2.Value
+</ReactiveSection>
+
+<button @onclick="@AlternateIncrement">Increment</button>
+
+@code
+{
+    private readonly ReactiveValue<int> _counter1;
+    private readonly ReactiveValue<int> _counter2;
+
+    public AlternatingCounter()
+    {
+        _counter1 = new ReactiveValue<int>(this, 0);
+        _counter2 = new ReactiveValue<int>(this, 0);
+    }
+
+    private void AlternateIncrement()
+    {
+        if (_counter1.Value > _counter2.Value)
+            _counter2.Value++;
+        else
+            _counter1.Value++;
+    }
+}
