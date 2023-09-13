@@ -64,13 +64,13 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     }
 
     /// <summary>
-    /// The selected value.
+    /// Gets or sets the selected value.
     /// </summary>
     [Parameter]
     public TValue? Value { get; set; }
 
     /// <summary>
-    /// Occurs when the selected value changes.
+    /// Gets or sets the callback which is invoked when the selected value changes.
     /// </summary>
     [Parameter]
     public EventCallback<TValue?> ValueChanged { get; set; }
@@ -79,10 +79,13 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     [Parameter]
     public RenderFragment<IListbox>? _ { get; set; }
 
+    /// <summary>
+    /// Gets or sets the content of the listbox.
+    /// </summary>
     [Parameter] public RenderFragment<IListbox>? ChildContent { get; set; }
 
     /// <summary>
-    /// Additional attributes to be applied to the listbox.
+    /// Gets or sets additional attributes that will be applied to the listbox.
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }

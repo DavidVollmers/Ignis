@@ -16,7 +16,7 @@ public interface IListbox : IDynamicParentComponent<IListbox>, IOpenClose, IWith
     internal IListboxButton? Button { get; }
 
     /// <summary>
-    /// A unique identifier for the listbox.
+    /// Gets the id of the listbox.
     /// </summary>
     string Id { get; }
 
@@ -29,7 +29,7 @@ public interface IListbox : IDynamicParentComponent<IListbox>, IOpenClose, IWith
     bool IsValueSelected<TValue>(TValue? value);
 
     /// <summary>
-    /// Select the given value.
+    /// Selects the given value.
     /// </summary>
     /// <param name="value">The value to select.</param>
     /// <typeparam name="TValue">The value type.</typeparam>

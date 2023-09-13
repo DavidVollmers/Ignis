@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
+/// <summary>
+/// Renders a dialog which can be opened and closed.
+/// </summary>
 public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandleAfterRender
 {
     private readonly AttributeCollection _attributes;
@@ -51,14 +54,25 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
     [Parameter]
     public EventCallback<bool> IsOpenChanged { get; set; }
 
-    [CascadingParameter] public ITransition? Transition { get; set; }
+    /// <summary>
+    /// Gets or sets the transition which is used to animate the dialog.
+    /// </summary>
+    [CascadingParameter]
+    public ITransition? Transition { get; set; }
 
     /// <inheritdoc />
     [Parameter]
     public RenderFragment<IDialog>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IDialog>? ChildContent { get; set; }
+    /// <summary>
+    /// Gets or sets the content of the dialog.
+    /// </summary>
+    [Parameter]
+    public RenderFragment<IDialog>? ChildContent { get; set; }
 
+    /// <summary>
+    /// Gets or sets additional attributes that will be applied to the dialog.
+    /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
     {
@@ -86,6 +100,9 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
 
     [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Dialog" /> class.
+    /// </summary>
     public Dialog()
     {
         AsElement = "div";
@@ -113,7 +130,7 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
     protected override void RegisterAsContentProvider()
     {
         if (Transition != null) return;
-        
+
         base.RegisterAsContentProvider();
     }
 
@@ -126,7 +143,7 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
             BuildContentRenderTree(builder);
             return;
         }
-        
+
         base.BuildRenderTree(builder);
     }
 
