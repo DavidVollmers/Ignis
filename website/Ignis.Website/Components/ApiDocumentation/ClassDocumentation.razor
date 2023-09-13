@@ -233,6 +233,11 @@ else
     {
         var definition = new StringBuilder();
         definition.Append(method.Name);
+        if (method.IsGenericMethod)
+        {
+            var args = method.GetGenericArguments().Select(a => a.Name).ToList();
+            definition.Append($"<{string.Join(", ", args)}>");
+        }
 
         AppendParameters(definition, method);
 
