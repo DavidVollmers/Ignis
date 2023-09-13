@@ -33,4 +33,7 @@
   <data name="ViewApiReference" xml:space="preserve">
     <value>View full API reference</value>
   </data>
+  <data name="PropertiesHeading" xml:space="preserve">
+    <value>Properties</value>
+  </data>
 </root>

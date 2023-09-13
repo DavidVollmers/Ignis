@@ -89,6 +89,72 @@ else
             </tbody>
         </table>
     }
+
+    @if (Type.DeclaredProperties.Any())
+    {
+        <h4>
+            @Resources["PropertiesHeading"]
+        </h4>
+
+        <table>
+            <thead>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var prop in Type.DeclaredProperties)
+            {
+                var propComments = _reader!.GetMemberComments(prop);
+                <tr>
+                    <td>
+                        <code>@prop.Name</code>
+                    </td>
+                    <td>
+                        @if (propComments?.Summary != null)
+                        {
+                            @propComments.Summary.ResolveCodeComment()
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    
+    @if (Type.DeclaredMethods.Any())
+    {
+        <h4>
+            @Resources["MethodsHeading"]
+        </h4>
+
+        <table>
+            <thead>
+            <tr>
+                <td></td>
+                <td></td>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var method in Type.DeclaredMethods)
+            {
+                var methodComments = _reader!.GetMethodComments(method);
+                <tr>
+                    <td>
+                        <code>@GetMethodDefinition(method)</code>
+                    </td>
+                    <td>
+                        @if (methodComments?.Summary != null)
+                        {
+                            @methodComments.Summary.ResolveCodeComment()
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
 }
 
 @code
@@ -180,9 +246,52 @@ else
         return definition.ToString();
     }
 
+    private string GetMethodDefinition(MethodInfo method)
+    {
+        var definition = new StringBuilder();
+
+        if (method.IsPublic) definition.Append("public ");
+        else if (method.IsPrivate) definition.Append("private ");
+        else if (method.IsFamily) definition.Append("protected ");
+        else if (method.IsAssembly) definition.Append("internal ");
+        else if (method.IsFamilyOrAssembly) definition.Append("protected internal ");
+        else if (method.IsFamilyAndAssembly) definition.Append("private protected ");
+
+        if (method.IsStatic) definition.Append("static ");
+        else if (method.IsAbstract) definition.Append("abstract ");
+        else if (method.IsVirtual) definition.Append("virtual ");
+        else if (method.IsFinal) definition.Append("sealed ");
+
+        definition.Append(method.ReturnType.GetTypeInfo().SanitizeTypeName());
+        definition.Append(" ");
+        definition.Append(method.Name);
+        definition.Append("(");
+
+        var parameter = method.GetParameters();
+        foreach (var param in parameter)
+        {
+            definition.Append(param.ParameterType.GetTypeInfo().SanitizeTypeName());
+            definition.Append(" ");
+            definition.Append(param.Name);
+
+            if (param.HasDefaultValue)
+            {
+                definition.Append(" = ");
+                definition.Append(param.DefaultValue);
+            }
+            if (param != parameter.Last())
+            {
+                definition.Append(", ");
+            }
+        }
+
+        definition.Append(")");
+
+        return definition.ToString();
+    }
+
     public async Task OnAfterRenderAsync()
     {
         await JSRuntime.InvokeVoidAsync("OnPageLoad");
     }
 }
-
