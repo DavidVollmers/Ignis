@@ -90,7 +90,8 @@ else
         </table>
     }
 
-    @if (Type.DeclaredProperties.Any())
+    var publicProperties = Type.DeclaredProperties.Where(p => p.GetMethod?.IsPublic == true || p.SetMethod?.IsPublic == true).ToArray();
+    if (publicProperties.Any())
     {
         <h4>
             @Resources["PropertiesHeading"]
@@ -104,7 +105,7 @@ else
             </tr>
             </thead>
             <tbody>
-            @foreach (var prop in Type.DeclaredProperties)
+            @foreach (var prop in publicProperties)
             {
                 var propComments = _reader!.GetMemberComments(prop);
                 <tr>
@@ -122,8 +123,9 @@ else
             </tbody>
         </table>
     }
-    
-    @if (Type.DeclaredMethods.Any())
+
+    var publicMethods = Type.DeclaredMethods.Where(m => m is { IsPublic: true,IsSpecialName: false }).ToArray();
+    if (publicMethods.Any())
     {
         <h4>
             @Resources["MethodsHeading"]
@@ -137,7 +139,7 @@ else
             </tr>
             </thead>
             <tbody>
-            @foreach (var method in Type.DeclaredMethods)
+            @foreach (var method in publicMethods)
             {
                 var methodComments = _reader!.GetMethodComments(method);
                 <tr>
@@ -221,27 +223,8 @@ else
     {
         var definition = new StringBuilder();
         definition.Append(Type.SanitizeTypeName());
-        definition.Append("(");
 
-        var parameter = ctor.GetParameters();
-        foreach (var param in parameter)
-        {
-            definition.Append(param.ParameterType.GetTypeInfo().SanitizeTypeName());
-            definition.Append(" ");
-            definition.Append(param.Name);
-
-            if (param.HasDefaultValue)
-            {
-                definition.Append(" = ");
-                definition.Append(param.DefaultValue);
-            }
-            if (param != parameter.Last())
-            {
-                definition.Append(", ");
-            }
-        }
-
-        definition.Append(")");
+        AppendParameters(definition, ctor);
 
         return definition.ToString();
     }
@@ -249,22 +232,15 @@ else
     private string GetMethodDefinition(MethodInfo method)
     {
         var definition = new StringBuilder();
-
-        if (method.IsPublic) definition.Append("public ");
-        else if (method.IsPrivate) definition.Append("private ");
-        else if (method.IsFamily) definition.Append("protected ");
-        else if (method.IsAssembly) definition.Append("internal ");
-        else if (method.IsFamilyOrAssembly) definition.Append("protected internal ");
-        else if (method.IsFamilyAndAssembly) definition.Append("private protected ");
-
-        if (method.IsStatic) definition.Append("static ");
-        else if (method.IsAbstract) definition.Append("abstract ");
-        else if (method.IsVirtual) definition.Append("virtual ");
-        else if (method.IsFinal) definition.Append("sealed ");
-
-        definition.Append(method.ReturnType.GetTypeInfo().SanitizeTypeName());
-        definition.Append(" ");
         definition.Append(method.Name);
+
+        AppendParameters(definition, method);
+
+        return definition.ToString();
+    }
+
+    private static void AppendParameters(StringBuilder definition, MethodBase method)
+    {
         definition.Append("(");
 
         var parameter = method.GetParameters();
@@ -286,8 +262,6 @@ else
         }
 
         definition.Append(")");
-
-        return definition.ToString();
     }
 
     public async Task OnAfterRenderAsync()

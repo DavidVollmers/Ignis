@@ -36,4 +36,7 @@
   <data name="PropertiesHeading" xml:space="preserve">
     <value>Properties</value>
   </data>
+  <data name="MethodsHeading" xml:space="preserve">
+    <value>Methods</value>
+  </data>
 </root>
