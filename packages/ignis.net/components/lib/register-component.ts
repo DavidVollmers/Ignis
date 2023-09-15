@@ -1,4 +1,4 @@
-﻿import {ComponentBase} from "./component-base";
+﻿import {ComponentBase} from './component-base';
 
 export interface ComponentConstructor<T extends ComponentBase> {
     new($ref: DotNet.DotNetObject, ...args: any[]): T;

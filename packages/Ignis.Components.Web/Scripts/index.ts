@@ -1,4 +1,4 @@
-import {registerComponent, registerStaticComponent} from "@ignis.net/components";
+import {registerComponent, registerStaticComponent} from '@ignis.net/components';
 import {FocusComponentBase} from './focus-component-base';
 import {ScrollDetector} from './scroll-detector';
 
