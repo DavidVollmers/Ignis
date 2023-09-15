@@ -95,7 +95,7 @@ public sealed class RadioGroupDescription : IgnisRigidComponentBase, IRadioGroup
         builder.AddChildContentFor<IRadioGroupDescription, RadioGroupDescription>(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
-        
+
         builder.CloseAs(this);
     }
 }

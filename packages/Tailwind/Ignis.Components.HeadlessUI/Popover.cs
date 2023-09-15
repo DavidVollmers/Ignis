@@ -18,7 +18,7 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
         get
         {
             if (_button != null) yield return _button;
-            
+
             if (_panel != null) yield return _panel;
         }
     }

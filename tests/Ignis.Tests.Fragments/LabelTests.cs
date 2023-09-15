@@ -37,12 +37,12 @@ public class LabelTests : TestContext
         Assert.Equal(nameof(TestModel.StringPropertyWithDisplayAttribute), label.GetAttribute("for"));
         Assert.Equal(TestModel.StringPropertyWithDisplayAttributeValue, label.TextContent);
     }
-    
+
     [Fact]
     public void Label_Expression_Default()
     {
         var model = new TestModel();
-        
+
         var fragment = Render(Label(() => model.StringProperty)!);
 
         var label = fragment.Find("label");
@@ -54,7 +54,7 @@ public class LabelTests : TestContext
     public void Label_Expression_Default_WithDisplayNameAttribute()
     {
         var model = new TestModel();
-        
+
         var fragment = Render(Label(() => model.StringPropertyWithDisplayNameAttribute)!);
 
         var label = fragment.Find("label");
@@ -66,7 +66,7 @@ public class LabelTests : TestContext
     public void Label_Expression_Default_WithDisplayAttribute()
     {
         var model = new TestModel();
-        
+
         var fragment = Render(Label(() => model.StringPropertyWithDisplayAttribute)!);
 
         var label = fragment.Find("label");

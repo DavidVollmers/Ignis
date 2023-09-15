@@ -1,4 +1,4 @@
-using Ignis.Fragments.Abstractions.Builder;
+﻿using Ignis.Fragments.Abstractions.Builder;
 using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Tests.Fragments;
@@ -6,12 +6,12 @@ namespace Ignis.Tests.Fragments;
 public class TestInputBuilder<T> : IFragmentBuilder<InputFragmentContext<T>>
 {
     private readonly string _value;
-    
+
     public TestInputBuilder(string value)
     {
         _value = value;
     }
-    
+
     public RenderFragment? BuildFragment(InputFragmentContext<T> context)
     {
         return builder =>

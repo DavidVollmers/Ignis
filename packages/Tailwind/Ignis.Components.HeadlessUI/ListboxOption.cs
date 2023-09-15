@@ -120,7 +120,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
         OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
-        
+
         Listbox.SelectValue(Value);
 
         Listbox.Close();

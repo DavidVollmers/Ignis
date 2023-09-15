@@ -144,7 +144,7 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
         OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
-        
+
         TabGroup.SelectTab(this);
     }
 
@@ -155,7 +155,7 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
         {
             TabGroup.RemoveTab(this);
         }
-        
+
         base.Dispose(disposing);
     }
 }

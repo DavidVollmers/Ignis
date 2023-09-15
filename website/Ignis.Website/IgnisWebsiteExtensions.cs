@@ -73,7 +73,7 @@ public static partial class IgnisWebsiteExtensions
         var parts = cref.Split('.');
         var ns = string.Join('.', parts[..^1]);
         var assembly = Assembly.Load(ns);
-        
+
         type = assembly.GetType(cref);
         return type?.GetTypeInfo();
     }

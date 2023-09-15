@@ -49,7 +49,7 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
 #pragma warning disable CS4014
         UpdateTargetsAsync();
 #pragma warning restore CS4014
-        
+
         continueWith?.Invoke();
     }
 

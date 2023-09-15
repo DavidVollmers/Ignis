@@ -10,9 +10,9 @@ public interface IListbox : IDynamicParentComponent<IListbox>, IOpenClose, IWith
     internal IListboxOption[] Options { get; }
 
     internal IListboxOption? ActiveOption { get; }
-    
+
     internal IListboxLabel? Label { get; }
-    
+
     internal IListboxButton? Button { get; }
 
     /// <summary>

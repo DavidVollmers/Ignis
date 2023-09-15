@@ -4,7 +4,7 @@ public interface IDialog : IDynamicParentComponent<IDialog>, IOpenClose, IConten
 {
     // Implemented by IgnisContentProviderComponentBase and required by Transition
     internal bool IgnoreOutlet { get; }
-    
+
     internal IDialogDescription? Description { get; }
 
     internal IDialogTitle? Title { get; }

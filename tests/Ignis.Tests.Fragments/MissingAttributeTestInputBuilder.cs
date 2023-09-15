@@ -1,4 +1,4 @@
-using Ignis.Fragments.Abstractions.Builder;
+﻿using Ignis.Fragments.Abstractions.Builder;
 using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Tests.Fragments;

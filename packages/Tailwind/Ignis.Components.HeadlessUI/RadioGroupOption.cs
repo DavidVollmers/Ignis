@@ -152,19 +152,19 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
                 RadioGroup.Options[0].Check();
                 break;
             case "ArrowDown":
-            {
-                var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) + 1;
-                if (index < RadioGroup.Options.Length) RadioGroup.Options[index].Check();
-                else RadioGroup.Options[0].Check();
-                break;
-            }
+                {
+                    var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) + 1;
+                    if (index < RadioGroup.Options.Length) RadioGroup.Options[index].Check();
+                    else RadioGroup.Options[0].Check();
+                    break;
+                }
             case "ArrowUp":
-            {
-                var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) - 1;
-                if (index >= 0) RadioGroup.Options[index].Check();
-                else RadioGroup.Options[^1].Check();
-                break;
-            }
+                {
+                    var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) - 1;
+                    if (index >= 0) RadioGroup.Options[index].Check();
+                    else RadioGroup.Options[^1].Check();
+                    break;
+                }
         }
     }
 
@@ -187,7 +187,7 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
         OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
-        
+
         Check();
     }
 
@@ -222,7 +222,7 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
         {
             RadioGroup.RemoveOption(this);
         }
-        
+
         base.Dispose(disposing);
     }
 }

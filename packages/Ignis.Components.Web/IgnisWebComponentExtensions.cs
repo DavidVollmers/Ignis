@@ -8,9 +8,9 @@ public static class IgnisWebComponentExtensions
     public static IServiceCollection AddIgnisWeb(this IServiceCollection serviceCollection)
     {
         if (serviceCollection is null) throw new ArgumentNullException(nameof(serviceCollection));
-        
+
         serviceCollection.TryAddScoped<ILocalStorage, LocalStorage>();
-        
+
         return serviceCollection;
     }
 }

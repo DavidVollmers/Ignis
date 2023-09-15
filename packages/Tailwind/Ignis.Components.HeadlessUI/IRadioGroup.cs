@@ -5,7 +5,7 @@ public interface IRadioGroup : IDynamicParentComponent<IRadioGroup>
     internal IRadioGroupOption[] Options { get; }
 
     internal IRadioGroupOption? ActiveOption { get; }
-    
+
     /// <summary>
     /// A unique identifier for the radio group.
     /// </summary>

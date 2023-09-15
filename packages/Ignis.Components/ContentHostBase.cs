@@ -27,7 +27,7 @@ public abstract class ContentHostBase : IgnisComponentBase, IContentHost, IConte
     public virtual void OnProviderRegistered(IContentProvider provider)
     {
         if (provider == null) throw new ArgumentNullException(nameof(provider));
-        
+
         if (_components.Contains(provider)) return;
 
         _components.Add(provider);

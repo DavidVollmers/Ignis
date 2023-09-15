@@ -6,7 +6,7 @@ namespace Ignis.Components.HeadlessUI;
 public sealed class TabPanel : IgnisComponentBase, ITabPanel, IDisposable
 {
     private readonly AttributeCollection _attributes;
-    
+
     private Type? _asComponent;
     private string? _asElement;
 
@@ -89,14 +89,14 @@ public sealed class TabPanel : IgnisComponentBase, ITabPanel, IDisposable
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         if (!IsSelected) return;
-        
+
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         builder.AddChildContentFor<ITabPanel, TabPanel>(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }
-    
+
     public void Dispose()
     {
         TabGroup.RemoveTabPanel(this);

@@ -104,7 +104,7 @@ public sealed class RadioGroupLabel : IgnisRigidComponentBase, IRadioGroupLabel
         builder.AddChildContentFor<IRadioGroupLabel, RadioGroupLabel>(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
-        
+
         builder.CloseAs(this);
     }
 }

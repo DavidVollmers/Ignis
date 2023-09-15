@@ -6,7 +6,7 @@ namespace Ignis.Components.HeadlessUI;
 public sealed class TabList : IgnisRigidComponentBase, IDynamicParentComponent
 {
     private readonly AttributeCollection _attributes;
-    
+
     private Type? _asComponent;
     private string? _asElement;
 

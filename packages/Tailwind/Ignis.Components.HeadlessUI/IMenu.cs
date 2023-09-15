@@ -13,7 +13,7 @@ public interface IMenu : IDynamicParentComponent<IMenu>, IOpenClose, IWithTransi
     string Id { get; }
 
     internal void SetItems(IDynamicParentComponent items);
-    
+
     internal void SetButton(IMenuButton button);
 
     internal void SetItemActive(IMenuItem item, bool isActive);

@@ -10,7 +10,7 @@ public interface ISwitch : IDynamicParentComponent<ISwitch>
     bool Checked { get; set; }
 
     EventCallback<bool> CheckedChanged { get; set; }
-    
+
     EventCallback<IComponentEvent> OnClick { get; set; }
 
     void Toggle();

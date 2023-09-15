@@ -20,4 +20,4 @@
 #echo 'Husky.Net is awesome!'
 
 npx lint-staged
-#dotnet format
+dotnet format

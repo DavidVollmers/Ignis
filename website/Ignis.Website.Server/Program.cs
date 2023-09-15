@@ -1,4 +1,4 @@
-using Ignis.Components.Server;
+﻿using Ignis.Components.Server;
 using Ignis.Website;
 using Ignis.Website.Server.Services;
 using Ignis.Website.Services;
@@ -17,7 +17,7 @@ builder.Services.AddIgnisServer();
 builder.Services.Configure<StaticFileOptions>(options =>
 {
     var extensionProvider = new FileExtensionContentTypeProvider { Mappings = { [".razor"] = "text/plain" } };
-    
+
     options.ContentTypeProvider = extensionProvider;
 });
 
@@ -26,7 +26,7 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    
+
     app.UseHsts();
 }
 

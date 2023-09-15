@@ -85,7 +85,7 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDisclosureButto
             throw new InvalidOperationException(
                 $"{nameof(DisclosureButton)} must be used inside a {nameof(HeadlessUI.Disclosure)}.");
         }
-        
+
         Disclosure.SetButton(this);
     }
 
@@ -109,10 +109,10 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDisclosureButto
         OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
-        
+
         Toggle();
     }
-    
+
     private void Toggle()
     {
         if (Disclosure.IsOpen) Disclosure.Close();

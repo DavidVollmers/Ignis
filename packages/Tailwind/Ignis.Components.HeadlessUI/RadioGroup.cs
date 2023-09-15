@@ -115,7 +115,7 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IRadioGroup
 
         builder.CloseAs(this);
     }
-    
+
     /// <inheritdoc />
     public bool IsValueChecked<TValue1>(TValue1? value)
     {
@@ -134,7 +134,7 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IRadioGroup
     public void SetOptionActive(IRadioGroupOption option, bool isActive)
     {
         if (option == null) throw new ArgumentNullException(nameof(option));
-        
+
         if (isActive)
         {
             ActiveOption = option;

@@ -200,33 +200,33 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
 
                 break;
             case "ArrowDown":
-            {
-                var index = Array.IndexOf(Items, ActiveItem) + 1;
-                if (index < Items.Length) SetItemActive(Items[index], true);
-                else if (!IsOpen)
                 {
-                    Open(() =>
+                    var index = Array.IndexOf(Items, ActiveItem) + 1;
+                    if (index < Items.Length) SetItemActive(Items[index], true);
+                    else if (!IsOpen)
                     {
-                        if (Items.Any()) SetItemActive(Items[0], true);
-                    });
-                }
+                        Open(() =>
+                        {
+                            if (Items.Any()) SetItemActive(Items[0], true);
+                        });
+                    }
 
-                break;
-            }
+                    break;
+                }
             case "ArrowUp":
-            {
-                var index = Array.IndexOf(Items, ActiveItem) - 1;
-                if (index >= 0) SetItemActive(Items[index], true);
-                else if (!IsOpen)
                 {
-                    Open(() =>
+                    var index = Array.IndexOf(Items, ActiveItem) - 1;
+                    if (index >= 0) SetItemActive(Items[index], true);
+                    else if (!IsOpen)
                     {
-                        if (Items.Any()) SetItemActive(Items[0], true);
-                    });
-                }
+                        Open(() =>
+                        {
+                            if (Items.Any()) SetItemActive(Items[0], true);
+                        });
+                    }
 
-                break;
-            }
+                    break;
+                }
         }
     }
 }

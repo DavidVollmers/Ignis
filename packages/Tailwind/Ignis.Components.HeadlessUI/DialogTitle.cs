@@ -6,7 +6,7 @@ namespace Ignis.Components.HeadlessUI;
 public sealed class DialogTitle : IgnisRigidComponentBase, IDialogTitle
 {
     private readonly AttributeCollection _attributes;
-    
+
     private Type? _asComponent;
     private string? _asElement;
 
@@ -36,9 +36,9 @@ public sealed class DialogTitle : IgnisRigidComponentBase, IDialogTitle
 
     /// <inheritdoc />
     [Parameter] public string? Id { get; set; }
-    
+
     [CascadingParameter] public IDialog Dialog { get; set; } = null!;
-    
+
     /// <inheritdoc />
     [Parameter]
     public RenderFragment<IDialogTitle>? _ { get; set; }
@@ -79,7 +79,7 @@ public sealed class DialogTitle : IgnisRigidComponentBase, IDialogTitle
             throw new InvalidOperationException(
                 $"{nameof(DialogTitle)} must be used inside a {nameof(HeadlessUI.Dialog)}.");
         }
-        
+
         Dialog.SetTitle(this);
     }
 
@@ -92,7 +92,7 @@ public sealed class DialogTitle : IgnisRigidComponentBase, IDialogTitle
         builder.AddChildContentFor<IDialogTitle, DialogTitle>(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
-        
+
         builder.CloseAs(this);
     }
 }

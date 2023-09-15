@@ -11,7 +11,7 @@ public class Page
     public string[]? ApiTypeNames { get; set; }
 
     public int? Order { get; set; }
-    
+
     public class PageInject
     {
         public string TypeName { get; set; } = null!;

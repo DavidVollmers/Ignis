@@ -66,7 +66,7 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
 
         // ReSharper disable once MethodHasAsyncOverload
         OnKeyDown(args);
-        
+
         await OnKeyDownAsync(args);
     }
 

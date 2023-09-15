@@ -8,12 +8,12 @@ public abstract class IgnisRigidComponentBase : IComponent
     private readonly RenderFragment _renderFragment;
 
     private RenderHandle _renderHandle;
-    
+
     protected IgnisRigidComponentBase()
     {
         _renderFragment = BuildRenderTree;
     }
-    
+
     public void Attach(RenderHandle renderHandle)
     {
         if (_renderHandle.IsInitialized)
@@ -27,11 +27,11 @@ public abstract class IgnisRigidComponentBase : IComponent
     public Task SetParametersAsync(ParameterView parameters)
     {
         parameters.SetParameterProperties(this);
-        
+
         OnRender();
-        
+
         _renderHandle.Render(_renderFragment);
-        
+
         return Task.CompletedTask;
     }
 

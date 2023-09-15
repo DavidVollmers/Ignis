@@ -61,7 +61,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     [CascadingParameter] public IMenu? Menu { get; set; }
 
     [CascadingParameter] public IListbox? Listbox { get; set; }
-    
+
     [CascadingParameter] public IPopover? Popover { get; set; }
 
     [CascadingParameter] public IDisclosure? Disclosure { get; set; }
@@ -95,11 +95,11 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     protected override void OnInitialized()
     {
         Menu?.SetTransition(this);
-        
+
         Listbox?.SetTransition(this);
-        
+
         Popover?.SetTransition(this);
-        
+
         Disclosure?.SetTransition(this);
     }
 
@@ -110,7 +110,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
 
         BuildContentRenderTree(builder);
     }
-    
+
     private void BuildContentRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenAs(0, this);
@@ -135,7 +135,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     public void HostedBy(IContentHost host)
     {
         Outlet = host ?? throw new ArgumentNullException(nameof(host));
-        
+
         Update();
     }
 
@@ -191,7 +191,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
         if (dialog == null) throw new ArgumentNullException(nameof(dialog));
 
         if (!_dialogs.Contains(dialog)) _dialogs.Add(dialog);
-        
+
         if (Outlet == null) ContentRegistry.RegisterContentProvider(this);
     }
 
@@ -260,7 +260,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
             if (count == 0) continueWith();
         }
     }
-    
+
     /// <inheritdoc />
     public override Task OnAfterRenderAsync()
     {

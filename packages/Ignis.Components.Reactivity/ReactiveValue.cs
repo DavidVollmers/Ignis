@@ -42,7 +42,7 @@ public sealed class ReactiveValue<T>
     internal void Adopt(ReactiveSection<T> section)
     {
         if (_sections.Contains(section)) return;
-        
+
         _sections.Add(section);
     }
 

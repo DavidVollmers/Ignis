@@ -6,7 +6,7 @@ namespace Ignis.Components;
 public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IContentProvider, IDisposable
 {
     private bool _ignoreOutlet;
-    
+
     [Parameter]
     public bool IgnoreOutlet
     {
@@ -26,7 +26,7 @@ public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IC
     public RenderFragment Content => BuildContentRenderTree;
 
     [Inject] public IContentRegistry ContentRegistry { get; set; } = null!;
-    
+
     protected override void OnInitialized()
     {
         RegisterAsContentProvider();
@@ -36,11 +36,11 @@ public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IC
     {
         if (!IgnoreOutlet && Outlet == null) ContentRegistry.RegisterContentProvider(this);
     }
-    
+
     protected new void Update(bool async = false)
     {
         Outlet?.Update(async);
-        
+
         base.Update(async);
     }
 
@@ -56,7 +56,7 @@ public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IC
     public void HostedBy(IContentHost host)
     {
         Outlet = host ?? throw new ArgumentNullException(nameof(host));
-        
+
         base.Update();
     }
 

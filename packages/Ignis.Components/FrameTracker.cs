@@ -33,7 +33,7 @@ internal class FrameTracker
         var action = _action;
 
         _action = null;
-        
+
         action?.Invoke();
     }
 }

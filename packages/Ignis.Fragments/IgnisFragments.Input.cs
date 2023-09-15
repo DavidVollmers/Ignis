@@ -61,9 +61,9 @@ public static partial class IgnisFragments
         {
             var genericBuilderInterface = defaultBuilder.GetType().GetInterfaces()
                 .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IFragmentBuilder<>));
-            if (genericBuilderInterface == null || 
+            if (genericBuilderInterface == null ||
                 genericBuilderInterface.GenericTypeArguments[0]
-                    .GetGenericTypeDefinition() != typeof(InputFragmentContext<>) || 
+                    .GetGenericTypeDefinition() != typeof(InputFragmentContext<>) ||
                 genericBuilderInterface.GenericTypeArguments[0].GenericTypeArguments[0] != propertyInfo.PropertyType)
             {
                 throw new ArgumentException(
@@ -92,7 +92,8 @@ public static partial class IgnisFragments
                 propertyInfo.SetValue(instance, v);
 
                 return Task.CompletedTask;
-            }) { Attributes = GetAttributes(propertyInfo), PropertyInfo = propertyInfo };
+            })
+        { Attributes = GetAttributes(propertyInfo), PropertyInfo = propertyInfo };
 
         var builder = TryGetFragmentBuilder<InputFragmentContext<T>>(propertyInfo) ??
                       defaultBuilder ?? new DefaultInputFragmentBuilder<T>();

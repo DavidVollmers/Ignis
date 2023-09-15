@@ -1,10 +1,10 @@
-using Ignis.Components.WebAssembly;
+﻿using Ignis.Components.WebAssembly;
 using Ignis.Website;
 using Ignis.Website.Services;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Ignis.Website.WebAssembly;
 using Ignis.Website.WebAssembly.Services;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

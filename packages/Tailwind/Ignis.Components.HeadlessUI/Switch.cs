@@ -124,7 +124,7 @@ public sealed class Switch : IgnisComponentBase, ISwitch
         OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
-        
+
         Toggle();
     }
 }

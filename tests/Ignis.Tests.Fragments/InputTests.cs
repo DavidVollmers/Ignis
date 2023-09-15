@@ -105,7 +105,7 @@ public class InputTests : TestContext
         var defaultBuilder = new MissingAttributeTestInputBuilder();
 
         var fragment = Render(Input(model, propertyInfo, defaultBuilder)!);
-        
+
         var input = fragment.Find("input");
         Assert.Equal("text", input.GetAttribute("type"));
     }

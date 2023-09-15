@@ -31,7 +31,7 @@ public sealed class Dynamic : IgnisRigidComponentBase, IDynamicParentComponent
     }
 
     [Parameter] public RenderFragment<IDynamicComponent>? _ { get; set; }
-    
+
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]

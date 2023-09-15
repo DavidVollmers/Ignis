@@ -38,15 +38,15 @@ internal class IconGenerator
         var fileName = name.Replace(".svg", "Icon.razor");
 
         var razorSvg = svg.Replace("aria-hidden=\"true\"", "aria-hidden=\"true\" @attributes=\"AdditionalAttributes\"");
-        
+
         var builder = new StringBuilder();
-        
+
         builder.AppendLine("@inherits HeroIconBase");
         builder.AppendLine();
         builder.AppendLine(razorSvg);
-        
+
         var content = builder.ToString().Trim();
-        
+
         using var fileStream = File.Create(Path.Combine(outputPath, fileName));
         using var writer = new StreamWriter(fileStream);
         writer.Write(content);
