@@ -3,6 +3,14 @@
     "install:Ignis.Website": "cd website/Ignis.Website && npm i",
     "install:ignis.net/components": "cd packages/ignis.net/components && npm i",
     "install:Ignis.Components.Web": "cd packages/Ignis.Components.Web && npm i",
-    "install": "npm run install:ignis.net/components && npm run install:Ignis.Components.Web && npm run install:Ignis.Website"
+    "install": "npm run install:ignis.net/components && npm run install:Ignis.Components.Web && npm run install:Ignis.Website",
+    "prepare": "dotnet tool restore && dotnet husky install"
+  },
+  "devDependencies": {
+    "lint-staged": "^14.0.1",
+    "prettier": "^3.0.3"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   }
 }

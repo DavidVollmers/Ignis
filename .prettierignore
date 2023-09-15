@@ -1,0 +1,10 @@
+dist
+package-lock.json
+.idea
+bin
+obj
+packages/Ignis.Components.Web/wwwroot/min.js
+website/Ignis.Website.Server/wwwroot/_docs
+website/Ignis.Website.WebAssembly/wwwroot/_docs
+website/Ignis.Website/wwwroot/js/website.min.js
+website/Ignis.Website/wwwroot/css/tailwind.min.css
