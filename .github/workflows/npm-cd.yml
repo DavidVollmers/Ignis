@@ -2,7 +2,7 @@ name: NPM Packages CD
 
 on:
   push:
-    tags: [ '**' ]
+    tags: ['**']
 
 jobs:
   Pack:

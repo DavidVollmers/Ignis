@@ -15,7 +15,7 @@ public class LoginModel
     [Required]
     [StringLength(50, MinimumLength = 3)]
     public string Username { get; set; }
-    
+
     [Required]
     [StringLength(50, MinimumLength = 3)]
     public string Password { get; set; }
@@ -48,7 +48,7 @@ public class LoginModel
     [Attribute("class", "form-control")]
     [StringLength(50, MinimumLength = 3)]
     public string Username { get; set; }
-    
+
     [Required]
     [Attribute("type", "password")]
     [Attribute("class", "form-control")]
@@ -67,7 +67,7 @@ public class LoginModel
     [Attribute("type", "email")]
     [StringLength(50, MinimumLength = 3)]
     public string Username { get; set; }
-    
+
     [Required]
     [Attribute("type", "password")]
     [StringLength(50, MinimumLength = 3)]

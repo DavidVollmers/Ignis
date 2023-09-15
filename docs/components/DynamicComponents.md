@@ -20,7 +20,7 @@ or component:
 </Dynamic>
 ```
 
-*This will render a `div` element with a `container` class and a `h1` element with the text `Hello World!`.*
+_This will render a `div` element with a `container` class and a `h1` element with the text `Hello World!`._
 
 ## Dynamic components rendered as fragments
 
@@ -33,7 +33,7 @@ content will be rendered.
 </Dynamic>
 ```
 
-*This will **only** render a `h1` element with the text `Hello World!`.*
+_This will **only** render a `h1` element with the text `Hello World!`._
 
 If a dynamic component is not meant to be rendered as a fragment per default, doing so might break its functionality or
 appearance. To still support rendering as a fragment, the component **must** implement the `IDynamicParentComponent`
@@ -48,7 +48,7 @@ render fragment and provide required attributes and reference captures as they s
 </Dynamic>
 ```
 
-*This will render a `h1` element with the text `Hello World!` **and** the `container` class.*
+_This will render a `h1` element with the text `Hello World!` **and** the `container` class._
 
 ## Designing a dynamic component
 
@@ -96,7 +96,7 @@ public sealed class Dynamic : IgnisRigidComponentBase, IDynamicParentComponent
 
     // The _ render fragment which can be used to provide attributes and reference capture of this component to a child.
     [Parameter] public RenderFragment<IDynamicComponent>? _ { get; set; }
-    
+
     // The default render fragment for child content.
     [Parameter] public RenderFragment? ChildContent { get; set; }
 

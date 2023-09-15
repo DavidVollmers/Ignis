@@ -1,8 +1,6 @@
 ﻿{
   "extends": "@tsconfig/recommended/tsconfig.json",
-  "include": [
-    "Scripts/**/*"
-  ],
+  "include": ["Scripts/**/*"],
   "compilerOptions": {
     "outDir": "dist"
   }

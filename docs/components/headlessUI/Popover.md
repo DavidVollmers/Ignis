@@ -49,7 +49,7 @@ panel.
 ### Keyboard interaction
 
 | Command                                                              | Description               |
-|----------------------------------------------------------------------|---------------------------|
+| -------------------------------------------------------------------- | ------------------------- |
 | <kbd>Enter</kbd> <kbd>Space</kbd> when a `PopoverButton` is focused. | Toggle panel.             |
 | <kbd>Escape</kbd>                                                    | Closes any open Popovers. |
 

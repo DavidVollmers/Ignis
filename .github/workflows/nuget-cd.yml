@@ -2,7 +2,7 @@ name: NuGet Packages CD
 
 on:
   push:
-    tags: [ '**' ]
+    tags: ['**']
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true

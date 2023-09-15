@@ -48,7 +48,7 @@ Clicking a `Switch` or a `SwitchLabel` toggles the Switch on and off.
 ### Keyboard interaction
 
 | Command                                      | Description         |
-|----------------------------------------------|---------------------|
+| -------------------------------------------- | ------------------- |
 | <kbd>Space</kbd> when a `Switch` is focused. | Toggles the switch. |
 
 ### Other

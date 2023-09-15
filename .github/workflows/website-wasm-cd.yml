@@ -2,8 +2,8 @@ name: Website (WebAssembly) CD
 
 on:
   push:
-    branches: [ 'website' ]
-    tags: [ '**' ]
+    branches: ['website']
+    tags: ['**']
 
 jobs:
   Publish:

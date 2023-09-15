@@ -16,7 +16,7 @@ api:
 
 Disclosures are built using the `Disclosure`, `DisclosureButton` and `DisclosurePanel` components.
 
-The button will automatically open/close the panel when clicked, and all components will receive the appropriate aria-*
+The button will automatically open/close the panel when clicked, and all components will receive the appropriate aria-\*
 related attributes like `aria-expanded` and `aria-controls`.
 
 ## Closing disclosures manually
@@ -55,7 +55,7 @@ Clicking a `DisclosureButton` toggles the Disclosure's panel open and closed.
 ### Keyboard interaction
 
 | Command                                                                 | Description    |
-|-------------------------------------------------------------------------|----------------|
+| ----------------------------------------------------------------------- | -------------- |
 | <kbd>Enter</kbd> <kbd>Space</kbd> when a `DisclosureButton` is focused. | Toggles panel. |
 
 ### Other

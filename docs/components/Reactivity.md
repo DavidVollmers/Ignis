@@ -33,8 +33,8 @@ the component when the value is changed.
 }
 ```
 
-*This will render a paragraph with the value `0` and a button with the text `Increment`. When the button is clicked, the
-paragraph will be updated with the new value.*
+_This will render a paragraph with the value `0` and a button with the text `Increment`. When the button is clicked, the
+paragraph will be updated with the new value._
 
 ## Reactive sections
 
@@ -70,6 +70,6 @@ by using the `ReactiveSection` component.
 }
 ```
 
-*This will render two paragraphs with the values `0` and two buttons with the text `Increment Counter 1` and
+_This will render two paragraphs with the values `0` and two buttons with the text `Increment Counter 1` and
 `Increment Counter 2`. When the buttons are clicked, only the paragraph with the corresponding value will be updated
-**and not the whole component**.*
+**and not the whole component**._
