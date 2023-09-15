@@ -15,6 +15,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageOutputPath>..\..\nuget</PackageOutputPath>
+    <NoWarn>BL0007</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
