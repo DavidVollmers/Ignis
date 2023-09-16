@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches-ignore: ['master', 'website']
+    branches-ignore: ['website']
     tags-ignore: ['**']
   pull_request:
 
@@ -23,4 +23,7 @@ jobs:
           node-version: 18.x
       - run: npm i
       - run: npx prettier --check .
-      - run: dotnet test
+      - run: dotnet test -c Release --settings .runsettings
+      - uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
