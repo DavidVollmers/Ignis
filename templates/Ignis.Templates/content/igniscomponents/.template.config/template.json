@@ -1,0 +1,13 @@
+﻿{
+  "$schema": "https://json.schemastore.org/template",
+  "author": "David Vollmers",
+  "classifications": ["Ignis", "Components", "Blazor", "Razor"],
+  "identity": "Ignis.Templates.Components",
+  "name": "Ignis Templates: Components",
+  "shortName": "igniscomponents",
+  "sourceName": "Ignis.Templates.Components",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  }
+}

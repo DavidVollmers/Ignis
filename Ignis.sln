@@ -56,6 +56,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Components.Reactivity
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Tests.Components.Reactivity", "tests\Ignis.Tests.Components.Reactivity\Ignis.Tests.Components.Reactivity.csproj", "{7E899D92-6A18-4AD0-9A96-3A50AFC5D654}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{18372589-7D9C-4A23-AA9B-3BBC28ABE5F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Templates", "templates\Ignis.Templates\Ignis.Templates.csproj", "{1AA99722-0DD3-4B72-9A26-C3253B2F0A85}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -150,6 +154,10 @@ Global
 		{7E899D92-6A18-4AD0-9A96-3A50AFC5D654}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E899D92-6A18-4AD0-9A96-3A50AFC5D654}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E899D92-6A18-4AD0-9A96-3A50AFC5D654}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AA99722-0DD3-4B72-9A26-C3253B2F0A85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AA99722-0DD3-4B72-9A26-C3253B2F0A85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AA99722-0DD3-4B72-9A26-C3253B2F0A85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AA99722-0DD3-4B72-9A26-C3253B2F0A85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5D3382FB-EADF-47D3-B8C3-736BE0B9338A} = {58B1C928-DCC7-4420-B5D2-259C7DB3417A}
@@ -174,5 +182,6 @@ Global
 		{FF27E64C-AAFB-499D-9D37-DB814D28DE7D} = {D95EEAB8-A600-4067-AFAD-F8CC39D412A2}
 		{9E52038D-CFA5-4B08-AD82-20FC63312044} = {333AA1BE-3105-4370-BB59-34463BD1F325}
 		{7E899D92-6A18-4AD0-9A96-3A50AFC5D654} = {D95EEAB8-A600-4067-AFAD-F8CC39D412A2}
+		{1AA99722-0DD3-4B72-9A26-C3253B2F0A85} = {18372589-7D9C-4A23-AA9B-3BBC28ABE5F1}
 	EndGlobalSection
 EndGlobal
