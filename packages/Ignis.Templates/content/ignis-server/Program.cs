@@ -1,3 +1,4 @@
+using Ignis.Components;
 using Ignis.Components.Server;
 
 var builder = WebApplication.CreateBuilder(args);

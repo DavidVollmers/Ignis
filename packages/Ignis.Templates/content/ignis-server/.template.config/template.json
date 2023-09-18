@@ -4,7 +4,7 @@
   "classifications": ["Ignis", "Server", "Blazor", "Web", "Tailwind"],
   "identity": "Ignis.Templates.Server",
   "name": "Ignis Templates: Server",
-  "shortName": "ignis-wasm",
+  "shortName": "ignis-server",
   "sourceName": "Ignis.Templates.Server",
   "tags": {
     "language": "C#",
