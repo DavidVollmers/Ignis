@@ -30,11 +30,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Include="content\ignis-wasm\Program.cs" />
     <Content Include="content\**\*" Exclude="content\**\bin\**;content\**\obj\**"/>
     <Compile Remove="**\*"/>
     <Content Update="content\ignis-wasm\wwwroot\index.html">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="content\ignis-wasm\_Imports.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="content\ignis-wasm\App.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>
   </ItemGroup>
 
@@ -46,5 +53,7 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </None>
   </ItemGroup>
+
+
 
 </Project>

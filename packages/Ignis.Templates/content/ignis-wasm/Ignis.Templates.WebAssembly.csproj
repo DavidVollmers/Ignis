@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ignis.Components.Web" Version="0.10.1"/>
+    <PackageReference Include="Ignis.Components.HeadlessUI" Version="0.10.1"/>
+    <PackageReference Include="Ignis.Components.HeroIcons" Version="0.10.1"/>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.11"/>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.11" PrivateAssets="all"/>
   </ItemGroup>
