@@ -1,0 +1,93 @@
+﻿{
+  "$schema": "https://json.schemastore.org/template",
+  "author": "David Vollmers",
+  "classifications": ["Ignis", "WebAssembly", "Blazor", "Web", "Tailwind"],
+  "identity": "Ignis.Templates.WebAssembly",
+  "name": "Ignis Templates: WebAssembly",
+  "shortName": "ignis-wasm",
+  "sourceName": "Ignis.Templates.WebAssembly",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "preferNameDirectory": true,
+  "primaryOutputs": [
+    {
+      "path": "Ignis.Templates.WebAssembly.csproj"
+    }
+  ],
+  "symbols": {
+    "framework": {
+      "type": "parameter",
+      "description": "The target framework for the project.",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "net6.0",
+          "description": "Target net6.0"
+        },
+        {
+          "choice": "net7.0",
+          "description": "Target net7.0"
+        }
+      ],
+      "replaces": "net7.0",
+      "defaultValue": "net7.0"
+    },
+    "skipRestore": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "If specified, skips the automatic restore of the project on create.",
+      "defaultValue": "false"
+    },
+    "kestrelHttpPort": {
+      "type": "parameter",
+      "datatype": "integer",
+      "description": "Port number to use for the HTTP endpoint in launchSettings.json."
+    },
+    "kestrelHttpPortGenerated": {
+      "type": "generated",
+      "generator": "port",
+      "parameters": {
+        "low": 5000,
+        "high": 5300
+      }
+    },
+    "kestrelHttpPortReplacer": {
+      "type": "generated",
+      "generator": "coalesce",
+      "parameters": {
+        "sourceVariableName": "kestrelHttpPort",
+        "fallbackVariableName": "kestrelHttpPortGenerated"
+      },
+      "replaces": "5000"
+    }
+  },
+  "postActions": [
+    {
+      "condition": "(!skipRestore)",
+      "description": "Restore NuGet packages required by this project.",
+      "manualInstructions": [
+        {
+          "text": "Run 'dotnet restore'"
+        }
+      ],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    },
+    {
+      "description": "Manual actions required",
+      "manualInstructions": [
+        {
+          "text": "Run the following command to finish setting up your project:"
+        }
+      ],
+      "actionId": "AC1156F7-BB77-4DB8-B28F-24EEBCCA1E5C",
+      "args": {
+        "executable": "npm install",
+        "args": ""
+      },
+      "continueOnError": true
+    }
+  ]
+}

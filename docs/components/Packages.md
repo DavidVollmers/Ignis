@@ -64,6 +64,8 @@ You can easily install this package using the following command:
 dotnet add package Ignis.Components.Reactivity
 ```
 
+Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components.Reactivity) for more information.
+
 ## Ignis.Components.WebAssembly
 
 **This package is required if you want to use Ignis components in your Blazor WebAssembly application.**
@@ -75,6 +77,8 @@ You can easily install this package using the following command:
 ```shell
 dotnet add package Ignis.Components.WebAssembly
 ```
+
+Visit [nuget.org](https://www.nuget.org/packages/Ignis.Components.WebAssembly) for more information.
 
 ## Ignis.Components.Server
 

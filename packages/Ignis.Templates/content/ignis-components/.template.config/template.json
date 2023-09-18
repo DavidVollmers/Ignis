@@ -1,0 +1,58 @@
+﻿{
+  "$schema": "https://json.schemastore.org/template",
+  "author": "David Vollmers",
+  "classifications": ["Ignis", "Components", "Blazor", "Web"],
+  "identity": "Ignis.Templates.Components",
+  "name": "Ignis Templates: Components",
+  "shortName": "ignis-components",
+  "sourceName": "Ignis.Templates.Components",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "preferNameDirectory": true,
+  "primaryOutputs": [
+    {
+      "path": "Ignis.Templates.Components.csproj"
+    }
+  ],
+  "symbols": {
+    "framework": {
+      "type": "parameter",
+      "description": "The target framework for the project.",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "net6.0",
+          "description": "Target net6.0"
+        },
+        {
+          "choice": "net7.0",
+          "description": "Target net7.0"
+        }
+      ],
+      "replaces": "net7.0",
+      "defaultValue": "net7.0"
+    },
+    "skipRestore": {
+      "type": "parameter",
+      "datatype": "bool",
+      "description": "If specified, skips the automatic restore of the project on create.",
+      "defaultValue": "false"
+    }
+  },
+  "postActions": [
+    {
+      "id": "restore",
+      "condition": "(!skipRestore)",
+      "description": "Restore NuGet packages required by this project.",
+      "manualInstructions": [
+        {
+          "text": "Run 'dotnet restore'"
+        }
+      ],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    }
+  ]
+}

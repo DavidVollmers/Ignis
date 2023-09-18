@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Ignis.Templates</PackageId>
+    <Authors>david@vollmers.org</Authors>
+    <Copyright>David Vollmers</Copyright>
+    <PackageVersion>1.0</PackageVersion>
+    <Description>Provides templates for projects based on Ignis components</Description>
+    <PackageProjectUrl>https://github.com/DavidVollmers/Ignis/tree/master/templates/Ignis.Templates</PackageProjectUrl>
+    <PackageType>Template</PackageType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIconUrl>https://raw.githubusercontent.com/DavidVollmers/Ignis/master/assets/logo-64x64.png</PackageIconUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/DavidVollmers/Ignis.git</RepositoryUrl>
+    <TargetFramework>net7.0</TargetFramework>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <PackageOutputPath>..\..\nuget</PackageOutputPath>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LocalizeTemplates>false</LocalizeTemplates>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.TemplateEngine.Tasks" Version="*" PrivateAssets="all" IsImplicitlyDefined="true"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="content\**\*" Exclude="content\**\bin\**;content\**\obj\**"/>
+    <Compile Remove="**\*"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath=""/>
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
+</Project>
