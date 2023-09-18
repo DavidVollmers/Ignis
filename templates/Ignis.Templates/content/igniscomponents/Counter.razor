@@ -1,0 +1,17 @@
+﻿@inherits IgnisComponentBase
+
+<p>@_counter</p>
+
+<button @onclick="@OnClick">Click me!</button>
+
+@code
+{
+    private int _counter;
+
+    private void OnClick()
+    {
+        _counter++;
+
+        Update();
+    }
+}

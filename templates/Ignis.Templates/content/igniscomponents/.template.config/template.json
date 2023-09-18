@@ -11,6 +11,11 @@
     "type": "project"
   },
   "preferNameDirectory": true,
+  "primaryOutputs": [
+    {
+      "path": "Ignis.Templates.Components.csproj"
+    }
+  ],
   "symbols": {
     "framework": {
       "type": "parameter",
