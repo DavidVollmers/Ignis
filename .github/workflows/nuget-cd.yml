@@ -31,6 +31,7 @@ jobs:
       # This is required to build the wwwroot folder so it is included in the nuget package (https://github.com/DavidVollmers/Ignis/issues/2)
       - run: dotnet build -c Release packages/Ignis.Components.Web
       - run: dotnet pack -c Release -p:Version=$VERSION
+      - run: dotnet pack -c Release -p:Version=$VERSION packages/Ignis.Templates
       - uses: actions/upload-artifact@v3
         with:
           name: NuGet
