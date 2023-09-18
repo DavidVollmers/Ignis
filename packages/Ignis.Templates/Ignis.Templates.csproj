@@ -4,7 +4,6 @@
     <PackageId>Ignis.Templates</PackageId>
     <Authors>david@vollmers.org</Authors>
     <Copyright>David Vollmers</Copyright>
-    <PackageVersion>1.0</PackageVersion>
     <Description>Provides templates for projects based on Ignis components</Description>
     <PackageProjectUrl>https://github.com/DavidVollmers/Ignis/tree/master/templates/Ignis.Templates</PackageProjectUrl>
     <PackageType>Template</PackageType>
