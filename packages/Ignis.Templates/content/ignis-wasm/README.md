@@ -11,6 +11,14 @@ Please make sure you have the following prerequisites installed:
 
 ## Getting started
 
+To setup the project, run the following command:
+
+```bash
+npm install
+```
+
+### Running the project
+
 To run the project, run the following command:
 
 ```bash

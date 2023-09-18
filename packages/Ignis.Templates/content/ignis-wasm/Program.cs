@@ -1,4 +1,5 @@
-﻿using Ignis.Components;
+﻿using Ignis.Templates.WebAssembly;
+using Ignis.Components;
 using Ignis.Components.WebAssembly;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;

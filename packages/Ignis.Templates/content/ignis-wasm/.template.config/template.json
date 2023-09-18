@@ -65,7 +65,6 @@
   },
   "postActions": [
     {
-      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
       "condition": "(!skipRestore)",
       "description": "Restore NuGet packages required by this project.",
       "manualInstructions": [
@@ -73,6 +72,21 @@
           "text": "Run 'dotnet restore'"
         }
       ],
+      "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
+      "continueOnError": true
+    },
+    {
+      "description": "Manual actions required",
+      "manualInstructions": [
+        {
+          "text": "Run the following command to finish setting up your project:"
+        }
+      ],
+      "actionId": "AC1156F7-BB77-4DB8-B28F-24EEBCCA1E5C",
+      "args": {
+        "executable": "npm install",
+        "args": ""
+      },
       "continueOnError": true
     }
   ]
