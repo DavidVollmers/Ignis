@@ -4,7 +4,7 @@
   "classifications": ["Ignis", "Components", "Blazor", "Razor"],
   "identity": "Ignis.Templates.Components",
   "name": "Ignis Templates: Components",
-  "shortName": "igniscomponents",
+  "shortName": "ignis-components",
   "sourceName": "Ignis.Templates.Components",
   "tags": {
     "language": "C#",

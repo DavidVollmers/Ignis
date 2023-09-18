@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Ignis.Components" Version="0.10.1"/>
+    <PackageReference Include="Ignis.Components.Web" Version="0.10.1"/>
   </ItemGroup>
 
 </Project>
