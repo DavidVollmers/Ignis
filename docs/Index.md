@@ -18,7 +18,37 @@ This guide will help you get started with Ignis in your project.
 - A code editor or IDE of your choice (e.g. [Visual Studio](https://visualstudio.microsoft.com),
   [Visual Studio Code](https://code.visualstudio.com), [JetBrains Rider](https://www.jetbrains.com/rider), etc.)
 
-### Installation
+### Using our Project Templates
+
+The easiest way to get started with Ignis is to use one of our project templates. These templates will set up a new
+project for you with all the required dependencies and configuration.
+
+Open a terminal and run the following command to install the Ignis project templates:
+
+```shell
+dotnet new install Ignis.Templates
+```
+
+Once the templates are installed, create and navigate to a folder for your new project and run the following command to
+create a new project based on the Ignis Blazor WebAssembly template:
+
+```shell
+dotnet new ignis-wasm
+```
+
+You can also create a new project based on the Ignis Blazor Server template:
+
+```shell
+dotnet new ignis-server
+```
+
+Or if you want to create a component library, you can use the Ignis Component Library template:
+
+```shell
+dotnet new ignis-components
+```
+
+### Manual Installation
 
 There are multiple packages available for Ignis, depending on your needs. You can have a look at
 the [Packages](/docs/components/packages) page for more information.
