@@ -1,7 +1,7 @@
 ﻿{
   "$schema": "https://json.schemastore.org/template",
   "author": "David Vollmers",
-  "classifications": ["Ignis", "Components", "Blazor", "Razor"],
+  "classifications": ["Ignis", "Components", "Blazor", "Web"],
   "identity": "Ignis.Templates.Components",
   "name": "Ignis Templates: Components",
   "shortName": "ignis-components",

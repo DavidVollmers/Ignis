@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "build:css": "npx tailwindcss -i ./Styles/app.css -o ./wwwroot/css/app.min.css --minify",
+    "build": "npm run build:css"
+  },
+  "dependencies": {
+    "tailwindcss": "^3.3.3"
+  }
+}
