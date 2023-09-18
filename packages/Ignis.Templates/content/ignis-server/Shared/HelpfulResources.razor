@@ -1,0 +1,117 @@
+@inherits IgnisRigidComponentBase
+
+<TabGroup>
+    <TabList class="flex space-x-1 rounded-xl bg-red-900/20 p-1">
+        @foreach (var category in _resourcesByCategory.Keys)
+        {
+            <Tab AsComponent="typeof(Fragment)" Context="tab">
+                <button @ref="tab.Element"
+                        @attributes="tab.Attributes"
+                        class="@Css.Class("w-full rounded-lg py-2.5 text-sm font-medium leading-5 ring-white ring-opacity-60 ring-offset-2 ring-offset-red-400 focus:outline-none focus:ring-2", tab.IsSelected ? "text-red-700 bg-white shadow" : "text-red-100 hover:bg-white/[0.12] hover:text-white")"
+                        type="button">
+                    @category
+                </button>
+            </Tab>
+        }
+    </TabList>
+    <TabPanels class="mt-2">
+        @foreach (var (category, resources) in _resourcesByCategory)
+        {
+            <TabPanel @key="category"
+                      class="rounded-xl bg-white p-3 ring-white ring-opacity-60 ring-offset-2 ring-offset-red-400 focus:outline-none focus:ring-2"
+                      Context="_">
+                <ul>
+                    @foreach (var resource in resources)
+                    {
+                        <li class="relative rounded-md p-3 hover:bg-gray-100">
+                            <h3 class="text-sm font-medium leading-5">
+                                @resource.Title
+                            </h3>
+
+                            <p class="mt-1 text-xs font-normal leading-4 text-gray-500">
+                                @resource.Description
+                            </p>
+                            
+                            <a href="@resource.Url" target="_blank"
+                               class="absolute inset-0 rounded-md ring-red-400 focus:z-10 focus:outline-none focus:ring-2">
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </TabPanel>
+        }
+    </TabPanels>
+</TabGroup>
+
+@code
+{
+    private readonly IDictionary<string, Resource[]> _resourcesByCategory = new Dictionary<string, Resource[]>
+    {
+        {
+            "Getting Started", new Resource[]
+            {
+                new()
+                {
+                    Title = "Understanding the Component Lifecycle",
+                    Description = "Learn how Ignis components work and how to use them.",
+                    Url = "https://ignis.dvolper.dev/docs/components/lifecycle"
+                },
+                new()
+                {
+                    Title = "Ignis Packages Overview",
+                    Description = "Learn more about all available Ignis packages.",
+                    Url = "https://ignis.dvolper.dev/docs/components/packages"
+                }
+            }
+        },
+        {
+            "Advanced", new Resource[]
+            {
+                new()
+                {
+                    Title = "Reactivity",
+                    Description = "Learn how to use the Ignis reactivity system.",
+                    Url = "https://ignis.dvolper.dev/docs/components/reactivity"
+                },
+                new()
+                {
+                    Title = "Dynamic Components",
+                    Description = "Learn how to build dynamic components.",
+                    Url = "https://ignis.dvolper.dev/docs/components/dynamic"
+                },
+                new()
+                {
+                    Title = "Fragments",
+                    Description = "Learn how to use Ignis fragments to build object-driven UI.",
+                    Url = "https://ignis.dvolper.dev/docs/components/fragments"
+                }
+            }
+        },
+        {
+            "Tailwind", new Resource[]
+            {
+                new()
+                {
+                    Title = "Ignis Headless UI",
+                    Description = "Learn more about how to use Headless UI components with Ignis.",
+                    Url = "https://ignis.dvolper.dev/docs/components/headlessUI"
+                },
+                new()
+                {
+                    Title = "Tailwind CSS",
+                    Description = "Learn more about Tailwind CSS.",
+                    Url = "https://tailwindcss.com"
+                }
+            }
+        }
+    };
+
+    private class Resource
+    {
+        public string Title { get; set; } = null!;
+
+        public string Url { get; set; } = null!;
+        
+        public string Description { get; set; } = null!;
+    }
+}
