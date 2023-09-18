@@ -10,6 +10,7 @@
     <PackageType>Template</PackageType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIconUrl>https://raw.githubusercontent.com/DavidVollmers/Ignis/master/assets/logo-64x64.png</PackageIconUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/DavidVollmers/Ignis.git</RepositoryUrl>
     <TargetFramework>net7.0</TargetFramework>
