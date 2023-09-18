@@ -5,7 +5,7 @@
     <Authors>david@vollmers.org</Authors>
     <Copyright>David Vollmers</Copyright>
     <Description>Provides templates for projects based on Ignis components</Description>
-    <PackageProjectUrl>https://github.com/DavidVollmers/Ignis/tree/master/templates/Ignis.Templates</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/DavidVollmers/Ignis/tree/master/packages/Ignis.Templates</PackageProjectUrl>
     <PackageType>Template</PackageType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
