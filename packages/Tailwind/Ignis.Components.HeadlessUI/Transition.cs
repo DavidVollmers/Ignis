@@ -8,6 +8,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     private readonly IList<ITransitionChild> _children = new List<ITransitionChild>();
     private readonly IList<IDialog> _dialogs = new List<IDialog>();
 
+    private bool _transitioningTo;
     private bool _didRenderOnce;
     private bool _showInitially;
     private Type? _asComponent;
@@ -47,6 +48,8 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
             _showInitially = _show = value;
 
             if (!_didRenderOnce) return;
+
+            if (_transitioningTo == _show) return;
 
             if (_show) EnterTransition();
             else LeaveTransition();
@@ -153,7 +156,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     /// <inheritdoc />
     protected override void EnterTransition(Action? continueWith = null)
     {
-        _show = true;
+        _transitioningTo = _show = true;
 
         WatchTransition(true, continueWith);
     }
@@ -161,6 +164,8 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     /// <inheritdoc />
     protected override void LeaveTransition(Action? continueWith = null)
     {
+        _transitioningTo = false;
+
         WatchTransition(false, () =>
         {
             _show = false;
