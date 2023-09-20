@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Ignis</PackageId>
+    <Authors>david@vollmers.org</Authors>
+    <Copyright>David Vollmers</Copyright>
+    <Description>The Blazor framework for building modern web applications</Description>
+    <PackageProjectUrl>https://github.com/DavidVollmers/Ignis</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>logo-64x64.png</PackageIcon>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/DavidVollmers/Ignis.git</RepositoryUrl>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <LangVersion>11</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageOutputPath>..\..\nuget</PackageOutputPath>
+    <NoWarn>BL0007</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
+    <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\"/>
+    <None Include="..\..\assets\logo-64x64.png" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ignis.Components.Reactivity\Ignis.Components.Reactivity.csproj" />
+    <ProjectReference Include="..\Ignis.Fragments\Ignis.Fragments.csproj" />
+    <ProjectReference Include="..\Ignis.Utils\Ignis.Utils.csproj" />
+    <ProjectReference Include="..\Tailwind\Ignis.Components.HeadlessUI\Ignis.Components.HeadlessUI.csproj" />
+    <ProjectReference Include="..\Tailwind\Ignis.Components.HeroIcons\Ignis.Components.HeroIcons.csproj" />
+  </ItemGroup>
+
+</Project>

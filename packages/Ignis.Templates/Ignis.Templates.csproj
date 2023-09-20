@@ -9,7 +9,7 @@
     <PackageType>Template</PackageType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageIconUrl>https://raw.githubusercontent.com/DavidVollmers/Ignis/master/assets/logo-64x64.png</PackageIconUrl>
+    <PackageIcon>logo-64x64.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/DavidVollmers/Ignis.git</RepositoryUrl>
     <TargetFramework>net7.0</TargetFramework>
@@ -37,6 +37,7 @@
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath=""/>
     <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="\"/>
+    <None Include="..\..\assets\logo-64x64.png" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
 </Project>
