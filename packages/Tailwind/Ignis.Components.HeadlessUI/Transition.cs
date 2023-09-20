@@ -50,7 +50,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
             if (!_didRenderOnce) return;
 
             if (_transitioningTo == _show) return;
-            
+
             if (_show) EnterTransition();
             else LeaveTransition();
         }
@@ -165,7 +165,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     protected override void LeaveTransition(Action? continueWith = null)
     {
         _transitioningTo = false;
-        
+
         WatchTransition(false, () =>
         {
             _show = false;
