@@ -1,0 +1,26 @@
+﻿@inherits IgnisRigidComponentBase
+
+<Transition AsComponent="typeof(Fragment)" Show="Open" Context="_">
+    <Dialog Context="dialog" IsOpenChanged="OpenChanged">
+        <TransitionChild AsComponent="typeof(Fragment)"
+                         Enter="duration-300"
+                         Leave="duration-200"
+                         Context="transition">
+            <DialogPanel>
+                @ChildContent
+            </DialogPanel>
+        </TransitionChild>
+    </Dialog>
+</Transition>
+
+@code
+{
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public bool Open { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+}

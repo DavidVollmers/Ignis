@@ -1,0 +1,19 @@
+﻿@inherits IgnisComponentBase
+
+<CustomModal Open="Open" OpenChanged="OpenChanged">
+    <button id="close-button" @onclick="@OnCloseAsync"></button>
+</CustomModal>
+
+@code
+{
+    [Parameter]
+    public bool Open { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+
+    private async Task OnCloseAsync()
+    {
+        await OpenChanged.InvokeAsync(false);
+    }
+}
