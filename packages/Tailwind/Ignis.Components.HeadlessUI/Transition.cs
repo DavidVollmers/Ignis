@@ -267,6 +267,14 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     }
 
     /// <inheritdoc />
+    protected internal override void Update(bool async = false)
+    {
+        Outlet?.Update(async);
+
+        base.Update(async);
+    }
+
+    /// <inheritdoc />
     public override Task OnAfterRenderAsync()
     {
         if (_didRenderOnce) return base.OnAfterRenderAsync();

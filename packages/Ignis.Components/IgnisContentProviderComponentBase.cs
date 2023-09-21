@@ -37,7 +37,7 @@ public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IC
         if (!IgnoreOutlet && Outlet == null) ContentRegistry.RegisterContentProvider(this);
     }
 
-    protected new void Update(bool async = false)
+    protected internal override void Update(bool async = false)
     {
         Outlet?.Update(async);
 

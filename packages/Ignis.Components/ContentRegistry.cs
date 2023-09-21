@@ -29,7 +29,11 @@ internal class ContentRegistry : IContentRegistry
     {
         if (subscriber == null) throw new ArgumentNullException(nameof(subscriber));
 
-        if (!_subscribers.Contains(subscriber)) _subscribers.Add(subscriber);
+        if (_subscribers.Contains(subscriber)) return;
+
+        _subscribers.Add(subscriber);
+
+        foreach (var component in _components) subscriber.OnProviderRegistered(component);
     }
 
     public void Unsubscribe(IContentRegistrySubscriber subscriber)

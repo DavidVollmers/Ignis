@@ -51,7 +51,7 @@ public abstract class IgnisComponentBase : IComponent
         Update();
     }
 
-    protected internal void Update(bool async = false)
+    protected internal virtual void Update(bool async = false)
     {
         if (async)
         {
