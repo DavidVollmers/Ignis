@@ -1,6 +1,6 @@
-﻿using Ignis.Tests.E2E.Website;
-using Ignis.Components;
+﻿using Ignis.Components;
 using Ignis.Components.WebAssembly;
+using Ignis.Tests.E2E.Website;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
