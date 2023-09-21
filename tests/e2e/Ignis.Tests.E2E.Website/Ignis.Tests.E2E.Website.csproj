@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Ignis.Components.HeadlessUI" Version="0.11.2"/>
+    <PackageReference Include="Ignis.Components.HeroIcons" Version="0.11.2"/>
+    <PackageReference Include="Ignis.Components.WebAssembly" Version="0.11.2"/>
+    <PackageReference Include="Ignis.Utils" Version="0.11.2"/>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.11"/>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.11" PrivateAssets="all"/>
+  </ItemGroup>
+
+
+
+
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="npm run build"/>
+  </Target>
+
+</Project>

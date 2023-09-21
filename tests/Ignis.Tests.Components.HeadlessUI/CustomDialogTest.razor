@@ -1,6 +1,6 @@
 ﻿<DialogOutlet AsElement="div" id="dialog-outlet"/>
 
-<WrappedCustomModal @bind-Open="OpenBinding"/>
+<WrappedCustomDialog @bind-Open="OpenBinding"/>
 <button id="open-button" @onclick="@(() => _isOpen = true)"></button>
 
 @code

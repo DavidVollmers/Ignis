@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "build:css": "npx tailwindcss -i ./Styles/app.css -o ./wwwroot/css/app.min.css --minify",
+    "build": "npm run build:css"
+  },
+  "dependencies": {
+    "@tailwindcss/typography": "^0.5.10",
+    "tailwindcss": "^3.3.3"
+  }
+}

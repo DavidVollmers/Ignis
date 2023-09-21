@@ -1,4 +1,4 @@
-namespace Ignis.Tests.E2E;
+﻿namespace Ignis.Tests.E2E;
 
 public class Tests
 {
