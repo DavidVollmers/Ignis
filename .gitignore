@@ -492,3 +492,5 @@ $RECYCLE.BIN/
 !packages/Ignis.Utils
 !packages/Ignis.Templates
 !packages/Tailwind
+
+!tests/e2e/Ignis.Tests.E2E
