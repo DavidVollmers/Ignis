@@ -7,8 +7,9 @@
 </div>
 
 [![](https://img.shields.io/github/v/release/DavidVollmers/Ignis)](https://github.com/DavidVollmers/Ignis/releases)
-[![](https://img.shields.io/codecov/c/github/DavidVollmers/Ignis)](https://app.codecov.io/gh/DavidVollmers/Ignis)
+[![](https://img.shields.io/nuget/dt/Ignis.Components)](https://www.nuget.org/packages/Ignis.Components)
 [![](https://img.shields.io/github/license/DavidVollmers/Ignis)](https://github.com/DavidVollmers/Ignis/blob/master/LICENSE.txt)
+[![](https://img.shields.io/codecov/c/github/DavidVollmers/Ignis)](https://app.codecov.io/gh/DavidVollmers/Ignis)
 
 The Blazor framework for building modern web applications.
 
