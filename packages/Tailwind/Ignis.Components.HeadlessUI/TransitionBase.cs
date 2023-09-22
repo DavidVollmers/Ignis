@@ -1,4 +1,5 @@
-﻿using Ignis.Components.Web;
+﻿using System.Globalization;
+using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
@@ -76,11 +77,11 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         UpdateState(TransitionState.Entering, () =>
         {
             var (graceDuration, transitionDuration) = ParseDuration(Enter);
-            Task.Delay(graceDuration).ContinueWith(_ =>
+            _ = Task.Delay(graceDuration).ContinueWith(__ =>
             {
                 UpdateState(TransitionState.Entered, () =>
                 {
-                    Task.Delay(transitionDuration).ContinueWith(_ =>
+                    _ = Task.Delay(transitionDuration).ContinueWith(_ =>
                     {
                         UpdateState(TransitionState.CanLeave, continueWith);
                     });
@@ -98,11 +99,11 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         UpdateState(TransitionState.Leaving, () =>
         {
             var (graceDuration, transitionDuration) = ParseDuration(Leave);
-            Task.Delay(graceDuration).ContinueWith(_ =>
+            _ = Task.Delay(graceDuration).ContinueWith(__ =>
             {
                 UpdateState(TransitionState.Left, () =>
                 {
-                    Task.Delay(transitionDuration).ContinueWith(_ =>
+                    _ = Task.Delay(transitionDuration).ContinueWith(_ =>
                     {
                         RenderContent = false;
 
@@ -158,7 +159,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
             else return (0, 0);
         }
 
-        var duration = int.Parse(durationString) * factor;
+        var duration = int.Parse(durationString, CultureInfo.InvariantCulture) * factor;
         if (duration <= 0) return (0, 0);
 
         return duration < TransitionGraceDuration

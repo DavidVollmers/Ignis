@@ -125,7 +125,7 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IRadioGroup
     /// <inheritdoc />
     public void CheckValue<TValue1>(TValue1? value)
     {
-        ValueChanged.InvokeAsync(Value = (TValue?)(object?)value);
+        var __ = ValueChanged.InvokeAsync(Value = (TValue?)(object?)value);
 
         Update();
     }

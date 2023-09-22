@@ -112,7 +112,7 @@ public sealed class MenuButton : IgnisComponentBase, IMenuButton
     {
         var @event = new ComponentEvent();
 
-        OnClick.InvokeAsync(@event);
+        var __ = OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
 

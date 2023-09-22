@@ -141,7 +141,7 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
     {
         var @event = new ComponentEvent();
 
-        OnClick.InvokeAsync(@event);
+        var __ = OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
 

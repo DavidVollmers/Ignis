@@ -112,7 +112,7 @@ public sealed class Switch : IgnisComponentBase, ISwitch
     /// <inheritdoc />
     public void Toggle()
     {
-        CheckedChanged.InvokeAsync(Checked = !Checked);
+        var __ = CheckedChanged.InvokeAsync(Checked = !Checked);
 
         Update();
     }
@@ -121,7 +121,7 @@ public sealed class Switch : IgnisComponentBase, ISwitch
     {
         var @event = new ComponentEvent();
 
-        OnClick.InvokeAsync(@event);
+        var __ = OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
 

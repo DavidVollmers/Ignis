@@ -105,7 +105,7 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
     {
         var @event = new ComponentEvent();
 
-        OnClick.InvokeAsync(@event);
+        var __ = OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
 

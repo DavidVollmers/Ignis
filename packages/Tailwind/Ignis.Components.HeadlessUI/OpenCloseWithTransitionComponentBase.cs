@@ -71,7 +71,7 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
 
     private void CloseCore(Action? continueWith, bool async = false)
     {
-        IsOpenChanged.InvokeAsync(_isOpen = false);
+        _ = IsOpenChanged.InvokeAsync(_isOpen = false);
 
         if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, Update);
 
