@@ -2,7 +2,7 @@ name: E2E
 
 on:
   push:
-    branches: ['master']
+    branches: ['master', 'features/e2e-tests']
 
 jobs:
   Publish:
@@ -24,3 +24,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+      - run: dotnet build tests/e2e/Ignis.Tests.E2E/Ignis.Tests.E2E.csproj -c Release
+      - run: pwsh tests/e2e/Ignis.Tests.E2E/bin/Release/net7.0/playwright.ps1 install --with-deps
+      - run: dotnet test tests/e2e/Ignis.Tests.E2E/Ignis.Tests.E2E.csproj -c Release
