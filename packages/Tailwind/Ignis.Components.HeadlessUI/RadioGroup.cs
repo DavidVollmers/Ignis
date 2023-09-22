@@ -74,7 +74,7 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IRadioGroup
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-radiogroup-" + Guid.NewGuid().ToString("N");
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -125,7 +125,7 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IRadioGroup
     /// <inheritdoc />
     public void CheckValue<TValue1>(TValue1? value)
     {
-        ValueChanged.InvokeAsync(Value = (TValue?)(object?)value);
+        var __ = ValueChanged.InvokeAsync(Value = (TValue?)(object?)value);
 
         Update();
     }

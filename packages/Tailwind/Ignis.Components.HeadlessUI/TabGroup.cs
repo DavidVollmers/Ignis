@@ -57,7 +57,7 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
     /// <inheritdoc />
     public ITab[] Tabs => _tabs.ToArray();
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -76,7 +76,7 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
     {
         if (SelectedIndex == DefaultIndex) return;
 
-        SelectedIndexChanged.InvokeAsync(SelectedIndex = DefaultIndex);
+        var __ = SelectedIndexChanged.InvokeAsync(SelectedIndex = DefaultIndex);
     }
 
     /// <inheritdoc />
@@ -118,9 +118,9 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
 
         if (index == -1) return;
 
-        SelectedIndexChanged.InvokeAsync(SelectedIndex = index);
+        var __ = SelectedIndexChanged.InvokeAsync(SelectedIndex = index);
 
-        tab.FocusAsync();
+        var ___ = tab.FocusAsync();
 
         Update();
     }

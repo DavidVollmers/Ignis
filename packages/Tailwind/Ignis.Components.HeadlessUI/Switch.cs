@@ -64,7 +64,7 @@ public sealed class Switch : IgnisComponentBase, ISwitch
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -85,7 +85,9 @@ public sealed class Switch : IgnisComponentBase, ISwitch
             () => new KeyValuePair<string, object?>("role", "switch"),
             () => new KeyValuePair<string, object?>("aria-checked", Checked.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
-            () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null), () =>
+            () => new KeyValuePair<string, object?>("type",
+                string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
+            () =>
                 new KeyValuePair<string, object?>("aria-labelledby",
                     SwitchGroup?.Label == null ? null : SwitchGroup.Label.Id ?? SwitchGroup.Id + "-label"),
             () => new KeyValuePair<string, object?>("aria-describedby",
@@ -112,7 +114,7 @@ public sealed class Switch : IgnisComponentBase, ISwitch
     /// <inheritdoc />
     public void Toggle()
     {
-        CheckedChanged.InvokeAsync(Checked = !Checked);
+        var __ = CheckedChanged.InvokeAsync(Checked = !Checked);
 
         Update();
     }
@@ -121,7 +123,7 @@ public sealed class Switch : IgnisComponentBase, ISwitch
     {
         var @event = new ComponentEvent();
 
-        OnClick.InvokeAsync(@event);
+        var __ = OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
 

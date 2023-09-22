@@ -78,7 +78,7 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-menu-" + Guid.NewGuid().ToString("N");
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -164,7 +164,9 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     }
 
     /// <inheritdoc />
+#pragma warning disable MA0051
     protected override void OnKeyDown(KeyboardEventArgs eventArgs)
+#pragma warning restore MA0051
     {
         switch (eventArgs.Code)
         {
@@ -182,19 +184,19 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
                     Open(() =>
                     {
                         var firstItem = Items.FirstOrDefault();
-                        if (firstItem != null) SetItemActive(firstItem, true);
+                        if (firstItem != null) SetItemActive(firstItem, isActive: true);
                     });
                 }
 
                 break;
             case "ArrowUp" when ActiveItem == null:
             case "ArrowDown" when ActiveItem == null:
-                if (Items.Any()) SetItemActive(Items[0], true);
+                if (Items.Any()) SetItemActive(Items[0], isActive: true);
                 else if (!IsOpen)
                 {
                     Open(() =>
                     {
-                        if (Items.Any()) SetItemActive(Items[0], true);
+                        if (Items.Any()) SetItemActive(Items[0], isActive: true);
                     });
                 }
 
@@ -202,12 +204,12 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
             case "ArrowDown":
                 {
                     var index = Array.IndexOf(Items, ActiveItem) + 1;
-                    if (index < Items.Length) SetItemActive(Items[index], true);
+                    if (index < Items.Length) SetItemActive(Items[index], isActive: true);
                     else if (!IsOpen)
                     {
                         Open(() =>
                         {
-                            if (Items.Any()) SetItemActive(Items[0], true);
+                            if (Items.Any()) SetItemActive(Items[0], isActive: true);
                         });
                     }
 
@@ -216,12 +218,12 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
             case "ArrowUp":
                 {
                     var index = Array.IndexOf(Items, ActiveItem) - 1;
-                    if (index >= 0) SetItemActive(Items[index], true);
+                    if (index >= 0) SetItemActive(Items[index], isActive: true);
                     else if (!IsOpen)
                     {
                         Open(() =>
                         {
-                            if (Items.Any()) SetItemActive(Items[0], true);
+                            if (Items.Any()) SetItemActive(Items[0], isActive: true);
                         });
                     }
 

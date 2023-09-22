@@ -35,7 +35,7 @@ public sealed class DialogOutlet : ContentHostBase, IDynamicComponent
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

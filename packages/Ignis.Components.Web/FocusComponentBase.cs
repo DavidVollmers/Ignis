@@ -34,8 +34,10 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
 
         _isFocused = true;
 
+#pragma warning disable MA0042
         // ReSharper disable once MethodHasAsyncOverload
         OnFocus();
+#pragma warning restore MA0042
 
         await OnFocusAsync();
     }
@@ -50,8 +52,10 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
 
         _isFocused = false;
 
+#pragma warning disable MA0042
         // ReSharper disable once MethodHasAsyncOverload
         OnBlur();
+#pragma warning restore MA0042
 
         await OnBlurAsync();
     }
@@ -62,10 +66,12 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
     [JSInvokable]
     public async Task InvokeKeyDownAsync(KeyboardEventArgs args)
     {
-        if (!_isFocused || !KeysToCapture.Contains(args.Code)) return;
+        if (!_isFocused || !KeysToCapture.Contains(args.Code, StringComparer.Ordinal)) return;
 
+#pragma warning disable MA0042
         // ReSharper disable once MethodHasAsyncOverload
         OnKeyDown(args);
+#pragma warning restore MA0042
 
         await OnKeyDownAsync(args);
     }
@@ -143,7 +149,7 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
         if (!disposing) return;
 
 #pragma warning disable CA2012
-        JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.dispose", _reference);
+        _ = JSRuntime.InvokeVoidAsync("Ignis.Components.Web.FocusComponentBase.dispose", _reference);
 #pragma warning restore CA2012
 
         _reference.Dispose();
@@ -151,12 +157,7 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
 
     public void Dispose()
     {
-        Dispose(true);
+        Dispose(disposing: true);
         GC.SuppressFinalize(this);
-    }
-
-    ~FocusComponentBase()
-    {
-        Dispose(false);
     }
 }

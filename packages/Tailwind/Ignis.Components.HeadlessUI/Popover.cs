@@ -65,7 +65,7 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-popover-" + Guid.NewGuid().ToString("N");
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -119,7 +119,7 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
     /// <inheritdoc />
     protected override void OnKeyDown(KeyboardEventArgs eventArgs)
     {
-        if (eventArgs.Code != "Escape") return;
+        if (!string.Equals(eventArgs.Code, "Escape", StringComparison.Ordinal)) return;
 
         Close();
     }

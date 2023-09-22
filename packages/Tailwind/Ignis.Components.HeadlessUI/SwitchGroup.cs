@@ -54,7 +54,7 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, ISwitchGroup
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-switch-" + Guid.NewGuid().ToString("N");
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

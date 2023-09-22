@@ -15,7 +15,7 @@ public static partial class IgnisFragments
     private static AttributeCollection GetAttributes(MemberInfo target)
     {
         var attributeAttributes = target.GetCustomAttributes<AttributeAttribute>();
-        var dictionary = attributeAttributes.ToDictionary(a => a.Name, a => a.Value);
+        var dictionary = attributeAttributes.ToDictionary(a => a.Name, a => a.Value, StringComparer.OrdinalIgnoreCase);
         return new AttributeCollection(dictionary);
     }
 
@@ -70,7 +70,8 @@ public static partial class IgnisFragments
             var instanceLambdaCompiled = (Func<object?>)instanceLambda.Compile();
             var result = instanceLambdaCompiled();
             instance = result ??
-                       throw new ArgumentException("The provided expression must evaluate to a non-null value.");
+                       throw new ArgumentException("The provided expression must evaluate to a non-null value.",
+                           nameof(expression));
         }
         else
         {

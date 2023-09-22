@@ -69,12 +69,7 @@ public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IC
 
     public void Dispose()
     {
-        Dispose(true);
+        Dispose(disposing: true);
         GC.SuppressFinalize(this);
-    }
-
-    ~IgnisContentProviderComponentBase()
-    {
-        Dispose(false);
     }
 }

@@ -70,7 +70,7 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
     /// <inheritdoc />
     public bool IsSelected => TabGroup.IsTabSelected(this);
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -90,7 +90,7 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
             () => new KeyValuePair<string, object?>("aria-selected", IsSelected.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("tabindex", IsSelected ? 0 : -1),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
-            () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null)
+            () => new KeyValuePair<string, object?>("type", string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null)
         });
     }
 
@@ -141,7 +141,7 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
     {
         var @event = new ComponentEvent();
 
-        OnClick.InvokeAsync(@event);
+        var __ = OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
 

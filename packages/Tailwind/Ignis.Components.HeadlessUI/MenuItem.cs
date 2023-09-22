@@ -56,7 +56,7 @@ public sealed class MenuItem : IgnisComponentBase, IMenuItem, IDisposable
     /// <inheritdoc />
     public bool IsActive => Menu.ActiveItem == this;
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -110,7 +110,7 @@ public sealed class MenuItem : IgnisComponentBase, IMenuItem, IDisposable
     {
         var @event = new ComponentEvent();
 
-        OnClick.InvokeAsync(@event);
+        var __ = OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
 

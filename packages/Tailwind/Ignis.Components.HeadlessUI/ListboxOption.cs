@@ -61,7 +61,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     /// <inheritdoc />
     public bool IsSelected => Listbox.IsValueSelected(Value);
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -117,7 +117,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     {
         var @event = new ComponentEvent();
 
-        OnClick.InvokeAsync(@event);
+        var __ = OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
 

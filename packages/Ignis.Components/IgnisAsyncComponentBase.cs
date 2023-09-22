@@ -47,9 +47,4 @@ public abstract class IgnisAsyncComponentBase : IgnisComponentBase, IDisposable
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-
-    ~IgnisAsyncComponentBase()
-    {
-        Dispose(false);
-    }
 }

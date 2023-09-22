@@ -54,7 +54,7 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDisclosureButto
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -71,9 +71,11 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDisclosureButto
         {
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("aria-expanded", Disclosure.IsOpen.ToString().ToLowerInvariant()),
-            () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null), () =>
+            () => new KeyValuePair<string, object?>("type",
+                string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
+            () =>
                 new KeyValuePair<string, object?>("aria-controls",
-                    Disclosure.Panel == null ? null : Disclosure.Panel.Id ?? Disclosure.Id + "-panel")
+                    Disclosure.Panel == null ? null : Disclosure.Panel.Id ?? Disclosure.Id + "-panel"),
         });
     }
 
@@ -106,7 +108,7 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDisclosureButto
     {
         var @event = new ComponentEvent();
 
-        OnClick.InvokeAsync(@event);
+        var __ = OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
 

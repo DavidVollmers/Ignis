@@ -1,4 +1,5 @@
-﻿using Ignis.Components.Web;
+﻿using System.Globalization;
+using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
@@ -32,7 +33,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     {
         get
         {
-            var originalClassString = AdditionalAttributes?.FirstOrDefault(a => a.Key == "class");
+            var originalClassString = AdditionalAttributes?.FirstOrDefault(a => string.Equals(a.Key, "class", StringComparison.OrdinalIgnoreCase));
             return _state switch
             {
                 TransitionState.Entering => $"{originalClassString?.Value} {Enter} {EnterFrom}".Trim(),
@@ -55,7 +56,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
             {
                 foreach (var attribute in AdditionalAttributes)
                 {
-                    if (attribute.Key == "class") continue;
+                    if (string.Equals(attribute.Key, "class", StringComparison.OrdinalIgnoreCase)) continue;
 
                     yield return attribute;
                 }
@@ -76,11 +77,11 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         UpdateState(TransitionState.Entering, () =>
         {
             var (graceDuration, transitionDuration) = ParseDuration(Enter);
-            Task.Delay(graceDuration).ContinueWith(_ =>
+            _ = Task.Delay(graceDuration).ContinueWith(__ =>
             {
                 UpdateState(TransitionState.Entered, () =>
                 {
-                    Task.Delay(transitionDuration).ContinueWith(_ =>
+                    _ = Task.Delay(transitionDuration).ContinueWith(_ =>
                     {
                         UpdateState(TransitionState.CanLeave, continueWith);
                     });
@@ -98,11 +99,11 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         UpdateState(TransitionState.Leaving, () =>
         {
             var (graceDuration, transitionDuration) = ParseDuration(Leave);
-            Task.Delay(graceDuration).ContinueWith(_ =>
+            _ = Task.Delay(graceDuration).ContinueWith(__ =>
             {
                 UpdateState(TransitionState.Left, () =>
                 {
-                    Task.Delay(transitionDuration).ContinueWith(_ =>
+                    _ = Task.Delay(transitionDuration).ContinueWith(_ =>
                     {
                         RenderContent = false;
 
@@ -135,22 +136,22 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     private static (int, int) ParseDuration(string? classString)
     {
         var durationClass = classString?.Split(' ')
-            .Select(v => v.Trim().Split(':').Last())
-            .FirstOrDefault(v => v.StartsWith("duration-"));
+            .Select(v => v.Trim().Split(':')[v.Trim().Split(':').Length - 1])
+            .FirstOrDefault(v => v.StartsWith("duration-", StringComparison.Ordinal));
         if (durationClass == null) return (0, 0);
 
         var factor = 1;
 
-        var durationString = durationClass.Split('-').Last();
+        var durationString = durationClass.Split('-')[durationClass.Split('-').Length - 1];
         // ReSharper disable once InvertIf
         if (durationString.StartsWith('['))
         {
             durationString = durationString.TrimStart('[').TrimEnd(']').ToLowerInvariant();
-            if (durationString.EndsWith("ms"))
+            if (durationString.EndsWith("ms", StringComparison.Ordinal))
             {
                 durationString = durationString[..^2];
             }
-            else if (durationString.EndsWith("s"))
+            else if (durationString.EndsWith('s'))
             {
                 durationString = durationString[..^1];
                 factor = 1000;
@@ -158,7 +159,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
             else return (0, 0);
         }
 
-        var duration = int.Parse(durationString) * factor;
+        var duration = int.Parse(durationString, CultureInfo.InvariantCulture) * factor;
         if (duration <= 0) return (0, 0);
 
         return duration < TransitionGraceDuration
