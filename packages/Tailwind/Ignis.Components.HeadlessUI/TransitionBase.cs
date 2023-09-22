@@ -32,7 +32,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     {
         get
         {
-            var originalClassString = AdditionalAttributes?.FirstOrDefault(a => a.Key == "class");
+            var originalClassString = AdditionalAttributes?.FirstOrDefault(a => string.Equals(a.Key, "class", StringComparison.Ordinal));
             return _state switch
             {
                 TransitionState.Entering => $"{originalClassString?.Value} {Enter} {EnterFrom}".Trim(),
@@ -55,7 +55,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
             {
                 foreach (var attribute in AdditionalAttributes)
                 {
-                    if (attribute.Key == "class") continue;
+                    if (string.Equals(attribute.Key, "class", StringComparison.Ordinal)) continue;
 
                     yield return attribute;
                 }
@@ -136,7 +136,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     {
         var durationClass = classString?.Split(' ')
             .Select(v => v.Trim().Split(':').Last())
-            .FirstOrDefault(v => v.StartsWith("duration-"));
+            .FirstOrDefault(v => v.StartsWith("duration-", StringComparison.Ordinal));
         if (durationClass == null) return (0, 0);
 
         var factor = 1;
@@ -146,11 +146,11 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         if (durationString.StartsWith('['))
         {
             durationString = durationString.TrimStart('[').TrimEnd(']').ToLowerInvariant();
-            if (durationString.EndsWith("ms"))
+            if (durationString.EndsWith("ms", StringComparison.Ordinal))
             {
                 durationString = durationString[..^2];
             }
-            else if (durationString.EndsWith("s"))
+            else if (durationString.EndsWith("s", StringComparison.Ordinal))
             {
                 durationString = durationString[..^1];
                 factor = 1000;

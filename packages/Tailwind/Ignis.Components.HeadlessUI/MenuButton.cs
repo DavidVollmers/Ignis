@@ -79,7 +79,7 @@ public sealed class MenuButton : IgnisComponentBase, IMenuButton
             () => new KeyValuePair<string, object?>("aria-haspopup", "true"),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("aria-expanded", Menu.IsOpen.ToString().ToLowerInvariant()),
-            () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
+            () => new KeyValuePair<string, object?>("type", string.Equals(AsElement, "button", StringComparison.Ordinal) ? "button" : null),
         });
     }
 

@@ -12,12 +12,12 @@ internal class StaticFileService : IStaticFileService
 
         if (!file.Exists) return null;
 
-        return await File.ReadAllTextAsync(file.FullName, cancellationToken);
+        return await File.ReadAllTextAsync(file.FullName, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<T?> GetFileContentAsJsonAsync<T>(string path, CancellationToken cancellationToken = default)
     {
-        var json = await GetFileContentAsync(path, cancellationToken);
+        var json = await GetFileContentAsync(path, cancellationToken).ConfigureAwait(false);
 
         return json == null ? default : JsonSerializer.Deserialize<T>(json);
     }

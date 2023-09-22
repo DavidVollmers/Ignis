@@ -119,7 +119,7 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
     /// <inheritdoc />
     protected override void OnKeyDown(KeyboardEventArgs eventArgs)
     {
-        if (eventArgs.Code != "Escape") return;
+        if (!string.Equals(eventArgs.Code, "Escape", StringComparison.Ordinal)) return;
 
         Close();
     }

@@ -18,7 +18,7 @@ internal class StaticFileService : IStaticFileService
     {
         try
         {
-            return await _httpClient.GetStringAsync(BuildPath(path), cancellationToken);
+            return await _httpClient.GetStringAsync(BuildPath(path), cancellationToken).ConfigureAwait(false);
         }
         catch (HttpRequestException exception)
         {
@@ -36,7 +36,7 @@ internal class StaticFileService : IStaticFileService
     public async Task<XPathDocument?> GetFileContentAsXmlAsync(string path,
         CancellationToken cancellationToken = default)
     {
-        var content = await GetFileContentAsync(path, cancellationToken);
+        var content = await GetFileContentAsync(path, cancellationToken).ConfigureAwait(false);
 
         return content == null ? null : new XPathDocument(new StringReader(content));
     }
