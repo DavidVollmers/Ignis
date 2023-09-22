@@ -57,7 +57,7 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
     /// <inheritdoc />
     public ITab[] Tabs => _tabs.ToArray();
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

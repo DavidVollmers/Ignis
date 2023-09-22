@@ -65,7 +65,7 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-popover-" + Guid.NewGuid().ToString("N");
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

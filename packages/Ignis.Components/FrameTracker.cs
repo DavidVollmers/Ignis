@@ -24,7 +24,7 @@ internal class FrameTracker
             {
                 _action = action;
 
-                update(false);
+                update(obj: false);
             };
     }
 

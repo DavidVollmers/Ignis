@@ -21,7 +21,8 @@ internal class AttributeCollection : IEnumerable<KeyValuePair<string, object?>>
         {
             var attribute = attributeDelegate();
 
-            if (AdditionalAttributes?.Any(a => a.Key == attribute.Key) == true) continue;
+            if (AdditionalAttributes?.Any(a =>
+                    string.Equals(a.Key, attribute.Key, StringComparison.Ordinal)) == true) continue;
 
             yield return attribute;
         }

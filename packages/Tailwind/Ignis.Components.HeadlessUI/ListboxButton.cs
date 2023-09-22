@@ -59,7 +59,7 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -79,9 +79,10 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
             () => new KeyValuePair<string, object?>("aria-haspopup", "listbox"),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("aria-expanded", Listbox.IsOpen.ToString().ToLowerInvariant()),
-            () => new KeyValuePair<string, object?>("type", AsElement == "button" ? "button" : null),
+            () => new KeyValuePair<string, object?>("type",
+                string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
             () => new KeyValuePair<string, object?>("aria-labelledby",
-                Listbox.Label == null ? null : Listbox.Label.Id ?? Listbox.Id + "-label")
+                Listbox.Label == null ? null : Listbox.Label.Id ?? Listbox.Id + "-label"),
         });
     }
 
@@ -114,7 +115,7 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
     {
         var @event = new ComponentEvent();
 
-        OnClick.InvokeAsync(@event);
+        var __ = OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
 

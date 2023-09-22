@@ -81,7 +81,7 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
     /// <inheritdoc />
     public bool IsChecked => RadioGroup.IsValueChecked(Value);
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />
@@ -175,16 +175,14 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IRadioGroupOp
 
         RadioGroup.SetOptionActive(this, true);
 
-#pragma warning disable CS4014
-        FocusAsync();
-#pragma warning restore CS4014
+        var __ = FocusAsync();
     }
 
     private void Click()
     {
         var @event = new ComponentEvent();
 
-        OnClick.InvokeAsync(@event);
+        var __ = OnClick.InvokeAsync(@event);
 
         if (@event.CancellationToken.IsCancellationRequested) return;
 

@@ -89,7 +89,7 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-dialog-" + Guid.NewGuid().ToString("N");
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

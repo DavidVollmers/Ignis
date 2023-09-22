@@ -70,7 +70,7 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
     /// <inheritdoc />
     public bool IsSelected => TabGroup.IsTabSelected(this);
 
-    /// <inheritdoc cref="IDynamicParentComponent{T}.Element" />
+    /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
     /// <inheritdoc />

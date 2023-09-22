@@ -35,7 +35,7 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
             return;
         }
 
-        IsOpenChanged.InvokeAsync(_isOpen = true);
+        _ = IsOpenChanged.InvokeAsync(_isOpen = true);
 
         if (_transition != null)
             FrameTracker.ExecuteOnNextFrame(() => _transition.Show(() => OnAfterOpen(continueWith)), Update);
@@ -46,9 +46,7 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
 
     protected virtual void OnAfterOpen(Action? continueWith)
     {
-#pragma warning disable CS4014
-        UpdateTargetsAsync();
-#pragma warning restore CS4014
+        _ = UpdateTargetsAsync();
 
         continueWith?.Invoke();
     }

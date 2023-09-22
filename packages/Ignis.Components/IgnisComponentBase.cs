@@ -48,7 +48,7 @@ public abstract class IgnisComponentBase : IComponent
 
         await OnUpdateCoreAsync();
 
-        UpdateCore(false);
+        UpdateCore(async: false);
     }
 
     protected internal virtual void Update(bool async = false) => UpdateCore(async);
@@ -57,7 +57,7 @@ public abstract class IgnisComponentBase : IComponent
     {
         if (async)
         {
-            _renderHandle.Dispatcher.InvokeAsync(QueueRender);
+            _ = _renderHandle.Dispatcher.InvokeAsync(QueueRender);
             return;
         }
 

@@ -67,12 +67,7 @@ public abstract class ContentHostBase : IgnisComponentBase, IContentHost, IConte
 
     public void Dispose()
     {
-        Dispose(true);
+        Dispose(disposing: true);
         GC.SuppressFinalize(this);
-    }
-
-    ~ContentHostBase()
-    {
-        Dispose(false);
     }
 }

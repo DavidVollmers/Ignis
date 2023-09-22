@@ -16,6 +16,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageOutputPath>..\..\nuget</PackageOutputPath>
+    <NoWarn>MA0004</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
