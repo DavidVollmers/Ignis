@@ -3,9 +3,9 @@
 
 <PageTitle>Test: Custom Dialog</PageTitle>
 
-<WrappedCustomDialogWithForm @bind-Open="_isDialogOpen" OnSubmit="OnSubmit"/>
+<WrappedCustomDialogWithForm data-testid="dialog" @bind-Open="_isDialogOpen" OnSubmit="OnSubmit"/>
 
-<button @onclick="OpenDialog"
+<button data-testid="open-button" @onclick="OpenDialog"
         class="inline-flex w-full justify-center rounded-md bg-stone-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-stone-500 sm:ml-3 sm:w-auto focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-600">
     Open Dialog
 </button>

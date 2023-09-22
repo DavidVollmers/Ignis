@@ -2,7 +2,7 @@
 
 <Transition AsComponent="typeof(Fragment)" Show="Open" Context="_">
     <Dialog Context="dialog" IsOpenChanged="OpenChanged"
-            class="relative z-20">
+            class="relative z-20" @attributes="AdditionalAttributes">
         <TransitionChild AsComponent="typeof(Fragment)"
                          Enter="ease-out duration-300"
                          EnterFrom="opacity-0"
@@ -50,4 +50,7 @@
 
     [Parameter]
     public EventCallback<bool> OpenChanged { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 }
