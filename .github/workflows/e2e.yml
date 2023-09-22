@@ -21,6 +21,7 @@ jobs:
       - run: dotnet publish tests/e2e/Ignis.Tests.E2E.Website/Ignis.Tests.E2E.Website.csproj -c Release
       - run: swa deploy -d ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_E2E }} --env production
         working-directory: tests/e2e/Ignis.Tests.E2E.Website
+      - run: pwsh tools/wait-for-stapp.ps1 ignis-e2e-website-stapp
   Tests:
     runs-on: ubuntu-latest
     steps:

@@ -25,6 +25,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Components.Web", "packages\Ignis.Components.Web\Ignis.Components.Web.csproj", "{B2F7725C-78BA-4419-B6AD-F5CF110CF475}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{80B7BBBD-6FAB-4A17-A18E-46558A696C19}"
+	ProjectSection(SolutionItems) = preProject
+		tools\wait-for-stapp.ps1 = tools\wait-for-stapp.ps1
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ignis.Website.Generator", "tools\Ignis.Website.Generator\Ignis.Website.Generator.csproj", "{B62AEFAC-8F61-4993-9C8C-D43C6A5068EC}"
 EndProject
