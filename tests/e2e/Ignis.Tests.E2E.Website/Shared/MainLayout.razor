@@ -1,0 +1,11 @@
+﻿@inherits IgnisRigidComponentBase
+
+<main class="flex h-screen justify-center items-center">
+    @Body
+</main>
+
+@code
+{
+    [Parameter]
+    public RenderFragment? Body { get; set; }
+}

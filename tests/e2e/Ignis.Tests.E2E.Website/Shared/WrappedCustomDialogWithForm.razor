@@ -1,0 +1,64 @@
+﻿@inherits IgnisComponentBase
+
+<CustomDialog Open="Open" OpenChanged="OpenChanged" @attributes="AdditionalAttributes">
+    <ChildContent>
+        <EditForm id="form" Model="_model" OnValidSubmit="OnSubmitAsync">
+            <DataAnnotationsValidator/>
+
+            <div>
+                <label for="input" class="block text-sm font-medium leading-6 text-gray-900">
+                    Test Input
+                </label>
+                <div class="relative mt-2 rounded-md shadow-sm">
+                    <InputText @bind-Value="_model.TestInput"
+                               id="input" type="text" class="block w-full rounded-md border-0 py-1.5 ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6">
+                    </InputText>
+                </div>
+                <p class="mt-2 text-sm">
+                    <ValidationMessage For="@(() => _model.TestInput)"></ValidationMessage>
+                </p>
+            </div>
+        </EditForm>
+    </ChildContent>
+    <FooterContent>
+        <button type="submit" form="form"
+                class="inline-flex w-full justify-center rounded-md bg-stone-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-stone-500 sm:ml-3 sm:w-auto focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-600">
+            Submit
+        </button>
+        <button type="button" @onclick="@CancelAsync"
+                class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
+            Cancel
+        </button>
+    </FooterContent>
+</CustomDialog>
+
+@code
+{
+    private WrappedCustomDialogWithFormModel _model = new();
+
+    [Parameter]
+    public bool Open { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<WrappedCustomDialogWithFormModel> OnSubmit { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
+    
+    private async Task OnSubmitAsync()
+    {
+        await OnSubmit.InvokeAsync(_model);
+
+        _model = new WrappedCustomDialogWithFormModel();
+    }
+
+    private async Task CancelAsync()
+    {
+        await OpenChanged.InvokeAsync(false);
+
+        _model = new WrappedCustomDialogWithFormModel();
+    }
+}

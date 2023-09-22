@@ -37,7 +37,14 @@ public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IC
         if (!IgnoreOutlet && Outlet == null) ContentRegistry.RegisterContentProvider(this);
     }
 
-    protected new void Update(bool async = false)
+    public void HostedBy(IContentHost host)
+    {
+        Outlet = host ?? throw new ArgumentNullException(nameof(host));
+
+        base.Update();
+    }
+
+    protected internal override void Update(bool async = false)
     {
         Outlet?.Update(async);
 
@@ -52,13 +59,6 @@ public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IC
     }
 
     protected abstract void BuildContentRenderTree(RenderTreeBuilder builder);
-
-    public void HostedBy(IContentHost host)
-    {
-        Outlet = host ?? throw new ArgumentNullException(nameof(host));
-
-        base.Update();
-    }
 
     protected virtual void Dispose(bool disposing)
     {

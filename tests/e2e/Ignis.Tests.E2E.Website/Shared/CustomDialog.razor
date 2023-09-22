@@ -1,0 +1,56 @@
+﻿@inherits IgnisRigidComponentBase
+
+<Transition AsComponent="typeof(Fragment)" Show="Open" Context="_">
+    <Dialog Context="dialog" IsOpenChanged="OpenChanged"
+            class="relative z-20" @attributes="AdditionalAttributes">
+        <TransitionChild AsComponent="typeof(Fragment)"
+                         Enter="ease-out duration-300"
+                         EnterFrom="opacity-0"
+                         EnterTo="opacity-100"
+                         Leave="ease-in duration-200"
+                         LeaveFrom="opacity-100"
+                         LeaveTo="opacity-0"
+                         Context="transition">
+            <div class="@Css.Class("fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity", transition)"></div>
+        </TransitionChild>
+        <div class="fixed inset-0 z-20 overflow-y-auto pointer-events-none">
+            <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                <TransitionChild AsComponent="typeof(Fragment)"
+                                 Enter="ease-out duration-300"
+                                 EnterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                 EnterTo="opacity-100 translate-y-0 sm:scale-100"
+                                 Leave="ease-in duration-200"
+                                 LeaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                                 LeaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                 Context="transition">
+                    <DialogPanel class="@Css.Class("relative text-left shadow-xl sm:my-8 sm:w-full sm:max-w-2xl pointer-events-auto rounded-lg transform transition-all", transition)">
+                        <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 rounded-t-lg">
+                            @ChildContent
+                        </div>
+                        <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 rounded-b-lg">
+                            @FooterContent
+                        </div>
+                    </DialogPanel>
+                </TransitionChild>
+            </div>
+        </div>
+    </Dialog>
+</Transition>
+
+@code
+{
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? FooterContent { get; set; }
+
+    [Parameter]
+    public bool Open { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
+}

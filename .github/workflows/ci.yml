@@ -23,7 +23,7 @@ jobs:
           node-version: 18.x
       - run: npm i
       - run: npx prettier --check .
-      - run: dotnet test -c Release --settings .runsettings
+      - run: dotnet test -c Release --settings .runsettings --filter FullyQualifiedName!~Ignis.Tests.E2E
       - uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

@@ -238,7 +238,7 @@
         const string openButtonId = "open-button";
         const string outletId = "dialog-outlet";
 
-        var cut = Render<CustomModalTest>(@<CustomModalTest/>);
+        var cut = Render<CustomDialogTest>(@<CustomDialogTest/>);
         
         var outlet = cut.Find($"#{outletId}");
         Assert.Empty(outlet.Children);

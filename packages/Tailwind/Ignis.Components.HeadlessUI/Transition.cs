@@ -139,7 +139,15 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     {
         Outlet = host ?? throw new ArgumentNullException(nameof(host));
 
-        Update();
+        base.Update();
+    }
+
+    /// <inheritdoc />
+    protected internal override void Update(bool async = false)
+    {
+        Outlet?.Update(async);
+
+        base.Update(async);
     }
 
     /// <inheritdoc />
