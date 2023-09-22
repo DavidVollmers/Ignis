@@ -3,7 +3,8 @@
     "install:Ignis.Website": "cd website/Ignis.Website && npm i",
     "install:ignis.net/components": "cd packages/ignis.net/components && npm i",
     "install:Ignis.Components.Web": "cd packages/Ignis.Components.Web && npm i",
-    "install": "npm run install:ignis.net/components && npm run install:Ignis.Components.Web && npm run install:Ignis.Website",
+    "install:Ignis.Tests.E2E.Website": "cd tests/e2e/Ignis.Tests.E2E.Website && npm i",
+    "install": "npm run install:ignis.net/components && npm run install:Ignis.Components.Web && npm run install:Ignis.Website && npm run install:Ignis.Tests.E2E.Website",
     "prepare": "dotnet tool restore && dotnet husky install"
   },
   "devDependencies": {
