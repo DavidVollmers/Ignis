@@ -24,6 +24,7 @@ jobs:
       - run: pwsh tools/wait-for-stapp.ps1 ignis-e2e-website-stapp
   Tests:
     runs-on: ubuntu-latest
+    needs: Publish
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-dotnet@v3
