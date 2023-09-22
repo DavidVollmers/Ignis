@@ -18,6 +18,13 @@
     <ProjectReference Include="..\..\..\packages\Tailwind\Ignis.Components.HeroIcons\Ignis.Components.HeroIcons.csproj"/>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="swa-cli.config.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="npm run build"/>
   </Target>
