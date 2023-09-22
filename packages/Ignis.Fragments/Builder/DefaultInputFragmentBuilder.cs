@@ -23,7 +23,7 @@ internal class DefaultInputFragmentBuilder<T> : IFragmentBuilder<InputFragmentCo
 
             builder.AddAttribute(6, "value", BindConverter.FormatValue(context.Value));
             builder.AddAttribute(7, "onchange",
-                EventCallback.Factory.CreateBinder<T>(this, v => context.OnInputAsync(v), context.Value!));
+                EventCallback.Factory.CreateBinder<T>(this, v => _ = context.OnInputAsync(v), context.Value!));
 
             builder.CloseElement();
         };

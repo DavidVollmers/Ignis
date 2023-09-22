@@ -33,7 +33,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     {
         get
         {
-            var originalClassString = AdditionalAttributes?.FirstOrDefault(a => string.Equals(a.Key, "class", StringComparison.Ordinal));
+            var originalClassString = AdditionalAttributes?.FirstOrDefault(a => string.Equals(a.Key, "class", StringComparison.OrdinalIgnoreCase));
             return _state switch
             {
                 TransitionState.Entering => $"{originalClassString?.Value} {Enter} {EnterFrom}".Trim(),
@@ -56,7 +56,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
             {
                 foreach (var attribute in AdditionalAttributes)
                 {
-                    if (string.Equals(attribute.Key, "class", StringComparison.Ordinal)) continue;
+                    if (string.Equals(attribute.Key, "class", StringComparison.OrdinalIgnoreCase)) continue;
 
                     yield return attribute;
                 }
@@ -136,13 +136,13 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     private static (int, int) ParseDuration(string? classString)
     {
         var durationClass = classString?.Split(' ')
-            .Select(v => v.Trim().Split(':').Last())
+            .Select(v => v.Trim().Split(':')[v.Trim().Split(':').Length - 1])
             .FirstOrDefault(v => v.StartsWith("duration-", StringComparison.Ordinal));
         if (durationClass == null) return (0, 0);
 
         var factor = 1;
 
-        var durationString = durationClass.Split('-').Last();
+        var durationString = durationClass.Split('-')[durationClass.Split('-').Length - 1];
         // ReSharper disable once InvertIf
         if (durationString.StartsWith('['))
         {
@@ -151,7 +151,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
             {
                 durationString = durationString[..^2];
             }
-            else if (durationString.EndsWith("s", StringComparison.Ordinal))
+            else if (durationString.EndsWith('s'))
             {
                 durationString = durationString[..^1];
                 factor = 1000;

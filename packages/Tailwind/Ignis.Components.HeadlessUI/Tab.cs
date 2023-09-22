@@ -90,7 +90,7 @@ public sealed class Tab : FocusComponentBase, ITab, IDisposable
             () => new KeyValuePair<string, object?>("aria-selected", IsSelected.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("tabindex", IsSelected ? 0 : -1),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
-            () => new KeyValuePair<string, object?>("type", string.Equals(AsElement, "button", StringComparison.Ordinal) ? "button" : null)
+            () => new KeyValuePair<string, object?>("type", string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null)
         });
     }
 

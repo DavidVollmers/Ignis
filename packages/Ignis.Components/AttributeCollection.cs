@@ -22,7 +22,7 @@ internal class AttributeCollection : IEnumerable<KeyValuePair<string, object?>>
             var attribute = attributeDelegate();
 
             if (AdditionalAttributes?.Any(a =>
-                    string.Equals(a.Key, attribute.Key, StringComparison.Ordinal)) == true) continue;
+                    string.Equals(a.Key, attribute.Key, StringComparison.OrdinalIgnoreCase)) == true) continue;
 
             yield return attribute;
         }

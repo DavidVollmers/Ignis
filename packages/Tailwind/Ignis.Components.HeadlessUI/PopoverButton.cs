@@ -72,7 +72,8 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
         {
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("aria-expanded", Popover.IsOpen.ToString().ToLowerInvariant()),
-            () => new KeyValuePair<string, object?>("type", string.Equals(AsElement, "button", StringComparison.Ordinal) ? "button" : null),
+            () => new KeyValuePair<string, object?>("type",
+                string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
         });
     }
 
