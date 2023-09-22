@@ -48,10 +48,12 @@ public abstract class IgnisComponentBase : IComponent
 
         await OnUpdateCoreAsync();
 
-        Update();
+        UpdateCore(false);
     }
 
-    protected internal virtual void Update(bool async = false)
+    protected internal virtual void Update(bool async = false) => UpdateCore(async);
+
+    private void UpdateCore(bool async)
     {
         if (async)
         {
