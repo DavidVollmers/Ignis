@@ -25,6 +25,11 @@ jobs:
           node-version: 18.x
       - run: echo "VERSION=$(git describe --tags --dirty)" >> $GITHUB_ENV
       - run: npm i
+      # Remove Meziantou.Analyzer from all projects (Roslyn analyzer which does not need to pollute the nuget package)
+      - run: dotnet remove package Meziantou.Analyzer
+        working-directory: packages/Ignis.Components
+      - run: dotnet remove package Meziantou.Analyzer
+        working-directory: packages/Ignis.Fragments.Abstractions
       - run: |
           dotnet build tools/Ignis.Components.HeroIcons.Generator -c Release
           dotnet tools/Ignis.Components.HeroIcons.Generator/bin/Release/net6.0/Ignis.Components.HeroIcons.Generator.dll
