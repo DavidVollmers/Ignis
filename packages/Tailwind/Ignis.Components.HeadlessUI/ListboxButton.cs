@@ -1,4 +1,5 @@
-﻿using Ignis.Components.Web;
+﻿using System.Globalization;
+using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
@@ -72,7 +73,6 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
     {
         AsElement = "button";
 
-        //TODO aria-controls
         _attributes = new AttributeCollection(new[]
         {
             () => new KeyValuePair<string, object?>("id", Id ?? Listbox.Id + "-button"),
@@ -83,6 +83,11 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
                 string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
             () => new KeyValuePair<string, object?>("aria-labelledby",
                 Listbox.Label == null ? null : Listbox.Label.Id ?? Listbox.Id + "-label"),
+            () => new KeyValuePair<string, object?>("aria-controls",
+                Listbox.SelectedOption == null
+                    ? null
+                    : Listbox.Id + "-option-" + Array.IndexOf(Listbox.Options, Listbox.SelectedOption)
+                        .ToString(CultureInfo.InvariantCulture)),
         });
     }
 

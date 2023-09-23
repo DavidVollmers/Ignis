@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
@@ -79,11 +80,13 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
             () => new KeyValuePair<string, object?>("tabindex", -1),
             () => new KeyValuePair<string, object?>("role", "option"),
             () => new KeyValuePair<string, object?>("aria-selected", IsSelected.ToString().ToLowerInvariant()),
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
-            () => new KeyValuePair<string, object?>("onmouseenter",
-                EventCallback.Factory.Create(this, OnMouseEnter)),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)), () =>
+                new KeyValuePair<string, object?>("onmouseenter",
+                    EventCallback.Factory.Create(this, OnMouseEnter)),
             () => new KeyValuePair<string, object?>("onmouseleave",
-                EventCallback.Factory.Create(this, OnMouseLeave))
+                EventCallback.Factory.Create(this, OnMouseLeave)),
+            () => new KeyValuePair<string, object?>("id",
+                Listbox.Id + "-option-" + Array.IndexOf(Listbox.Options, this).ToString(CultureInfo.InvariantCulture)),
         });
     }
 
