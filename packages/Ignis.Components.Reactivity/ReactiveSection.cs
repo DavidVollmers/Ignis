@@ -47,6 +47,11 @@ public sealed class ReactiveSection<T> : IgnisComponentBase, IDynamicParentCompo
 
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
+    public ReactiveSection()
+    {
+        AsComponent = typeof(Fragment);
+    }
+
     protected override void OnUpdate()
     {
         Value.Adopt(this);
