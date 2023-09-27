@@ -246,14 +246,12 @@
         var openButton = cut.Find($"#{openButtonId}");
         openButton.Click();
 
-        await Task.Delay(400);
-
-        var closeButton = cut.Find($"#{closeButtonId}");
+        var closeButton = cut.WaitForElement($"#{closeButtonId}");
         Assert.True(outlet.Contains(closeButton));
 
         closeButton.Click();
 
-        await Task.Delay(300);
+        await Task.Delay(400);
 
         outlet = cut.Find($"#{outletId}");
         Assert.Empty(outlet.Children);
