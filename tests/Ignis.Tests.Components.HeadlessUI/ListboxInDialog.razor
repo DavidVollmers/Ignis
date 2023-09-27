@@ -1,0 +1,40 @@
+﻿@inherits IgnisRigidComponentBase
+
+<CustomDialog Open="Open" OpenChanged="OpenChanged">
+    <Listbox @bind-Value="_selectedType">
+        <ListboxButton Id="listbox-button">
+        </ListboxButton>
+        <Transition AsComponent="typeof(Fragment)"
+                    Leave="duration-100"
+                    Context="transition">
+            <ListboxOptions @attributes="transition.Attributes">
+                @foreach (var option in _options)
+                {
+                    <ListboxOption @key="option.Name" 
+                                   Value="option"
+                                   Context="_">
+                        @option.Name
+                    </ListboxOption>
+                }
+            </ListboxOptions>
+        </Transition>
+    </Listbox>
+</CustomDialog>
+
+@code
+{
+    private readonly Type[] _options =
+    {
+        typeof(string),
+        typeof(int),
+        typeof(bool)
+    };
+
+    private Type? _selectedType;
+
+    [Parameter]
+    public bool Open { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OpenChanged { get; set; }
+}

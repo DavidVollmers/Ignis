@@ -43,4 +43,26 @@
         var listbox = cut.FindComponent<Listbox<object>>();
         Assert.False(listbox.Instance.IsOpen);
     }
+
+    [Fact]
+    public async Task ListboxInDialog()
+    {
+        Services.AddIgnis();
+        Services.AddSingleton<IHostContext, TestHostContext>();
+
+        JSInterop.Mode = JSRuntimeMode.Loose;
+        
+        const string openButtonId = "open-button";
+        const string listboxButtonId = "listbox-button";
+
+        var cut = Render(@<ListboxInDialogTest></ListboxInDialogTest>);
+        
+        var openButton = cut.Find($"#{openButtonId}");
+        openButton.Click();
+
+        await Task.Delay(400);
+
+        var listboxButton = cut.Find($"#{listboxButtonId}");
+        listboxButton.Click();
+    }
 }

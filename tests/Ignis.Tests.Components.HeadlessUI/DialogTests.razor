@@ -238,7 +238,7 @@
         const string openButtonId = "open-button";
         const string outletId = "dialog-outlet";
 
-        var cut = Render<CustomDialogTest>(@<CustomDialogTest/>);
+        var cut = Render(@<CustomDialogTest/>);
         
         var outlet = cut.Find($"#{outletId}");
         Assert.Empty(outlet.Children);
@@ -247,7 +247,6 @@
         openButton.Click();
 
         await Task.Delay(400);
-        cut.Render();
 
         var closeButton = cut.Find($"#{closeButtonId}");
         Assert.True(outlet.Contains(closeButton));
@@ -255,7 +254,6 @@
         closeButton.Click();
 
         await Task.Delay(300);
-        cut.Render();
 
         outlet = cut.Find($"#{outletId}");
         Assert.Empty(outlet.Children);
