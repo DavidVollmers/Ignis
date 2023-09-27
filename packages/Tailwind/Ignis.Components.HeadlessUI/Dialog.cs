@@ -179,7 +179,7 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
 
         var __ = IsOpenChanged.InvokeAsync(_isOpen = true);
 
-        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, Update);
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(this, continueWith);
 
         Update();
     }
@@ -206,7 +206,7 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
     {
         var __ = IsOpenChanged.InvokeAsync(_isOpen = false);
 
-        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, Update);
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(this, continueWith);
 
         Update(async);
     }

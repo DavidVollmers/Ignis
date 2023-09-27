@@ -20,7 +20,7 @@ internal class FrameTracker
     {
         _target = target ?? throw new ArgumentNullException(nameof(target));
         _action = action ?? throw new ArgumentNullException(nameof(action));
-        
+
         // If we're server-side, we can just execute the action on the next render, otherwise we need to wait for the second render. (WebAssembly)
         _frameToExecuteOn = _currentFrame + (_hostContext.IsServerSide ? 1 : 2);
     }
@@ -30,7 +30,7 @@ internal class FrameTracker
         if (_currentFrame >= _frameToExecuteOn)
         {
             _frameToExecuteOn = null;
-            
+
             _action?.Invoke();
 
             _action = null;
@@ -39,7 +39,7 @@ internal class FrameTracker
         {
             _target?.Update();
         }
-        
+
         ++_currentFrame;
     }
 }
