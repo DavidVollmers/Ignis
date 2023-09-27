@@ -11,7 +11,7 @@
                 @foreach (var option in _options)
                 {
                     <ListboxOption @key="option.Name" 
-                                   Value="option"
+                                   Value="option" id="@option.Name"
                                    Context="_">
                         @option.Name
                     </ListboxOption>
