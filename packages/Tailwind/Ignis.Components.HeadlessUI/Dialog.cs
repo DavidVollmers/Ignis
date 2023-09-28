@@ -226,7 +226,7 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
     /// <inheritdoc />
     public void CloseFromTransition(Action? continueWith = null)
     {
-        CloseCore(continueWith, true);
+        CloseCore(continueWith, async: true);
     }
 
     /// <inheritdoc />

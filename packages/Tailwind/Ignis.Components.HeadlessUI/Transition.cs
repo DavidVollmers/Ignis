@@ -173,7 +173,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     {
         _transitioningTo = false;
 
-        WatchTransition(false, () =>
+        WatchTransition(isEnter: false, () =>
         {
             _show = false;
 
