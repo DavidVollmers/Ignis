@@ -6,6 +6,6 @@ internal class TestTimeProvider : TimeProvider
 {
     public override Timer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period)
     {
-        return base.CreateTimer(callback, state, TimeSpan.Zero, TimeSpan.Zero);
+        return base.CreateTimer(callback, state, TimeSpan.Zero, Timeout.InfiniteTimeSpan);
     }
 }

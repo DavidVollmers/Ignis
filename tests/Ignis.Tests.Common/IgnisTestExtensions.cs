@@ -12,7 +12,7 @@ public static class IgnisTestExtensions
         serviceCollection.AddIgnis();
         serviceCollection.AddSingleton<IHostContext, TestHostContext>();
         serviceCollection.AddSingleton<TimeProvider, TestTimeProvider>();
-        
+
         return serviceCollection;
     }
 }
