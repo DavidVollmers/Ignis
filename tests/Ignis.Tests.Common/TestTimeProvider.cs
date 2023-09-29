@@ -6,7 +6,6 @@ internal class TestTimeProvider : TimeProvider
 {
     public override ITimer CreateTimer(TimerCallback callback, object? state, TimeSpan dueTime, TimeSpan period)
     {
-        callback(state);
-        return new TestTimer();
+        return new TestTimer(callback);
     }
 }

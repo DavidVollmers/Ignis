@@ -137,7 +137,10 @@
         var transition = cut.FindComponent<Transition>();
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, true); });
 
-        var transitions = cut.WaitForElements($"#{transitionId}");
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+
+        var transitions = cut.FindAll($"#{transitionId}");
         Assert.Single(transitions);
 
         var dialogs = cut.WaitForElements($"#{dialogId}");
@@ -181,6 +184,9 @@
         var transition = cut.FindComponent<Transition>();
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, true); });
 
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+
         var transitions = cut.WaitForElements($"#{transitionId}");
         Assert.Single(transitions);
 
@@ -198,6 +204,9 @@
         Assert.True(transitionChildDiv.Contains(dialogPanelDiv));
 
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, false); });
+
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
 
         cut.WaitForState(() => cut.FindAll($"#{dialogId}").Count == 0);
         
@@ -232,10 +241,16 @@
         var openButton = cut.Find($"#{openButtonId}");
         openButton.Click();
 
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+        
         var closeButton = cut.WaitForElement($"#{closeButtonId}");
         Assert.True(outlet.Contains(closeButton));
         
         closeButton.Click();
+
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
         
         cut.WaitForState(() => cut.FindAll($"#{closeButtonId}").Count == 0);
         

@@ -2,13 +2,29 @@
 
 namespace Ignis.Tests.Common;
 
-internal class TestTimer : ITimer
+public sealed class TestTimer : ITimer
 {
-    public TestTimer()
+    private static readonly List<TestTimer> Timers = new();
+
+    private readonly TimerCallback _callback;
+
+    public TestTimer(TimerCallback callback)
     {
+        _callback = callback;
+
+        Timers.Add(this);
+    }
+
+    public static void Trigger(object? state)
+    {
+        foreach (var timer in Timers.ToArray())
+        {
+            timer._callback(state);
+        }
     }
 
     public void Dispose()
     {
+        Timers.Remove(this);
     }
 }

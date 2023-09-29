@@ -58,6 +58,9 @@
         var openButton = cut.Find($"#{openButtonId}");
         openButton.Click();
 
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+
         var listboxButton = cut.WaitForElement($"#{listboxButtonId}");
         listboxButton.Click();
 
