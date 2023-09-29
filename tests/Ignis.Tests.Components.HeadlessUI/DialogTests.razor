@@ -5,8 +5,7 @@
     [Fact]
     public void Outlet()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -29,8 +28,7 @@
     [Fact]
     public void IgnoreOutlet()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -53,8 +51,7 @@
     [Fact]
     public void OutletWithTransition()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -85,8 +82,7 @@
     [Fact]
     public void IgnoreOutletWithTransition()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -117,8 +113,7 @@
     [Fact]
     public async Task OutletWithTransitionAndChildren()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -142,12 +137,17 @@
         var transition = cut.FindComponent<Transition>();
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, true); });
 
-        await Task.Delay(100);
+        // Transition
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+        // TransitionChild
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
 
         var transitions = cut.FindAll($"#{transitionId}");
         Assert.Single(transitions);
 
-        var dialogs = cut.FindAll($"#{dialogId}");
+        var dialogs = cut.WaitForElements($"#{dialogId}");
         Assert.Single(dialogs);
 
         var dialogDiv = dialogs.Single();
@@ -164,8 +164,7 @@
     [Fact]
     public async Task OutletWithTransitionAndChildren_EnterLeaveWithDuration()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -189,9 +188,14 @@
         var transition = cut.FindComponent<Transition>();
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, true); });
 
-        await Task.Delay(400);
+        // Transition
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+        // TransitionChild
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
 
-        var transitions = cut.FindAll($"#{transitionId}");
+        var transitions = cut.WaitForElements($"#{transitionId}");
         Assert.Single(transitions);
 
         var dialogs = cut.FindAll($"#{dialogId}");
@@ -209,14 +213,18 @@
 
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, false); });
 
-        await Task.Delay(300);
+        // Transition
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+        // TransitionChild
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
 
+        cut.WaitForState(() => cut.FindAll($"#{dialogId}").Count == 0);
+        
         transitions = cut.FindAll($"#{transitionId}");
         Assert.Single(transitions);
-
-        dialogs = cut.FindAll($"#{dialogId}");
-        Assert.Empty(dialogs);
-
+        
         transitionDiv = transitions.Single();
         outletDiv = cut.Find($"#{outletId}");
         var transitionChildDivs = cut.FindAll($"#{transitionChildId}");
@@ -229,8 +237,7 @@
     [Fact]
     public async Task CustomModal_OpenCloseByButton()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -238,7 +245,7 @@
         const string openButtonId = "open-button";
         const string outletId = "dialog-outlet";
 
-        var cut = Render<CustomDialogTest>(@<CustomDialogTest/>);
+        var cut = Render(@<CustomDialogTest/>);
         
         var outlet = cut.Find($"#{outletId}");
         Assert.Empty(outlet.Children);
@@ -246,17 +253,27 @@
         var openButton = cut.Find($"#{openButtonId}");
         openButton.Click();
 
-        await Task.Delay(400);
-        cut.Render();
-
-        var closeButton = cut.Find($"#{closeButtonId}");
+        // Transition
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+        // TransitionChild
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+        
+        var closeButton = cut.WaitForElement($"#{closeButtonId}");
         Assert.True(outlet.Contains(closeButton));
-
+        
         closeButton.Click();
 
-        await Task.Delay(300);
-        cut.Render();
-
+        // Transition
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+        // TransitionChild
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+        
+        cut.WaitForState(() => cut.FindAll($"#{closeButtonId}").Count == 0);
+        
         outlet = cut.Find($"#{outletId}");
         Assert.Empty(outlet.Children);
     }

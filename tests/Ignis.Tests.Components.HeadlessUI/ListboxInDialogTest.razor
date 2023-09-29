@@ -1,0 +1,7 @@
+﻿<ListboxInDialog @bind-Open="_isOpen"></ListboxInDialog>
+<button id="open-button" @onclick="@(() => _isOpen = true)"></button>
+
+@code
+{
+    bool _isOpen;
+}

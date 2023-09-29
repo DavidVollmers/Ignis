@@ -5,8 +5,7 @@
     [Fact]
     public void Button_OnClick()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -28,8 +27,7 @@
     [Fact]
     public void Button_OnClick_PreventDefault()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 

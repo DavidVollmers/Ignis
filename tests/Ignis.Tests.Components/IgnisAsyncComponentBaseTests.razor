@@ -5,8 +5,7 @@
     [Fact]
     public void Cycle()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         const string echo1 = "Hello World!";
         const string echo2 = "Lorem Ipsum dolor sit amet.";
@@ -27,8 +26,7 @@
     [Fact]
     public void AlreadyDisposed()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         const string echo1 = "Hello World!";
         const string echo2 = "Lorem Ipsum dolor sit amet.";

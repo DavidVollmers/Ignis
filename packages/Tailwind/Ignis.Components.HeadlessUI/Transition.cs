@@ -58,7 +58,6 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
 
     [Parameter] public bool Appear { get; set; }
 
-    /// <inheritdoc />
     [CascadingParameter] public IContentHost? Outlet { get; set; }
 
     [CascadingParameter] public IMenu? Menu { get; set; }
@@ -174,7 +173,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     {
         _transitioningTo = false;
 
-        WatchTransition(false, () =>
+        WatchTransition(isEnter: false, () =>
         {
             _show = false;
 
@@ -221,7 +220,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
         var startedTransitions = new List<ITransitionChild>();
         var finishedTransitions = 0;
 
-        if (isEnter) base.EnterTransition(() => AggregateDialogs(true, ContinueWith));
+        if (isEnter) base.EnterTransition(() => AggregateDialogs(open: true, ContinueWith));
         else ContinueWith();
         return;
 
@@ -243,7 +242,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
             if (finishedTransitions == startedTransitions.Count + 1)
             {
                 if (isEnter) continueWith?.Invoke();
-                else AggregateDialogs(false, () => base.LeaveTransition(continueWith));
+                else AggregateDialogs(open: false, () => base.LeaveTransition(continueWith));
             }
         }
     }

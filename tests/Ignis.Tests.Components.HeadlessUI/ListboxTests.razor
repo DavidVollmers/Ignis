@@ -5,8 +5,7 @@
     [Fact]
     public void Button_OnClick()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -28,8 +27,7 @@
     [Fact]
     public void Button_OnClick_PreventDefault()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -42,5 +40,37 @@
 
         var listbox = cut.FindComponent<Listbox<object>>();
         Assert.False(listbox.Instance.IsOpen);
+    }
+
+    [Fact]
+    public async Task ListboxInDialog()
+    {
+        Services.AddIgnisTestServices();
+
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        const string openButtonId = "open-button";
+        const string listboxButtonId = "listbox-button";
+        const string intOptionId = nameof(Int32);
+
+        var cut = Render(@<ListboxInDialogTest></ListboxInDialogTest>);
+
+        var openButton = cut.Find($"#{openButtonId}");
+        openButton.Click();
+
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+
+        var listboxButton = cut.WaitForElement($"#{listboxButtonId}");
+        listboxButton.Click();
+
+        var intOption = cut.WaitForElement($"#{intOptionId}");
+        intOption.Click();
+
+        cut.WaitForAssertion(() =>
+        {
+            var listbox = cut.FindComponent<Listbox<Type>>();
+            Assert.Equal(typeof(int), listbox.Instance.Value);
+        });
     }
 }
