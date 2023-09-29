@@ -14,7 +14,7 @@ public static class IgnisComponentExtensions
         serviceCollection.AddTransient<FrameTracker>();
 
         serviceCollection.TryAddScoped<IContentRegistry, ContentRegistry>();
-        
+
         serviceCollection.TryAddSingleton<TimeProvider, IgnisTimeProvider>();
 
         return serviceCollection;

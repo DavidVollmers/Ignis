@@ -68,7 +68,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     }
 
     [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
-    
+
     [Inject] internal TimeProvider TimeProvider { get; set; } = null!;
 
     protected virtual void EnterTransition(Action? continueWith = null)
@@ -79,13 +79,18 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
         UpdateState(TransitionState.Entering, () =>
         {
+            Timer timer = null!;
             var (graceDuration, transitionDuration) = ParseDuration(Enter);
-            using var timer = TimeProvider.CreateTimer(_ =>
+            timer = TimeProvider.CreateTimer(_ =>
             {
+                // ReSharper disable once AccessToModifiedClosure
+                timer.Dispose();
                 UpdateState(TransitionState.Entered, () =>
                 {
-                    using var timer = TimeProvider.CreateTimer(_ =>
+                    timer = TimeProvider.CreateTimer(_ =>
                     {
+                        // ReSharper disable once AccessToModifiedClosure
+                        timer.Dispose();
                         UpdateState(TransitionState.CanLeave, continueWith);
                     }, state: null, transitionDuration, Timeout.InfiniteTimeSpan);
                 });
@@ -101,13 +106,19 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
         UpdateState(TransitionState.Leaving, () =>
         {
+            Timer timer = null!;
             var (graceDuration, transitionDuration) = ParseDuration(Leave);
-            using var timer = TimeProvider.CreateTimer(_ =>
+            timer = TimeProvider.CreateTimer(_ =>
             {
+                // ReSharper disable once AccessToModifiedClosure
+                timer.Dispose();
                 UpdateState(TransitionState.Left, () =>
                 {
-                    using var timer = TimeProvider.CreateTimer(_ =>
+                    timer = TimeProvider.CreateTimer(_ =>
                     {
+                        // ReSharper disable once AccessToModifiedClosure
+                        timer.Dispose();
+                        
                         RenderContent = false;
 
                         UpdateState(TransitionState.CanEnter, continueWith);
