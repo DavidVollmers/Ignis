@@ -2,7 +2,7 @@
 
 namespace Ignis.Tests.Common;
 
-public class TestHostContext : IHostContext
+internal class TestHostContext : IHostContext
 {
     public bool IsPrerendering => false;
 

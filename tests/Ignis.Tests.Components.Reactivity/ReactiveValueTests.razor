@@ -5,8 +5,7 @@
     [Fact]
     public void SilentCounter()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         var cut = RenderComponent<SilentCounter>();
         Assert.Equal(1, cut.RenderCount);
@@ -25,8 +24,7 @@
     [Fact]
     public void ReactiveCounter()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         var cut = RenderComponent<ReactiveCounter>();
         Assert.Equal(1, cut.RenderCount);

@@ -5,8 +5,7 @@
     [Fact]
     public void Test()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
         
         var cut = RenderComponent<AlternatingCounter>();
 

@@ -5,8 +5,7 @@
     [Fact]
     public void Button_OnClick()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -28,8 +27,7 @@
     [Fact]
     public void Button_OnClick_PreventDefault()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -47,8 +45,7 @@
     [Fact]
     public async Task ListboxInDialog()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -64,7 +61,7 @@
         var listboxButton = cut.WaitForElement($"#{listboxButtonId}");
         listboxButton.Click();
 
-        var intOption = cut.Find($"#{intOptionId}");
+        var intOption = cut.WaitForElement($"#{intOptionId}");
         intOption.Click();
 
         cut.WaitForAssertion(() =>

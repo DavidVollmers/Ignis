@@ -5,8 +5,7 @@
     [Fact]
     public void Outlet()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -29,8 +28,7 @@
     [Fact]
     public void IgnoreOutlet()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -53,8 +51,7 @@
     [Fact]
     public void OutletWithTransition()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -85,8 +82,7 @@
     [Fact]
     public void IgnoreOutletWithTransition()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -117,8 +113,7 @@
     [Fact]
     public async Task OutletWithTransitionAndChildren()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -164,8 +159,7 @@
     [Fact]
     public async Task OutletWithTransitionAndChildren_EnterLeaveWithDuration()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -229,8 +223,7 @@
     [Fact]
     public async Task CustomModal_OpenCloseByButton()
     {
-        Services.AddIgnis();
-        Services.AddSingleton<IHostContext, TestHostContext>();
+        Services.AddIgnisTestServices();
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
@@ -248,11 +241,11 @@
 
         var closeButton = cut.WaitForElement($"#{closeButtonId}");
         Assert.True(outlet.Contains(closeButton));
-
+        
         closeButton.Click();
-
-        await Task.Delay(400);
-
+        
+        cut.WaitForState(() => cut.FindAll($"#{closeButtonId}").Count == 0);
+        
         outlet = cut.Find($"#{outletId}");
         Assert.Empty(outlet.Children);
     }
