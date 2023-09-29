@@ -118,7 +118,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
                     {
                         // ReSharper disable once AccessToModifiedClosure
                         timer.Dispose();
-                        
+
                         RenderContent = false;
 
                         UpdateState(TransitionState.CanEnter, continueWith);
