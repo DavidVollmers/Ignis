@@ -7,7 +7,7 @@ internal class TestTimer : ITimer
     public TestTimer()
     {
     }
-    
+
     public void Dispose()
     {
     }
