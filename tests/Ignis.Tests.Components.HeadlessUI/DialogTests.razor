@@ -137,12 +137,10 @@
         var transition = cut.FindComponent<Transition>();
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, true); });
 
-        await Task.Delay(100);
-
-        var transitions = cut.FindAll($"#{transitionId}");
+        var transitions = cut.WaitForElements($"#{transitionId}");
         Assert.Single(transitions);
 
-        var dialogs = cut.FindAll($"#{dialogId}");
+        var dialogs = cut.WaitForElements($"#{dialogId}");
         Assert.Single(dialogs);
 
         var dialogDiv = dialogs.Single();
@@ -183,9 +181,7 @@
         var transition = cut.FindComponent<Transition>();
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, true); });
 
-        await Task.Delay(400);
-
-        var transitions = cut.FindAll($"#{transitionId}");
+        var transitions = cut.WaitForElements($"#{transitionId}");
         Assert.Single(transitions);
 
         var dialogs = cut.FindAll($"#{dialogId}");
@@ -203,14 +199,11 @@
 
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, false); });
 
-        await Task.Delay(300);
-
+        cut.WaitForState(() => cut.FindAll($"#{dialogId}").Count == 0);
+        
         transitions = cut.FindAll($"#{transitionId}");
         Assert.Single(transitions);
-
-        dialogs = cut.FindAll($"#{dialogId}");
-        Assert.Empty(dialogs);
-
+        
         transitionDiv = transitions.Single();
         outletDiv = cut.Find($"#{outletId}");
         var transitionChildDivs = cut.FindAll($"#{transitionChildId}");

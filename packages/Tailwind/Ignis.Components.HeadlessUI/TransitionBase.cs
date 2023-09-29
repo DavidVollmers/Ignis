@@ -79,7 +79,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
         UpdateState(TransitionState.Entering, () =>
         {
-            Timer timer = null!;
+            ITimer timer = null!;
             var (graceDuration, transitionDuration) = ParseDuration(Enter);
             timer = TimeProvider.CreateTimer(_ =>
             {
@@ -106,7 +106,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
         UpdateState(TransitionState.Leaving, () =>
         {
-            Timer timer = null!;
+            ITimer timer = null!;
             var (graceDuration, transitionDuration) = ParseDuration(Leave);
             timer = TimeProvider.CreateTimer(_ =>
             {

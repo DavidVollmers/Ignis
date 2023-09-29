@@ -15,7 +15,7 @@ public static class IgnisComponentExtensions
 
         serviceCollection.TryAddScoped<IContentRegistry, ContentRegistry>();
 
-        serviceCollection.TryAddSingleton<TimeProvider, IgnisTimeProvider>();
+        serviceCollection.TryAddSingleton<TimeProvider, TimeProviderImplementation>();
 
         return serviceCollection;
     }
