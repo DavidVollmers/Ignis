@@ -137,6 +137,10 @@
         var transition = cut.FindComponent<Transition>();
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, true); });
 
+        // Transition
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+        // TransitionChild
         TestTimer.Trigger(null);
         TestTimer.Trigger(null);
 
@@ -184,6 +188,10 @@
         var transition = cut.FindComponent<Transition>();
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, true); });
 
+        // Transition
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+        // TransitionChild
         TestTimer.Trigger(null);
         TestTimer.Trigger(null);
 
@@ -205,6 +213,10 @@
 
         transition.SetParametersAndRender(p => { p.Add(x => x.Show, false); });
 
+        // Transition
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+        // TransitionChild
         TestTimer.Trigger(null);
         TestTimer.Trigger(null);
 
@@ -241,6 +253,10 @@
         var openButton = cut.Find($"#{openButtonId}");
         openButton.Click();
 
+        // Transition
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+        // TransitionChild
         TestTimer.Trigger(null);
         TestTimer.Trigger(null);
         
@@ -249,6 +265,10 @@
         
         closeButton.Click();
 
+        // Transition
+        TestTimer.Trigger(null);
+        TestTimer.Trigger(null);
+        // TransitionChild
         TestTimer.Trigger(null);
         TestTimer.Trigger(null);
         
