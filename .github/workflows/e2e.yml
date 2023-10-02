@@ -18,8 +18,8 @@ jobs:
       - run: npm i
       - run: npm i -g @azure/static-web-apps-cli
       - run: |
-          dotnet build tools/Ignis.Website.Generator -c Release
-          dotnet tools/Ignis.Website.Generator/bin/Release/net6.0/Ignis.Website.Generator.dll
+          dotnet build tools/Ignis.Components.HeroIcons.Generator -c Release
+          dotnet tools/Ignis.Components.HeroIcons.Generator/bin/Release/net6.0/Ignis.Components.HeroIcons.Generator.dll
       - run: dotnet build tests/e2e/Ignis.Tests.E2E.Website -c Release
       - run: dotnet publish tests/e2e/Ignis.Tests.E2E.Website/Ignis.Tests.E2E.Website.csproj -c Release
       - run: swa deploy -d ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_E2E }} --env production
