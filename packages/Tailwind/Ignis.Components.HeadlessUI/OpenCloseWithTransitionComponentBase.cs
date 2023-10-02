@@ -62,7 +62,7 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
 
         if (_transition != null)
         {
-            _transition.Hide(() => CloseCore(continueWith, true));
+            _transition.Hide(() => CloseCore(continueWith, async: true));
             return;
         }
 

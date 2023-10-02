@@ -13,6 +13,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     private bool _showInitially;
     private Type? _asComponent;
     private string? _asElement;
+    private bool _isHosted;
     private bool _show;
 
     /// <inheritdoc />
@@ -108,7 +109,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        if (Outlet != null) return;
+        if (Outlet != null && _isHosted) return;
 
         BuildContentRenderTree(builder);
     }
@@ -138,13 +139,15 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     {
         Outlet = host ?? throw new ArgumentNullException(nameof(host));
 
+        _isHosted = true;
+        
         base.Update();
     }
 
     /// <inheritdoc />
     protected internal override void Update(bool async = false)
     {
-        Outlet?.Update(async);
+        if (_isHosted) Outlet?.Update(async);
 
         base.Update(async);
     }
@@ -165,7 +168,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     {
         _transitioningTo = _show = true;
 
-        WatchTransition(true, continueWith);
+        WatchTransition(isEnter: true, continueWith);
     }
 
     /// <inheritdoc />
