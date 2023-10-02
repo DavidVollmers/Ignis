@@ -140,7 +140,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
         Outlet = host ?? throw new ArgumentNullException(nameof(host));
 
         _isHosted = true;
-        
+
         base.Update();
     }
 

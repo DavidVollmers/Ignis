@@ -4,5 +4,5 @@ namespace Ignis.Tests.E2E.Website.Models;
 
 public sealed record WrappedCustomDialogWithFormModel
 {
-    [Required] public string TestInput { get; set; } = null!;
+    [Required] public Type? SelectedType { get; set; }
 }

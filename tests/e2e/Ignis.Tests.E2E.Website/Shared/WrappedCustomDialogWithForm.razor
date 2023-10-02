@@ -6,16 +6,26 @@
             <DataAnnotationsValidator/>
 
             <div>
-                <label for="input" class="block text-sm font-medium leading-6 text-gray-900">
-                    Test Input
-                </label>
-                <div class="relative mt-2 rounded-md shadow-sm">
-                    <InputText @bind-Value="_model.TestInput"
-                               id="input" type="text" class="block w-full rounded-md border-0 py-1.5 ring-1 ring-inset focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6">
-                    </InputText>
-                </div>
+                <SelectInput @bind-Value="_model.SelectedType" Options="SupportedPropertyTypes">
+                    <LabelContent Context="label">
+                        Type
+                    </LabelContent>
+                    <SelectedValueContent Context="value">
+                        @if (_model.SelectedType == null)
+                        {
+                            <Fragment>No type selected</Fragment>
+                        }
+                        else
+                        {
+                            @_model.SelectedType.Name
+                        }
+                    </SelectedValueContent>
+                    <OptionValueContent Context="option">
+                        @option.Value.Name
+                    </OptionValueContent>
+                </SelectInput>
                 <p class="mt-2 text-sm">
-                    <ValidationMessage For="@(() => _model.TestInput)"></ValidationMessage>
+                    <ValidationMessage For="@(() => _model.SelectedType)"></ValidationMessage>
                 </p>
             </div>
         </EditForm>
@@ -34,6 +44,11 @@
 
 @code
 {
+    public static readonly Type[] SupportedPropertyTypes =
+    {
+        typeof(string), typeof(int), typeof(decimal), typeof(bool)
+    };
+
     private WrappedCustomDialogWithFormModel _model = new();
 
     [Parameter]
@@ -47,7 +62,7 @@
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
-    
+
     private async Task OnSubmitAsync()
     {
         await OnSubmit.InvokeAsync(_model);

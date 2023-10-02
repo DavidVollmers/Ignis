@@ -1,0 +1,103 @@
+﻿@using Ignis.Components.HeroIcons.Outline
+@typeparam TValue
+@typeparam TOption
+@inherits InputBase<TValue>
+
+<Listbox Context="listbox" 
+         Value="Value" ValueChanged="@((TValue? v) => OnValueChanged(v))" 
+         @attributes="AdditionalAttributes">
+    @if (LabelContent != null)
+    {
+        <ListboxLabel class="block text-sm font-medium leading-6 text-gray-900">
+            @LabelContent(listbox)
+        </ListboxLabel>
+    }
+    <div class="relative mt-2 rounded-md shadow-sm">
+        <ListboxButton class="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-stone-600 sm:text-sm sm:leading-6">
+            <span class="block truncate">
+                @SelectedValueContent(listbox)
+            </span>
+            <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                <ChevronUpDownIcon class="h-5 w-5 text-gray-400"/>
+            </span>
+        </ListboxButton>
+        @if (Options.Any())
+        {
+            <Transition AsComponent="typeof(Fragment)"
+                        Leave="transition ease-in duration-100"
+                        LeaveFrom="opacity-100"
+                        LeaveTo="opacity-0"
+                        Context="transition">
+                <ListboxOptions class="@Css.Class("absolute z-20 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm sm:leading-5", transition)">
+                    @foreach (var option in Options)
+                    {
+                        <ListboxOption @key="option"
+                                       AsComponent="typeof(Fragment)"
+                                       Value="option"
+                                       Context="optionContext">
+                            <li @ref="optionContext.Element"
+                                @attributes="optionContext.Attributes"
+                                class="@Css.Class("relative cursor-default select-none py-2 pl-3 pr-9", optionContext.IsActive ? "bg-stone-600 text-white" : "text-gray-900")">
+                                <span class="@Css.Class("block truncate", optionContext.IsSelected ? "font-semibold" : "font-normal")">
+                                    @OptionValueContent(new SelectOptionValueContext(optionContext, option))
+                                </span>
+                                @if (optionContext.IsSelected)
+                                {
+                                    <span class="@Css.Class("absolute inset-y-0 right-0 flex items-center pr-4", optionContext.IsActive ? "text-white" : "text-stone-600")">
+                                        <CheckIcon class="h-5 w-5"/>
+                                    </span>
+                                }
+                            </li>
+                        </ListboxOption>
+                    }
+                </ListboxOptions>
+            </Transition>
+        }
+    </div>
+</Listbox>
+
+@code
+{
+    [Parameter]
+    public RenderFragment<IListbox>? LabelContent { get; set; }
+
+    //TODO display selected value
+    [Parameter]
+    public RenderFragment<IListbox> SelectedValueContent { get; set; } = context => { return builder => { builder.AddContent(0, context.Id); }; };
+
+    [Parameter]
+    public RenderFragment<SelectOptionValueContext> OptionValueContent { get; set; } = context => { return builder => { builder.AddContent(0, context.Value?.ToString()); }; };
+
+    [Parameter]
+    public IEnumerable<TOption> Options { get; set; } = Array.Empty<TOption>();
+
+    [Parameter]
+    public EventCallback<TValue?> OnChange { get; set; }
+
+    public void OnValueChanged(TValue? value)
+    {
+        ValueChanged.InvokeAsync(value);
+
+        OnChange.InvokeAsync(value);
+    }
+
+    public sealed class SelectOptionValueContext
+    {
+        public IListboxOption Option { get; }
+
+        public TOption Value { get; }
+
+        public SelectOptionValueContext(IListboxOption context, TOption value)
+        {
+            Option = context;
+            Value = value;
+        }
+    }
+
+#pragma warning disable CS8765
+    protected override bool TryParseValueFromString(string? value, out TValue result, out string? validationErrorMessage)
+#pragma warning restore CS8765
+    {
+        return this.TryParseSelectableValueFromString(value, out result, out validationErrorMessage);
+    }
+}
