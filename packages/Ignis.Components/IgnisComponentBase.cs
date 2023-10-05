@@ -106,6 +106,8 @@ public abstract class IgnisComponentBase : IComponent
     {
         OnUpdate();
 
+        HostContext.OnComponentUpdate(this);
+
         return Task.CompletedTask;
     }
 }
