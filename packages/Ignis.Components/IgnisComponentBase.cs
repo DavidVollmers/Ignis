@@ -20,7 +20,7 @@ public abstract class IgnisComponentBase : IComponent
         _renderFragment = builder =>
         {
             _hasPendingQueuedRender = false;
-
+            
             BuildRenderTree(builder);
         };
     }

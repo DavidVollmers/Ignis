@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.Extensions;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -12,7 +13,7 @@ public static class IgnisComponentExtensions
         if (serviceCollection == null) throw new ArgumentNullException(nameof(serviceCollection));
 
         serviceCollection.AddTransient<FrameTracker>();
-
+        
         serviceCollection.TryAddScoped<IContentRegistry, ContentRegistry>();
 
         serviceCollection.TryAddSingleton<TimeProvider, TimeProviderImplementation>();

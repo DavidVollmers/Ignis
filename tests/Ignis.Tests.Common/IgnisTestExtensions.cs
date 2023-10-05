@@ -10,7 +10,7 @@ public static class IgnisTestExtensions
         if (serviceCollection == null) throw new ArgumentNullException(nameof(serviceCollection));
 
         serviceCollection.AddIgnis();
-        serviceCollection.AddSingleton<IHostContext, TestHostContext>();
+        serviceCollection.AddScoped<IHostContext, TestHostContext>();
         serviceCollection.AddSingleton<TimeProvider, TestTimeProvider>();
 
         return serviceCollection;

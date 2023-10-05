@@ -13,7 +13,7 @@ public static class IgnisServerExtensions
 
         serviceCollection.AddHttpContextAccessor();
 
-        serviceCollection.TryAddSingleton<IHostContext, ServerHostContext>();
+        serviceCollection.TryAddScoped<IHostContext, ServerHostContext>();
 
         return serviceCollection;
     }

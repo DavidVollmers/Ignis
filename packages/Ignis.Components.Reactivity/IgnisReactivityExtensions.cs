@@ -9,7 +9,7 @@ public static class IgnisReactivityExtensions
     {
         if (services == null) throw new ArgumentNullException(nameof(services));
 
-        services.AddSingleton<IComponentExtension, IgnisReactivityExtension>();
+        services.AddScoped<IComponentExtension, IgnisReactivityExtension>();
 
         return services;
     }

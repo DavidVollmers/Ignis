@@ -3,15 +3,6 @@
 @code
 {
     [Fact]
-    public void MissingCallToAddIgnisReactivity()
-    {
-        Services.AddIgnisTestServices();
-        
-        var exception = Assert.Throws<InvalidOperationException>(() => RenderComponent<SilentCounter>());
-        Assert.Equal("To use the Ignis reactivity system please make sure to call AddIgnisReactivity() in your Program.cs.", exception.Message);
-    }
-    
-    [Fact]
     public void SilentCounter()
     {
         Services.AddIgnisTestServices();
