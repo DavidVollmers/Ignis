@@ -13,7 +13,7 @@ public static class IgnisComponentExtensions
         if (serviceCollection == null) throw new ArgumentNullException(nameof(serviceCollection));
 
         serviceCollection.AddTransient<FrameTracker>();
-        
+
         serviceCollection.TryAddScoped<IContentRegistry, ContentRegistry>();
 
         serviceCollection.TryAddSingleton<TimeProvider, TimeProviderImplementation>();
