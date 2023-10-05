@@ -1,6 +1,6 @@
 ﻿namespace Ignis.Components.Reactivity;
 
-public sealed class ReactiveValue<T>
+public sealed class ReactiveValue<T> where T : struct
 {
     private readonly IList<ReactiveSection<T>> _sections = new List<ReactiveSection<T>>();
     private readonly IgnisComponentBase _owner;

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.Reactivity;
 
-public sealed class ReactiveSection<T> : IgnisComponentBase, IDynamicParentComponent, IDisposable
+public sealed class ReactiveSection<T> : IgnisComponentBase, IDynamicParentComponent, IDisposable where T : struct
 {
     private Type? _asComponent;
     private string? _asElement;
