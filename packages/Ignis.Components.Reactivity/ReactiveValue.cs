@@ -1,10 +1,13 @@
-﻿namespace Ignis.Components.Reactivity;
+﻿using Ignis.Components.Extensions;
+
+namespace Ignis.Components.Reactivity;
 
 public sealed class ReactiveValue<T> where T : struct
 {
     private readonly IList<ReactiveSection<T>> _sections = new List<ReactiveSection<T>>();
     private readonly IgnisComponentBase _owner;
 
+    private IgnisReactivityExtension? _extension;
     private T _value;
 
     public ReactiveValue(IgnisComponentBase owner, T value)
@@ -17,6 +20,8 @@ public sealed class ReactiveValue<T> where T : struct
     {
         get
         {
+            Initialize();
+            
             return _value;
         }
         set
@@ -31,6 +36,18 @@ public sealed class ReactiveValue<T> where T : struct
                 }
             }
             else _owner.Update();
+        }
+    }
+
+    private void Initialize()
+    {
+        if (_extension != null) return;
+
+        _extension = _owner.GetExtension<IgnisReactivityExtension>();
+        if (_extension == null)
+        {
+            throw new InvalidOperationException(
+                "To use the Ignis reactivity system please make sure to call AddIgnisReactivity() in your Program.cs.");
         }
     }
 

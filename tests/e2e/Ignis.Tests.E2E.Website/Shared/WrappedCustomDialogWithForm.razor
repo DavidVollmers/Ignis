@@ -28,6 +28,13 @@
                     <ValidationMessage For="@(() => _model.SelectedType)"></ValidationMessage>
                 </p>
             </div>
+
+            @if (_model.SelectedType != null)
+            {
+                <p>
+                    @_model.SelectedType.Name
+                </p>
+            }
         </EditForm>
     </ChildContent>
     <FooterContent>
