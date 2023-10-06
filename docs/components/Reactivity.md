@@ -9,8 +9,8 @@ When you build your Ignis components you have full control over how they react t
 by manually calling the `Update` method on the component. But this also means you need to call the `Update` method on
 every internal state change which is not coming from a `Parameter` or `CascadingParameter`.
 
-To make this easier, Ignis provides the `ReactiveValue<T>` class which will automatically call the `Update` method on
-the component when the value is changed.
+To make this easier, Ignis provides the `ReactiveValue<T>` and `ReactiveReference<T>` classes which will automatically
+call the `Update` method on the component when the value or reference is changed.
 
 ```cshtml
 @using Ignis.Components
@@ -47,10 +47,10 @@ by using the `ReactiveSection` component.
 
 @inherits IgnisComponentBase
 
-<ReactiveSection AsElement="p" Value="_counter1">
+<ReactiveSection AsElement="p" For="_counter1">
     Counter 1: @_counter1.Value
 </ReactiveSection>
-<ReactiveSection AsElement="p" Value="_counter2">
+<ReactiveSection AsElement="p" For="_counter2">
     Counter 2: @_counter2.Value
 </ReactiveSection>
 
