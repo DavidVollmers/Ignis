@@ -29,12 +29,14 @@
                 </p>
             </div>
 
-            @if (_model.SelectedType != null)
-            {
-                <p>
-                    @_model.SelectedType.Name
-                </p>
-            }
+            <ReactiveSection For="_link">
+                @if (_model.SelectedType != null)
+                {
+                    <p>
+                        @_model.SelectedType.Name
+                    </p>
+                }
+            </ReactiveSection>
         </EditForm>
     </ChildContent>
     <FooterContent>
@@ -51,11 +53,14 @@
 
 @code
 {
+
     public static readonly Type[] SupportedPropertyTypes =
     {
         typeof(string), typeof(int), typeof(decimal), typeof(bool)
     };
 
+    private readonly ReactiveLink _link;
+        
     private WrappedCustomDialogWithFormModel _model = new();
 
     [Parameter]
@@ -69,6 +74,11 @@
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
+    
+    public WrappedCustomDialogWithForm()
+    {
+        _link = new ReactiveLink(this);
+    }
 
     private async Task OnSubmitAsync()
     {

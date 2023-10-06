@@ -24,4 +24,14 @@ public abstract class HostContextBase : IHostContext
             extension.OnUpdate(component);
         }
     }
+
+    public void OnComponentDispose(IgnisComponentBase component)
+    {
+        if (component == null) throw new ArgumentNullException(nameof(component));
+
+        foreach (var extension in ComponentExtensions)
+        {
+            extension.OnDispose(component);
+        }
+    }
 }
