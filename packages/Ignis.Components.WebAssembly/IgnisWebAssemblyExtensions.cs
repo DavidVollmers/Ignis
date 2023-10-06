@@ -11,7 +11,7 @@ public static class IgnisWebAssemblyExtensions
 
         serviceCollection.AddIgnis();
 
-        serviceCollection.TryAddSingleton<IHostContext, WebAssemblyHostContext>();
+        serviceCollection.TryAddScoped<IHostContext, WebAssemblyHostContext>();
 
         return serviceCollection;
     }

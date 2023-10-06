@@ -1,8 +1,14 @@
-﻿namespace Ignis.Components.WebAssembly;
+﻿using Ignis.Components.Extensions;
 
-internal class WebAssemblyHostContext : IHostContext
+namespace Ignis.Components.WebAssembly;
+
+internal class WebAssemblyHostContext : HostContextBase
 {
-    public bool IsPrerendering => false;
+    public override bool IsPrerendering => false;
 
-    public bool IsServerSide => false;
+    public override bool IsServerSide => false;
+
+    public WebAssemblyHostContext(IEnumerable<IComponentExtension> componentExtensions) : base(componentExtensions)
+    {
+    }
 }

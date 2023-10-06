@@ -9,7 +9,7 @@
         
         var cut = RenderComponent<AlternatingCounter>();
 
-        var sections = cut.FindComponents<ReactiveSection<int>>();
+        var sections = cut.FindComponents<ReactiveSection>();
         Assert.Equal(2, sections.Count);
         Assert.Equal(1, sections[0].RenderCount);
         Assert.Equal(1, sections[1].RenderCount);

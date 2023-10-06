@@ -1,0 +1,23 @@
+﻿@using Ignis.Components.Extensions
+@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void TestComponentExtension()
+    {
+        var counter = 0;
+        var testExtension = new TestComponentExtension(_ => counter++);
+
+        Services.AddIgnisTestServices();
+        Services.AddSingleton<IComponentExtension>(_ => testExtension);
+
+        var cut = RenderComponent<AsyncTestComponent>(p => { p.Add(x => x.Echo, "Test 1"); });
+        Assert.Equal(1, cut.RenderCount);
+        Assert.Equal(1, counter);
+
+        cut.SetParametersAndRender(p => { p.Add(x => x.Echo, "Test 2"); });
+        Assert.Equal(2, cut.RenderCount);
+        Assert.Equal(2, counter);
+    }
+}

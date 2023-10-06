@@ -1,0 +1,58 @@
+﻿@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void ReactiveBinding()
+    {
+        Services.AddIgnisTestServices();
+        
+        const string newValue = "Ignis rocks!";
+
+        var cut = RenderComponent<ReactiveBinding>();
+        Assert.Equal(1, cut.RenderCount);
+        
+        var staticResult = cut.Find("p#static-value").TextContent;
+        Assert.Equal("Hello World!", staticResult);
+        
+        var reactiveResult = cut.Find("p#reactive-value").TextContent;
+        Assert.Equal("Hello World!", reactiveResult);
+        
+        cut.Find("input").Change(newValue);
+        
+        Assert.Equal(2, cut.RenderCount);
+        
+        staticResult = cut.Find("p#static-value").TextContent;
+        Assert.Equal("Hello World!", staticResult);
+        
+        reactiveResult = cut.Find("p#reactive-value").TextContent;
+        Assert.Equal(newValue, reactiveResult);
+    }
+    
+    [Fact]
+    public void SilentBinding()
+    {
+        Services.AddIgnisTestServices();
+        
+        const string newValue = "Ignis rocks!";
+
+        var cut = RenderComponent<SilentBinding>();
+        Assert.Equal(1, cut.RenderCount);
+        
+        var staticResult = cut.Find("p#static-value").TextContent;
+        Assert.Equal("Hello World!", staticResult);
+        
+        var reactiveResult = cut.Find("p#reactive-value").TextContent;
+        Assert.Equal("Hello World!", reactiveResult);
+        
+        cut.Find("input").Change(newValue);
+        
+        Assert.Equal(2, cut.RenderCount);
+        
+        staticResult = cut.Find("p#static-value").TextContent;
+        Assert.Equal("Hello World!", staticResult);
+        
+        reactiveResult = cut.Find("p#reactive-value").TextContent;
+        Assert.Equal("Hello World!", reactiveResult);
+    }
+}
