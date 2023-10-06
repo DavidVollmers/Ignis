@@ -3,14 +3,11 @@
 public abstract class ReactiveExpression
 {
     private readonly IList<ReactiveSection> _sections = new List<ReactiveSection>();
-
-    internal IEnumerable<ReactiveSection> Sections => _sections;
-
-    internal IgnisComponentBase Owner { get; }
+    private readonly IgnisComponentBase _owner;
 
     protected ReactiveExpression(IgnisComponentBase owner)
     {
-        Owner = owner ?? throw new ArgumentNullException(nameof(owner));
+        _owner = owner ?? throw new ArgumentNullException(nameof(owner));
     }
 
     protected internal void Update()
@@ -22,7 +19,7 @@ public abstract class ReactiveExpression
                 section.Update();
             }
         }
-        else Owner.Update();
+        else _owner.Update();
     }
 
     internal void Subscribe(ReactiveSection section)

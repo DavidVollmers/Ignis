@@ -6,9 +6,7 @@
             <DataAnnotationsValidator/>
 
             <div>
-                <SelectInput Value="_model.SelectedType" ValueChanged="(Type t) => OnValueChanged(t)" 
-                             ValueExpression="() => _model.SelectedType"
-                             Options="SupportedPropertyTypes">
+                <SelectInput @bind-Value="_selectedType.Value" Options="SupportedPropertyTypes">
                     <LabelContent Context="label">
                         Type
                     </LabelContent>
@@ -31,12 +29,14 @@
                 </p>
             </div>
 
-            @if (_model.SelectedType != null)
-            {
-                <p>
-                    @_model.SelectedType.Name
-                </p>
-            }
+            <ReactiveSection For="_selectedType">
+                @if (_model.SelectedType != null)
+                {
+                    <p>
+                        @_model.SelectedType.Name
+                    </p>
+                }
+            </ReactiveSection>
         </EditForm>
     </ChildContent>
     <FooterContent>
@@ -58,7 +58,9 @@
     {
         typeof(string), typeof(int), typeof(decimal), typeof(bool)
     };
-        
+
+    private readonly ReactiveReference<Type?> _selectedType;
+
     private WrappedCustomDialogWithFormModel _model = new();
 
     [Parameter]
@@ -73,11 +75,9 @@
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    private void OnValueChanged(Type value)
+    public WrappedCustomDialogWithForm()
     {
-        _model.SelectedType = value;
-
-        Update();
+        _selectedType = new ReactiveReference<Type?>(this, () => _model.SelectedType, v => _model.SelectedType = v);
     }
 
     private async Task OnSubmitAsync()
