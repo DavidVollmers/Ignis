@@ -3,6 +3,4 @@
 public interface IComponentExtension
 {
     void OnUpdate(IgnisComponentBase component);
-
-    void OnDispose(IgnisComponentBase component);
 }

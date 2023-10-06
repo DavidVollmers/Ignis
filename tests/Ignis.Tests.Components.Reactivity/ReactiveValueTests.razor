@@ -6,7 +6,6 @@
     public void SilentCounter()
     {
         Services.AddIgnisTestServices();
-        Services.AddIgnisReactivity();
 
         var cut = RenderComponent<SilentCounter>();
         Assert.Equal(1, cut.RenderCount);
@@ -26,7 +25,6 @@
     public void ReactiveCounter()
     {
         Services.AddIgnisTestServices();
-        Services.AddIgnisReactivity();
 
         var cut = RenderComponent<ReactiveCounter>();
         Assert.Equal(1, cut.RenderCount);

@@ -11,6 +11,4 @@ public interface IHostContext
     IEnumerable<IComponentExtension> ComponentExtensions { get; }
 
     internal void OnComponentUpdate(IgnisComponentBase component);
-    
-    internal void OnComponentDispose(IgnisComponentBase component);
 }
