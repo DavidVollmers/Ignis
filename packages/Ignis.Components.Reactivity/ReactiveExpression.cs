@@ -25,10 +25,6 @@ public abstract class ReactiveExpression
         else Owner.Update();
     }
 
-    protected internal virtual void Initialize()
-    {
-    }
-
     internal void Subscribe(ReactiveSection section)
     {
         if (_sections.Contains(section)) return;

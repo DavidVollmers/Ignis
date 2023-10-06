@@ -1,5 +1,4 @@
 ﻿using Ignis.Components;
-using Ignis.Components.Reactivity;
 using Ignis.Components.WebAssembly;
 using Ignis.Tests.E2E.Website;
 using Microsoft.AspNetCore.Components.Web;
