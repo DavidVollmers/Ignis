@@ -52,6 +52,11 @@ public sealed class ReactiveSection : IgnisComponentBase, IDynamicParentComponen
         AsComponent = typeof(Fragment);
     }
 
+    protected override void OnInitialized()
+    {
+        For.Initialize();
+    }
+
     protected override void OnUpdate()
     {
         For.Subscribe(this);
