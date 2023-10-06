@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.Reactivity;
 
-public sealed class ReactiveSection<T> : IgnisComponentBase, IDynamicParentComponent, IDisposable
+public sealed class ReactiveSection : IgnisComponentBase, IDynamicParentComponent, IDisposable
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -30,7 +30,7 @@ public sealed class ReactiveSection<T> : IgnisComponentBase, IDynamicParentCompo
         }
     }
 
-    [Parameter, EditorRequired] public ReactiveExpression<T> For { get; set; } = null!;
+    [Parameter, EditorRequired] public ReactiveExpression For { get; set; } = null!;
 
     [Parameter] public RenderFragment<IDynamicComponent>? _ { get; set; }
 
@@ -61,7 +61,7 @@ public sealed class ReactiveSection<T> : IgnisComponentBase, IDynamicParentCompo
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IDynamicComponent, ReactiveSection<T>>(2, this, ChildContent);
+        builder.AddChildContentFor<IDynamicComponent, ReactiveSection>(2, this, ChildContent);
 
         builder.CloseAs(this);
     }

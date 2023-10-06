@@ -1,6 +1,6 @@
 ﻿namespace Ignis.Components.Reactivity;
 
-public sealed class ReactiveValue<T> : ReactiveExpression<T> where T : struct
+public sealed class ReactiveValue<T> : ReactiveExpression where T : struct
 {
     private T _value;
 

@@ -1,8 +1,8 @@
 ﻿namespace Ignis.Components.Reactivity;
 
-public abstract class ReactiveExpression<T>
+public abstract class ReactiveExpression
 {
-    private readonly IList<ReactiveSection<T>> _sections = new List<ReactiveSection<T>>();
+    private readonly IList<ReactiveSection> _sections = new List<ReactiveSection>();
     private readonly IgnisComponentBase _owner;
 
     protected ReactiveExpression(IgnisComponentBase owner)
@@ -10,7 +10,7 @@ public abstract class ReactiveExpression<T>
         _owner = owner ?? throw new ArgumentNullException(nameof(owner));
     }
 
-    protected void Update()
+    protected internal void Update()
     {
         if (_sections.Any())
         {
@@ -22,14 +22,14 @@ public abstract class ReactiveExpression<T>
         else _owner.Update();
     }
 
-    internal void Subscribe(ReactiveSection<T> section)
+    internal void Subscribe(ReactiveSection section)
     {
         if (_sections.Contains(section)) return;
 
         _sections.Add(section);
     }
 
-    internal void Unsubscribe(ReactiveSection<T> section)
+    internal void Unsubscribe(ReactiveSection section)
     {
         _sections.Remove(section);
     }

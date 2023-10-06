@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components;
 
-public abstract class IgnisComponentBase : IComponent
+public abstract class IgnisComponentBase : IComponent, IDisposable
 {
     private readonly RenderFragment _renderFragment;
 
@@ -109,5 +109,10 @@ public abstract class IgnisComponentBase : IComponent
         HostContext.OnComponentUpdate(this);
 
         return Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        HostContext.OnComponentDispose(this);
     }
 }
