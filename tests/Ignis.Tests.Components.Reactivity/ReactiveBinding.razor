@@ -1,12 +1,14 @@
 ﻿@using Microsoft.AspNetCore.Components.Forms
 @inherits IgnisComponentBase
 
-<p id="static-value">@_binding.Value</p>
-<ReactiveSection AsElement="p" For="_binding" id="reactive-value">
-    @_binding.Value
-</ReactiveSection>
+<EditForm Model="_text">
+    <p id="static-value">@_binding.Value</p>
+    <ReactiveSection AsElement="p" For="_binding" id="reactive-value">
+        @_binding.Value
+    </ReactiveSection>
 
-<InputText @bind-Value="_binding.Value"/>
+    <InputText @bind-Value="_binding.Value"/>
+</EditForm>
 
 @code
 {
