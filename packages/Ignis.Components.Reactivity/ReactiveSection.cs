@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.Reactivity;
 
-public sealed class ReactiveSection<T> : IgnisComponentBase, IDynamicParentComponent, IDisposable where T : struct
+public sealed class ReactiveSection<T> : IgnisComponentBase, IDynamicParentComponent, IDisposable
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -30,7 +30,7 @@ public sealed class ReactiveSection<T> : IgnisComponentBase, IDynamicParentCompo
         }
     }
 
-    [Parameter, EditorRequired] public ReactiveValue<T> Value { get; set; } = null!;
+    [Parameter, EditorRequired] public ReactiveExpression<T> For { get; set; } = null!;
 
     [Parameter] public RenderFragment<IDynamicComponent>? _ { get; set; }
 
@@ -54,7 +54,7 @@ public sealed class ReactiveSection<T> : IgnisComponentBase, IDynamicParentCompo
 
     protected override void OnUpdate()
     {
-        Value.Adopt(this);
+        For.Subscribe(this);
     }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -68,6 +68,6 @@ public sealed class ReactiveSection<T> : IgnisComponentBase, IDynamicParentCompo
 
     public void Dispose()
     {
-        Value.SetFree(this);
+        For.Unsubscribe(this);
     }
 }
