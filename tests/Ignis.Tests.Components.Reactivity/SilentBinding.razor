@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@inherits IgnisComponentBase
+
+<p id="static-value">@_binding.Value</p>
+<ReactiveSection AsElement="p" For="_binding" id="reactive-value">
+    @_binding.Value
+</ReactiveSection>
+
+<InputText Value="@_binding.Value" ValueChanged="_binding.SetSilently" ValueExpression="() => _binding.Value"/>
+
+@code
+{
+    private readonly ReactiveReference<string?> _binding;
+
+    private string _text = "Hello World!";
+
+    public SilentBinding()
+    {
+        _binding = new ReactiveReference<string?>(this, () => _text, v => _text = v);
+    }
+}

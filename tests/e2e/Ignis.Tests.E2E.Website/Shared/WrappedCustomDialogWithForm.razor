@@ -30,10 +30,10 @@
             </div>
 
             <ReactiveSection For="_selectedType">
-                @if (_model.SelectedType != null)
+                @if (_selectedType.Value != null)
                 {
                     <p>
-                        @_model.SelectedType.Name
+                        @_selectedType.Value.Name
                     </p>
                 }
             </ReactiveSection>
