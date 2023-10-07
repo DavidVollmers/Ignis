@@ -43,11 +43,19 @@ public class DialogTests : PageTest
 
             var listboxItem = listboxItems.Nth(2);
 
+            var listboxItemText = await listboxItem.InnerTextAsync();
+
             await listboxItem.ClickAsync();
 
             await Task.Delay(200);
 
             await Expect(listboxItem).ToBeHiddenAsync();
+
+            var listboxResult = Page.GetByTestId("listbox-result");
+
+            var listboxResultText = await listboxResult.InnerTextAsync();
+
+            Assert.That(listboxResultText, Is.EqualTo(listboxItemText));
 
             await Page.ClickAsync(".fixed.inset-0.bg-gray-500",
                 new PageClickOptions { Position = new Position { X = 0, Y = 0 } });

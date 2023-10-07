@@ -32,7 +32,7 @@
             <ReactiveSection For="_selectedType">
                 @if (_selectedType.Value != null)
                 {
-                    <p>
+                    <p data-testid="listbox-result">
                         @_selectedType.Value.Name
                     </p>
                 }
