@@ -9,3 +9,7 @@ updates:
     directory: '/packages'
     schedule:
       interval: 'weekly'
+  - package-ecosystem: 'npm'
+    directory: '/packages'
+    schedule:
+      interval: 'weekly'
