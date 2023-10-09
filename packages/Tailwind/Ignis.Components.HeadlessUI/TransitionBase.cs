@@ -67,7 +67,7 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         }
     }
 
-    [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
+    [Inject] private IFrameTracker FrameTracker { get; set; } = null!;
 
     [Inject] internal TimeProvider TimeProvider { get; set; } = null!;
 

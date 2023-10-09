@@ -24,7 +24,7 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
     [Parameter]
     public EventCallback<bool> IsOpenChanged { get; set; }
 
-    [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
+    [Inject] private IFrameTracker FrameTracker { get; set; } = null!;
 
     /// <inheritdoc />
     public void Open(Action? continueWith = null)

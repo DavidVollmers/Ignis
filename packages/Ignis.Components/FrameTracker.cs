@@ -1,6 +1,6 @@
 ﻿namespace Ignis.Components;
 
-internal class FrameTracker
+internal class FrameTracker : IFrameTracker
 {
     private long _currentFrame;
     private long? _frameToExecuteOn;

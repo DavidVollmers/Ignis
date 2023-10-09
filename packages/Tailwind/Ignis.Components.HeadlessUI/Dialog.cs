@@ -98,7 +98,7 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
 
-    [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
+    [Inject] private IFrameTracker FrameTracker { get; set; } = null!;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Dialog" /> class.
