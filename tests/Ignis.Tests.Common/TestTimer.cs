@@ -27,4 +27,18 @@ public sealed class TestTimer : ITimer
     {
         Timers.Remove(this);
     }
+
+    public ValueTask DisposeAsync()
+    {
+        Timers.Remove(this);
+
+        return ValueTask.CompletedTask;
+    }
+
+    public bool Change(TimeSpan dueTime, TimeSpan period)
+    {
+#pragma warning disable MA0025
+        throw new NotImplementedException();
+#pragma warning restore MA0025
+    }
 }
