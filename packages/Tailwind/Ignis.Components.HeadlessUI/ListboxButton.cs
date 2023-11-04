@@ -83,11 +83,14 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
                 string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
             () => new KeyValuePair<string, object?>("aria-labelledby",
                 Listbox.Label == null ? null : Listbox.Label.Id ?? Listbox.Id + "-label"),
-            () => new KeyValuePair<string, object?>("aria-controls",
-                Listbox.SelectedOption == null
-                    ? null
-                    : Listbox.Id + "-option-" + Array.IndexOf(Listbox.Options, Listbox.SelectedOption)
-                        .ToString(CultureInfo.InvariantCulture)),
+            () =>
+            {
+                var selectedIndex = Array.FindIndex(Listbox.Options, o => o.IsSelected);
+                return new KeyValuePair<string, object?>("aria-controls",
+                    selectedIndex == -1
+                        ? null
+                        : Listbox.Id + "-option-" + selectedIndex.ToString(CultureInfo.InvariantCulture));
+            },
         });
     }
 
