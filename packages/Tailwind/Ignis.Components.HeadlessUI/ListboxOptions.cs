@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
@@ -62,14 +63,18 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
     {
         AsElement = "ul";
 
-        //TODO aria-active-descendant
         _attributes = new AttributeCollection(new[]
         {
             () => new KeyValuePair<string, object?>("tabindex", -1),
             () => new KeyValuePair<string, object?>("role", "listbox"),
             () => new KeyValuePair<string, object?>("aria-orientation", "vertical"), () =>
                 new KeyValuePair<string, object?>("aria-labelledby",
-                    Listbox.Button == null ? null : Listbox.Button.Id ?? Listbox.Id + "-button")
+                    Listbox.Button == null ? null : Listbox.Button.Id ?? Listbox.Id + "-button"),
+            () => new KeyValuePair<string, object?>("aria-activedescendant",
+                Listbox.ActiveOption == null
+                    ? null
+                    : Listbox.Id + "-option-" +
+                      Array.IndexOf(Listbox.Options, Listbox.ActiveOption).ToString(CultureInfo.InvariantCulture)),
         });
     }
 
