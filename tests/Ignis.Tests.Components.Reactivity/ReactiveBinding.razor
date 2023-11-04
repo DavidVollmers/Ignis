@@ -1,0 +1,23 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@inherits IgnisComponentBase
+
+<EditForm Model="_text">
+    <p id="static-value">@_binding.Value</p>
+    <ReactiveSection AsElement="p" For="_binding" id="reactive-value">
+        @_binding.Value
+    </ReactiveSection>
+
+    <InputText @bind-Value="_binding.Value"/>
+</EditForm>
+
+@code
+{
+    private readonly ReactiveReference<string> _binding;
+
+    private string _text = "Hello World!";
+
+    public ReactiveBinding()
+    {
+        _binding = new ReactiveReference<string>(this, () => _text, v => _text = v);
+    }
+}

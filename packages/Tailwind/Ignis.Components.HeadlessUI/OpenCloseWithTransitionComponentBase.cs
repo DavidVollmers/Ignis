@@ -24,7 +24,7 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
     [Parameter]
     public EventCallback<bool> IsOpenChanged { get; set; }
 
-    [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
+    [Inject] private IFrameTracker FrameTracker { get; set; } = null!;
 
     /// <inheritdoc />
     public void Open(Action? continueWith = null)
@@ -38,8 +38,8 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
         _ = IsOpenChanged.InvokeAsync(_isOpen = true);
 
         if (_transition != null)
-            FrameTracker.ExecuteOnNextFrame(() => _transition.Show(() => OnAfterOpen(continueWith)), Update);
-        else if (continueWith != null) FrameTracker.ExecuteOnNextFrame(() => OnAfterOpen(continueWith), Update);
+            FrameTracker.ExecuteOnNextFrame(this, () => _transition.Show(() => OnAfterOpen(continueWith)));
+        else if (continueWith != null) FrameTracker.ExecuteOnNextFrame(this, () => OnAfterOpen(continueWith));
 
         Update();
     }
@@ -62,7 +62,7 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
 
         if (_transition != null)
         {
-            _transition.Hide(() => CloseCore(continueWith, true));
+            _transition.Hide(() => CloseCore(continueWith, async: true));
             return;
         }
 
@@ -73,7 +73,7 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
     {
         _ = IsOpenChanged.InvokeAsync(_isOpen = false);
 
-        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, Update);
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(this, continueWith);
 
         Update(async);
     }

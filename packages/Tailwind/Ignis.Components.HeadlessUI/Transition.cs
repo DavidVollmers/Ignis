@@ -13,6 +13,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     private bool _showInitially;
     private Type? _asComponent;
     private string? _asElement;
+    private bool _isHosted;
     private bool _show;
 
     /// <inheritdoc />
@@ -58,7 +59,6 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
 
     [Parameter] public bool Appear { get; set; }
 
-    /// <inheritdoc />
     [CascadingParameter] public IContentHost? Outlet { get; set; }
 
     [CascadingParameter] public IMenu? Menu { get; set; }
@@ -109,7 +109,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        if (Outlet != null) return;
+        if (Outlet != null && _isHosted) return;
 
         BuildContentRenderTree(builder);
     }
@@ -139,13 +139,15 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     {
         Outlet = host ?? throw new ArgumentNullException(nameof(host));
 
+        _isHosted = true;
+
         base.Update();
     }
 
     /// <inheritdoc />
     protected internal override void Update(bool async = false)
     {
-        Outlet?.Update(async);
+        if (_isHosted) Outlet?.Update(async);
 
         base.Update(async);
     }
@@ -166,7 +168,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     {
         _transitioningTo = _show = true;
 
-        WatchTransition(true, continueWith);
+        WatchTransition(isEnter: true, continueWith);
     }
 
     /// <inheritdoc />
@@ -174,7 +176,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
     {
         _transitioningTo = false;
 
-        WatchTransition(false, () =>
+        WatchTransition(isEnter: false, () =>
         {
             _show = false;
 
@@ -221,7 +223,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
         var startedTransitions = new List<ITransitionChild>();
         var finishedTransitions = 0;
 
-        if (isEnter) base.EnterTransition(() => AggregateDialogs(true, ContinueWith));
+        if (isEnter) base.EnterTransition(() => AggregateDialogs(open: true, ContinueWith));
         else ContinueWith();
         return;
 
@@ -243,7 +245,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
             if (finishedTransitions == startedTransitions.Count + 1)
             {
                 if (isEnter) continueWith?.Invoke();
-                else AggregateDialogs(false, () => base.LeaveTransition(continueWith));
+                else AggregateDialogs(open: false, () => base.LeaveTransition(continueWith));
             }
         }
     }

@@ -23,6 +23,7 @@
     <InternalsVisibleTo Include="Ignis.Components.HeadlessUI"/>
     <InternalsVisibleTo Include="Ignis.Components.Reactivity"/>
     <InternalsVisibleTo Include="Ignis.Components.Web"/>
+    <InternalsVisibleTo Include="Ignis.Tests.Common"/>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
@@ -32,7 +33,7 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="7.0.9"/>
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Meziantou.Analyzer" Version="2.0.85"/>
   </ItemGroup>

@@ -33,7 +33,8 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     {
         get
         {
-            var originalClassString = AdditionalAttributes?.FirstOrDefault(a => string.Equals(a.Key, "class", StringComparison.OrdinalIgnoreCase));
+            var originalClassString = AdditionalAttributes?.FirstOrDefault(a =>
+                string.Equals(a.Key, "class", StringComparison.OrdinalIgnoreCase));
             return _state switch
             {
                 TransitionState.Entering => $"{originalClassString?.Value} {Enter} {EnterFrom}".Trim(),
@@ -66,7 +67,9 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         }
     }
 
-    [Inject] internal FrameTracker FrameTracker { get; set; } = null!;
+    [Inject] private IFrameTracker FrameTracker { get; set; } = null!;
+
+    [Inject] internal TimeProvider TimeProvider { get; set; } = null!;
 
     protected virtual void EnterTransition(Action? continueWith = null)
     {
@@ -76,17 +79,22 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
         UpdateState(TransitionState.Entering, () =>
         {
+            ITimer timer = null!;
             var (graceDuration, transitionDuration) = ParseDuration(Enter);
-            _ = Task.Delay(graceDuration).ContinueWith(__ =>
+            timer = TimeProvider.CreateTimer(_ =>
             {
+                // ReSharper disable once AccessToModifiedClosure
+                timer.Dispose();
                 UpdateState(TransitionState.Entered, () =>
                 {
-                    _ = Task.Delay(transitionDuration).ContinueWith(_ =>
+                    timer = TimeProvider.CreateTimer(_ =>
                     {
+                        // ReSharper disable once AccessToModifiedClosure
+                        timer.Dispose();
                         UpdateState(TransitionState.CanLeave, continueWith);
-                    });
+                    }, state: null, transitionDuration, Timeout.InfiniteTimeSpan);
                 });
-            });
+            }, state: null, graceDuration, Timeout.InfiniteTimeSpan);
         });
     }
 
@@ -98,19 +106,25 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
         UpdateState(TransitionState.Leaving, () =>
         {
+            ITimer timer = null!;
             var (graceDuration, transitionDuration) = ParseDuration(Leave);
-            _ = Task.Delay(graceDuration).ContinueWith(__ =>
+            timer = TimeProvider.CreateTimer(_ =>
             {
+                // ReSharper disable once AccessToModifiedClosure
+                timer.Dispose();
                 UpdateState(TransitionState.Left, () =>
                 {
-                    _ = Task.Delay(transitionDuration).ContinueWith(_ =>
+                    timer = TimeProvider.CreateTimer(_ =>
                     {
+                        // ReSharper disable once AccessToModifiedClosure
+                        timer.Dispose();
+
                         RenderContent = false;
 
                         UpdateState(TransitionState.CanEnter, continueWith);
-                    });
+                    }, state: null, transitionDuration, Timeout.InfiniteTimeSpan);
                 });
-            });
+            }, state: null, graceDuration, Timeout.InfiniteTimeSpan);
         });
     }
 
@@ -120,9 +134,9 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
 
         _state = state;
 
-        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(continueWith, Update);
+        if (continueWith != null) FrameTracker.ExecuteOnNextFrame(this, continueWith);
 
-        Update(true);
+        Update(async: true);
     }
 
     /// <inheritdoc />
@@ -133,12 +147,12 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         return Task.CompletedTask;
     }
 
-    private static (int, int) ParseDuration(string? classString)
+    private static (TimeSpan, TimeSpan) ParseDuration(string? classString)
     {
         var durationClass = classString?.Split(' ')
             .Select(v => v.Trim().Split(':')[v.Trim().Split(':').Length - 1])
             .FirstOrDefault(v => v.StartsWith("duration-", StringComparison.Ordinal));
-        if (durationClass == null) return (0, 0);
+        if (durationClass == null) return (TimeSpan.Zero, TimeSpan.Zero);
 
         var factor = 1;
 
@@ -156,15 +170,16 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
                 durationString = durationString[..^1];
                 factor = 1000;
             }
-            else return (0, 0);
+            else return (TimeSpan.Zero, TimeSpan.Zero);
         }
 
         var duration = int.Parse(durationString, CultureInfo.InvariantCulture) * factor;
-        if (duration <= 0) return (0, 0);
+        if (duration <= 0) return (TimeSpan.Zero, TimeSpan.Zero);
 
         return duration < TransitionGraceDuration
-            ? (0, duration)
-            : (TransitionGraceDuration, duration - TransitionGraceDuration);
+            ? (TimeSpan.Zero, TimeSpan.FromMilliseconds(duration))
+            : (TimeSpan.FromMilliseconds(TransitionGraceDuration),
+                TimeSpan.FromMilliseconds(duration - TransitionGraceDuration));
     }
 
     private enum TransitionState

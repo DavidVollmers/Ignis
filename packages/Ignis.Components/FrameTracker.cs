@@ -1,39 +1,37 @@
 ﻿namespace Ignis.Components;
 
-internal class FrameTracker
+internal class FrameTracker : IFrameTracker
 {
-    private readonly IHostContext _hostContext;
-
+    private long _currentFrame;
+    private long? _frameToExecuteOn;
+    private IgnisComponentBase? _target;
     private Action? _action;
 
     public bool IsPending => _action != null;
 
-    public FrameTracker(IHostContext hostContext)
+    public void ExecuteOnNextFrame(IgnisComponentBase target, Action action)
     {
-        _hostContext = hostContext ?? throw new ArgumentNullException(nameof(hostContext));
-    }
+        _target = target ?? throw new ArgumentNullException(nameof(target));
+        _action = action ?? throw new ArgumentNullException(nameof(action));
 
-    public void ExecuteOnNextFrame(Action action, Action<bool> update)
-    {
-        if (action == null) throw new ArgumentNullException(nameof(action));
-
-        // If we're server-side, we can just execute the action on the next render, otherwise we need to wait for the second render. (WebAssembly)
-        _action = _hostContext.IsServerSide
-            ? action
-            : () =>
-            {
-                _action = action;
-
-                update(obj: false);
-            };
+        _frameToExecuteOn = _currentFrame + 1;
     }
 
     public void OnAfterRender()
     {
-        var action = _action;
+        if (_currentFrame >= _frameToExecuteOn)
+        {
+            _frameToExecuteOn = null;
 
-        _action = null;
+            _action?.Invoke();
 
-        action?.Invoke();
+            _action = null;
+        }
+        else if (_frameToExecuteOn.HasValue)
+        {
+            _target?.Update();
+        }
+
+        ++_currentFrame;
     }
 }

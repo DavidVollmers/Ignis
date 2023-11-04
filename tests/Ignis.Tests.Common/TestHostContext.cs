@@ -1,10 +1,15 @@
 ﻿using Ignis.Components;
+using Ignis.Components.Extensions;
 
 namespace Ignis.Tests.Common;
 
-public class TestHostContext : IHostContext
+internal class TestHostContext : HostContextBase
 {
-    public bool IsPrerendering => false;
+    public override bool IsPrerendering => false;
 
-    public bool IsServerSide => true;
+    public override bool IsServerSide => true;
+
+    public TestHostContext(IEnumerable<IComponentExtension> componentExtensions) : base(componentExtensions)
+    {
+    }
 }
