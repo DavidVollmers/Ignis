@@ -260,19 +260,19 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
                 else if (!IsOpen) Open();
                 break;
             case "ArrowDown":
-            {
-                var index = Array.IndexOf(Options, ActiveOption) + 1;
-                if (index < Options.Length) SetOptionActive(Options[index], true);
-                else if (!IsOpen) Open();
-                break;
-            }
+                {
+                    var index = Array.IndexOf(Options, ActiveOption) + 1;
+                    if (index < Options.Length) SetOptionActive(Options[index], true);
+                    else if (!IsOpen) Open();
+                    break;
+                }
             case "ArrowUp":
-            {
-                var index = Array.IndexOf(Options, ActiveOption) - 1;
-                if (index >= 0) SetOptionActive(Options[index], true);
-                else if (!IsOpen) Open();
-                break;
-            }
+                {
+                    var index = Array.IndexOf(Options, ActiveOption) - 1;
+                    if (index >= 0) SetOptionActive(Options[index], true);
+                    else if (!IsOpen) Open();
+                    break;
+                }
         }
     }
 }
