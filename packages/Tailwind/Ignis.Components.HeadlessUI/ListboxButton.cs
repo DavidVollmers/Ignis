@@ -83,7 +83,7 @@ public sealed class ListboxButton : IgnisComponentBase, IListboxButton
                 string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
             () => new KeyValuePair<string, object?>("aria-labelledby",
                 Listbox.Label == null ? null : Listbox.Label.Id ?? Listbox.Id + "-label"),
-            () => new KeyValuePair<string, object?>("aria-controls", Listbox.OptionsId),
+            () => new KeyValuePair<string, object?>("aria-controls", Listbox.IsOpen ? Listbox.OptionsId : null),
         });
     }
 
