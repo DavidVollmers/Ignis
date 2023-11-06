@@ -14,6 +14,8 @@ public interface IListbox : IDynamicParentComponent<IListbox>, IOpenClose, IWith
     internal IListboxLabel? Label { get; }
 
     internal IListboxButton? Button { get; }
+    
+    internal string? OptionsId { get; }
 
     /// <summary>
     /// Gets the id of the listbox.
@@ -45,5 +47,7 @@ public interface IListbox : IDynamicParentComponent<IListbox>, IOpenClose, IWith
 
     internal void SetLabel(IListboxLabel label);
 
-    internal void SetOptions(IDynamicParentComponent options);
+    internal void SetOptions(IListboxOptions options);
+    
+    internal string? GetOptionId(IListboxOption? option);
 }

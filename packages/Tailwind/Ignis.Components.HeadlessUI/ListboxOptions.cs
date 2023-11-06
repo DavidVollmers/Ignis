@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComponent
+public sealed class ListboxOptions : IgnisRigidComponentBase, IListboxOptions
 {
     private readonly AttributeCollection _attributes;
 
@@ -35,11 +35,15 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
         }
     }
 
+    /// <inheritdoc />
+    [Parameter]
+    public string? Id { get; set; }
+
     [CascadingParameter] public IListbox Listbox { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDynamicComponent>? _ { get; set; }
+    public RenderFragment<IListboxOptions>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -65,16 +69,13 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
 
         _attributes = new AttributeCollection(new[]
         {
+            () => new KeyValuePair<string, object?>("id", Listbox.OptionsId),
             () => new KeyValuePair<string, object?>("tabindex", -1),
             () => new KeyValuePair<string, object?>("role", "listbox"),
             () => new KeyValuePair<string, object?>("aria-orientation", "vertical"), () =>
                 new KeyValuePair<string, object?>("aria-labelledby",
                     Listbox.Button == null ? null : Listbox.Button.Id ?? Listbox.Id + "-button"),
-            () => new KeyValuePair<string, object?>("aria-activedescendant",
-                Listbox.ActiveOption == null
-                    ? null
-                    : Listbox.Id + "-option-" +
-                      Array.IndexOf(Listbox.Options, Listbox.ActiveOption).ToString(CultureInfo.InvariantCulture)),
+            () => new KeyValuePair<string, object?>("aria-activedescendant", Listbox.GetOptionId(Listbox.ActiveOption)),
         });
     }
 
@@ -98,7 +99,7 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IDynamicComponent, ListboxOptions>(3, this, ChildContent);
+        builder.AddChildContentFor<IListboxOptions, ListboxOptions>(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

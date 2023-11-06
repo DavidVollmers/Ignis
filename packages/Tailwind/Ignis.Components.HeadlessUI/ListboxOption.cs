@@ -37,6 +37,10 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
 
     /// <inheritdoc />
     [Parameter]
+    public string? Id { get; set; }
+
+    /// <inheritdoc />
+    [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
     [CascadingParameter] public IListbox Listbox { get; set; } = null!;
@@ -77,6 +81,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
 
         _attributes = new AttributeCollection(new[]
         {
+            () => new KeyValuePair<string, object?>("id", Listbox.GetOptionId(this)),
             () => new KeyValuePair<string, object?>("tabindex", -1),
             () => new KeyValuePair<string, object?>("role", "option"),
             () => new KeyValuePair<string, object?>("aria-selected", IsSelected.ToString().ToLowerInvariant()),
@@ -85,8 +90,6 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
                     EventCallback.Factory.Create(this, OnMouseEnter)),
             () => new KeyValuePair<string, object?>("onmouseleave",
                 EventCallback.Factory.Create(this, OnMouseLeave)),
-            () => new KeyValuePair<string, object?>("id",
-                Listbox.Id + "-option-" + Array.IndexOf(Listbox.Options, this).ToString(CultureInfo.InvariantCulture)),
         });
     }
 

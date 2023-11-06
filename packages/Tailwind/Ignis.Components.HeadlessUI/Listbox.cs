@@ -1,4 +1,5 @@
-﻿using Ignis.Components.Web;
+﻿using System.Globalization;
+using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
@@ -13,7 +14,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
 {
     private readonly IList<IListboxOption> _options = new List<IListboxOption>();
 
-    private IDynamicParentComponent? _optionsComponent;
+    private IListboxOptions? _optionsComponent;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -82,7 +83,8 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     /// <summary>
     /// Gets or sets the content of the listbox.
     /// </summary>
-    [Parameter] public RenderFragment<IListbox>? ChildContent { get; set; }
+    [Parameter]
+    public RenderFragment<IListbox>? ChildContent { get; set; }
 
     /// <summary>
     /// Gets or sets additional attributes that will be applied to the listbox.
@@ -101,6 +103,9 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
 
     /// <inheritdoc />
     public IListboxButton? Button { get; private set; }
+
+    /// <inheritdoc />
+    public string? OptionsId => _optionsComponent == null ? null : _optionsComponent.Id ?? Id + "-options";
 
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-listbox-" + Guid.NewGuid().ToString("N");
@@ -210,9 +215,17 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     }
 
     /// <inheritdoc />
-    public void SetOptions(IDynamicParentComponent options)
+    public void SetOptions(IListboxOptions options)
     {
         _optionsComponent = options ?? throw new ArgumentNullException(nameof(options));
+    }
+
+    /// <inheritdoc />
+    public string? GetOptionId(IListboxOption? option)
+    {
+        if (option == null) return null;
+
+        return option.Id ?? Id + "-option-" + Array.IndexOf(Options, option).ToString(CultureInfo.InvariantCulture);
     }
 
     /// <inheritdoc />
@@ -247,19 +260,19 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
                 else if (!IsOpen) Open();
                 break;
             case "ArrowDown":
-                {
-                    var index = Array.IndexOf(Options, ActiveOption) + 1;
-                    if (index < Options.Length) SetOptionActive(Options[index], true);
-                    else if (!IsOpen) Open();
-                    break;
-                }
+            {
+                var index = Array.IndexOf(Options, ActiveOption) + 1;
+                if (index < Options.Length) SetOptionActive(Options[index], true);
+                else if (!IsOpen) Open();
+                break;
+            }
             case "ArrowUp":
-                {
-                    var index = Array.IndexOf(Options, ActiveOption) - 1;
-                    if (index >= 0) SetOptionActive(Options[index], true);
-                    else if (!IsOpen) Open();
-                    break;
-                }
+            {
+                var index = Array.IndexOf(Options, ActiveOption) - 1;
+                if (index >= 0) SetOptionActive(Options[index], true);
+                else if (!IsOpen) Open();
+                break;
+            }
         }
     }
 }
