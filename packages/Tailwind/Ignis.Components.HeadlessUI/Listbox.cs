@@ -114,6 +114,14 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
 
     #region ARIA
 
+    private readonly IList<IListboxOption> _descendants = new List<IListboxOption>();
+
+    /// <inheritdoc />
+    public IEnumerable<IListboxOption> Descendants => _descendants;
+
+    /// <inheritdoc />
+    public IListboxOption? ActiveDescendant { get; private set; }
+
     /// <inheritdoc />
     public IAriaComponentPart? Controlled { get; set; }
 
@@ -122,6 +130,43 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
 
     /// <inheritdoc />
     public IAriaComponentPart? Label { get; set; }
+
+    /// <inheritdoc />
+    public void AddDescendant(IListboxOption descendant)
+    {
+        if (descendant == null) throw new ArgumentNullException(nameof(descendant));
+
+        if (!_descendants.Contains(descendant)) _descendants.Add(descendant);
+    }
+
+    /// <inheritdoc />
+    public void RemoveDescendant(IListboxOption descendant)
+    {
+        if (descendant == null) throw new ArgumentNullException(nameof(descendant));
+
+        _descendants.Remove(descendant);
+    }
+
+    /// <inheritdoc />
+    public string? GetId(IAriaComponentPart componentPart)
+    {
+        if (componentPart == null) throw new ArgumentNullException(nameof(componentPart));
+
+        if (componentPart.Id != null) return componentPart.Id;
+
+        if (componentPart == Button) return Id + "-button";
+
+        if (componentPart == Label) return Id + "-label";
+
+        if (componentPart == Controlled) return Id + "-controlled";
+
+        if (componentPart is not IListboxOption option) return null;
+
+        var index = Array.IndexOf(_descendants.ToArray(), option);
+        if (index < 0) return null;
+
+        return Id + "-option-" + index.ToString(CultureInfo.InvariantCulture);
+    }
 
     #endregion ARIA
 
@@ -138,7 +183,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
 
             if (Controlled != null) yield return Controlled;
 
-            foreach (var option in _options)
+            foreach (var option in _descendants)
             {
                 yield return option;
             }
@@ -166,7 +211,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
             case "Space" or "Enter":
                 if (IsOpen)
                 {
-                    if (ActiveOption != null) ActiveOption.Click();
+                    if (ActiveDescendant != null) ActiveDescendant.Click();
                     else Close();
                 }
                 else
@@ -175,22 +220,22 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
                 }
 
                 break;
-            case "ArrowUp" when ActiveOption == null:
-            case "ArrowDown" when ActiveOption == null:
-                if (Options.Any()) SetOptionActive(Options[0], true);
+            case "ArrowUp" when ActiveDescendant == null:
+            case "ArrowDown" when ActiveDescendant == null:
+                if (_descendants.Any()) SetOptionActive(_descendants[0], isActive: true);
                 else if (!IsOpen) Open();
                 break;
             case "ArrowDown":
             {
-                var index = Array.IndexOf(Options, ActiveOption) + 1;
-                if (index < Options.Length) SetOptionActive(Options[index], true);
+                var index = Array.IndexOf(_descendants.ToArray(), ActiveDescendant) + 1;
+                if (index < _descendants.Count) SetOptionActive(_descendants[index], isActive: true);
                 else if (!IsOpen) Open();
                 break;
             }
             case "ArrowUp":
             {
-                var index = Array.IndexOf(Options, ActiveOption) - 1;
-                if (index >= 0) SetOptionActive(Options[index], true);
+                var index = Array.IndexOf(_descendants.ToArray(), ActiveDescendant) - 1;
+                if (index >= 0) SetOptionActive(_descendants[index], isActive: true);
                 else if (!IsOpen) Open();
                 break;
             }
@@ -201,15 +246,13 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
 
     #region Listbox
 
-    private readonly IList<IListboxOption> _options = new List<IListboxOption>();
-
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-listbox-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc />
     protected override void OnAfterOpen(Action? continueWith)
     {
-        var selectedOption = _options.FirstOrDefault(x => x.IsSelected);
+        var selectedOption = _descendants.FirstOrDefault(x => x.IsSelected);
         if (selectedOption != null) SetOptionActive(selectedOption, isActive: true);
 
         base.OnAfterOpen(continueWith);
@@ -235,11 +278,11 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
 
         if (isActive)
         {
-            ActiveOption = option;
+            ActiveDescendant = option;
         }
-        else if (ActiveOption == option)
+        else if (ActiveDescendant == option)
         {
-            ActiveOption = null;
+            ActiveDescendant = null;
         }
 
         Update();
