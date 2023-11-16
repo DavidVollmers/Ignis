@@ -1,18 +1,18 @@
 ﻿namespace Ignis.Components.HeadlessUI.Aria;
 
-public interface IAriaPopup : IAriaComponent, IOpenClose
+public interface IAriaPopup<T> : IAriaComponent, IOpenClose where T : IAriaComponentDescendant
 {
-    IEnumerable<IAriaComponentDescendant> Descendants { get; }
+    IEnumerable<T> Descendants { get; }
 
-    IAriaComponentDescendant? ActiveDescendant { get; set; }
+    T? ActiveDescendant { get; }
 
-    IAriaComponentControlled? Controlled { get; set; }
+    IAriaComponentPart? Controlled { get; set; }
 
-    IAriaComponentButton? Button { get; set; }
+    IAriaComponentPart? Button { get; set; }
 
-    IAriaComponentLabel? Label { get; set; }
+    IAriaComponentPart? Label { get; set; }
 
-    void AddDescendant(IAriaComponentDescendant descendant);
+    void AddDescendant(T descendant);
 
-    void RemoveDescendant(IAriaComponentDescendant descendant);
+    void RemoveDescendant(T descendant);
 }

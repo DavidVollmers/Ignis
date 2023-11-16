@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
-public interface IListboxButton : IDynamicParentComponent<IListboxButton>
+public interface IListboxButton : IDynamicParentComponent<IListboxButton>, IAriaComponentPart
 {
-    string? Id { get; set; }
-
     EventCallback<IComponentEvent> OnClick { get; set; }
 }

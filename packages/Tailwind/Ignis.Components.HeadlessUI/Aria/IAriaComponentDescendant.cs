@@ -1,6 +1,6 @@
 ﻿namespace Ignis.Components.HeadlessUI.Aria;
 
-public interface IAriaComponentDescendant
+public interface IAriaComponentDescendant : IAriaComponentPart
 {
-
+    bool IsActive { get; }
 }
