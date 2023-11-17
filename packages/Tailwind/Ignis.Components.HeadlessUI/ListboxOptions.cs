@@ -1,10 +1,12 @@
 ﻿using System.Globalization;
+using Ignis.Components.HeadlessUI.Aria;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOptions : IgnisRigidComponentBase, IListboxOptions
+public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComponent<ListboxOptions>,
+    IAriaComponentPart
 {
     private readonly AttributeCollection _attributes;
 
@@ -39,11 +41,10 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IListboxOptions
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public IListbox Listbox { get; set; } = null!;
+    [CascadingParameter] public Listbox<> Listbox { get; set; } = null!;
 
-    /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IListboxOptions>? _ { get; set; }
+    public RenderFragment<ListboxOptions>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -69,13 +70,12 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IListboxOptions
 
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Listbox.OptionsId),
+            () => new KeyValuePair<string, object?>("id", Listbox.GetId(this)),
             () => new KeyValuePair<string, object?>("tabindex", -1),
             () => new KeyValuePair<string, object?>("role", "listbox"),
             () => new KeyValuePair<string, object?>("aria-orientation", "vertical"), () =>
-                new KeyValuePair<string, object?>("aria-labelledby",
-                    Listbox.Button == null ? null : Listbox.Button.Id ?? Listbox.Id + "-button"),
-            () => new KeyValuePair<string, object?>("aria-activedescendant", Listbox.GetOptionId(Listbox.ActiveOption)),
+                new KeyValuePair<string, object?>("aria-labelledby", Listbox.GetId(Listbox.Button)),
+            () => new KeyValuePair<string, object?>("aria-activedescendant", Listbox.GetId(Listbox.ActiveDescendant)),
         });
     }
 
@@ -88,7 +88,7 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IListboxOptions
                 $"{nameof(ListboxOptions)} must be used inside a {nameof(Listbox<object>)}.");
         }
 
-        Listbox.SetOptions(this);
+        Listbox.Controlled = this;
     }
 
     /// <inheritdoc />
@@ -99,7 +99,7 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IListboxOptions
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IListboxOptions, ListboxOptions>(3, this, ChildContent);
+        builder.AddChildContentFor(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
+public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentComponent<ListboxLabel>, IAriaComponentPart
 {
     private readonly AttributeCollection _attributes;
 
@@ -38,11 +39,11 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public IListbox Listbox { get; set; } = null!;
+    [CascadingParameter] public Listbox<> Listbox { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IListboxLabel>? _ { get; set; }
+    public RenderFragment<ListboxLabel>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -68,9 +69,9 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
 
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id ?? Listbox.Id + "-label"), () =>
+            () => new KeyValuePair<string, object?>("id", Listbox.GetId(this)), () =>
                 new KeyValuePair<string, object?>("onclick",
-                    EventCallback.Factory.Create(this, Listbox.FocusAsync))
+                    EventCallback.Factory.Create(this, Listbox.FocusAsync)),
         });
     }
 
@@ -83,7 +84,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
                 $"{nameof(ListboxLabel)} must be used inside a {nameof(Listbox<object>)}.");
         }
 
-        Listbox.SetLabel(this);
+        Listbox.Label = this;
     }
 
     /// <inheritdoc />
@@ -92,7 +93,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IListboxLabel, ListboxLabel>(3, this, ChildContent);
+        builder.AddChildContentFor(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

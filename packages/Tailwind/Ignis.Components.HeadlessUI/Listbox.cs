@@ -11,7 +11,8 @@ namespace Ignis.Components.HeadlessUI;
 /// Renders a listbox which can be used to select one or more values.
 /// </summary>
 /// <typeparam name="TValue">The value type.</typeparam>
-public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, IListbox
+public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Listbox<TValue>>,
+    IAriaPopup<ListboxOption>
 {
     #region Parameters
 
@@ -53,13 +54,13 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IListbox>? _ { get; set; }
+    public RenderFragment<Listbox<TValue>>? _ { get; set; }
 
     /// <summary>
     /// Gets or sets the content of the listbox.
     /// </summary>
     [Parameter]
-    public RenderFragment<IListbox>? ChildContent { get; set; }
+    public RenderFragment<Listbox<TValue>>? ChildContent { get; set; }
 
     /// <summary>
     /// Gets or sets additional attributes that will be applied to the listbox.
@@ -99,10 +100,11 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<IListbox>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IListbox>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<IListbox>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IListbox>.ChildContent), this.GetChildContent(ChildContent));
+            builder.OpenComponent<CascadingValue<Listbox<TValue>>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<Listbox<TValue>>.IsFixed), value: true);
+            builder.AddAttribute(5, nameof(CascadingValue<Listbox<TValue>>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<Listbox<TValue>>.ChildContent),
+                this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });
@@ -148,9 +150,9 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     }
 
     /// <inheritdoc />
-    public string? GetId(IAriaComponentPart componentPart)
+    public string? GetId(IAriaComponentPart? componentPart)
     {
-        if (componentPart == null) throw new ArgumentNullException(nameof(componentPart));
+        if (componentPart == null) return null;
 
         if (componentPart.Id != null) return componentPart.Id;
 

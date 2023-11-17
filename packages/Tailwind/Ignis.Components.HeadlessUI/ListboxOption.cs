@@ -1,10 +1,12 @@
 ﻿using System.Globalization;
+using Ignis.Components.HeadlessUI.Aria;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, IDisposable
+public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicParentComponent<ListboxOption<TValue>>,
+    IAriaComponentDescendant, IDisposable
 {
     private readonly AttributeCollection _attributes;
 
@@ -39,19 +41,17 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     [Parameter]
     public string? Id { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public EventCallback<IComponentEvent> OnClick { get; set; }
+    [Parameter] public EventCallback<IComponentEvent> OnClick { get; set; }
 
-    [CascadingParameter] public IListbox Listbox { get; set; } = null!;
+    [CascadingParameter] public Listbox<> Listbox { get; set; } = null!;
 
     [Parameter, EditorRequired] public TValue? Value { get; set; }
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IListboxOption>? _ { get; set; }
+    public RenderFragment<ListboxOption<TValue>>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IListboxOption>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<ListboxOption<TValue>>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
@@ -63,7 +63,6 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
     /// <inheritdoc />
     public bool IsActive => Listbox.ActiveOption == this;
 
-    /// <inheritdoc />
     public bool IsSelected => Listbox.IsValueSelected(Value);
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
@@ -81,7 +80,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
 
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Listbox.GetOptionId(this)),
+            () => new KeyValuePair<string, object?>("id", Listbox.GetId(this)),
             () => new KeyValuePair<string, object?>("tabindex", -1),
             () => new KeyValuePair<string, object?>("role", "option"),
             () => new KeyValuePair<string, object?>("aria-selected", IsSelected.ToString().ToLowerInvariant()),
@@ -102,7 +101,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
                 $"{nameof(ListboxOption<object>)} must be used inside a {nameof(Listbox<object>)}.");
         }
 
-        Listbox.AddOption(this);
+        Listbox.AddDescendant(this);
     }
 
     /// <inheritdoc />
@@ -111,7 +110,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IListboxOption, ListboxOption<TValue>>(3, this, ChildContent?.Invoke(this));
+        builder.AddChildContentFor(3, this, ChildContent?.Invoke(this));
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 
@@ -144,6 +143,6 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IListboxOption, 
 
     public void Dispose()
     {
-        Listbox.RemoveOption(this);
+        Listbox.RemoveDescendant(this);
     }
 }

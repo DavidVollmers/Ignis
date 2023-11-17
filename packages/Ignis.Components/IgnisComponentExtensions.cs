@@ -76,16 +76,14 @@ public static class IgnisComponentExtensions
         }
     }
 
-    public static RenderFragment? GetChildContent<TContext, TDynamic>(this TDynamic dynamicComponent,
-        RenderFragment<TContext>? childContent)
-        where TContext : IDynamicComponent where TDynamic : IDynamicParentComponent<TContext>, TContext
+    public static RenderFragment? GetChildContent<T>(this T dynamicComponent, RenderFragment<T>? childContent)
+        where T : IDynamicParentComponent<T>
     {
-        return GetChildContent<TContext, TDynamic>(dynamicComponent, childContent?.Invoke(dynamicComponent));
+        return GetChildContent(dynamicComponent, childContent?.Invoke(dynamicComponent));
     }
 
-    public static RenderFragment? GetChildContent<TContext, TDynamic>(this TDynamic dynamicComponent,
-        RenderFragment? childContent)
-        where TContext : IDynamicComponent where TDynamic : IDynamicParentComponent<TContext>, TContext
+    public static RenderFragment? GetChildContent<T>(this T dynamicComponent, RenderFragment? childContent)
+        where T : IDynamicParentComponent<T>
     {
         switch (dynamicComponent)
         {
@@ -99,12 +97,10 @@ public static class IgnisComponentExtensions
         return dynamicComponent._ != null ? dynamicComponent._.Invoke(dynamicComponent) : childContent;
     }
 
-    public static void AddChildContentFor<TContext, TDynamic>(this RenderTreeBuilder builder, int sequence,
-        TDynamic dynamicComponent, RenderFragment? childContent)
-        where TContext : IDynamicComponent where TDynamic : IDynamicParentComponent<TContext>, TContext
+    public static void AddChildContentFor<T>(this RenderTreeBuilder builder, int sequence, T dynamicComponent,
+        RenderFragment? childContent) where T : IDynamicParentComponent<T>
     {
-        AddContentFor(builder, sequence, dynamicComponent,
-            GetChildContent<TContext, TDynamic>(dynamicComponent, childContent));
+        AddContentFor(builder, sequence, dynamicComponent, GetChildContent(dynamicComponent, childContent));
     }
 
 #pragma warning disable ASP0006

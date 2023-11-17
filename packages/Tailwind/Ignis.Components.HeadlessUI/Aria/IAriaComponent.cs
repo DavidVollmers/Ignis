@@ -2,5 +2,5 @@
 
 public interface IAriaComponent : IAriaComponentPart
 {
-    string? GetId(IAriaComponentPart componentPart);
+    string? GetId(IAriaComponentPart? componentPart);
 }
