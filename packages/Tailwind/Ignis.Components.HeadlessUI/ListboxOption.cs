@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicParentComponent<ListboxOption<TValue>>,
+public sealed class ListboxOption<T> : IgnisComponentBase, IDynamicParentComponent<ListboxOption<T>>,
     IAriaComponentDescendant, IDisposable
 {
     private readonly AttributeCollection _attributes;
@@ -43,15 +43,15 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicParentCo
 
     [Parameter] public EventCallback<IComponentEvent> OnClick { get; set; }
 
-    [CascadingParameter] public Listbox<> Listbox { get; set; } = null!;
+    [CascadingParameter] public Listbox<T> Listbox { get; set; } = null!;
 
-    [Parameter, EditorRequired] public TValue? Value { get; set; }
+    [Parameter, EditorRequired] public T? Value { get; set; }
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<ListboxOption<TValue>>? _ { get; set; }
+    public RenderFragment<ListboxOption<T>>? _ { get; set; }
 
-    [Parameter] public RenderFragment<ListboxOption<TValue>>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<ListboxOption<T>>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
@@ -61,7 +61,7 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicParentCo
     }
 
     /// <inheritdoc />
-    public bool IsActive => Listbox.ActiveOption == this;
+    public bool IsActive => Listbox.ActiveDescendant == this;
 
     public bool IsSelected => Listbox.IsValueSelected(Value);
 
@@ -133,12 +133,12 @@ public sealed class ListboxOption<TValue> : IgnisComponentBase, IDynamicParentCo
 
     private void OnMouseEnter()
     {
-        Listbox.SetOptionActive(this, true);
+        Listbox.SetOptionActive(this, isActive: true);
     }
 
     private void OnMouseLeave()
     {
-        Listbox.SetOptionActive(this, false);
+        Listbox.SetOptionActive(this, isActive: false);
     }
 
     public void Dispose()

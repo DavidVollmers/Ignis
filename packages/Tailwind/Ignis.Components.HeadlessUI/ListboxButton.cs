@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent<ListboxButton>, IAriaComponentPart
+public sealed class ListboxButton<T> : IgnisComponentBase, IDynamicParentComponent<ListboxButton<T>>, IAriaComponentPart
 {
     private readonly AttributeCollection _attributes;
 
@@ -45,11 +45,11 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent<
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
-    [CascadingParameter] public Listbox<> Listbox { get; set; } = null!;
+    [CascadingParameter] public Listbox<T> Listbox { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<ListboxButton>? _ { get; set; }
+    public RenderFragment<ListboxButton<T>>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -93,7 +93,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent<
         if (Listbox == null)
         {
             throw new InvalidOperationException(
-                $"{nameof(ListboxButton)} must be used inside a {nameof(Listbox<object>)}.");
+                $"{nameof(ListboxButton<T>)} must be used inside a {nameof(Listbox<T>)}.");
         }
 
         Listbox.Button = this;

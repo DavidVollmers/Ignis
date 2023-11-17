@@ -10,9 +10,9 @@ namespace Ignis.Components.HeadlessUI;
 /// <summary>
 /// Renders a listbox which can be used to select one or more values.
 /// </summary>
-/// <typeparam name="TValue">The value type.</typeparam>
-public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Listbox<TValue>>,
-    IAriaPopup<ListboxOption>
+/// <typeparam name="T">The value type.</typeparam>
+public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Listbox<T>>,
+    IAriaPopup<ListboxOption<T>>
 {
     #region Parameters
 
@@ -44,23 +44,23 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, IDyn
     /// Gets or sets the selected value.
     /// </summary>
     [Parameter]
-    public TValue? Value { get; set; }
+    public T? Value { get; set; }
 
     /// <summary>
     /// Gets or sets the callback which is invoked when the selected value changes.
     /// </summary>
     [Parameter]
-    public EventCallback<TValue?> ValueChanged { get; set; }
+    public EventCallback<T?> ValueChanged { get; set; }
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<Listbox<TValue>>? _ { get; set; }
+    public RenderFragment<Listbox<T>>? _ { get; set; }
 
     /// <summary>
     /// Gets or sets the content of the listbox.
     /// </summary>
     [Parameter]
-    public RenderFragment<Listbox<TValue>>? ChildContent { get; set; }
+    public RenderFragment<Listbox<T>>? ChildContent { get; set; }
 
     /// <summary>
     /// Gets or sets additional attributes that will be applied to the listbox.
@@ -85,7 +85,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, IDyn
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Listbox{TValue}"/> class.
+    /// Initializes a new instance of the <see cref="Listbox{T}"/> class.
     /// </summary>
     public Listbox()
     {
@@ -100,10 +100,10 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, IDyn
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<Listbox<TValue>>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<Listbox<TValue>>.IsFixed), value: true);
-            builder.AddAttribute(5, nameof(CascadingValue<Listbox<TValue>>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<Listbox<TValue>>.ChildContent),
+            builder.OpenComponent<CascadingValue<Listbox<T>>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<Listbox<T>>.IsFixed), value: true);
+            builder.AddAttribute(5, nameof(CascadingValue<Listbox<T>>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<Listbox<T>>.ChildContent),
                 this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
@@ -116,13 +116,13 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, IDyn
 
     #region ARIA
 
-    private readonly IList<IListboxOption> _descendants = new List<IListboxOption>();
+    private readonly IList<ListboxOption<T>> _descendants = new List<ListboxOption<T>>();
 
     /// <inheritdoc />
-    public IEnumerable<IListboxOption> Descendants => _descendants;
+    public IEnumerable<ListboxOption<T>> Descendants => _descendants;
 
     /// <inheritdoc />
-    public IListboxOption? ActiveDescendant { get; private set; }
+    public ListboxOption<T>? ActiveDescendant { get; private set; }
 
     /// <inheritdoc />
     public IAriaComponentPart? Controlled { get; set; }
@@ -134,7 +134,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, IDyn
     public IAriaComponentPart? Label { get; set; }
 
     /// <inheritdoc />
-    public void AddDescendant(IListboxOption descendant)
+    public void AddDescendant(ListboxOption<T> descendant)
     {
         if (descendant == null) throw new ArgumentNullException(nameof(descendant));
 
@@ -142,7 +142,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, IDyn
     }
 
     /// <inheritdoc />
-    public void RemoveDescendant(IListboxOption descendant)
+    public void RemoveDescendant(ListboxOption<T> descendant)
     {
         if (descendant == null) throw new ArgumentNullException(nameof(descendant));
 
@@ -162,7 +162,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, IDyn
 
         if (componentPart == Controlled) return Id + "-controlled";
 
-        if (componentPart is not IListboxOption option) return null;
+        if (componentPart is not ListboxOption<T> option) return null;
 
         var index = Array.IndexOf(_descendants.ToArray(), option);
         if (index < 0) return null;
@@ -228,19 +228,19 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, IDyn
                 else if (!IsOpen) Open();
                 break;
             case "ArrowDown":
-            {
-                var index = Array.IndexOf(_descendants.ToArray(), ActiveDescendant) + 1;
-                if (index < _descendants.Count) SetOptionActive(_descendants[index], isActive: true);
-                else if (!IsOpen) Open();
-                break;
-            }
+                {
+                    var index = Array.IndexOf(_descendants.ToArray(), ActiveDescendant) + 1;
+                    if (index < _descendants.Count) SetOptionActive(_descendants[index], isActive: true);
+                    else if (!IsOpen) Open();
+                    break;
+                }
             case "ArrowUp":
-            {
-                var index = Array.IndexOf(_descendants.ToArray(), ActiveDescendant) - 1;
-                if (index >= 0) SetOptionActive(_descendants[index], isActive: true);
-                else if (!IsOpen) Open();
-                break;
-            }
+                {
+                    var index = Array.IndexOf(_descendants.ToArray(), ActiveDescendant) - 1;
+                    if (index >= 0) SetOptionActive(_descendants[index], isActive: true);
+                    else if (!IsOpen) Open();
+                    break;
+                }
         }
     }
 
@@ -260,21 +260,19 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, IDyn
         base.OnAfterOpen(continueWith);
     }
 
-    /// <inheritdoc />
-    public bool IsValueSelected<TValue1>(TValue1? value)
+    public bool IsValueSelected(T? value)
     {
         return value?.Equals(Value) ?? Value?.Equals(value) ?? false;
     }
 
-    /// <inheritdoc />
-    public void SelectValue<TValue1>(TValue1? value)
+    public void SelectValue(T? value)
     {
-        var __ = ValueChanged.InvokeAsync(Value = (TValue?)(object?)value);
+        var __ = ValueChanged.InvokeAsync(Value = value);
 
         Update();
     }
 
-    private void SetOptionActive(IListboxOption option, bool isActive)
+    internal void SetOptionActive(ListboxOption<T> option, bool isActive)
     {
         if (option == null) throw new ArgumentNullException(nameof(option));
 

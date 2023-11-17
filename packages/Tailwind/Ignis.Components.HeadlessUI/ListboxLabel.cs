@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentComponent<ListboxLabel>, IAriaComponentPart
+public sealed class ListboxLabel<T> : IgnisRigidComponentBase, IDynamicParentComponent<ListboxLabel<T>>, IAriaComponentPart
 {
     private readonly AttributeCollection _attributes;
 
@@ -39,11 +39,11 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentCompon
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public Listbox<> Listbox { get; set; } = null!;
+    [CascadingParameter] public Listbox<T> Listbox { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<ListboxLabel>? _ { get; set; }
+    public RenderFragment<ListboxLabel<T>>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -81,7 +81,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentCompon
         if (Listbox == null)
         {
             throw new InvalidOperationException(
-                $"{nameof(ListboxLabel)} must be used inside a {nameof(Listbox<object>)}.");
+                $"{nameof(ListboxLabel<T>)} must be used inside a {nameof(Listbox<T>)}.");
         }
 
         Listbox.Label = this;

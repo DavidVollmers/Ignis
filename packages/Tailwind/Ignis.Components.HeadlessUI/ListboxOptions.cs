@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComponent<ListboxOptions>,
+public sealed class ListboxOptions<T> : IgnisRigidComponentBase, IDynamicParentComponent<ListboxOptions<T>>,
     IAriaComponentPart
 {
     private readonly AttributeCollection _attributes;
@@ -41,10 +41,10 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public Listbox<> Listbox { get; set; } = null!;
+    [CascadingParameter] public Listbox<T> Listbox { get; set; } = null!;
 
     [Parameter]
-    public RenderFragment<ListboxOptions>? _ { get; set; }
+    public RenderFragment<ListboxOptions<T>>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -85,7 +85,7 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
         if (Listbox == null)
         {
             throw new InvalidOperationException(
-                $"{nameof(ListboxOptions)} must be used inside a {nameof(Listbox<object>)}.");
+                $"{nameof(ListboxOptions<T>)} must be used inside a {nameof(Listbox<T>)}.");
         }
 
         Listbox.Controlled = this;
