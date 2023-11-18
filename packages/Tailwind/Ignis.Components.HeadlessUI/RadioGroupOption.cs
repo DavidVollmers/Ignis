@@ -119,25 +119,25 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
-        if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
+        builder.OpenComponent<CascadingValue<RadioGroupOption<T>>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<RadioGroupOption<T>>.IsFixed), true);
+        builder.AddAttribute(2, nameof(CascadingValue<RadioGroupOption<T>>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(3, this, builder =>
+        builder.AddAttribute(3, nameof(CascadingValue<RadioGroupOption<T>>.ChildContent), (RenderFragment)(builder =>
         {
-            builder.OpenComponent<CascadingValue<RadioGroupOption<T>>>(4);
-            builder.AddAttribute(5, nameof(CascadingValue<RadioGroupOption<T>>.IsFixed), true);
-            builder.AddAttribute(6, nameof(CascadingValue<RadioGroupOption<T>>.Value), this);
-            builder.AddAttribute(7, nameof(CascadingValue<RadioGroupOption<T>>.ChildContent),
-                this.GetChildContent(ChildContent));
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, Attributes!);
+            if (AsElement != null) builder.AddElementReferenceCapture(6, e => Element = e);
+            // ReSharper disable once VariableHidesOuterVariable
+            builder.AddChildContentFor(7, this, ChildContent);
 
-            builder.CloseComponent();
-        });
+            if (AsComponent != null && AsComponent != typeof(Fragment))
+                builder.AddComponentReferenceCapture(8, c => Component = c);
 
-        if (AsComponent != null && AsComponent != typeof(Fragment))
-            builder.AddComponentReferenceCapture(4, c => Component = c);
+            builder.CloseAs(this);
+        }));
 
-        builder.CloseAs(this);
+        builder.CloseComponent();
     }
 
     /// <inheritdoc />
@@ -152,19 +152,19 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
                 RadioGroup.Options[0].Check();
                 break;
             case "ArrowDown":
-                {
-                    var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) + 1;
-                    if (index < RadioGroup.Options.Length) RadioGroup.Options[index].Check();
-                    else RadioGroup.Options[0].Check();
-                    break;
-                }
+            {
+                var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) + 1;
+                if (index < RadioGroup.Options.Length) RadioGroup.Options[index].Check();
+                else RadioGroup.Options[0].Check();
+                break;
+            }
             case "ArrowUp":
-                {
-                    var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) - 1;
-                    if (index >= 0) RadioGroup.Options[index].Check();
-                    else RadioGroup.Options[^1].Check();
-                    break;
-                }
+            {
+                var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) - 1;
+                if (index >= 0) RadioGroup.Options[index].Check();
+                else RadioGroup.Options[^1].Check();
+                break;
+            }
         }
     }
 

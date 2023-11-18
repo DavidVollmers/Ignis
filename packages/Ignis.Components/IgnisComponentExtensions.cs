@@ -113,13 +113,11 @@ public static class IgnisComponentExtensions
     public static void AddContentFor(this RenderTreeBuilder builder, int sequence, IDynamicComponent dynamicComponent,
         RenderFragment? content)
     {
-#if DEBUG
         if (dynamicComponent.GetType().GetInterfaces().Any(i => i.IsGenericType &&
                                                                 i.GetGenericTypeDefinition() ==
                                                                 typeof(IDynamicParentComponent<>)))
             throw new InvalidOperationException(
                 $"You cannot use {nameof(AddContentFor)} with a {nameof(IDynamicParentComponent<IDynamicComponent>)}. Use {nameof(AddChildContentFor)} instead.");
-#endif
         AddContentForCore(builder, sequence, dynamicComponent, content);
     }
 
