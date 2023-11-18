@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
+public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent<DialogPanel>
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -53,7 +53,7 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDynamicComponent>? _ { get; set; }
+    public RenderFragment<DialogPanel>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 

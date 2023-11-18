@@ -152,7 +152,6 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
         base.Update(async);
     }
 
-    /// <inheritdoc />
     public void Hide(Action? continueWith = null)
     {
         LeaveTransition(continueWith);

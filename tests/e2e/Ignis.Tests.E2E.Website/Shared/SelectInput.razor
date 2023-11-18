@@ -59,11 +59,11 @@
 @code
 {
     [Parameter]
-    public RenderFragment<IListbox>? LabelContent { get; set; }
+    public RenderFragment<Listbox<TValue>>? LabelContent { get; set; }
 
     //TODO display selected value
     [Parameter]
-    public RenderFragment<IListbox> SelectedValueContent { get; set; } = context => { return builder => { builder.AddContent(0, context.Id); }; };
+    public RenderFragment<Listbox<TValue>> SelectedValueContent { get; set; } = context => { return builder => { builder.AddContent(0, context.Id); }; };
 
     [Parameter]
     public RenderFragment<SelectOptionValueContext> OptionValueContent { get; set; } = context => { return builder => { builder.AddContent(0, context.Value?.ToString()); }; };
@@ -83,11 +83,11 @@
 
     public sealed class SelectOptionValueContext
     {
-        public IListboxOption Option { get; }
+        public ListboxOption<TOption> Option { get; }
 
         public TOption Value { get; }
 
-        public SelectOptionValueContext(IListboxOption context, TOption value)
+        public SelectOptionValueContext(ListboxOption<TOption> context, TOption value)
         {
             Option = context;
             Value = value;

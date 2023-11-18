@@ -80,7 +80,7 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, IDynamicParentCompone
             builder.AddAttribute(4, nameof(CascadingValue<SwitchGroup>.IsFixed), true);
             builder.AddAttribute(5, nameof(CascadingValue<SwitchGroup>.Value), this);
             builder.AddAttribute(6, nameof(CascadingValue<SwitchGroup>.ChildContent),
-                this.GetChildContent<SwitchGroup, SwitchGroup>(ChildContent));
+                this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });

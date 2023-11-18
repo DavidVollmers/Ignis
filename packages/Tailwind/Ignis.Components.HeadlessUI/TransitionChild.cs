@@ -74,13 +74,11 @@ public sealed class TransitionChild : TransitionBase, IDynamicParentComponent<Tr
         builder.CloseAs(this);
     }
 
-    /// <inheritdoc />
     public void Hide(Action? continueWith = null)
     {
         LeaveTransition(continueWith);
     }
 
-    /// <inheritdoc />
     public void Show(Action? continueWith = null)
     {
         EnterTransition(continueWith);
