@@ -9,7 +9,7 @@
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
-        var cut = Render(@<Listbox TValue="object">
+        var cut = Render(@<Listbox T="object">
                              <ListboxButton>
                              </ListboxButton>
                          </Listbox>);
@@ -31,7 +31,7 @@
 
         JSInterop.Mode = JSRuntimeMode.Loose;
 
-        var cut = Render(@<Listbox TValue="object">
+        var cut = Render(@<Listbox T="object">
                              <ListboxButton OnClick="e => e.PreventDefault()">
                              </ListboxButton>
                          </Listbox>);
