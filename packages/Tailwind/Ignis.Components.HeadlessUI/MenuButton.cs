@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class MenuButton : IgnisComponentBase, IMenuButton
+public sealed class MenuButton : IgnisComponentBase, IDynamicParentComponent<MenuButton>
 {
     private readonly AttributeCollection _attributes;
 

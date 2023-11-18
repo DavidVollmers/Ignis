@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class TabGroup : IgnisComponentBase, ITabGroup
+public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGroup>
 {
     private readonly IList<ITabPanel> _tabPanels = new List<ITabPanel>();
     private readonly IList<ITab> _tabs = new List<ITab>();

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroup<TValue> : IgnisComponentBase, IRadioGroup
+public sealed class RadioGroup<TValue> : IgnisComponentBase, IDynamicParentComponent<RadioGroup>
 {
     private readonly IList<IRadioGroupOption> _options = new List<IRadioGroupOption>();
     private readonly AttributeCollection _attributes;

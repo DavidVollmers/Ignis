@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DialogDescription : IgnisRigidComponentBase, IDialogDescription
+public sealed class DialogDescription : IgnisRigidComponentBase, IDynamicParentComponent<DialogDescription>
 {
     private readonly AttributeCollection _attributes;
 
@@ -34,15 +34,13 @@ public sealed class DialogDescription : IgnisRigidComponentBase, IDialogDescript
         }
     }
 
-    /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public IDialog Dialog { get; set; } = null!;
+    [CascadingParameter] public Dialog Dialog { get; set; } = null!;
 
-    /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDialogDescription>? _ { get; set; }
+    public RenderFragment<DialogDescription>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -90,7 +88,7 @@ public sealed class DialogDescription : IgnisRigidComponentBase, IDialogDescript
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IDialogDescription, DialogDescription>(3, this, ChildContent);
+        builder.AddChildContentFor(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

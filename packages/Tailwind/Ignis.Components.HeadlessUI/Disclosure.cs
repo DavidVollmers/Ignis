@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosure
+public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Disclosure>
 {
     private IDisclosureButton? _button;
     private Type? _asComponent;
@@ -46,17 +46,15 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDisclosure>? _ { get; set; }
+    public RenderFragment<Disclosure>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IDisclosure>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<Disclosure>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    /// <inheritdoc />
     public IDisclosurePanel? Panel { get; private set; }
 
-    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-disclosure-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />

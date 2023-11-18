@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Switch : IgnisComponentBase, ISwitch
+public sealed class Switch : IgnisComponentBase, IDynamicParentComponent<Switch>
 {
     private readonly AttributeCollection _attributes;
 

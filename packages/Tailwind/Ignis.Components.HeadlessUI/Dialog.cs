@@ -6,7 +6,8 @@ namespace Ignis.Components.HeadlessUI;
 /// <summary>
 /// Renders a dialog which can be opened and closed.
 /// </summary>
-public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandleAfterRender
+public sealed class Dialog : IgnisContentProviderComponentBase, IDynamicParentComponent<Dialog>, IOpenClose,
+    IHandleAfterRender
 {
     private readonly AttributeCollection _attributes;
 
@@ -62,13 +63,13 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDialog>? _ { get; set; }
+    public RenderFragment<Dialog>? _ { get; set; }
 
     /// <summary>
     /// Gets or sets the content of the dialog.
     /// </summary>
     [Parameter]
-    public RenderFragment<IDialog>? ChildContent { get; set; }
+    public RenderFragment<Dialog>? ChildContent { get; set; }
 
     /// <summary>
     /// Gets or sets additional attributes that will be applied to the dialog.
@@ -80,13 +81,10 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc />
     public IDialogDescription? Description { get; private set; }
 
-    /// <inheritdoc />
     public IDialogTitle? Title { get; private set; }
 
-    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-dialog-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
@@ -157,10 +155,10 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<IDialog>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IDialog>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<IDialog>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IDialog>.ChildContent), this.GetChildContent(ChildContent));
+            builder.OpenComponent<CascadingValue<Dialog>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<Dialog>.IsFixed), value: true);
+            builder.AddAttribute(5, nameof(CascadingValue<Dialog>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<Dialog>.ChildContent), this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });
@@ -211,19 +209,16 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDialog, IHandle
         Update(async);
     }
 
-    /// <inheritdoc />
     public void SetTitle(IDialogTitle title)
     {
         Title = title ?? throw new ArgumentNullException(nameof(title));
     }
 
-    /// <inheritdoc />
     public void SetDescription(IDialogDescription description)
     {
         Description = description ?? throw new ArgumentNullException(nameof(description));
     }
 
-    /// <inheritdoc />
     public void CloseFromTransition(Action? continueWith = null)
     {
         CloseCore(continueWith, async: true);

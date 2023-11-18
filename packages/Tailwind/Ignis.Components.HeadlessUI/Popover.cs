@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
+public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Popover>
 {
     private IDynamicParentComponent? _panel;
     private IPopoverButton? _button;

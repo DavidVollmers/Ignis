@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class SwitchGroup : IgnisRigidComponentBase, ISwitchGroup
+public sealed class SwitchGroup : IgnisRigidComponentBase, IDynamicParentComponent<SwitchGroup>
 {
     private Type? _asComponent;
     private string? _asElement;

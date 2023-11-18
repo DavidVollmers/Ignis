@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class MenuItem : IgnisComponentBase, IMenuItem, IDisposable
+public sealed class MenuItem : IgnisComponentBase, IDynamicParentComponent<MenuItem>, IDisposable
 {
     private readonly AttributeCollection _attributes;
 

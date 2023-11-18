@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class TabPanel : IgnisComponentBase, ITabPanel, IDisposable
+public sealed class TabPanel : IgnisComponentBase, IDynamicParentComponent<TabPanel>, IDisposable
 {
     private readonly AttributeCollection _attributes;
 

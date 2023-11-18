@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
+public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Menu>
 {
     private readonly IList<IMenuItem> _items = new List<IMenuItem>();
 

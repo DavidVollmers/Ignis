@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Transition : TransitionBase, ITransition, IDisposable
+public sealed class Transition : TransitionBase, IDynamicParentComponent<Transition>, IContentProvider, IDisposable
 {
     private readonly IList<ITransitionChild> _children = new List<ITransitionChild>();
     private readonly IList<IDialog> _dialogs = new List<IDialog>();

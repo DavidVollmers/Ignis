@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Tab : FocusComponentBase, ITab, IDisposable
+public sealed class Tab : FocusComponentBase, IDynamicParentComponent<Tab>
 {
     private readonly AttributeCollection _attributes;
 

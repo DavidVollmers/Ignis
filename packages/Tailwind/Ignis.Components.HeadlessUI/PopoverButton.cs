@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
+public sealed class PopoverButton : IgnisComponentBase, IDynamicParentComponent<PopoverButton>
 {
     private readonly AttributeCollection _attributes;
 

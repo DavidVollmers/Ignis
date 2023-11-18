@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DisclosurePanel : IgnisRigidComponentBase, IDisclosurePanel
+public sealed class DisclosurePanel : IgnisRigidComponentBase, IDynamicParentComponent<DisclosurePanel>
 {
     private readonly AttributeCollection _attributes;
 
