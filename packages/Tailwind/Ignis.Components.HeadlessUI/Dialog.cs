@@ -59,7 +59,7 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDynamicParentCo
     /// Gets or sets the transition which is used to animate the dialog.
     /// </summary>
     [CascadingParameter]
-    public ITransition? Transition { get; set; }
+    public Transition? Transition { get; set; }
 
     /// <inheritdoc />
     [Parameter]
@@ -81,9 +81,9 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDynamicParentCo
         set => _attributes.AdditionalAttributes = value;
     }
 
-    public IDialogDescription? Description { get; private set; }
+    public DialogDescription? Description { get; private set; }
 
-    public IDialogTitle? Title { get; private set; }
+    public DialogTitle? Title { get; private set; }
 
     public string Id { get; } = "ignis-hui-dialog-" + Guid.NewGuid().ToString("N");
 
@@ -209,12 +209,12 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDynamicParentCo
         Update(async);
     }
 
-    public void SetTitle(IDialogTitle title)
+    public void SetTitle(DialogTitle title)
     {
         Title = title ?? throw new ArgumentNullException(nameof(title));
     }
 
-    public void SetDescription(IDialogDescription description)
+    public void SetDescription(DialogDescription description)
     {
         Description = description ?? throw new ArgumentNullException(nameof(description));
     }

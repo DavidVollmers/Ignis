@@ -34,15 +34,14 @@ public sealed class DisclosurePanel : IgnisRigidComponentBase, IDynamicParentCom
         }
     }
 
-    /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public IDisclosure Disclosure { get; set; } = null!;
+    [CascadingParameter] public Disclosure Disclosure { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDisclosurePanel>? _ { get; set; }
+    public RenderFragment<DisclosurePanel>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -92,7 +91,7 @@ public sealed class DisclosurePanel : IgnisRigidComponentBase, IDynamicParentCom
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IDisclosurePanel, DisclosurePanel>(3, this, ChildContent);
+        builder.AddChildContentFor(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

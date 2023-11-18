@@ -8,7 +8,3 @@ public interface IDynamicParentComponent<T> : IDynamicComponent where T : IDynam
 
     IEnumerable<KeyValuePair<string, object?>>? Attributes { get; }
 }
-
-public interface IDynamicParentComponent : IDynamicParentComponent<IDynamicComponent>
-{
-}

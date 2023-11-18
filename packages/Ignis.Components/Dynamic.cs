@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components;
 
-public sealed class Dynamic : IgnisRigidComponentBase, IDynamicParentComponent
+public sealed class Dynamic : IgnisRigidComponentBase, IDynamicParentComponent<Dynamic>
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -30,7 +30,7 @@ public sealed class Dynamic : IgnisRigidComponentBase, IDynamicParentComponent
         }
     }
 
-    [Parameter] public RenderFragment<IDynamicComponent>? _ { get; set; }
+    [Parameter] public RenderFragment<Dynamic>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -49,7 +49,7 @@ public sealed class Dynamic : IgnisRigidComponentBase, IDynamicParentComponent
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IDynamicComponent, Dynamic>(2, this, ChildContent);
+        builder.AddChildContentFor(2, this, ChildContent);
 
         builder.CloseAs(this);
     }

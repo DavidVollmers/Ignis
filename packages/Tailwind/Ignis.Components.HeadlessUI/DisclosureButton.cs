@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentComponent
+public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentComponent<DisclosureButton>
 {
     private readonly AttributeCollection _attributes;
 
@@ -39,11 +39,11 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
-    [CascadingParameter] public IDisclosure Disclosure { get; set; } = null!;
+    [CascadingParameter] public Disclosure Disclosure { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDynamicComponent>? _ { get; set; }
+    public RenderFragment<DisclosureButton>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -97,7 +97,7 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IDynamicComponent, DisclosureButton>(3, this, ChildContent);
+        builder.AddChildContentFor(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

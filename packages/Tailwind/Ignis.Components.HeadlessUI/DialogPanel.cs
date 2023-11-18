@@ -49,7 +49,7 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
         }
     }
 
-    [CascadingParameter] public IDialog Dialog { get; set; } = null!;
+    [CascadingParameter] public Dialog Dialog { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]

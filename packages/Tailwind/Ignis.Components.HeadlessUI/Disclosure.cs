@@ -5,7 +5,7 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Disclosure>
 {
-    private IDisclosureButton? _button;
+    private DisclosureButton? _button;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -53,7 +53,7 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDynamicP
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    public IDisclosurePanel? Panel { get; private set; }
+    public DisclosurePanel? Panel { get; private set; }
 
     public string Id { get; } = "ignis-hui-disclosure-" + Guid.NewGuid().ToString("N");
 
@@ -79,10 +79,10 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDynamicP
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<IDisclosure>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IDisclosure>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<IDisclosure>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IDisclosure>.ChildContent),
+            builder.OpenComponent<CascadingValue<Disclosure>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<Disclosure>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<Disclosure>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<Disclosure>.ChildContent),
                 this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
@@ -91,14 +91,12 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDynamicP
         builder.CloseAs(this);
     }
 
-    /// <inheritdoc />
-    public void SetPanel(IDisclosurePanel panel)
+    public void SetPanel(DisclosurePanel panel)
     {
         Panel = panel ?? throw new ArgumentNullException(nameof(panel));
     }
 
-    /// <inheritdoc />
-    public void SetButton(IDisclosureButton button)
+    public void SetButton(DisclosureButton button)
     {
         _button = button ?? throw new ArgumentNullException(nameof(button));
     }

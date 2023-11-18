@@ -78,7 +78,7 @@ public sealed class DialogOutlet : ContentHostBase, IDynamicComponent
         // ReSharper disable once ConvertIfStatementToSwitchStatement
         if (provider == null) throw new ArgumentNullException(nameof(provider));
 
-        if (provider is not IDialog and not ITransition { HasOutletDialogs: true }) return;
+        if (provider is not Dialog and not Transition { HasOutletDialogs: true }) return;
 
         base.OnProviderRegistered(provider);
     }
