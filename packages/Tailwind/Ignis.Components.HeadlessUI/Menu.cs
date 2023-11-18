@@ -95,20 +95,21 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
+        builder.OpenComponent<CascadingValue<Menu>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<Menu>.IsFixed), value: true);
+        builder.AddAttribute(2, nameof(CascadingValue<Menu>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.AddAttribute(3, nameof(CascadingValue<Menu>.ChildContent), (RenderFragment)(builder =>
         {
-            builder.OpenComponent<CascadingValue<Menu>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<Menu>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<Menu>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<Menu>.ChildContent), this.GetChildContent(ChildContent));
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, Attributes!);
+            // ReSharper disable once VariableHidesOuterVariable
+            builder.AddChildContentFor(6, this, ChildContent);
 
-            builder.CloseComponent();
-        });
+            builder.CloseAs(this);
+        }));
 
-        builder.CloseAs(this);
+        builder.CloseComponent();
     }
 
     public void SetItemActive(MenuItem item, bool isActive)
@@ -194,33 +195,33 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
 
                 break;
             case "ArrowDown":
+            {
+                var index = Array.IndexOf(Items, ActiveItem) + 1;
+                if (index < Items.Length) SetItemActive(Items[index], isActive: true);
+                else if (!IsOpen)
                 {
-                    var index = Array.IndexOf(Items, ActiveItem) + 1;
-                    if (index < Items.Length) SetItemActive(Items[index], isActive: true);
-                    else if (!IsOpen)
+                    Open(() =>
                     {
-                        Open(() =>
-                        {
-                            if (Items.Any()) SetItemActive(Items[0], isActive: true);
-                        });
-                    }
-
-                    break;
+                        if (Items.Any()) SetItemActive(Items[0], isActive: true);
+                    });
                 }
+
+                break;
+            }
             case "ArrowUp":
+            {
+                var index = Array.IndexOf(Items, ActiveItem) - 1;
+                if (index >= 0) SetItemActive(Items[index], isActive: true);
+                else if (!IsOpen)
                 {
-                    var index = Array.IndexOf(Items, ActiveItem) - 1;
-                    if (index >= 0) SetItemActive(Items[index], isActive: true);
-                    else if (!IsOpen)
+                    Open(() =>
                     {
-                        Open(() =>
-                        {
-                            if (Items.Any()) SetItemActive(Items[0], isActive: true);
-                        });
-                    }
-
-                    break;
+                        if (Items.Any()) SetItemActive(Items[0], isActive: true);
+                    });
                 }
+
+                break;
+            }
         }
     }
 }

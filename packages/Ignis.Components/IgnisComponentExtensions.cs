@@ -83,7 +83,7 @@ public static class IgnisComponentExtensions
         return GetChildContent(dynamicComponent, childContent?.Invoke(dynamicComponent));
     }
 
-    public static RenderFragment? GetChildContent<T>(this T dynamicComponent, RenderFragment? childContent)
+    private static RenderFragment? GetChildContent<T>(this T dynamicComponent, RenderFragment? childContent)
         where T : IDynamicParentComponent<T>
     {
         switch (dynamicComponent)
@@ -100,6 +100,12 @@ public static class IgnisComponentExtensions
 
     public static void AddChildContentFor<T>(this RenderTreeBuilder builder, int sequence, T dynamicComponent,
         RenderFragment? childContent) where T : IDynamicParentComponent<T>
+    {
+        AddContentForCore(builder, sequence, dynamicComponent, GetChildContent(dynamicComponent, childContent));
+    }
+
+    public static void AddChildContentFor<T>(this RenderTreeBuilder builder, int sequence, T dynamicComponent,
+        RenderFragment<T>? childContent) where T : IDynamicParentComponent<T>
     {
         AddContentForCore(builder, sequence, dynamicComponent, GetChildContent(dynamicComponent, childContent));
     }
