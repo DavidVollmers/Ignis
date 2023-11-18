@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroupDescription<T> : IgnisRigidComponentBase, IDynamicParentComponent<RadioGroupDescription<T>>
+public sealed class RadioGroupDescription : IgnisRigidComponentBase, IDynamicParentComponent<RadioGroupDescription>
 {
     private readonly AttributeCollection _attributes;
 

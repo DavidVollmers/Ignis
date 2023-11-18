@@ -193,7 +193,7 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDynamicParentCo
 
         if (Transition != null)
         {
-            Transition.Hide(() => CloseCore(continueWith, true));
+            Transition.Trigger(() => CloseCore(continueWith, async: true));
             return;
         }
 

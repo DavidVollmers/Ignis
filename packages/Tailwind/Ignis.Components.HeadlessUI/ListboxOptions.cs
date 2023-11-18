@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOptions<T> : IgnisRigidComponentBase, IDynamicParentComponent<ListboxOptions<T>>,
+public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComponent<ListboxOptions>,
     IAriaComponentPart
 {
     private readonly AttributeCollection _attributes;

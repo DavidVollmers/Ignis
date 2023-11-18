@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxButton<T> : IgnisComponentBase, IDynamicParentComponent<ListboxButton<T>>, IAriaComponentPart
+public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent<ListboxButton>, IAriaComponentPart
 {
     private readonly AttributeCollection _attributes;
 

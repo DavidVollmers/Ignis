@@ -52,8 +52,7 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
 
             if (_transitioningTo == _show) return;
 
-            if (_show) EnterTransition();
-            else LeaveTransition();
+            Trigger();
         }
     }
 
@@ -63,7 +62,7 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
 
     [CascadingParameter] public Menu? Menu { get; set; }
 
-    [CascadingParameter] public Listbox? Listbox { get; set; }
+    [CascadingParameter] public Listbox<object>? Listbox { get; set; }
 
     [CascadingParameter] public Popover? Popover { get; set; }
 
@@ -152,14 +151,10 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
         base.Update(async);
     }
 
-    public void Hide(Action? continueWith = null)
+    public void Trigger(Action? continueWith = null)
     {
-        LeaveTransition(continueWith);
-    }
-
-    public void Show(Action? continueWith)
-    {
-        EnterTransition(continueWith);
+        if (_show) EnterTransition(continueWith);
+        else LeaveTransition(continueWith);
     }
 
     /// <inheritdoc />

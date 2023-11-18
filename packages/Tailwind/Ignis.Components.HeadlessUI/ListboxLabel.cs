@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxLabel<T> : IgnisRigidComponentBase, IDynamicParentComponent<ListboxLabel<T>>, IAriaComponentPart
+public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentComponent<ListboxLabel>, IAriaComponentPart
 {
     private readonly AttributeCollection _attributes;
 
