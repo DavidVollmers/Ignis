@@ -39,11 +39,11 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentCompon
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public Listbox<T> Listbox { get; set; } = null!;
+    [CascadingParameter] public Listbox<object> Listbox { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<ListboxLabel<T>>? _ { get; set; }
+    public RenderFragment<ListboxLabel>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -81,7 +81,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentCompon
         if (Listbox == null)
         {
             throw new InvalidOperationException(
-                $"{nameof(ListboxLabel<T>)} must be used inside a {nameof(Listbox<T>)}.");
+                $"{nameof(ListboxLabel)} must be used inside a {nameof(Listbox<object>)}.");
         }
 
         Listbox.Label = this;

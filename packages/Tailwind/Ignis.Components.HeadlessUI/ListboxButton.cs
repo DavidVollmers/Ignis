@@ -45,11 +45,11 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent<
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
-    [CascadingParameter] public Listbox<T> Listbox { get; set; } = null!;
+    [CascadingParameter] public Listbox<object> Listbox { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<ListboxButton<T>>? _ { get; set; }
+    public RenderFragment<ListboxButton>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -93,7 +93,7 @@ public sealed class ListboxButton : IgnisComponentBase, IDynamicParentComponent<
         if (Listbox == null)
         {
             throw new InvalidOperationException(
-                $"{nameof(ListboxButton<T>)} must be used inside a {nameof(Listbox<T>)}.");
+                $"{nameof(ListboxButton)} must be used inside a {nameof(Listbox<object>)}.");
         }
 
         Listbox.Button = this;

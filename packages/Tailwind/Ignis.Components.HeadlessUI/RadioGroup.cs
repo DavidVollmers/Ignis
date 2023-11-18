@@ -9,7 +9,7 @@ public sealed class RadioGroup<T> : IgnisComponentBase, IDynamicParentComponent<
     private readonly IList<RadioGroupOption<T>> _options = new List<RadioGroupOption<T>>();
     private readonly AttributeCollection _attributes;
 
-    private RadioGroupLabel<T>? _label;
+    private RadioGroupLabel? _label;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -161,7 +161,7 @@ public sealed class RadioGroup<T> : IgnisComponentBase, IDynamicParentComponent<
         _options.Remove(option);
     }
 
-    public void SetLabel(RadioGroupLabel<T> label)
+    public void SetLabel(RadioGroupLabel label)
     {
         _label = label ?? throw new ArgumentNullException(nameof(label));
     }

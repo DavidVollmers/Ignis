@@ -38,13 +38,13 @@ public sealed class RadioGroupDescription : IgnisRigidComponentBase, IDynamicPar
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public RadioGroup<T> RadioGroup { get; set; } = null!;
+    [CascadingParameter] public RadioGroup<object> RadioGroup { get; set; } = null!;
 
-    [CascadingParameter] public RadioGroupOption<T>? RadioGroupOption { get; set; }
+    [CascadingParameter] public RadioGroupOption<object>? RadioGroupOption { get; set; }
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<RadioGroupDescription<T>>? _ { get; set; }
+    public RenderFragment<RadioGroupDescription>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -80,7 +80,7 @@ public sealed class RadioGroupDescription : IgnisRigidComponentBase, IDynamicPar
         if (RadioGroup == null)
         {
             throw new InvalidOperationException(
-                $"{nameof(RadioGroupDescription<T>)} must be used inside a {nameof(RadioGroup<T>)}.");
+                $"{nameof(RadioGroupDescription)} must be used inside a {nameof(RadioGroup<object>)}.");
         }
 
         RadioGroupOption?.SetDescription(this);

@@ -9,8 +9,8 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
 {
     private readonly AttributeCollection _attributes;
 
-    private RadioGroupDescription<T>? _description;
-    private RadioGroupLabel<T>? _label;
+    private RadioGroupDescription? _description;
+    private RadioGroupLabel? _label;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -110,7 +110,7 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
         if (RadioGroup == null)
         {
             throw new InvalidOperationException(
-                $"{nameof(RadioGroupOption<T>)} must be used inside a {nameof(RadioGroup<object>)}.");
+                $"{nameof(RadioGroupOption<T>)} must be used inside a {nameof(RadioGroup<T>)}.");
         }
 
         RadioGroup.AddOption(this);
@@ -190,13 +190,13 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
     }
 
     /// <inheritdoc />
-    public void SetLabel(RadioGroupLabel<T> label)
+    public void SetLabel(RadioGroupLabel label)
     {
         _label = label ?? throw new ArgumentNullException(nameof(label));
     }
 
     /// <inheritdoc />
-    public void SetDescription(RadioGroupDescription<T> description)
+    public void SetDescription(RadioGroupDescription description)
     {
         _description = description ?? throw new ArgumentNullException(nameof(description));
     }

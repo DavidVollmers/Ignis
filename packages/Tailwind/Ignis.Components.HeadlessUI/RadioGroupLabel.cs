@@ -38,13 +38,13 @@ public sealed class RadioGroupLabel : IgnisRigidComponentBase, IDynamicParentCom
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public RadioGroup<T> RadioGroup { get; set; } = null!;
+    [CascadingParameter] public RadioGroup<object> RadioGroup { get; set; } = null!;
 
-    [CascadingParameter] public RadioGroupOption<T>? RadioGroupOption { get; set; }
+    [CascadingParameter] public RadioGroupOption<object>? RadioGroupOption { get; set; }
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<RadioGroupLabel<T>>? _ { get; set; }
+    public RenderFragment<RadioGroupLabel>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -82,7 +82,7 @@ public sealed class RadioGroupLabel : IgnisRigidComponentBase, IDynamicParentCom
         if (RadioGroup == null)
         {
             throw new InvalidOperationException(
-                $"{nameof(RadioGroupLabel<T>)} must be used inside a {nameof(RadioGroup<T>)}.");
+                $"{nameof(RadioGroupLabel)} must be used inside a {nameof(RadioGroup<object>)}.");
         }
 
         if (RadioGroupOption != null)
