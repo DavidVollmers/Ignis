@@ -5,8 +5,8 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGroup>
 {
-    private readonly IList<ITabPanel> _tabPanels = new List<ITabPanel>();
-    private readonly IList<ITab> _tabs = new List<ITab>();
+    private readonly IList<TabPanel> _tabPanels = new List<TabPanel>();
+    private readonly IList<Tab> _tabs = new List<Tab>();
 
     private Type? _asComponent;
     private string? _asElement;
@@ -47,15 +47,15 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<ITabGroup>? _ { get; set; }
+    public RenderFragment<TabGroup>? _ { get; set; }
 
-    [Parameter] public RenderFragment<ITabGroup>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<TabGroup>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
-    public ITab[] Tabs => _tabs.ToArray();
+    public Tab[] Tabs => _tabs.ToArray();
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
@@ -87,10 +87,10 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<ITabGroup>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<ITabGroup>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<ITabGroup>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<ITabGroup>.ChildContent),
+            builder.OpenComponent<CascadingValue<TabGroup>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<TabGroup>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<TabGroup>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<TabGroup>.ChildContent),
                 this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
@@ -100,7 +100,7 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
     }
 
     /// <inheritdoc />
-    public bool IsTabSelected(ITab tab)
+    public bool IsTabSelected(Tab tab)
     {
         if (tab == null) throw new ArgumentNullException(nameof(tab));
 
@@ -110,7 +110,7 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
     }
 
     /// <inheritdoc />
-    public void SelectTab(ITab tab)
+    public void SelectTab(Tab tab)
     {
         if (tab == null) throw new ArgumentNullException(nameof(tab));
 
@@ -126,7 +126,7 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
     }
 
     /// <inheritdoc />
-    public void AddTab(ITab tab)
+    public void AddTab(Tab tab)
     {
         if (tab == null) throw new ArgumentNullException(nameof(tab));
 
@@ -134,7 +134,7 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
     }
 
     /// <inheritdoc />
-    public void RemoveTab(ITab tab)
+    public void RemoveTab(Tab tab)
     {
         if (tab == null) throw new ArgumentNullException(nameof(tab));
 
@@ -142,7 +142,7 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
     }
 
     /// <inheritdoc />
-    public bool IsTabPanelSelected(ITabPanel tabPanel)
+    public bool IsTabPanelSelected(TabPanel tabPanel)
     {
         if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));
 
@@ -152,7 +152,7 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
     }
 
     /// <inheritdoc />
-    public void AddTabPanel(ITabPanel tabPanel)
+    public void AddTabPanel(TabPanel tabPanel)
     {
         if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));
 
@@ -160,7 +160,7 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
     }
 
     /// <inheritdoc />
-    public void RemoveTabPanel(ITabPanel tabPanel)
+    public void RemoveTabPanel(TabPanel tabPanel)
     {
         if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));
 

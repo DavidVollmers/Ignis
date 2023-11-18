@@ -38,11 +38,11 @@ public sealed class SwitchLabel : IgnisRigidComponentBase, IDynamicParentCompone
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public ISwitchGroup SwitchGroup { get; set; } = null!;
+    [CascadingParameter] public SwitchGroup SwitchGroup { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<ISwitchLabel>? _ { get; set; }
+    public RenderFragment<SwitchLabel>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -94,7 +94,7 @@ public sealed class SwitchLabel : IgnisRigidComponentBase, IDynamicParentCompone
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<ISwitchLabel, SwitchLabel>(2, this, ChildContent);
+        builder.AddChildContentFor(2, this, ChildContent);
 
         builder.CloseAs(this);
     }

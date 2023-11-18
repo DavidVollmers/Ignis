@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class MenuItems : IgnisRigidComponentBase, IDynamicParentComponent
+public sealed class MenuItems : IgnisRigidComponentBase, IDynamicParentComponent<MenuItems>
 {
     private readonly AttributeCollection _attributes;
 
@@ -34,11 +34,11 @@ public sealed class MenuItems : IgnisRigidComponentBase, IDynamicParentComponent
         }
     }
 
-    [CascadingParameter] public IMenu Menu { get; set; } = null!;
+    [CascadingParameter] public Menu Menu { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDynamicComponent>? _ { get; set; }
+    public RenderFragment<MenuItems>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -91,7 +91,7 @@ public sealed class MenuItems : IgnisRigidComponentBase, IDynamicParentComponent
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IDynamicComponent, MenuItems>(3, this, ChildContent);
+        builder.AddChildContentFor(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

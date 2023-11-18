@@ -38,13 +38,13 @@ public sealed class MenuItem : IgnisComponentBase, IDynamicParentComponent<MenuI
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
-    [CascadingParameter] public IMenu Menu { get; set; } = null!;
+    [CascadingParameter] public Menu Menu { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IMenuItem>? _ { get; set; }
+    public RenderFragment<MenuItem>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IMenuItem>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<MenuItem>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
@@ -98,7 +98,7 @@ public sealed class MenuItem : IgnisComponentBase, IDynamicParentComponent<MenuI
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IMenuItem, MenuItem>(3, this, ChildContent?.Invoke(this));
+        builder.AddChildContentFor(3, this, ChildContent?.Invoke(this));
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

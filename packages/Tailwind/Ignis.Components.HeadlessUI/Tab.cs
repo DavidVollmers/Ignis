@@ -52,13 +52,13 @@ public sealed class Tab : FocusComponentBase, IDynamicParentComponent<Tab>
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
-    [CascadingParameter] public ITabGroup TabGroup { get; set; } = null!;
+    [CascadingParameter] public TabGroup TabGroup { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<ITab>? _ { get; set; }
+    public RenderFragment<Tab>? _ { get; set; }
 
-    [Parameter] public RenderFragment<ITab>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<Tab>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
@@ -111,7 +111,7 @@ public sealed class Tab : FocusComponentBase, IDynamicParentComponent<Tab>
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<ITab, Tab>(3, this, ChildContent?.Invoke(this));
+        builder.AddChildContentFor(3, this, ChildContent?.Invoke(this));
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

@@ -5,8 +5,8 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Transition : TransitionBase, IDynamicParentComponent<Transition>, IContentProvider, IDisposable
 {
-    private readonly IList<ITransitionChild> _children = new List<ITransitionChild>();
-    private readonly IList<IDialog> _dialogs = new List<IDialog>();
+    private readonly IList<TransitionChild> _children = new List<TransitionChild>();
+    private readonly IList<Dialog> _dialogs = new List<Dialog>();
 
     private bool _transitioningTo;
     private bool _didRenderOnce;
@@ -61,19 +61,19 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
 
     [CascadingParameter] public IContentHost? Outlet { get; set; }
 
-    [CascadingParameter] public IMenu? Menu { get; set; }
+    [CascadingParameter] public Menu? Menu { get; set; }
 
-    [CascadingParameter] public IListbox? Listbox { get; set; }
+    [CascadingParameter] public Listbox? Listbox { get; set; }
 
-    [CascadingParameter] public IPopover? Popover { get; set; }
+    [CascadingParameter] public Popover? Popover { get; set; }
 
-    [CascadingParameter] public IDisclosure? Disclosure { get; set; }
+    [CascadingParameter] public Disclosure? Disclosure { get; set; }
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<ITransition>? _ { get; set; }
+    public RenderFragment<Transition>? _ { get; set; }
 
-    [Parameter] public RenderFragment<ITransition>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<Transition>? ChildContent { get; set; }
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
@@ -121,11 +121,11 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<ITransition>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<ITransition>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<ITransition>.Value), this);
+            builder.OpenComponent<CascadingValue<Transition>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<Transition>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<Transition>.Value), this);
             if (RenderContent || _show)
-                builder.AddAttribute(6, nameof(CascadingValue<ITransition>.ChildContent),
+                builder.AddAttribute(6, nameof(CascadingValue<Transition>.ChildContent),
                     this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
@@ -158,7 +158,7 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
         LeaveTransition(continueWith);
     }
 
-    void ITransition.Show(Action? continueWith)
+    public void Show(Action? continueWith)
     {
         EnterTransition(continueWith);
     }
@@ -185,7 +185,7 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
     }
 
     /// <inheritdoc />
-    public void AddChild(ITransitionChild child)
+    public void AddChild(TransitionChild child)
     {
         if (child == null) throw new ArgumentNullException(nameof(child));
 
@@ -193,7 +193,7 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
     }
 
     /// <inheritdoc />
-    public void RemoveChild(ITransitionChild child)
+    public void RemoveChild(TransitionChild child)
     {
         if (child == null) throw new ArgumentNullException(nameof(child));
 
@@ -201,7 +201,7 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
     }
 
     /// <inheritdoc />
-    public void AddDialog(IDialog dialog)
+    public void AddDialog(Dialog dialog)
     {
         if (dialog == null) throw new ArgumentNullException(nameof(dialog));
 
@@ -211,7 +211,7 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
     }
 
     /// <inheritdoc />
-    public void RemoveDialog(IDialog dialog)
+    public void RemoveDialog(Dialog dialog)
     {
         if (dialog == null) throw new ArgumentNullException(nameof(dialog));
 
@@ -220,7 +220,7 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
 
     private void WatchTransition(bool isEnter, Action? continueWith)
     {
-        var startedTransitions = new List<ITransitionChild>();
+        var startedTransitions = new List<TransitionChild>();
         var finishedTransitions = 0;
 
         if (isEnter) base.EnterTransition(() => AggregateDialogs(open: true, ContinueWith));

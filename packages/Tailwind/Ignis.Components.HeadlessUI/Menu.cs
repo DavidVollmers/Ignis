@@ -7,9 +7,9 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Menu>
 {
-    private readonly IList<IMenuItem> _items = new List<IMenuItem>();
+    private readonly IList<MenuItem> _items = new List<MenuItem>();
 
-    private IDynamicParentComponent? _itemsComponent;
+    private MenuItems? _itemsComponent;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -59,9 +59,9 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IMenu>? _ { get; set; }
+    public RenderFragment<Menu>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IMenu>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<Menu>? ChildContent { get; set; }
 
     /// <summary>
     /// Additional attributes to be applied to the menu.
@@ -69,13 +69,10 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    /// <inheritdoc />
-    public IMenuItem? ActiveItem { get; private set; }
+    public MenuItem? ActiveItem { get; private set; }
 
-    /// <inheritdoc />
-    public IMenuButton? Button { get; private set; }
+    public MenuButton? Button { get; private set; }
 
-    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-menu-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
@@ -88,7 +85,7 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
     /// <inheritdoc />
-    public IMenuItem[] Items => _items.ToArray();
+    public MenuItem[] Items => _items.ToArray();
 
     public Menu()
     {
@@ -103,10 +100,10 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<IMenu>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IMenu>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<IMenu>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IMenu>.ChildContent), this.GetChildContent(ChildContent));
+            builder.OpenComponent<CascadingValue<Menu>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<Menu>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<Menu>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<Menu>.ChildContent), this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });
@@ -114,8 +111,7 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
         builder.CloseAs(this);
     }
 
-    /// <inheritdoc />
-    public void SetItemActive(IMenuItem item, bool isActive)
+    public void SetItemActive(MenuItem item, bool isActive)
     {
         if (isActive)
         {
@@ -129,30 +125,26 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
         Update();
     }
 
-    /// <inheritdoc />
-    public void AddItem(IMenuItem item)
+    public void AddItem(MenuItem item)
     {
         if (item == null) throw new ArgumentNullException(nameof(item));
 
         if (!_items.Contains(item)) _items.Add(item);
     }
 
-    /// <inheritdoc />
-    public void RemoveItem(IMenuItem item)
+    public void RemoveItem(MenuItem item)
     {
         if (item == null) throw new ArgumentNullException(nameof(item));
 
         _items.Remove(item);
     }
 
-    /// <inheritdoc />
-    public void SetButton(IMenuButton button)
+    public void SetButton(MenuButton button)
     {
         Button = button ?? throw new ArgumentNullException(nameof(button));
     }
 
-    /// <inheritdoc />
-    public void SetItems(IDynamicParentComponent items)
+    public void SetItems(MenuItems items)
     {
         _itemsComponent = items ?? throw new ArgumentNullException(nameof(items));
     }

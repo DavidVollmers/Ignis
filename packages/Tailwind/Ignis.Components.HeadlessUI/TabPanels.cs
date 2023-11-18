@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class TabPanels : IgnisRigidComponentBase, IDynamicParentComponent
+public sealed class TabPanels : IgnisRigidComponentBase, IDynamicParentComponent<TabPanels>
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -34,7 +34,7 @@ public sealed class TabPanels : IgnisRigidComponentBase, IDynamicParentComponent
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDynamicComponent>? _ { get; set; }
+    public RenderFragment<TabPanels>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -60,7 +60,7 @@ public sealed class TabPanels : IgnisRigidComponentBase, IDynamicParentComponent
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<IDynamicComponent, TabPanels>(2, this, ChildContent);
+        builder.AddChildContentFor(2, this, ChildContent);
 
         builder.CloseAs(this);
     }

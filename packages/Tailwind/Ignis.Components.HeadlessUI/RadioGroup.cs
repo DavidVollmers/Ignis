@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroup<TValue> : IgnisComponentBase, IDynamicParentComponent<RadioGroup>
+public sealed class RadioGroup<TValue> : IgnisComponentBase, IDynamicParentComponent<RadioGroup<TValue>>
 {
-    private readonly IList<IRadioGroupOption> _options = new List<IRadioGroupOption>();
+    private readonly IList<RadioGroupOption<TValue>> _options = new List<RadioGroupOption<TValue>>();
     private readonly AttributeCollection _attributes;
 
-    private IRadioGroupLabel? _label;
+    private RadioGroupLabel? _label;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -51,7 +51,7 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IDynamicParentCompo
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IRadioGroup>? _ { get; set; }
+    public RenderFragment<RadioGroup<TValue>>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -66,10 +66,10 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IDynamicParentCompo
     }
 
     /// <inheritdoc />
-    public IRadioGroupOption[] Options => _options.ToArray();
+    public RadioGroupOption<TValue>[] Options => _options.ToArray();
 
     /// <inheritdoc />
-    public IRadioGroupOption? ActiveOption { get; private set; }
+    public RadioGroupOption<TValue>? ActiveOption { get; private set; }
 
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-radiogroup-" + Guid.NewGuid().ToString("N");
@@ -104,11 +104,11 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IDynamicParentCompo
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<IRadioGroup>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IRadioGroup>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<IRadioGroup>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IRadioGroup>.ChildContent),
-                this.GetChildContent<IRadioGroup, RadioGroup<TValue>>(ChildContent));
+            builder.OpenComponent<CascadingValue<RadioGroup<TValue>>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<RadioGroup<TValue>>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<RadioGroup<TValue>>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<RadioGroup<TValue>>.ChildContent),
+                this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });
@@ -131,7 +131,7 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IDynamicParentCompo
     }
 
     /// <inheritdoc />
-    public void SetOptionActive(IRadioGroupOption option, bool isActive)
+    public void SetOptionActive(RadioGroupOption<TValue> option, bool isActive)
     {
         if (option == null) throw new ArgumentNullException(nameof(option));
 
@@ -147,24 +147,21 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IDynamicParentCompo
         Update();
     }
 
-    /// <inheritdoc />
-    public void AddOption(IRadioGroupOption option)
+    public void AddOption(RadioGroupOption<TValue> option)
     {
         if (option == null) throw new ArgumentNullException(nameof(option));
 
         if (!_options.Contains(option)) _options.Add(option);
     }
 
-    /// <inheritdoc />
-    public void RemoveOption(IRadioGroupOption option)
+    public void RemoveOption(RadioGroupOption<TValue> option)
     {
         if (option == null) throw new ArgumentNullException(nameof(option));
 
         _options.Remove(option);
     }
 
-    /// <inheritdoc />
-    public void SetLabel(IRadioGroupLabel label)
+    public void SetLabel(RadioGroupLabel label)
     {
         _label = label ?? throw new ArgumentNullException(nameof(label));
     }

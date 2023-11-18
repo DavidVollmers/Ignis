@@ -38,11 +38,11 @@ public sealed class SwitchDescription : IgnisRigidComponentBase, IDynamicParentC
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public ISwitchGroup SwitchGroup { get; set; } = null!;
+    [CascadingParameter] public SwitchGroup SwitchGroup { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<ISwitchDescription>? _ { get; set; }
+    public RenderFragment<SwitchDescription>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -92,7 +92,7 @@ public sealed class SwitchDescription : IgnisRigidComponentBase, IDynamicParentC
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<ISwitchDescription, SwitchDescription>(2, this, ChildContent);
+        builder.AddChildContentFor(2, this, ChildContent);
 
         builder.CloseAs(this);
     }

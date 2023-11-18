@@ -32,13 +32,13 @@ public sealed class TransitionChild : TransitionBase, IDynamicParentComponent<Tr
         }
     }
 
-    [CascadingParameter] public ITransition Parent { get; set; } = null!;
+    [CascadingParameter] public Transition Parent { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<ITransitionChild>? _ { get; set; }
+    public RenderFragment<TransitionChild>? _ { get; set; }
 
-    [Parameter] public RenderFragment<ITransitionChild>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<TransitionChild>? ChildContent { get; set; }
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
@@ -69,7 +69,7 @@ public sealed class TransitionChild : TransitionBase, IDynamicParentComponent<Tr
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (RenderContent)
-            builder.AddChildContentFor<ITransitionChild, TransitionChild>(2, this, ChildContent?.Invoke(this));
+            builder.AddChildContentFor(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }

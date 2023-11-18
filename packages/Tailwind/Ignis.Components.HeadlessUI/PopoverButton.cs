@@ -39,11 +39,11 @@ public sealed class PopoverButton : IgnisComponentBase, IDynamicParentComponent<
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
-    [CascadingParameter] public IPopover Popover { get; set; } = null!;
+    [CascadingParameter] public Popover Popover { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IPopoverButton>? _ { get; set; }
+    public RenderFragment<PopoverButton>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -95,7 +95,7 @@ public sealed class PopoverButton : IgnisComponentBase, IDynamicParentComponent<
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IPopoverButton, PopoverButton>(3, this, ChildContent);
+        builder.AddChildContentFor(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

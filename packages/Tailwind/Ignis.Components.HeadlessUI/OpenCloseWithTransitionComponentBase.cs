@@ -5,7 +5,7 @@ namespace Ignis.Components.HeadlessUI;
 
 public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase, IOpenClose, IWithTransition
 {
-    private ITransition? _transition;
+    private Transition? _transition;
     private bool _isOpen;
 
     /// <inheritdoc />
@@ -79,7 +79,7 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
     }
 
     /// <inheritdoc />
-    public void SetTransition(ITransition transition)
+    public void SetTransition(Transition transition)
     {
         _transition = transition ?? throw new ArgumentNullException(nameof(transition));
     }

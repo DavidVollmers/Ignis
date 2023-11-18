@@ -7,8 +7,8 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Popover>
 {
-    private IDynamicParentComponent? _panel;
-    private IPopoverButton? _button;
+    private PopoverPanel? _panel;
+    private PopoverButton? _button;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -52,9 +52,9 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicPare
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IPopover>? _ { get; set; }
+    public RenderFragment<Popover>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IPopover>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<Popover>? ChildContent { get; set; }
 
     /// <summary>
     /// Additional attributes to be applied to the popover.
@@ -87,10 +87,10 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicPare
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<IPopover>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IPopover>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<IPopover>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IPopover>.ChildContent), this.GetChildContent(ChildContent));
+            builder.OpenComponent<CascadingValue<Popover>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<Popover>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<Popover>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<Popover>.ChildContent), this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
         });
@@ -99,13 +99,13 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicPare
     }
 
     /// <inheritdoc />
-    public void SetButton(IPopoverButton button)
+    public void SetButton(PopoverButton button)
     {
         _button = button ?? throw new ArgumentNullException(nameof(button));
     }
 
     /// <inheritdoc />
-    public void SetPanel(IDynamicParentComponent panel)
+    public void SetPanel(PopoverPanel panel)
     {
         _panel = panel ?? throw new ArgumentNullException(nameof(panel));
     }

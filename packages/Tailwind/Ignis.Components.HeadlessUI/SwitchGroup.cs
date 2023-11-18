@@ -7,7 +7,7 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, IDynamicParentCompone
 {
     private Type? _asComponent;
     private string? _asElement;
-    private ISwitch? _switch;
+    private Switch? _switch;
 
     /// <inheritdoc />
     [Parameter]
@@ -35,7 +35,7 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, IDynamicParentCompone
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<ISwitchGroup>? _ { get; set; }
+    public RenderFragment<SwitchGroup>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -46,10 +46,10 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, IDynamicParentCompone
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
-    public ISwitchLabel? Label { get; private set; }
+    public SwitchLabel? Label { get; private set; }
 
     /// <inheritdoc />
-    public ISwitchDescription? Description { get; private set; }
+    public SwitchDescription? Description { get; private set; }
 
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-switch-" + Guid.NewGuid().ToString("N");
@@ -76,11 +76,11 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, IDynamicParentCompone
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<ISwitchGroup>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<ISwitchGroup>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<ISwitchGroup>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<ISwitchGroup>.ChildContent),
-                this.GetChildContent<ISwitchGroup, SwitchGroup>(ChildContent));
+            builder.OpenComponent<CascadingValue<SwitchGroup>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<SwitchGroup>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<SwitchGroup>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<SwitchGroup>.ChildContent),
+                this.GetChildContent<SwitchGroup, SwitchGroup>(ChildContent));
 
             builder.CloseComponent();
         });
@@ -89,19 +89,19 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, IDynamicParentCompone
     }
 
     /// <inheritdoc />
-    public void SetSwitch(ISwitch @switch)
+    public void SetSwitch(Switch @switch)
     {
         _switch = @switch ?? throw new ArgumentNullException(nameof(@switch));
     }
 
     /// <inheritdoc />
-    public void SetLabel(ISwitchLabel label)
+    public void SetLabel(SwitchLabel label)
     {
         Label = label ?? throw new ArgumentNullException(nameof(label));
     }
 
     /// <inheritdoc />
-    public void SetDescription(ISwitchDescription description)
+    public void SetDescription(SwitchDescription description)
     {
         Description = description ?? throw new ArgumentNullException(nameof(description));
     }

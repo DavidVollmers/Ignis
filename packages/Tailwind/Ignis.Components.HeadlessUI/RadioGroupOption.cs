@@ -9,8 +9,8 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IDynamicParen
 {
     private readonly AttributeCollection _attributes;
 
-    private IRadioGroupDescription? _description;
-    private IRadioGroupLabel? _label;
+    private RadioGroupDescription? _description;
+    private RadioGroupLabel? _label;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -60,13 +60,13 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IDynamicParen
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
-    [CascadingParameter] public IRadioGroup RadioGroup { get; set; } = null!;
+    [CascadingParameter] public RadioGroup<TValue> RadioGroup { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IRadioGroupOption>? _ { get; set; }
+    public RenderFragment<RadioGroupOption<TValue>>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IRadioGroupOption>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<RadioGroupOption<TValue>>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
@@ -125,10 +125,10 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IDynamicParen
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(3, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<IRadioGroupOption>>(4);
-            builder.AddAttribute(5, nameof(CascadingValue<IRadioGroupOption>.IsFixed), true);
-            builder.AddAttribute(6, nameof(CascadingValue<IRadioGroupOption>.Value), this);
-            builder.AddAttribute(7, nameof(CascadingValue<IRadioGroupOption>.ChildContent),
+            builder.OpenComponent<CascadingValue<RadioGroupOption<TValue>>>(4);
+            builder.AddAttribute(5, nameof(CascadingValue<RadioGroupOption<TValue>>.IsFixed), true);
+            builder.AddAttribute(6, nameof(CascadingValue<RadioGroupOption<TValue>>.Value), this);
+            builder.AddAttribute(7, nameof(CascadingValue<RadioGroupOption<TValue>>.ChildContent),
                 this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
@@ -190,13 +190,13 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IDynamicParen
     }
 
     /// <inheritdoc />
-    public void SetLabel(IRadioGroupLabel label)
+    public void SetLabel(RadioGroupLabel label)
     {
         _label = label ?? throw new ArgumentNullException(nameof(label));
     }
 
     /// <inheritdoc />
-    public void SetDescription(IRadioGroupDescription description)
+    public void SetDescription(RadioGroupDescription description)
     {
         _description = description ?? throw new ArgumentNullException(nameof(description));
     }

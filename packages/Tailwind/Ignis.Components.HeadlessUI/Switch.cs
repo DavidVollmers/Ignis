@@ -46,13 +46,13 @@ public sealed class Switch : IgnisComponentBase, IDynamicParentComponent<Switch>
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
-    [CascadingParameter] public ISwitchGroup? SwitchGroup { get; set; }
+    [CascadingParameter] public SwitchGroup? SwitchGroup { get; set; }
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<ISwitch>? _ { get; set; }
+    public RenderFragment<Switch>? _ { get; set; }
 
-    [Parameter] public RenderFragment<ISwitch>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<Switch>? ChildContent { get; set; }
 
     /// <summary>
     /// Additional attributes to be applied to the switch.
@@ -106,7 +106,7 @@ public sealed class Switch : IgnisComponentBase, IDynamicParentComponent<Switch>
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<ISwitch, Switch>(2, this, ChildContent?.Invoke(this));
+        builder.AddChildContentFor(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }

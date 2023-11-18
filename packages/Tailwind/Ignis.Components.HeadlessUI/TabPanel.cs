@@ -34,13 +34,13 @@ public sealed class TabPanel : IgnisComponentBase, IDynamicParentComponent<TabPa
         }
     }
 
-    [CascadingParameter] public ITabGroup TabGroup { get; set; } = null!;
+    [CascadingParameter] public TabGroup TabGroup { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<ITabPanel>? _ { get; set; }
+    public RenderFragment<TabPanel>? _ { get; set; }
 
-    [Parameter] public RenderFragment<ITabPanel>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<TabPanel>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
@@ -92,7 +92,7 @@ public sealed class TabPanel : IgnisComponentBase, IDynamicParentComponent<TabPa
 
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<ITabPanel, TabPanel>(2, this, ChildContent?.Invoke(this));
+        builder.AddChildContentFor(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }
