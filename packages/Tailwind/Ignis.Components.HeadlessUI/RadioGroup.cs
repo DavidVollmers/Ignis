@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroup<TValue> : IgnisComponentBase, IDynamicParentComponent<RadioGroup<TValue>>
+public sealed class RadioGroup<T> : IgnisComponentBase, IDynamicParentComponent<RadioGroup<T>>
 {
-    private readonly IList<RadioGroupOption<TValue>> _options = new List<RadioGroupOption<TValue>>();
+    private readonly IList<RadioGroupOption<T>> _options = new List<RadioGroupOption<T>>();
     private readonly AttributeCollection _attributes;
 
-    private RadioGroupLabel? _label;
+    private RadioGroupLabel<T>? _label;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -41,17 +41,17 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IDynamicParentCompo
     /// The checked value.
     /// </summary>
     [Parameter]
-    public TValue? Value { get; set; }
+    public T? Value { get; set; }
 
     /// <summary>
     /// Occurs when the checked value changes.
     /// </summary>
     [Parameter]
-    public EventCallback<TValue?> ValueChanged { get; set; }
+    public EventCallback<T?> ValueChanged { get; set; }
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<RadioGroup<TValue>>? _ { get; set; }
+    public RenderFragment<RadioGroup<T>>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -66,10 +66,10 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IDynamicParentCompo
     }
 
     /// <inheritdoc />
-    public RadioGroupOption<TValue>[] Options => _options.ToArray();
+    public RadioGroupOption<T>[] Options => _options.ToArray();
 
     /// <inheritdoc />
-    public RadioGroupOption<TValue>? ActiveOption { get; private set; }
+    public RadioGroupOption<T>? ActiveOption { get; private set; }
 
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-radiogroup-" + Guid.NewGuid().ToString("N");
@@ -104,10 +104,10 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IDynamicParentCompo
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(2, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<RadioGroup<TValue>>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<RadioGroup<TValue>>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<RadioGroup<TValue>>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<RadioGroup<TValue>>.ChildContent),
+            builder.OpenComponent<CascadingValue<RadioGroup<T>>>(3);
+            builder.AddAttribute(4, nameof(CascadingValue<RadioGroup<T>>.IsFixed), true);
+            builder.AddAttribute(5, nameof(CascadingValue<RadioGroup<T>>.Value), this);
+            builder.AddAttribute(6, nameof(CascadingValue<RadioGroup<T>>.ChildContent),
                 this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
@@ -117,21 +117,21 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IDynamicParentCompo
     }
 
     /// <inheritdoc />
-    public bool IsValueChecked<TValue1>(TValue1? value)
+    public bool IsValueChecked<T1>(T1? value)
     {
         return value?.Equals(Value) ?? Value?.Equals(value) ?? false;
     }
 
     /// <inheritdoc />
-    public void CheckValue<TValue1>(TValue1? value)
+    public void CheckValue<T1>(T1? value)
     {
-        var __ = ValueChanged.InvokeAsync(Value = (TValue?)(object?)value);
+        var __ = ValueChanged.InvokeAsync(Value = (T?)(object?)value);
 
         Update();
     }
 
     /// <inheritdoc />
-    public void SetOptionActive(RadioGroupOption<TValue> option, bool isActive)
+    public void SetOptionActive(RadioGroupOption<T> option, bool isActive)
     {
         if (option == null) throw new ArgumentNullException(nameof(option));
 
@@ -147,21 +147,21 @@ public sealed class RadioGroup<TValue> : IgnisComponentBase, IDynamicParentCompo
         Update();
     }
 
-    public void AddOption(RadioGroupOption<TValue> option)
+    public void AddOption(RadioGroupOption<T> option)
     {
         if (option == null) throw new ArgumentNullException(nameof(option));
 
         if (!_options.Contains(option)) _options.Add(option);
     }
 
-    public void RemoveOption(RadioGroupOption<TValue> option)
+    public void RemoveOption(RadioGroupOption<T> option)
     {
         if (option == null) throw new ArgumentNullException(nameof(option));
 
         _options.Remove(option);
     }
 
-    public void SetLabel(RadioGroupLabel label)
+    public void SetLabel(RadioGroupLabel<T> label)
     {
         _label = label ?? throw new ArgumentNullException(nameof(label));
     }

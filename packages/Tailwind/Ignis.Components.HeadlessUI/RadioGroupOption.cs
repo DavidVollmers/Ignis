@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroupOption<TValue> : FocusComponentBase, IDynamicParentComponent<RadioGroupOption<TValue>>
+public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComponent<RadioGroupOption<T>>
 {
     private readonly AttributeCollection _attributes;
 
-    private RadioGroupDescription? _description;
-    private RadioGroupLabel? _label;
+    private RadioGroupDescription<T>? _description;
+    private RadioGroupLabel<T>? _label;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -54,19 +54,19 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IDynamicParen
         }
     }
 
-    [Parameter] public TValue? Value { get; set; }
+    [Parameter] public T? Value { get; set; }
 
     /// <inheritdoc />
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
-    [CascadingParameter] public RadioGroup<TValue> RadioGroup { get; set; } = null!;
+    [CascadingParameter] public RadioGroup<T> RadioGroup { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<RadioGroupOption<TValue>>? _ { get; set; }
+    public RenderFragment<RadioGroupOption<T>>? _ { get; set; }
 
-    [Parameter] public RenderFragment<RadioGroupOption<TValue>>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<RadioGroupOption<T>>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
@@ -110,7 +110,7 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IDynamicParen
         if (RadioGroup == null)
         {
             throw new InvalidOperationException(
-                $"{nameof(RadioGroupOption<TValue>)} must be used inside a {nameof(RadioGroup<object>)}.");
+                $"{nameof(RadioGroupOption<T>)} must be used inside a {nameof(RadioGroup<object>)}.");
         }
 
         RadioGroup.AddOption(this);
@@ -125,10 +125,10 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IDynamicParen
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddContentFor(3, this, builder =>
         {
-            builder.OpenComponent<CascadingValue<RadioGroupOption<TValue>>>(4);
-            builder.AddAttribute(5, nameof(CascadingValue<RadioGroupOption<TValue>>.IsFixed), true);
-            builder.AddAttribute(6, nameof(CascadingValue<RadioGroupOption<TValue>>.Value), this);
-            builder.AddAttribute(7, nameof(CascadingValue<RadioGroupOption<TValue>>.ChildContent),
+            builder.OpenComponent<CascadingValue<RadioGroupOption<T>>>(4);
+            builder.AddAttribute(5, nameof(CascadingValue<RadioGroupOption<T>>.IsFixed), true);
+            builder.AddAttribute(6, nameof(CascadingValue<RadioGroupOption<T>>.Value), this);
+            builder.AddAttribute(7, nameof(CascadingValue<RadioGroupOption<T>>.ChildContent),
                 this.GetChildContent(ChildContent));
 
             builder.CloseComponent();
@@ -190,13 +190,13 @@ public sealed class RadioGroupOption<TValue> : FocusComponentBase, IDynamicParen
     }
 
     /// <inheritdoc />
-    public void SetLabel(RadioGroupLabel label)
+    public void SetLabel(RadioGroupLabel<T> label)
     {
         _label = label ?? throw new ArgumentNullException(nameof(label));
     }
 
     /// <inheritdoc />
-    public void SetDescription(RadioGroupDescription description)
+    public void SetDescription(RadioGroupDescription<T> description)
     {
         _description = description ?? throw new ArgumentNullException(nameof(description));
     }

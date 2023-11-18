@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroupDescription : IgnisRigidComponentBase, IDynamicParentComponent<RadioGroupDescription>
+public sealed class RadioGroupDescription<T> : IgnisRigidComponentBase, IDynamicParentComponent<RadioGroupDescription<T>>
 {
     private readonly AttributeCollection _attributes;
 
@@ -38,13 +38,13 @@ public sealed class RadioGroupDescription : IgnisRigidComponentBase, IDynamicPar
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public RadioGroup RadioGroup { get; set; } = null!;
+    [CascadingParameter] public RadioGroup<T> RadioGroup { get; set; } = null!;
 
-    [CascadingParameter] public RadioGroupOption? RadioGroupOption { get; set; }
+    [CascadingParameter] public RadioGroupOption<T>? RadioGroupOption { get; set; }
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<RadioGroupDescription>? _ { get; set; }
+    public RenderFragment<RadioGroupDescription<T>>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -80,7 +80,7 @@ public sealed class RadioGroupDescription : IgnisRigidComponentBase, IDynamicPar
         if (RadioGroup == null)
         {
             throw new InvalidOperationException(
-                $"{nameof(RadioGroupDescription)} must be used inside a {nameof(RadioGroup<object>)}.");
+                $"{nameof(RadioGroupDescription<T>)} must be used inside a {nameof(RadioGroup<T>)}.");
         }
 
         RadioGroupOption?.SetDescription(this);
