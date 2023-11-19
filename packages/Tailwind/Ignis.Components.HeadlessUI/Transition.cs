@@ -115,22 +115,23 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
 
     private void BuildContentRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
-        // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.OpenComponent<CascadingValue<Transition>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<Transition>.IsFixed), value: true);
+        builder.AddAttribute(2, nameof(CascadingValue<Transition>.Value), this);
+        if (RenderContent || _show)
         {
-            builder.OpenComponent<CascadingValue<Transition>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<Transition>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<Transition>.Value), this);
-            if (RenderContent || _show)
-                builder.AddAttribute(6, nameof(CascadingValue<Transition>.ChildContent),
-                    this.GetChildContent(ChildContent));
+            // ReSharper disable once VariableHidesOuterVariable
+            builder.AddAttribute(3, nameof(CascadingValue<Transition>.ChildContent), (RenderFragment)(builder =>
+            {
+                builder.OpenAs(4, this);
+                builder.AddMultipleAttributes(5, Attributes!);
+                builder.AddChildContentFor(6, this, ChildContent);
 
-            builder.CloseComponent();
-        });
+                builder.CloseAs(this);
+            }));
+        }
 
-        builder.CloseAs(this);
+        builder.CloseComponent();
     }
 
     /// <inheritdoc />
@@ -178,7 +179,6 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
         });
     }
 
-    /// <inheritdoc />
     public void AddChild(TransitionChild child)
     {
         if (child == null) throw new ArgumentNullException(nameof(child));
@@ -186,7 +186,6 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
         if (!_children.Contains(child)) _children.Add(child);
     }
 
-    /// <inheritdoc />
     public void RemoveChild(TransitionChild child)
     {
         if (child == null) throw new ArgumentNullException(nameof(child));
@@ -194,7 +193,6 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
         _children.Remove(child);
     }
 
-    /// <inheritdoc />
     public void AddDialog(Dialog dialog)
     {
         if (dialog == null) throw new ArgumentNullException(nameof(dialog));
@@ -204,7 +202,6 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
         if (Outlet == null) ContentRegistry.RegisterContentProvider(this);
     }
 
-    /// <inheritdoc />
     public void RemoveDialog(Dialog dialog)
     {
         if (dialog == null) throw new ArgumentNullException(nameof(dialog));

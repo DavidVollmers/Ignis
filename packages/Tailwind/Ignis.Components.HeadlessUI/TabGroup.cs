@@ -82,24 +82,22 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, AdditionalAttributes!);
+        builder.OpenComponent<CascadingValue<TabGroup>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<TabGroup>.IsFixed), value: true);
+        builder.AddAttribute(2, nameof(CascadingValue<TabGroup>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.AddAttribute(3, nameof(CascadingValue<TabGroup>.ChildContent), (RenderFragment)(builder =>
         {
-            builder.OpenComponent<CascadingValue<TabGroup>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<TabGroup>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<TabGroup>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<TabGroup>.ChildContent),
-                this.GetChildContent(ChildContent));
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, AdditionalAttributes!);
+            builder.AddChildContentFor(6, this, ChildContent);
 
-            builder.CloseComponent();
-        });
+            builder.CloseAs(this);
+        }));
 
-        builder.CloseAs(this);
+        builder.CloseComponent();
     }
 
-    /// <inheritdoc />
     public bool IsTabSelected(Tab tab)
     {
         if (tab == null) throw new ArgumentNullException(nameof(tab));
@@ -109,7 +107,6 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
         return index == SelectedIndex;
     }
 
-    /// <inheritdoc />
     public void SelectTab(Tab tab)
     {
         if (tab == null) throw new ArgumentNullException(nameof(tab));
@@ -125,7 +122,6 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
         Update();
     }
 
-    /// <inheritdoc />
     public void AddTab(Tab tab)
     {
         if (tab == null) throw new ArgumentNullException(nameof(tab));
@@ -133,7 +129,6 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
         if (!_tabs.Contains(tab)) _tabs.Add(tab);
     }
 
-    /// <inheritdoc />
     public void RemoveTab(Tab tab)
     {
         if (tab == null) throw new ArgumentNullException(nameof(tab));
@@ -141,7 +136,6 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
         _tabs.Remove(tab);
     }
 
-    /// <inheritdoc />
     public bool IsTabPanelSelected(TabPanel tabPanel)
     {
         if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));
@@ -151,7 +145,6 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
         return index == SelectedIndex;
     }
 
-    /// <inheritdoc />
     public void AddTabPanel(TabPanel tabPanel)
     {
         if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));
@@ -159,7 +152,6 @@ public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGr
         if (!_tabPanels.Contains(tabPanel)) _tabPanels.Add(tabPanel);
     }
 
-    /// <inheritdoc />
     public void RemoveTabPanel(TabPanel tabPanel)
     {
         if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));

@@ -71,42 +71,37 @@ public sealed class SwitchGroup : IgnisRigidComponentBase, IDynamicParentCompone
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
+        builder.OpenComponent<CascadingValue<SwitchGroup>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<SwitchGroup>.IsFixed), value: true);
+        builder.AddAttribute(2, nameof(CascadingValue<SwitchGroup>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.AddAttribute(3, nameof(CascadingValue<SwitchGroup>.ChildContent), (RenderFragment)(builder =>
         {
-            builder.OpenComponent<CascadingValue<SwitchGroup>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<SwitchGroup>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<SwitchGroup>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<SwitchGroup>.ChildContent),
-                this.GetChildContent(ChildContent));
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, Attributes!);
+            builder.AddChildContentFor(6, this, ChildContent);
 
-            builder.CloseComponent();
-        });
+            builder.CloseAs(this);
+        }));
 
-        builder.CloseAs(this);
+        builder.CloseComponent();
     }
 
-    /// <inheritdoc />
     public void SetSwitch(Switch @switch)
     {
         _switch = @switch ?? throw new ArgumentNullException(nameof(@switch));
     }
 
-    /// <inheritdoc />
     public void SetLabel(SwitchLabel label)
     {
         Label = label ?? throw new ArgumentNullException(nameof(label));
     }
 
-    /// <inheritdoc />
     public void SetDescription(SwitchDescription description)
     {
         Description = description ?? throw new ArgumentNullException(nameof(description));
     }
 
-    /// <inheritdoc />
     public void ToggleSwitch()
     {
         _switch?.Toggle();

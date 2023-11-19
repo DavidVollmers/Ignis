@@ -120,7 +120,7 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         builder.OpenComponent<CascadingValue<RadioGroupOption<T>>>(0);
-        builder.AddAttribute(1, nameof(CascadingValue<RadioGroupOption<T>>.IsFixed), true);
+        builder.AddAttribute(1, nameof(CascadingValue<RadioGroupOption<T>>.IsFixed), value: true);
         builder.AddAttribute(2, nameof(CascadingValue<RadioGroupOption<T>>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddAttribute(3, nameof(CascadingValue<RadioGroupOption<T>>.ChildContent), (RenderFragment)(builder =>
@@ -128,7 +128,6 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
             builder.OpenAs(4, this);
             builder.AddMultipleAttributes(5, Attributes!);
             if (AsElement != null) builder.AddElementReferenceCapture(6, e => Element = e);
-            // ReSharper disable once VariableHidesOuterVariable
             builder.AddChildContentFor(7, this, ChildContent);
 
             if (AsComponent != null && AsComponent != typeof(Fragment))
@@ -152,23 +151,22 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
                 RadioGroup.Options[0].Check();
                 break;
             case "ArrowDown":
-            {
-                var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) + 1;
-                if (index < RadioGroup.Options.Length) RadioGroup.Options[index].Check();
-                else RadioGroup.Options[0].Check();
-                break;
-            }
+                {
+                    var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) + 1;
+                    if (index < RadioGroup.Options.Length) RadioGroup.Options[index].Check();
+                    else RadioGroup.Options[0].Check();
+                    break;
+                }
             case "ArrowUp":
-            {
-                var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) - 1;
-                if (index >= 0) RadioGroup.Options[index].Check();
-                else RadioGroup.Options[^1].Check();
-                break;
-            }
+                {
+                    var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) - 1;
+                    if (index >= 0) RadioGroup.Options[index].Check();
+                    else RadioGroup.Options[^1].Check();
+                    break;
+                }
         }
     }
 
-    /// <inheritdoc />
     public void Check()
     {
         RadioGroup.CheckValue(Value);
@@ -189,13 +187,11 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
         Check();
     }
 
-    /// <inheritdoc />
     public void SetLabel(RadioGroupLabel label)
     {
         _label = label ?? throw new ArgumentNullException(nameof(label));
     }
 
-    /// <inheritdoc />
     public void SetDescription(RadioGroupDescription description)
     {
         _description = description ?? throw new ArgumentNullException(nameof(description));
