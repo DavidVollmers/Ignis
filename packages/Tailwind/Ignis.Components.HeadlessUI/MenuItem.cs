@@ -3,73 +3,20 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class MenuItem : IgnisComponentBase, IDynamicParentComponent<MenuItem>, IDisposable
+public sealed class MenuItem : DynamicComponentBase<MenuItem>, IDisposable
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
-    /// <inheritdoc />
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
     [CascadingParameter] public Menu Menu { get; set; } = null!;
 
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<MenuItem>? _ { get; set; }
-
     [Parameter] public RenderFragment<MenuItem>? ChildContent { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
-    {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc />
     public bool IsActive => Menu.ActiveItem == this;
 
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public MenuItem()
+    public MenuItem() : base(typeof(Fragment))
     {
-        AsComponent = typeof(Fragment);
-
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
             () => new KeyValuePair<string, object?>("tabindex", -1),
             () => new KeyValuePair<string, object?>("role", "menuitem"),
@@ -105,7 +52,6 @@ public sealed class MenuItem : IgnisComponentBase, IDynamicParentComponent<MenuI
         builder.CloseAs(this);
     }
 
-    /// <inheritdoc />
     public void Click()
     {
         var @event = new ComponentEvent();

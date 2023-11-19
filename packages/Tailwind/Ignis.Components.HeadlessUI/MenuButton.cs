@@ -5,75 +5,22 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class MenuButton : IgnisComponentBase, IDynamicParentComponent<MenuButton>
+public sealed class MenuButton : DynamicComponentBase<MenuButton>
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
-    /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
 
-    /// <inheritdoc />
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
     [CascadingParameter] public Menu Menu { get; set; } = null!;
 
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<MenuButton>? _ { get; set; }
-
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    public MenuButton() : base("button")
     {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public MenuButton()
-    {
-        AsElement = "button";
-
         //TODO aria-controls
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
             () => new KeyValuePair<string, object?>("id", Id ?? Menu.Id + "-button"),
             () => new KeyValuePair<string, object?>("aria-haspopup", "true"),

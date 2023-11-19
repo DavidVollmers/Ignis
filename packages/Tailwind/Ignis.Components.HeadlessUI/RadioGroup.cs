@@ -4,38 +4,11 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroup<T> : IgnisComponentBase, IDynamicParentComponent<RadioGroup<T>>
+public sealed class RadioGroup<T> : DynamicComponentBase<RadioGroup<T>>
 {
     private readonly IList<RadioGroupOption<T>> _options = new List<RadioGroupOption<T>>();
-    private readonly AttributeCollection _attributes;
 
     private RadioGroupLabel? _label;
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
 
     /// <summary>
     /// The checked value.
@@ -49,50 +22,22 @@ public sealed class RadioGroup<T> : IgnisComponentBase, IDynamicParentComponent<
     [Parameter]
     public EventCallback<T?> ValueChanged { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<RadioGroup<T>>? _ { get; set; }
-
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    /// <summary>
-    /// Additional attributes to be applied to the radio group.
-    /// </summary>
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
-    {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc />
     public RadioGroupOption<T>[] Options => _options.ToArray();
 
-    /// <inheritdoc />
     public RadioGroupOption<T>? ActiveOption { get; private set; }
 
-    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-radiogroup-" + Guid.NewGuid().ToString("N");
 
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public RadioGroup()
+    public RadioGroup() : base("div")
     {
-        AsElement = "div";
-
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
             () => new KeyValuePair<string, object?>("id", Id),
             () => new KeyValuePair<string, object?>("role", "radiogroup"),
             () => new KeyValuePair<string, object?>("aria-labelledby",
-                _label == null ? null : _label.Id ?? Id + "-label")
+                _label == null ? null : _label.Id ?? Id + "-label"),
         });
     }
 

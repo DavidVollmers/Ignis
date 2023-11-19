@@ -3,38 +3,8 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroupDescription : IgnisRigidComponentBase, IDynamicParentComponent<RadioGroupDescription>
+public sealed class RadioGroupDescription : DynamicComponentBase<RadioGroupDescription>
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
-    /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
 
@@ -42,40 +12,18 @@ public sealed class RadioGroupDescription : IgnisRigidComponentBase, IDynamicPar
 
     [CascadingParameter] public RadioGroupOption<object>? RadioGroupOption { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<RadioGroupDescription>? _ { get; set; }
-
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    public RadioGroupDescription() : base("div")
     {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public RadioGroupDescription()
-    {
-        AsElement = "div";
-
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id ?? RadioGroup.Id + "-description")
+            () => new KeyValuePair<string, object?>("id", Id ?? RadioGroup.Id + "-description"),
         });
     }
 
     /// <inheritdoc />
-    protected override void OnRender()
+    protected override void OnInitialized()
     {
         if (RadioGroup == null)
         {
