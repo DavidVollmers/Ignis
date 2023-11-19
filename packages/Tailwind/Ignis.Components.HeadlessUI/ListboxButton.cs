@@ -13,10 +13,10 @@ public sealed class ListboxButton : DynamicComponentBase<ListboxButton>, IAriaCo
     [Parameter]
     public string? Id { get; set; }
 
-    [Parameter]
-    public EventCallback<IComponentEvent> OnClick { get; set; }
+    [Parameter] public EventCallback<IComponentEvent> OnClick { get; set; }
 
-    [CascadingParameter] public Listbox<object> Listbox { get; set; } = null!;
+    [CascadingParameter(Name = nameof(Listbox<object>))]
+    public IAriaPopup Listbox { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -30,9 +30,9 @@ public sealed class ListboxButton : DynamicComponentBase<ListboxButton>, IAriaCo
             () => new KeyValuePair<string, object?>("aria-expanded", Listbox.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type",
                 string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
-            () => new KeyValuePair<string, object?>("aria-labelledby", Listbox.GetId(Listbox.Label)),
-            () => new KeyValuePair<string, object?>("aria-controls",
-                Listbox.IsOpen ? Listbox.GetId(Listbox.Controlled) : null),
+            () => new KeyValuePair<string, object?>("aria-labelledby", Listbox.GetId(Listbox.Label)), () =>
+                new KeyValuePair<string, object?>("aria-controls",
+                    Listbox.IsOpen ? Listbox.GetId(Listbox.Controlled) : null),
         });
     }
 

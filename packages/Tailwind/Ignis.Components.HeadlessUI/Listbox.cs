@@ -97,6 +97,7 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
     {
         builder.OpenComponent<CascadingValue<Listbox<T>>>(0);
         builder.AddAttribute(1, nameof(CascadingValue<Listbox<T>>.IsFixed), value: true);
+        builder.AddAttribute(1, nameof(CascadingValue<Listbox<T>>.Name), nameof(Listbox<T>));
         builder.AddAttribute(2, nameof(CascadingValue<Listbox<T>>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddAttribute(3, nameof(CascadingValue<Listbox<T>>.ChildContent), (RenderFragment)(builder =>
@@ -122,6 +123,8 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
 
     /// <inheritdoc />
     public ListboxOption<T>? ActiveDescendant { get; private set; }
+
+    IAriaComponentDescendant? IAriaPopup.ActiveDescendant => ActiveDescendant;
 
     /// <inheritdoc />
     public IAriaComponentPart? Controlled { get; set; }

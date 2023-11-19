@@ -49,27 +49,27 @@ public sealed class DialogOutlet : ContentHostBase, IDynamicComponent
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, AdditionalAttributes!);
+        builder.OpenComponent<CascadingValue<IContentHost>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<IContentHost>.IsFixed), value: true);
+        builder.AddAttribute(2, nameof(CascadingValue<IContentHost>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.AddAttribute(3, nameof(CascadingValue<IContentHost>.ChildContent), (RenderFragment)(builder =>
         {
-            builder.OpenComponent<CascadingValue<IContentHost>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IContentHost>.IsFixed), value: true);
-            builder.AddAttribute(5, nameof(CascadingValue<IContentHost>.Value), this);
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, AdditionalAttributes!);
             // ReSharper disable once VariableHidesOuterVariable
-            builder.AddAttribute(6, nameof(CascadingValue<IContentHost>.ChildContent), (RenderFragment)(builder =>
+            builder.AddContentFor(6, this, builder =>
             {
                 foreach (var dialog in Components)
                 {
                     builder.AddContent(7, dialog.Content);
                 }
-            }));
+            });
 
-            builder.CloseComponent();
-        });
+            builder.CloseAs(this);
+        }));
 
-        builder.CloseAs(this);
+        builder.CloseComponent();
     }
 
     /// <inheritdoc />

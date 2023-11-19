@@ -11,7 +11,8 @@ public sealed class ListboxOptions : DynamicComponentBase<ListboxOptions>, IAria
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public Listbox<object> Listbox { get; set; } = null!;
+    [CascadingParameter(Name = nameof(Listbox<object>))]
+    public IAriaPopup Listbox { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
