@@ -117,7 +117,7 @@ public static class IgnisComponentExtensions
                                                                 i.GetGenericTypeDefinition() ==
                                                                 typeof(IDynamicParentComponent<>)))
             throw new InvalidOperationException(
-                $"You cannot use {nameof(AddContentFor)} with a {nameof(IDynamicParentComponent<IDynamicComponent>)}. Use {nameof(AddChildContentFor)} instead.");
+                $"You cannot use {nameof(AddContentFor)} with a IDynamicParentComponent. Use {nameof(AddChildContentFor)} instead.");
         AddContentForCore(builder, sequence, dynamicComponent, content);
     }
 

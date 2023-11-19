@@ -55,7 +55,7 @@ public sealed class DialogOutlet : ContentHostBase, IDynamicComponent
         builder.AddContentFor(2, this, builder =>
         {
             builder.OpenComponent<CascadingValue<IContentHost>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IContentHost>.IsFixed), true);
+            builder.AddAttribute(4, nameof(CascadingValue<IContentHost>.IsFixed), value: true);
             builder.AddAttribute(5, nameof(CascadingValue<IContentHost>.Value), this);
             // ReSharper disable once VariableHidesOuterVariable
             builder.AddAttribute(6, nameof(CascadingValue<IContentHost>.ChildContent), (RenderFragment)(builder =>

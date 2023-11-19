@@ -2,7 +2,7 @@
 
 namespace Ignis.Components;
 
-public interface IDynamicParentComponent<T> : IDynamicComponent where T : IDynamicComponent
+public interface IDynamicParentComponent<T> : IDynamicComponent where T : IDynamicParentComponent<T>
 {
     RenderFragment<T>? _ { get; set; }
 

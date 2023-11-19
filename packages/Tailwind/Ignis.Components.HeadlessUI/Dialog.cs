@@ -149,7 +149,7 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDynamicParentCo
     protected override void BuildContentRenderTree(RenderTreeBuilder builder)
     {
         if (!_isOpen) return;
-        
+
         builder.OpenComponent<CascadingValue<Dialog>>(0);
         builder.AddAttribute(1, nameof(CascadingValue<Dialog>.IsFixed), value: true);
         builder.AddAttribute(2, nameof(CascadingValue<Dialog>.Value), this);

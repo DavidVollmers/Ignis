@@ -117,7 +117,6 @@ public sealed class ListboxOption<T> : IgnisComponentBase, IDynamicParentCompone
         builder.CloseAs(this);
     }
 
-    /// <inheritdoc />
     public void Click()
     {
         var @event = new ComponentEvent();
