@@ -149,21 +149,21 @@ public sealed class Dialog : IgnisContentProviderComponentBase, IDynamicParentCo
     protected override void BuildContentRenderTree(RenderTreeBuilder builder)
     {
         if (!_isOpen) return;
-
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
+        
+        builder.OpenComponent<CascadingValue<Dialog>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<Dialog>.IsFixed), value: true);
+        builder.AddAttribute(2, nameof(CascadingValue<Dialog>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.AddAttribute(3, nameof(CascadingValue<Dialog>.ChildContent), (RenderFragment)(builder =>
         {
-            builder.OpenComponent<CascadingValue<Dialog>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<Dialog>.IsFixed), value: true);
-            builder.AddAttribute(5, nameof(CascadingValue<Dialog>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<Dialog>.ChildContent), this.GetChildContent(ChildContent));
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, Attributes!);
+            builder.AddChildContentFor(6, this, ChildContent);
 
-            builder.CloseComponent();
-        });
+            builder.CloseAs(this);
+        }));
 
-        builder.CloseAs(this);
+        builder.CloseComponent();
     }
 
     /// <inheritdoc />
