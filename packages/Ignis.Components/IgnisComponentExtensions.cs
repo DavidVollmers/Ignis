@@ -77,7 +77,7 @@ public static class IgnisComponentExtensions
         }
     }
 
-    public static RenderFragment? GetChildContent<T>(this T dynamicComponent, RenderFragment<T>? childContent)
+    private static RenderFragment? GetChildContent<T>(this T dynamicComponent, RenderFragment<T>? childContent)
         where T : IDynamicParentComponent<T>
     {
         return GetChildContent(dynamicComponent, childContent?.Invoke(dynamicComponent));

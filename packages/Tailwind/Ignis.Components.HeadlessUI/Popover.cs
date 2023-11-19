@@ -62,7 +62,6 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicPare
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-popover-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
@@ -82,29 +81,27 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicPare
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
+        builder.OpenComponent<CascadingValue<Popover>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<Popover>.IsFixed), value: true);
+        builder.AddAttribute(2, nameof(CascadingValue<Popover>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.AddAttribute(3, nameof(CascadingValue<Popover>.ChildContent), (RenderFragment)(builder =>
         {
-            builder.OpenComponent<CascadingValue<Popover>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<Popover>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<Popover>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<Popover>.ChildContent), this.GetChildContent(ChildContent));
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, Attributes!);
+            builder.AddChildContentFor(6, this, ChildContent);
 
-            builder.CloseComponent();
-        });
+            builder.CloseAs(this);
+        }));
 
-        builder.CloseAs(this);
+        builder.CloseComponent();
     }
 
-    /// <inheritdoc />
     public void SetButton(PopoverButton button)
     {
         _button = button ?? throw new ArgumentNullException(nameof(button));
     }
 
-    /// <inheritdoc />
     public void SetPanel(PopoverPanel panel)
     {
         _panel = panel ?? throw new ArgumentNullException(nameof(panel));

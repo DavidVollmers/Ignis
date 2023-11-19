@@ -60,12 +60,11 @@ You **should** set a default for either the `AsElement` or `AsComponent` propert
 dynamic component without caring about the dynamic part.
 
 To build the render tree of a dynamic component, you **can** use
-the `OpenAs`, `CloseAs`, `AddContentFor`, `AddChildContentFor<TContext, TDynamic>`
-and `GetChildContent<TContext, TDynamic>` methods.
+the `OpenAs`, `CloseAs`, `AddContentFor`, `AddChildContentFor<TContext, TDynamic>` methods.
 
 ```csharp
 // Example implmentation of the <Dynamic> component. (This is deviating from the actual implementation)
-public sealed class Dynamic : IgnisRigidComponentBase, IDynamicParentComponent
+public sealed class Dynamic : IgnisComponentBase, IDynamicParentComponent<Dynamic>
 {
     private Type? _asComponent;
     private string? _asElement;
