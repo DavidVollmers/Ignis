@@ -2,8 +2,8 @@
 
 namespace Ignis.Components;
 
-public abstract class IgnisDynamicComponentBase<T> : IgnisComponentBase, IDynamicParentComponent<T>
-    where T : IgnisDynamicComponentBase<T>
+public abstract class DynamicComponentBase<T> : IgnisComponentBase, IDynamicParentComponent<T>
+    where T : DynamicComponentBase<T>
 {
     private const string AttributesNotSetExceptionMessage =
         "Dynamic component attributes not set. Please use the SetAttributes method in the component's constructor.";
@@ -55,12 +55,12 @@ public abstract class IgnisDynamicComponentBase<T> : IgnisComponentBase, IDynami
 
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => _attributes;
 
-    protected IgnisDynamicComponentBase(string asElement)
+    protected DynamicComponentBase(string asElement)
     {
         _asElement = asElement ?? throw new ArgumentNullException(nameof(asElement));
     }
 
-    protected IgnisDynamicComponentBase(Type asComponent)
+    protected DynamicComponentBase(Type asComponent)
     {
         _asComponent = asComponent ?? throw new ArgumentNullException(nameof(asComponent));
     }

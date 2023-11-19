@@ -6,7 +6,7 @@ namespace Ignis.Components.HeadlessUI;
 /// <summary>
 /// Renders a dialog which can be opened and closed.
 /// </summary>
-public sealed class Dialog : IgnisContentProviderComponentBase, IDynamicParentComponent<Dialog>, IOpenClose,
+public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog>, IOpenClose,
     IHandleAfterRender
 {
     private readonly AttributeCollection _attributes;

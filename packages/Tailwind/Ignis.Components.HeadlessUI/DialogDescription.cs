@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DialogDescription : IgnisDynamicComponentBase<DialogDescription>
+public sealed class DialogDescription : DynamicComponentBase<DialogDescription>
 {
     [Parameter] public string? Id { get; set; }
 

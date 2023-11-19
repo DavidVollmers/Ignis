@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components;
 
-public sealed class Dynamic : IgnisDynamicComponentBase<Dynamic>
+public sealed class Dynamic : DynamicComponentBase<Dynamic>
 {
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
