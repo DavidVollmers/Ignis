@@ -5,38 +5,8 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOption<T> : IgnisComponentBase, IDynamicParentComponent<ListboxOption<T>>,
-    IAriaComponentDescendant, IDisposable
+public sealed class ListboxOption<T> : DynamicComponentBase<ListboxOption<T>>, IAriaComponentDescendant, IDisposable
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
     /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
@@ -47,38 +17,16 @@ public sealed class ListboxOption<T> : IgnisComponentBase, IDynamicParentCompone
 
     [Parameter, EditorRequired] public T? Value { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<ListboxOption<T>>? _ { get; set; }
-
     [Parameter] public RenderFragment<ListboxOption<T>>? ChildContent { get; set; }
-
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
-    {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
 
     /// <inheritdoc />
     public bool IsActive => Listbox.ActiveDescendant == this;
 
     public bool IsSelected => Listbox.IsValueSelected(Value);
 
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public ListboxOption()
+    public ListboxOption() : base("li")
     {
-        AsElement = "li";
-
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
             () => new KeyValuePair<string, object?>("id", Listbox.GetId(this)),
             () => new KeyValuePair<string, object?>("tabindex", -1),

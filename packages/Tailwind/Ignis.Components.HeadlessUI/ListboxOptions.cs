@@ -5,70 +5,19 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComponent<ListboxOptions>,
-    IAriaComponentPart
+public sealed class ListboxOptions : DynamicComponentBase<ListboxOptions>, IAriaComponentPart
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
     /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
 
     [CascadingParameter] public Listbox<object> Listbox { get; set; } = null!;
 
-    [Parameter]
-    public RenderFragment<ListboxOptions>? _ { get; set; }
-
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    public ListboxOptions() : base("ul")
     {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public ListboxOptions()
-    {
-        AsElement = "ul";
-
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
             () => new KeyValuePair<string, object?>("id", Listbox.GetId(this)),
             () => new KeyValuePair<string, object?>("tabindex", -1),
@@ -80,7 +29,7 @@ public sealed class ListboxOptions : IgnisRigidComponentBase, IDynamicParentComp
     }
 
     /// <inheritdoc />
-    protected override void OnRender()
+    protected override void OnInitialized()
     {
         if (Listbox == null)
         {

@@ -4,70 +4,19 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentComponent<ListboxLabel>, IAriaComponentPart
+public sealed class ListboxLabel : DynamicComponentBase<ListboxLabel>, IAriaComponentPart
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
     /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
 
     [CascadingParameter] public Listbox<object> Listbox { get; set; } = null!;
 
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<ListboxLabel>? _ { get; set; }
-
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    public ListboxLabel() : base("label")
     {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public ListboxLabel()
-    {
-        AsElement = "label";
-
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
             () => new KeyValuePair<string, object?>("id", Listbox.GetId(this)), () =>
                 new KeyValuePair<string, object?>("onclick",
@@ -76,7 +25,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IDynamicParentCompon
     }
 
     /// <inheritdoc />
-    protected override void OnRender()
+    protected override void OnInitialized()
     {
         if (Listbox == null)
         {

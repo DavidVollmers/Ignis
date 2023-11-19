@@ -4,70 +4,18 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentComponent<DisclosureButton>
+public sealed class DisclosureButton : DynamicComponentBase<DisclosureButton>, IDynamicParentComponent<DisclosureButton>
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
-    /// <inheritdoc />
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
     [CascadingParameter] public Disclosure Disclosure { get; set; } = null!;
 
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<DisclosureButton>? _ { get; set; }
-
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    public DisclosureButton() : base("button")
     {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public DisclosureButton()
-    {
-        AsElement = "button";
-
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("aria-expanded", Disclosure.IsOpen.ToString().ToLowerInvariant()),
@@ -80,7 +28,7 @@ public sealed class DisclosureButton : IgnisRigidComponentBase, IDynamicParentCo
     }
 
     /// <inheritdoc />
-    protected override void OnRender()
+    protected override void OnInitialized()
     {
         if (Disclosure == null)
         {
