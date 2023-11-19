@@ -3,69 +3,24 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class SwitchGroup : IgnisRigidComponentBase, IDynamicParentComponent<SwitchGroup>
+public sealed class SwitchGroup : DynamicComponentBase<SwitchGroup>
 {
-    private Type? _asComponent;
-    private string? _asElement;
     private Switch? _switch;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<SwitchGroup>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    /// <summary>
-    /// Additional attributes to be applied to the switch group.
-    /// </summary>
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
-
-    /// <inheritdoc />
     public SwitchLabel? Label { get; private set; }
 
-    /// <inheritdoc />
     public SwitchDescription? Description { get; private set; }
 
-    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-switch-" + Guid.NewGuid().ToString("N");
 
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
-
-    public SwitchGroup()
+    public SwitchGroup() : base(typeof(Fragment))
     {
-        AsComponent = typeof(Fragment);
+        SetAttributes(new[]
+        {
+            () => new KeyValuePair<string, object?>("id", Id),
+        });
     }
 
     /// <inheritdoc />

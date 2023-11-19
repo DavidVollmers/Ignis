@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Transition : TransitionBase, IDynamicParentComponent<Transition>, IContentProvider, IDisposable
+public sealed class Transition : TransitionBase<Transition>, IContentProvider, IDisposable
 {
     private readonly IList<TransitionChild> _children = new List<TransitionChild>();
     private readonly IList<Dialog> _dialogs = new List<Dialog>();
@@ -11,34 +11,8 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
     private bool _transitioningTo;
     private bool _didRenderOnce;
     private bool _showInitially;
-    private Type? _asComponent;
-    private string? _asElement;
     private bool _isHosted;
     private bool _show;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
 
     [Parameter]
     public bool Show
@@ -68,17 +42,7 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
 
     [CascadingParameter] public Disclosure? Disclosure { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<Transition>? _ { get; set; }
-
     [Parameter] public RenderFragment<Transition>? ChildContent { get; set; }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
 
     /// <inheritdoc />
     public RenderFragment Content => BuildContentRenderTree;
@@ -88,9 +52,9 @@ public sealed class Transition : TransitionBase, IDynamicParentComponent<Transit
 
     [Inject] public IContentRegistry ContentRegistry { get; set; } = null!;
 
-    public Transition()
+    public Transition() : base("div")
     {
-        AsElement = "div";
+        SetAttributes(ArraySegment<Func<KeyValuePair<string, object?>>>.Empty);
     }
 
     /// <inheritdoc />

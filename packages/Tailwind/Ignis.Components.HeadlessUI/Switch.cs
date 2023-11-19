@@ -3,38 +3,8 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Switch : IgnisComponentBase, IDynamicParentComponent<Switch>
+public sealed class Switch : DynamicComponentBase<Switch>
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
-    /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
 
@@ -42,42 +12,16 @@ public sealed class Switch : IgnisComponentBase, IDynamicParentComponent<Switch>
 
     [Parameter] public EventCallback<bool> CheckedChanged { get; set; }
 
-    /// <inheritdoc />
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
     [CascadingParameter] public SwitchGroup? SwitchGroup { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<Switch>? _ { get; set; }
-
     [Parameter] public RenderFragment<Switch>? ChildContent { get; set; }
 
-    /// <summary>
-    /// Additional attributes to be applied to the switch.
-    /// </summary>
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    public Switch() : base("button")
     {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public Switch()
-    {
-        AsElement = "button";
-
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
             () => new KeyValuePair<string, object?>("id",
                 Id != null || SwitchGroup != null ? Id ?? SwitchGroup?.Id + "-button" : null),
@@ -91,7 +35,7 @@ public sealed class Switch : IgnisComponentBase, IDynamicParentComponent<Switch>
                 new KeyValuePair<string, object?>("aria-labelledby",
                     SwitchGroup?.Label == null ? null : SwitchGroup.Label.Id ?? SwitchGroup.Id + "-label"),
             () => new KeyValuePair<string, object?>("aria-describedby",
-                SwitchGroup?.Description == null ? null : SwitchGroup.Description.Id ?? SwitchGroup.Id + "-description")
+                SwitchGroup?.Description == null ? null : SwitchGroup.Description.Id ?? SwitchGroup.Id + "-description"),
         });
     }
 
@@ -111,7 +55,6 @@ public sealed class Switch : IgnisComponentBase, IDynamicParentComponent<Switch>
         builder.CloseAs(this);
     }
 
-    /// <inheritdoc />
     public void Toggle()
     {
         var __ = CheckedChanged.InvokeAsync(Checked = !Checked);

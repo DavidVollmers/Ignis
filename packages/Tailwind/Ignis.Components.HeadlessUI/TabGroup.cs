@@ -3,72 +3,25 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class TabGroup : IgnisComponentBase, IDynamicParentComponent<TabGroup>
+public sealed class TabGroup : DynamicComponentBase<TabGroup>
 {
     private readonly IList<TabPanel> _tabPanels = new List<TabPanel>();
     private readonly IList<Tab> _tabs = new List<Tab>();
 
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
-    /// <inheritdoc />
     [Parameter]
     public int DefaultIndex { get; set; }
 
-    /// <inheritdoc />
     [Parameter]
     public int SelectedIndex { get; set; }
 
     [Parameter] public EventCallback<int> SelectedIndexChanged { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<TabGroup>? _ { get; set; }
-
     [Parameter] public RenderFragment<TabGroup>? ChildContent { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
-
-    /// <inheritdoc />
     public Tab[] Tabs => _tabs.ToArray();
 
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
-
-    public TabGroup()
+    public TabGroup() : base(typeof(Fragment))
     {
-        AsComponent = typeof(Fragment);
     }
 
     /// <inheritdoc />

@@ -3,73 +3,22 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class TabPanel : IgnisComponentBase, IDynamicParentComponent<TabPanel>, IDisposable
+public sealed class TabPanel : DynamicComponentBase<TabPanel>, IDisposable
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
     [CascadingParameter] public TabGroup TabGroup { get; set; } = null!;
 
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<TabPanel>? _ { get; set; }
-
     [Parameter] public RenderFragment<TabPanel>? ChildContent { get; set; }
-
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
-    {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
 
     /// <inheritdoc />
     public bool IsSelected => TabGroup.IsTabPanelSelected(this);
 
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public TabPanel()
+    public TabPanel() : base("div")
     {
-        AsElement = "div";
-
         //TODO aria-labelledby
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
             () => new KeyValuePair<string, object?>("role", "tabpanel"),
-            () => new KeyValuePair<string, object?>("tabindex", IsSelected ? 0 : -1)
+            () => new KeyValuePair<string, object?>("tabindex", IsSelected ? 0 : -1),
         });
     }
 
