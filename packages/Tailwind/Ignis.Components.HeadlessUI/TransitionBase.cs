@@ -26,9 +26,6 @@ public abstract class TransitionBase<T> : DynamicComponentBase<T>, ICssClass, IH
 
     [Parameter] public string? LeaveTo { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
-
     /// <inheritdoc />
     public string? CssClass
     {
@@ -49,14 +46,14 @@ public abstract class TransitionBase<T> : DynamicComponentBase<T>, ICssClass, IH
         }
     }
 
-    /// <inheritdoc cref="IDynamicComponent" />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes
+    /// <inheritdoc cref="DynamicComponentBase{T}" />
+    public new IEnumerable<KeyValuePair<string, object?>>? Attributes
     {
         get
         {
-            if (AdditionalAttributes != null)
+            if (base.Attributes != null)
             {
-                foreach (var attribute in AdditionalAttributes)
+                foreach (var attribute in base.Attributes)
                 {
                     if (string.Equals(attribute.Key, "class", StringComparison.OrdinalIgnoreCase)) continue;
 

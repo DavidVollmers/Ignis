@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
@@ -37,7 +38,7 @@ public sealed class Transition : TransitionBase<Transition>, IContentProvider, I
 
     [CascadingParameter] public Menu? Menu { get; set; }
 
-    [CascadingParameter] public Listbox<object>? Listbox { get; set; }
+    [CascadingParameter(Name = nameof(Listbox<object>))] public IAriaPopup? Listbox { get; set; }
 
     [CascadingParameter] public Popover? Popover { get; set; }
 
@@ -48,7 +49,6 @@ public sealed class Transition : TransitionBase<Transition>, IContentProvider, I
     /// <inheritdoc />
     public RenderFragment Content => BuildContentRenderTree;
 
-    /// <inheritdoc />
     public bool HasOutletDialogs => _dialogs.Any(d => !d.IgnoreOutlet);
 
     [Inject] public IContentRegistry ContentRegistry { get; set; } = null!;
