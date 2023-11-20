@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
@@ -6,7 +7,7 @@ namespace Ignis.Components.HeadlessUI;
 /// <summary>
 /// Renders a dialog which can be opened and closed.
 /// </summary>
-public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog>, IOpenClose,
+public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog>, IAriaModal,
     IHandleAfterRender
 {
     private readonly AttributeCollection _attributes;
@@ -81,9 +82,9 @@ public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog
         set => _attributes.AdditionalAttributes = value;
     }
 
-    public DialogDescription? Description { get; private set; }
+    public IAriaComponentPart? Description { get; set; }
 
-    public DialogTitle? Title { get; private set; }
+    public IAriaComponentPart? Label { get; set; }
 
     public string Id { get; } = "ignis-hui-dialog-" + Guid.NewGuid().ToString("N");
 
@@ -107,12 +108,11 @@ public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog
 
         _attributes = new AttributeCollection(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id),
+            () => new KeyValuePair<string, object?>("id", GetId(this)),
             () => new KeyValuePair<string, object?>("role", "dialog"),
-            () => new KeyValuePair<string, object?>("aria-modal", "true"), () => new KeyValuePair<string, object?>(
-                "aria-labelledby", Title == null ? null : Title.Id ?? Id + "-title"),
-            () => new KeyValuePair<string, object?>("aria-describedby",
-                Description == null ? null : Description.Id ?? Id + "-description")
+            () => new KeyValuePair<string, object?>("aria-modal", "true"), 
+            () => new KeyValuePair<string, object?>("aria-labelledby", GetId(Label)),
+            () => new KeyValuePair<string, object?>("aria-describedby", GetId(Description)),
         });
     }
 
@@ -122,6 +122,20 @@ public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog
         Transition?.AddDialog(this);
 
         base.OnInitialized();
+    }
+
+    /// <inheritdoc />
+    public string? GetId(IAriaComponentPart? componentPart)
+    {
+        if (componentPart == null) return null;
+
+        if (componentPart.Id != null) return componentPart.Id;
+        
+        if (componentPart == Label) return Id + "-label";
+
+        if (componentPart == Description) return Id + "-description";
+        
+        return null;
     }
 
     /// <inheritdoc />
@@ -209,17 +223,7 @@ public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog
         Update(async);
     }
 
-    public void SetTitle(DialogTitle title)
-    {
-        Title = title ?? throw new ArgumentNullException(nameof(title));
-    }
-
-    public void SetDescription(DialogDescription description)
-    {
-        Description = description ?? throw new ArgumentNullException(nameof(description));
-    }
-
-    public void CloseFromTransition(Action? continueWith = null)
+    internal void CloseFromTransition(Action? continueWith = null)
     {
         CloseCore(continueWith, async: true);
     }

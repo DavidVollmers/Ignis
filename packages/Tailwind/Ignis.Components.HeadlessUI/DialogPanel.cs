@@ -16,7 +16,7 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent<Di
         {
             yield return this;
 
-            if (Dialog.Title != null) yield return Dialog.Title;
+            if (Dialog.Label != null) yield return Dialog.Label;
 
             if (Dialog.Description != null) yield return Dialog.Description;
         }

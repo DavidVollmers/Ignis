@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DialogDescription : DynamicComponentBase<DialogDescription>
+public sealed class DialogDescription : DynamicComponentBase<DialogDescription>, IAriaComponentPart
 {
     [Parameter] public string? Id { get; set; }
 
@@ -13,7 +14,7 @@ public sealed class DialogDescription : DynamicComponentBase<DialogDescription>
 
     public DialogDescription() : base("p")
     {
-        SetAttributes(new[] { () => new KeyValuePair<string, object?>("id", Id ?? Dialog.Id + "-description"), });
+        SetAttributes(new[] { () => new KeyValuePair<string, object?>("id", Dialog.GetId(this)), });
     }
 
     /// <inheritdoc />
@@ -25,7 +26,7 @@ public sealed class DialogDescription : DynamicComponentBase<DialogDescription>
                 $"{nameof(DialogDescription)} must be used inside a {nameof(HeadlessUI.Dialog)}.");
         }
 
-        Dialog.SetDescription(this);
+        Dialog.Description = this;
     }
 
     /// <inheritdoc />
