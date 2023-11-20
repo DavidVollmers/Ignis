@@ -110,7 +110,7 @@ public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog
         {
             () => new KeyValuePair<string, object?>("id", GetId(this)),
             () => new KeyValuePair<string, object?>("role", "dialog"),
-            () => new KeyValuePair<string, object?>("aria-modal", "true"), 
+            () => new KeyValuePair<string, object?>("aria-modal", "true"),
             () => new KeyValuePair<string, object?>("aria-labelledby", GetId(Label)),
             () => new KeyValuePair<string, object?>("aria-describedby", GetId(Description)),
         });
@@ -130,11 +130,11 @@ public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog
         if (componentPart == null) return null;
 
         if (componentPart.Id != null) return componentPart.Id;
-        
+
         if (componentPart == Label) return Id + "-label";
 
         if (componentPart == Description) return Id + "-description";
-        
+
         return null;
     }
 

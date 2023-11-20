@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DisclosurePanel : DynamicComponentBase<DisclosurePanel>, IDynamicParentComponent<DisclosurePanel>
+public sealed class DisclosurePanel : DynamicComponentBase<DisclosurePanel>, IAriaComponentPart
 {
-    [Parameter]
-    public string? Id { get; set; }
+    [Parameter] public string? Id { get; set; }
 
     [CascadingParameter] public Disclosure Disclosure { get; set; } = null!;
 
@@ -14,10 +14,7 @@ public sealed class DisclosurePanel : DynamicComponentBase<DisclosurePanel>, IDy
 
     public DisclosurePanel() : base("div")
     {
-        SetAttributes(new[]
-        {
-            () => new KeyValuePair<string, object?>("id", Id ?? Disclosure.Id + "-panel"),
-        });
+        SetAttributes(new[] { () => new KeyValuePair<string, object?>("id", Disclosure.GetId(this)), });
     }
 
     /// <inheritdoc />
@@ -29,7 +26,7 @@ public sealed class DisclosurePanel : DynamicComponentBase<DisclosurePanel>, IDy
                 $"{nameof(DisclosurePanel)} must be used inside a {nameof(HeadlessUI.Disclosure)}.");
         }
 
-        Disclosure.SetPanel(this);
+        Disclosure.Controlled = this;
     }
 
     /// <inheritdoc />

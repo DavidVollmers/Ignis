@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Disclosure>
+public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Disclosure>, IAriaControl
 {
-    private DisclosureButton? _button;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -14,9 +14,9 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDynamicP
     {
         get
         {
-            if (_button != null) yield return _button;
+            if (Button != null) yield return Button;
 
-            if (Panel != null) yield return Panel;
+            if (Controlled != null) yield return Controlled;
         }
     }
 
@@ -53,7 +53,9 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDynamicP
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    public DisclosurePanel? Panel { get; private set; }
+    public DisclosureButton? Button { get; set; }
+    
+    public IAriaComponentPart? Controlled { get; set; }
 
     public string Id { get; } = "ignis-hui-disclosure-" + Guid.NewGuid().ToString("N");
 
@@ -90,13 +92,15 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDynamicP
         builder.CloseComponent();
     }
 
-    public void SetPanel(DisclosurePanel panel)
+    /// <inheritdoc />
+    public string? GetId(IAriaComponentPart? componentPart)
     {
-        Panel = panel ?? throw new ArgumentNullException(nameof(panel));
-    }
+        if (componentPart == null) return null;
 
-    public void SetButton(DisclosureButton button)
-    {
-        _button = button ?? throw new ArgumentNullException(nameof(button));
+        if (componentPart.Id != null) return componentPart.Id;
+
+        if (componentPart == Controlled) return Id + "-panel";
+
+        return null;
     }
 }

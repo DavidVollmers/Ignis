@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DisclosureButton : DynamicComponentBase<DisclosureButton>, IDynamicParentComponent<DisclosureButton>
+public sealed class DisclosureButton : DynamicComponentBase<DisclosureButton>
 {
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
@@ -21,9 +22,7 @@ public sealed class DisclosureButton : DynamicComponentBase<DisclosureButton>, I
             () => new KeyValuePair<string, object?>("aria-expanded", Disclosure.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type",
                 string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
-            () =>
-                new KeyValuePair<string, object?>("aria-controls",
-                    Disclosure.Panel == null ? null : Disclosure.Panel.Id ?? Disclosure.Id + "-panel"),
+            () => new KeyValuePair<string, object?>("aria-controls", Disclosure.GetId(Disclosure.Controlled)),
         });
     }
 
@@ -36,7 +35,7 @@ public sealed class DisclosureButton : DynamicComponentBase<DisclosureButton>, I
                 $"{nameof(DisclosureButton)} must be used inside a {nameof(HeadlessUI.Disclosure)}.");
         }
 
-        Disclosure.SetButton(this);
+        Disclosure.Button = this;
     }
 
     /// <inheritdoc />

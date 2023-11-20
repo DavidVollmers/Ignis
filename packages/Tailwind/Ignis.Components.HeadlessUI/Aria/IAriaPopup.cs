@@ -14,11 +14,9 @@ public interface IAriaPopup<T> : IAriaPopup where T : IAriaComponentDescendant
 }
 
 // Only needed to cascade a non-generic type to the non-generic parts. (e.g. Button, Label, etc.)
-public interface IAriaPopup : IAriaComponent, IOpenClose, IWithTransition, IFocus
+public interface IAriaPopup : IAriaControl, IOpenClose, IWithTransition, IFocus
 {
     IAriaComponentDescendant? ActiveDescendant { get; }
-
-    IAriaComponentPart? Controlled { get; set; }
 
     IAriaComponentPart? Button { get; set; }
 
