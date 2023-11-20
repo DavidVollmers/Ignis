@@ -26,7 +26,8 @@ public sealed class Transition : TransitionBase<Transition>, IContentProvider, I
 
             if (_transitioningTo == _show) return;
 
-            Trigger();
+            if (_show) EnterTransition();
+            else LeaveTransition();
         }
     }
 
@@ -116,10 +117,14 @@ public sealed class Transition : TransitionBase<Transition>, IContentProvider, I
         base.Update(async);
     }
 
-    public void Trigger(Action? continueWith = null)
+    public void Leave(Action? continueWith = null)
     {
-        if (_show) EnterTransition(continueWith);
-        else LeaveTransition(continueWith);
+        LeaveTransition(continueWith);
+    }
+
+    public void Enter(Action? continueWith)
+    {
+        EnterTransition(continueWith);
     }
 
     /// <inheritdoc />

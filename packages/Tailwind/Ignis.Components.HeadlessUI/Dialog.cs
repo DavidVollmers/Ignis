@@ -193,7 +193,7 @@ public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog
 
         if (Transition != null)
         {
-            Transition.Trigger(() => CloseCore(continueWith, async: true));
+            Transition.Leave(() => CloseCore(continueWith, async: true));
             return;
         }
 

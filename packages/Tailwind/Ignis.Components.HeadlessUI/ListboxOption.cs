@@ -13,7 +13,8 @@ public sealed class ListboxOption<T> : DynamicComponentBase<ListboxOption<T>>, I
 
     [Parameter] public EventCallback<IComponentEvent> OnClick { get; set; }
 
-    [CascadingParameter] public Listbox<T> Listbox { get; set; } = null!;
+    [CascadingParameter(Name = nameof(Listbox<T>))]
+    public Listbox<T> Listbox { get; set; } = null!;
 
     [Parameter, EditorRequired] public T? Value { get; set; }
 
