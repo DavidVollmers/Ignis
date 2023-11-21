@@ -9,7 +9,7 @@ public sealed class PopoverPanel : DynamicComponentBase<PopoverPanel>, IAriaComp
     /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
-    
+
     [CascadingParameter] public Popover Popover { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }

@@ -66,7 +66,7 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicPare
     public PopoverButton? Button { get; set; }
 
     public IAriaComponentPart? Controlled { get; set; }
-    
+
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
