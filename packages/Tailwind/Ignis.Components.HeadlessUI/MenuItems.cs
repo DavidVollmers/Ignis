@@ -8,7 +8,7 @@ public sealed class MenuItems : DynamicComponentBase<MenuItems>, IAriaComponentP
 {
     /// <inheritdoc />
     [Parameter] public string? Id { get; set; }
-    
+
     [CascadingParameter] public Menu Menu { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
@@ -19,7 +19,7 @@ public sealed class MenuItems : DynamicComponentBase<MenuItems>, IAriaComponentP
         {
             () => new KeyValuePair<string, object?>("id", Menu.GetId(this)),
             () => new KeyValuePair<string, object?>("tabindex", -1),
-            () => new KeyValuePair<string, object?>("role", "menu"), 
+            () => new KeyValuePair<string, object?>("role", "menu"),
             () => new KeyValuePair<string, object?>("aria-labelledby", Menu.GetId(Menu.Button)),
             () => new KeyValuePair<string, object?>("aria-activedescendant", Menu.GetId(Menu.ActiveDescendant)),
         });

@@ -8,7 +8,7 @@ public sealed class MenuItem : DynamicComponentBase<MenuItem>, IAriaDescendant, 
 {
     /// <inheritdoc />
     [Parameter] public string? Id { get; set; }
-    
+
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
