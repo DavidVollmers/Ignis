@@ -1,17 +1,26 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class PopoverPanel : DynamicComponentBase<PopoverPanel>
+public sealed class PopoverPanel : DynamicComponentBase<PopoverPanel>, IAriaComponentPart
 {
+    /// <inheritdoc />
+    [Parameter]
+    public string? Id { get; set; }
+    
     [CascadingParameter] public Popover Popover { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     public PopoverPanel() : base("div")
     {
-        SetAttributes(new[] { () => new KeyValuePair<string, object?>("tabindex", -1) });
+        SetAttributes(new[]
+        {
+            () => new KeyValuePair<string, object?>("id", Popover.GetId(this)),
+            () => new KeyValuePair<string, object?>("tabindex", -1),
+        });
     }
 
     /// <inheritdoc />
@@ -23,7 +32,7 @@ public sealed class PopoverPanel : DynamicComponentBase<PopoverPanel>
                 $"{nameof(PopoverPanel)} must be used inside a {nameof(HeadlessUI.Popover)}.");
         }
 
-        Popover.SetPanel(this);
+        Popover.Controlled = this;
     }
 
     /// <inheritdoc />

@@ -1,13 +1,17 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class PopoverButton : DynamicComponentBase<PopoverButton>
+public sealed class PopoverButton : DynamicComponentBase<PopoverButton>, IAriaComponentPart
 {
+    /// <inheritdoc />
     [Parameter]
-    public EventCallback<IComponentEvent> OnClick { get; set; }
+    public string? Id { get; set; }
+
+    [Parameter] public EventCallback<IComponentEvent> OnClick { get; set; }
 
     [CascadingParameter] public Popover Popover { get; set; } = null!;
 
@@ -15,13 +19,15 @@ public sealed class PopoverButton : DynamicComponentBase<PopoverButton>
 
     public PopoverButton() : base("button")
     {
-        //TODO aria-controls
         SetAttributes(new[]
         {
+            () => new KeyValuePair<string, object?>("id", Popover.GetId(this)),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("aria-expanded", Popover.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type",
                 string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
+            () => new KeyValuePair<string, object?>("aria-controls",
+                Popover.IsOpen ? Popover.GetId(Popover.Controlled) : null),
         });
     }
 
@@ -34,7 +40,7 @@ public sealed class PopoverButton : DynamicComponentBase<PopoverButton>
                 $"{nameof(PopoverButton)} must be used inside a {nameof(HeadlessUI.Popover)}.");
         }
 
-        Popover.SetButton(this);
+        Popover.Button = this;
     }
 
     /// <inheritdoc />

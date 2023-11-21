@@ -1,14 +1,13 @@
-﻿using Ignis.Components.Web;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Popover>
+public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Popover>, IAriaControl
 {
-    private PopoverPanel? _panel;
-    private PopoverButton? _button;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -17,9 +16,9 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicPare
     {
         get
         {
-            if (_button != null) yield return _button;
+            if (Button != null) yield return Button;
 
-            if (_panel != null) yield return _panel;
+            if (Controlled != null) yield return Controlled;
         }
     }
 
@@ -64,6 +63,10 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicPare
 
     public string Id { get; } = "ignis-hui-popover-" + Guid.NewGuid().ToString("N");
 
+    public PopoverButton? Button { get; set; }
+
+    public IAriaComponentPart? Controlled { get; set; }
+    
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
 
@@ -97,16 +100,6 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicPare
         builder.CloseComponent();
     }
 
-    public void SetButton(PopoverButton button)
-    {
-        _button = button ?? throw new ArgumentNullException(nameof(button));
-    }
-
-    public void SetPanel(PopoverPanel panel)
-    {
-        _panel = panel ?? throw new ArgumentNullException(nameof(panel));
-    }
-
     /// <inheritdoc />
     protected override void OnBlur()
     {
@@ -119,5 +112,19 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicPare
         if (!string.Equals(eventArgs.Code, "Escape", StringComparison.Ordinal)) return;
 
         Close();
+    }
+
+    /// <inheritdoc />
+    public string? GetId(IAriaComponentPart? componentPart)
+    {
+        if (componentPart == null) return null;
+
+        if (componentPart.Id != null) return componentPart.Id;
+
+        if (componentPart == Button) return Id + "-button";
+
+        if (componentPart == Controlled) return Id + "-controlled";
+
+        return null;
     }
 }
