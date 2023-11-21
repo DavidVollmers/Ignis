@@ -1,17 +1,17 @@
-﻿using Ignis.Components.Web;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class MenuButton : DynamicComponentBase<MenuButton>
+public sealed class MenuButton : DynamicComponentBase<MenuButton>, IAriaComponentPart
 {
-    [Parameter]
-    public string? Id { get; set; }
+    /// <inheritdoc />
+    [Parameter] public string? Id { get; set; }
 
-    [Parameter]
-    public EventCallback<IComponentEvent> OnClick { get; set; }
+    [Parameter] public EventCallback<IComponentEvent> OnClick { get; set; }
 
     [CascadingParameter] public Menu Menu { get; set; } = null!;
 
@@ -19,14 +19,15 @@ public sealed class MenuButton : DynamicComponentBase<MenuButton>
 
     public MenuButton() : base("button")
     {
-        //TODO aria-controls
         SetAttributes(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id ?? Menu.Id + "-button"),
+            () => new KeyValuePair<string, object?>("id", Menu.GetId(this)),
             () => new KeyValuePair<string, object?>("aria-haspopup", "true"),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("aria-expanded", Menu.IsOpen.ToString().ToLowerInvariant()),
-            () => new KeyValuePair<string, object?>("type", string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
+            () => new KeyValuePair<string, object?>("type",
+                string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
+            () => new KeyValuePair<string, object?>("aria-controls", Menu.IsOpen ? Menu.GetId(Menu.Controlled) : null),
         });
     }
 
@@ -39,7 +40,7 @@ public sealed class MenuButton : DynamicComponentBase<MenuButton>
                 $"{nameof(MenuButton)} must be used inside a {nameof(HeadlessUI.Menu)}.");
         }
 
-        Menu.SetButton(this);
+        Menu.Button = this;
     }
 
     /// <inheritdoc />

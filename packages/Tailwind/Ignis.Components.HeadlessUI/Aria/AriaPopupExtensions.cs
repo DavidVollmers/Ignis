@@ -21,7 +21,7 @@ internal static class AriaPopupExtensions
     public static void OnKeyDown(this IAriaPopup popup, KeyboardEventArgs eventArgs)
     {
         var descendants = popup.Descendants.ToArray();
-        
+
         switch (eventArgs.Code)
         {
             case "Escape":
@@ -45,19 +45,19 @@ internal static class AriaPopupExtensions
                 else if (!popup.IsOpen) popup.Open();
                 break;
             case "ArrowDown":
-            {
-                var index = Array.IndexOf(descendants, popup.ActiveDescendant) + 1;
-                if (index < descendants.Length) popup.SetActiveDescendant(descendants[index], isActive: true);
-                else if (!popup.IsOpen) popup.Open();
-                break;
-            }
+                {
+                    var index = Array.IndexOf(descendants, popup.ActiveDescendant) + 1;
+                    if (index < descendants.Length) popup.SetActiveDescendant(descendants[index], isActive: true);
+                    else if (!popup.IsOpen) popup.Open();
+                    break;
+                }
             case "ArrowUp":
-            {
-                var index = Array.IndexOf(descendants, popup.ActiveDescendant) - 1;
-                if (index >= 0) popup.SetActiveDescendant(descendants[index], isActive: true);
-                else if (!popup.IsOpen) popup.Open();
-                break;
-            }
+                {
+                    var index = Array.IndexOf(descendants, popup.ActiveDescendant) - 1;
+                    if (index >= 0) popup.SetActiveDescendant(descendants[index], isActive: true);
+                    else if (!popup.IsOpen) popup.Open();
+                    break;
+                }
         }
     }
 }

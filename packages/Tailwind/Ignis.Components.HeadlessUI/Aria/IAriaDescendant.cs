@@ -3,4 +3,6 @@
 public interface IAriaDescendant : IAriaComponentPart
 {
     bool IsActive { get; }
+
+    void Click();
 }

@@ -66,6 +66,7 @@ public sealed class ListboxOption<T> : DynamicComponentBase<ListboxOption<T>>, I
         builder.CloseAs(this);
     }
 
+    /// <inheritdoc />
     public void Click()
     {
         var @event = new ComponentEvent();
@@ -81,12 +82,12 @@ public sealed class ListboxOption<T> : DynamicComponentBase<ListboxOption<T>>, I
 
     private void OnMouseEnter()
     {
-        Listbox.SetOptionActive(this, isActive: true);
+        Listbox.SetActiveDescendant(this, isActive: true);
     }
 
     private void OnMouseLeave()
     {
-        Listbox.SetOptionActive(this, isActive: false);
+        Listbox.SetActiveDescendant(this, isActive: false);
     }
 
     public void Dispose()

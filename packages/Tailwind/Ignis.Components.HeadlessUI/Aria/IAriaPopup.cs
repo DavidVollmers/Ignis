@@ -17,7 +17,7 @@ public interface IAriaPopup<T> : IAriaPopup where T : IAriaDescendant
 public interface IAriaPopup : IAriaControl, IOpenClose, IWithTransition, IFocus
 {
     IEnumerable<IAriaDescendant> Descendants { get; }
-    
+
     IAriaDescendant? ActiveDescendant { get; set; }
 
     IAriaComponentPart? Button { get; set; }

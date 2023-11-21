@@ -6,6 +6,9 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class MenuItem : DynamicComponentBase<MenuItem>, IAriaDescendant, IDisposable
 {
+    /// <inheritdoc />
+    [Parameter] public string? Id { get; set; }
+    
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
 
@@ -13,12 +16,14 @@ public sealed class MenuItem : DynamicComponentBase<MenuItem>, IAriaDescendant, 
 
     [Parameter] public RenderFragment<MenuItem>? ChildContent { get; set; }
 
+    /// <inheritdoc />
     public bool IsActive => Menu.ActiveDescendant == this;
 
     public MenuItem() : base(typeof(Fragment))
     {
         SetAttributes(new[]
         {
+            () => new KeyValuePair<string, object?>("id", Menu.GetId(this)),
             () => new KeyValuePair<string, object?>("tabindex", -1),
             () => new KeyValuePair<string, object?>("role", "menuitem"),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)), () =>
@@ -53,6 +58,7 @@ public sealed class MenuItem : DynamicComponentBase<MenuItem>, IAriaDescendant, 
         builder.CloseAs(this);
     }
 
+    /// <inheritdoc />
     public void Click()
     {
         var @event = new ComponentEvent();
@@ -66,12 +72,12 @@ public sealed class MenuItem : DynamicComponentBase<MenuItem>, IAriaDescendant, 
 
     private void OnMouseEnter()
     {
-        Menu.SetItemActive(this, true);
+        Menu.SetActiveDescendant(this, isActive: true);
     }
 
     private void OnMouseLeave()
     {
-        Menu.SetItemActive(this, false);
+        Menu.SetActiveDescendant(this, isActive: false);
     }
 
     public void Dispose()

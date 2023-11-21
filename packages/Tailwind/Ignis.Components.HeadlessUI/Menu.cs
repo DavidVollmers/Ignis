@@ -10,7 +10,7 @@ namespace Ignis.Components.HeadlessUI;
 public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Menu>, IAriaPopup<MenuItem>
 {
     #region Parameters
-    
+
     /// <inheritdoc />
     [Parameter]
     public string? AsElement
@@ -46,11 +46,11 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
-    
+
     #endregion Parameters
 
     #region Rendering
-    
+
     private Type? _asComponent;
     private string? _asElement;
 
@@ -87,13 +87,13 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
 
         builder.CloseComponent();
     }
-    
+
     #endregion Rendering
 
     #region ARIA
-    
+
     private readonly IList<MenuItem> _descendants = new List<MenuItem>();
-    
+
     private MenuItem? _activeDescendant;
 
     /// <inheritdoc />
@@ -167,11 +167,11 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
 
         return Id + "-item-" + index.ToString(CultureInfo.InvariantCulture);
     }
-    
+
     #endregion ARIA
 
     #region Focus
-    
+
     /// <inheritdoc />
     protected override IEnumerable<object> Targets
     {
@@ -199,11 +199,11 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
     {
         Close();
     }
-    
+
     #endregion Focus
 
     #region Menu
-    
+
     /// <inheritdoc />
     protected override void OnAfterOpen(Action? continueWith)
     {
@@ -218,6 +218,6 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
     {
         AriaPopupExtensions.OnKeyDown(this, eventArgs);
     }
-    
+
     #endregion Menu
 }

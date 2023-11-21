@@ -1,22 +1,27 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class MenuItems : DynamicComponentBase<MenuItems>
+public sealed class MenuItems : DynamicComponentBase<MenuItems>, IAriaComponentPart
 {
+    /// <inheritdoc />
+    [Parameter] public string? Id { get; set; }
+    
     [CascadingParameter] public Menu Menu { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     public MenuItems() : base("div")
     {
-        //TODO aria-active-descendant
         SetAttributes(new[]
         {
+            () => new KeyValuePair<string, object?>("id", Menu.GetId(this)),
             () => new KeyValuePair<string, object?>("tabindex", -1),
-            () => new KeyValuePair<string, object?>("role", "menu"), () => new KeyValuePair<string, object?>(
-                "aria-labelledby", Menu.Button == null ? null : Menu.Button.Id ?? Menu.Id + "-button")
+            () => new KeyValuePair<string, object?>("role", "menu"), 
+            () => new KeyValuePair<string, object?>("aria-labelledby", Menu.GetId(Menu.Button)),
+            () => new KeyValuePair<string, object?>("aria-activedescendant", Menu.GetId(Menu.ActiveDescendant)),
         });
     }
 
@@ -29,7 +34,7 @@ public sealed class MenuItems : DynamicComponentBase<MenuItems>
                 $"{nameof(MenuItems)} must be used inside a {nameof(HeadlessUI.Menu)}.");
         }
 
-        Menu.SetItems(this);
+        Menu.Controlled = this;
     }
 
     /// <inheritdoc />

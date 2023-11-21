@@ -117,7 +117,7 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
     #region ARIA
 
     private readonly IList<ListboxOption<T>> _descendants = new List<ListboxOption<T>>();
-    
+
     private ListboxOption<T>? _activeDescendant;
 
     /// <inheritdoc />
