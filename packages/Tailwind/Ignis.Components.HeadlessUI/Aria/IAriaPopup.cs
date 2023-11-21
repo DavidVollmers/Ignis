@@ -2,11 +2,11 @@
 
 namespace Ignis.Components.HeadlessUI.Aria;
 
-public interface IAriaPopup<T> : IAriaPopup where T : IAriaComponentDescendant
+public interface IAriaPopup<T> : IAriaPopup where T : IAriaDescendant
 {
-    IEnumerable<T> Descendants { get; }
+    new IEnumerable<T> Descendants { get; }
 
-    new T? ActiveDescendant { get; }
+    new T? ActiveDescendant { get; set; }
 
     void AddDescendant(T descendant);
 
@@ -16,7 +16,9 @@ public interface IAriaPopup<T> : IAriaPopup where T : IAriaComponentDescendant
 // Only needed to cascade a non-generic type to the non-generic parts. (e.g. Button, Label, etc.)
 public interface IAriaPopup : IAriaControl, IOpenClose, IWithTransition, IFocus
 {
-    IAriaComponentDescendant? ActiveDescendant { get; }
+    IEnumerable<IAriaDescendant> Descendants { get; }
+    
+    IAriaDescendant? ActiveDescendant { get; set; }
 
     IAriaComponentPart? Button { get; set; }
 

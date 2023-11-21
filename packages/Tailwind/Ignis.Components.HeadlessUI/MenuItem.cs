@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class MenuItem : DynamicComponentBase<MenuItem>, IDisposable
+public sealed class MenuItem : DynamicComponentBase<MenuItem>, IAriaDescendant, IDisposable
 {
     [Parameter]
     public EventCallback<IComponentEvent> OnClick { get; set; }
@@ -12,7 +13,7 @@ public sealed class MenuItem : DynamicComponentBase<MenuItem>, IDisposable
 
     [Parameter] public RenderFragment<MenuItem>? ChildContent { get; set; }
 
-    public bool IsActive => Menu.ActiveItem == this;
+    public bool IsActive => Menu.ActiveDescendant == this;
 
     public MenuItem() : base(typeof(Fragment))
     {
@@ -36,7 +37,7 @@ public sealed class MenuItem : DynamicComponentBase<MenuItem>, IDisposable
             throw new InvalidOperationException($"{nameof(MenuItem)} must be used inside a {nameof(HeadlessUI.Menu)}.");
         }
 
-        Menu.AddItem(this);
+        Menu.AddDescendant(this);
     }
 
     /// <inheritdoc />
@@ -75,6 +76,6 @@ public sealed class MenuItem : DynamicComponentBase<MenuItem>, IDisposable
 
     public void Dispose()
     {
-        Menu.RemoveItem(this);
+        Menu.RemoveDescendant(this);
     }
 }

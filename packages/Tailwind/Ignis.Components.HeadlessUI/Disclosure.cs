@@ -54,7 +54,7 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDynamicP
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     public DisclosureButton? Button { get; set; }
-    
+
     public IAriaComponentPart? Controlled { get; set; }
 
     public string Id { get; } = "ignis-hui-disclosure-" + Guid.NewGuid().ToString("N");

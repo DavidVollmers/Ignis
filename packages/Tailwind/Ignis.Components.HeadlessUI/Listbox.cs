@@ -117,14 +117,34 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
     #region ARIA
 
     private readonly IList<ListboxOption<T>> _descendants = new List<ListboxOption<T>>();
+    
+    private ListboxOption<T>? _activeDescendant;
+
+    /// <inheritdoc />
+    public string Id { get; } = "ignis-hui-listbox-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc />
     public IEnumerable<ListboxOption<T>> Descendants => _descendants;
 
-    /// <inheritdoc />
-    public ListboxOption<T>? ActiveDescendant { get; private set; }
+    IEnumerable<IAriaDescendant> IAriaPopup.Descendants => _descendants;
 
-    IAriaComponentDescendant? IAriaPopup.ActiveDescendant => ActiveDescendant;
+    /// <inheritdoc />
+    public ListboxOption<T>? ActiveDescendant
+    {
+        get => _activeDescendant;
+        set
+        {
+            _activeDescendant = value;
+
+            Update();
+        }
+    }
+
+    IAriaDescendant? IAriaPopup.ActiveDescendant
+    {
+        get => _activeDescendant;
+        set => ActiveDescendant = (ListboxOption<T>?)value;
+    }
 
     /// <inheritdoc />
     public IAriaComponentPart? Controlled { get; set; }
@@ -204,63 +224,9 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
         Close();
     }
 
-    /// <inheritdoc />
-    protected override void OnKeyDown(KeyboardEventArgs eventArgs)
-    {
-        switch (eventArgs.Code)
-        {
-            case "Escape":
-                Close();
-                break;
-            case "Space" or "Enter":
-                if (IsOpen)
-                {
-                    if (ActiveDescendant != null) ActiveDescendant.Click();
-                    else Close();
-                }
-                else
-                {
-                    Open();
-                }
-
-                break;
-            case "ArrowUp" when ActiveDescendant == null:
-            case "ArrowDown" when ActiveDescendant == null:
-                if (_descendants.Any()) SetOptionActive(_descendants[0], isActive: true);
-                else if (!IsOpen) Open();
-                break;
-            case "ArrowDown":
-                {
-                    var index = Array.IndexOf(_descendants.ToArray(), ActiveDescendant) + 1;
-                    if (index < _descendants.Count) SetOptionActive(_descendants[index], isActive: true);
-                    else if (!IsOpen) Open();
-                    break;
-                }
-            case "ArrowUp":
-                {
-                    var index = Array.IndexOf(_descendants.ToArray(), ActiveDescendant) - 1;
-                    if (index >= 0) SetOptionActive(_descendants[index], isActive: true);
-                    else if (!IsOpen) Open();
-                    break;
-                }
-        }
-    }
-
     #endregion Focus
 
     #region Listbox
-
-    /// <inheritdoc />
-    public string Id { get; } = "ignis-hui-listbox-" + Guid.NewGuid().ToString("N");
-
-    /// <inheritdoc />
-    protected override void OnAfterOpen(Action? continueWith)
-    {
-        var selectedOption = _descendants.FirstOrDefault(x => x.IsSelected);
-        if (selectedOption != null) SetOptionActive(selectedOption, isActive: true);
-
-        base.OnAfterOpen(continueWith);
-    }
 
     public bool IsValueSelected(T? value)
     {
@@ -274,20 +240,19 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
         Update();
     }
 
-    internal void SetOptionActive(ListboxOption<T> option, bool isActive)
+    /// <inheritdoc />
+    protected override void OnAfterOpen(Action? continueWith)
     {
-        if (option == null) throw new ArgumentNullException(nameof(option));
+        var selectedOption = _descendants.FirstOrDefault(x => x.IsSelected);
+        if (selectedOption != null) this.SetActiveDescendant(selectedOption, isActive: true);
 
-        if (isActive)
-        {
-            ActiveDescendant = option;
-        }
-        else if (ActiveDescendant == option)
-        {
-            ActiveDescendant = null;
-        }
+        base.OnAfterOpen(continueWith);
+    }
 
-        Update();
+    /// <inheritdoc />
+    protected override void OnKeyDown(KeyboardEventArgs eventArgs)
+    {
+        AriaPopupExtensions.OnKeyDown(this, eventArgs);
     }
 
     #endregion Listbox

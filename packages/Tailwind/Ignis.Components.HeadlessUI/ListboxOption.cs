@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxOption<T> : DynamicComponentBase<ListboxOption<T>>, IAriaComponentDescendant, IDisposable
+public sealed class ListboxOption<T> : DynamicComponentBase<ListboxOption<T>>, IAriaDescendant, IDisposable
 {
     /// <inheritdoc />
     [Parameter]
