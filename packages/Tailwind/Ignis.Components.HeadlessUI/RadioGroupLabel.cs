@@ -14,7 +14,7 @@ public sealed class RadioGroupLabel : DynamicComponentBase<RadioGroupLabel>, IAr
     public IAriaLabeled RadioGroup { get; set; } = null!;
 
     [CascadingParameter(Name = nameof(RadioGroupOption<object>))]
-    public IAriaDescribed? RadioGroupOption { get; set; }
+    public IAriaLabeled? RadioGroupOption { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -22,7 +22,7 @@ public sealed class RadioGroupLabel : DynamicComponentBase<RadioGroupLabel>, IAr
     {
         SetAttributes(new[]
         {
-            () => new KeyValuePair<string, object?>("id", RadioGroup.GetId(this)), 
+            () => new KeyValuePair<string, object?>("id", RadioGroup.GetId(this)),
             () => new KeyValuePair<string, object?>("onclick",
                     RadioGroupOption != null ? EventCallback.Factory.Create(this, RadioGroupOption.FocusAsync) : null),
         });

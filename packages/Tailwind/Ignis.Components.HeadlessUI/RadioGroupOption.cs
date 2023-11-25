@@ -152,26 +152,28 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
     {
         if (!RadioGroup.Options.Any()) return;
 
+        var options = RadioGroup.Options.ToArray();
+
         switch (eventArgs.Code)
         {
             case "ArrowUp" when RadioGroup.ActiveOption == null:
             case "ArrowDown" when RadioGroup.ActiveOption == null:
-                RadioGroup.Options[0].Check();
+                options[0].Check();
                 break;
             case "ArrowDown":
-            {
-                var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) + 1;
-                if (index < RadioGroup.Options.Length) RadioGroup.Options[index].Check();
-                else RadioGroup.Options[0].Check();
-                break;
-            }
+                {
+                    var index = Array.IndexOf(options, RadioGroup.ActiveOption) + 1;
+                    if (index < options.Length) options[index].Check();
+                    else options[0].Check();
+                    break;
+                }
             case "ArrowUp":
-            {
-                var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) - 1;
-                if (index >= 0) RadioGroup.Options[index].Check();
-                else RadioGroup.Options[^1].Check();
-                break;
-            }
+                {
+                    var index = Array.IndexOf(options, RadioGroup.ActiveOption) - 1;
+                    if (index >= 0) options[index].Check();
+                    else options[^1].Check();
+                    break;
+                }
         }
     }
 

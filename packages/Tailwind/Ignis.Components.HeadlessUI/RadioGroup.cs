@@ -9,7 +9,7 @@ namespace Ignis.Components.HeadlessUI;
 public sealed class RadioGroup<T> : DynamicComponentBase<RadioGroup<T>>, IAriaComponent, IAriaLabeled
 {
     private readonly IList<RadioGroupOption<T>> _options = new List<RadioGroupOption<T>>();
-    
+
     private RadioGroupOption<T>? _activeOption;
 
     /// <summary>
@@ -34,7 +34,7 @@ public sealed class RadioGroup<T> : DynamicComponentBase<RadioGroup<T>>, IAriaCo
         set
         {
             _activeOption = value;
-            
+
             Update();
         }
     }
