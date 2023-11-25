@@ -1,8 +1,5 @@
 ﻿namespace Ignis.Components.HeadlessUI.Aria;
 
-public interface IAriaModal : IAriaComponent, IOpenClose
+public interface IAriaModal : IAriaComponent, IAriaLabeled, IAriaDescribed, IOpenClose
 {
-    IAriaComponentPart? Label { get; set; }
-
-    IAriaComponentPart? Description { get; set; }
 }

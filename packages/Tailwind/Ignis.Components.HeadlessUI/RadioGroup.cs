@@ -1,14 +1,16 @@
-﻿using Ignis.Components.Web;
+﻿using System.Globalization;
+using Ignis.Components.HeadlessUI.Aria;
+using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroup<T> : DynamicComponentBase<RadioGroup<T>>
+public sealed class RadioGroup<T> : DynamicComponentBase<RadioGroup<T>>, IAriaComponent, IAriaLabeled
 {
     private readonly IList<RadioGroupOption<T>> _options = new List<RadioGroupOption<T>>();
-
-    private RadioGroupLabel? _label;
+    
+    private RadioGroupOption<T>? _activeOption;
 
     /// <summary>
     /// The checked value.
@@ -24,20 +26,32 @@ public sealed class RadioGroup<T> : DynamicComponentBase<RadioGroup<T>>
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    public RadioGroupOption<T>[] Options => _options.ToArray();
+    public IEnumerable<RadioGroupOption<T>> Options => _options;
 
-    public RadioGroupOption<T>? ActiveOption { get; private set; }
+    public RadioGroupOption<T>? ActiveOption
+    {
+        get => _activeOption;
+        set
+        {
+            _activeOption = value;
+            
+            Update();
+        }
+    }
 
+    /// <inheritdoc />
+    public IAriaComponentPart Label { get; set; }
+
+    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-radiogroup-" + Guid.NewGuid().ToString("N");
 
     public RadioGroup() : base("div")
     {
         SetAttributes(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id),
+            () => new KeyValuePair<string, object?>("id", GetId(this)),
             () => new KeyValuePair<string, object?>("role", "radiogroup"),
-            () => new KeyValuePair<string, object?>("aria-labelledby",
-                _label == null ? null : _label.Id ?? Id + "-label"),
+            () => new KeyValuePair<string, object?>("aria-labelledby", GetId(Label)),
         });
     }
 
@@ -46,6 +60,7 @@ public sealed class RadioGroup<T> : DynamicComponentBase<RadioGroup<T>>
     {
         builder.OpenComponent<CascadingValue<RadioGroup<T>>>(0);
         builder.AddAttribute(1, nameof(CascadingValue<RadioGroup<T>>.IsFixed), value: true);
+        builder.AddAttribute(1, nameof(CascadingValue<RadioGroup<T>>.Name), nameof(RadioGroup<T>));
         builder.AddAttribute(2, nameof(CascadingValue<RadioGroup<T>>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
         builder.AddAttribute(3, nameof(CascadingValue<RadioGroup<T>>.ChildContent), (RenderFragment)(builder =>
@@ -60,6 +75,23 @@ public sealed class RadioGroup<T> : DynamicComponentBase<RadioGroup<T>>
         builder.CloseComponent();
     }
 
+    /// <inheritdoc />
+    public string? GetId(IAriaComponentPart? componentPart)
+    {
+        if (componentPart == null) return null;
+
+        if (componentPart.Id != null) return componentPart.Id;
+
+        if (componentPart == Label) return Id + "-label";
+
+        if (componentPart is not RadioGroupOption<T> option) return null;
+
+        var index = Array.IndexOf(_options.ToArray(), option);
+        if (index < 0) return null;
+
+        return Id + "-option-" + index.ToString(CultureInfo.InvariantCulture);
+    }
+
     public bool IsValueChecked<T1>(T1? value)
     {
         return value?.Equals(Value) ?? Value?.Equals(value) ?? false;
@@ -68,22 +100,6 @@ public sealed class RadioGroup<T> : DynamicComponentBase<RadioGroup<T>>
     public void CheckValue<T1>(T1? value)
     {
         var __ = ValueChanged.InvokeAsync(Value = (T?)(object?)value);
-
-        Update();
-    }
-
-    public void SetOptionActive(RadioGroupOption<T> option, bool isActive)
-    {
-        if (option == null) throw new ArgumentNullException(nameof(option));
-
-        if (isActive)
-        {
-            ActiveOption = option;
-        }
-        else if (ActiveOption == option)
-        {
-            ActiveOption = null;
-        }
 
         Update();
     }
@@ -100,10 +116,5 @@ public sealed class RadioGroup<T> : DynamicComponentBase<RadioGroup<T>>
         if (option == null) throw new ArgumentNullException(nameof(option));
 
         _options.Remove(option);
-    }
-
-    public void SetLabel(RadioGroupLabel label)
-    {
-        _label = label ?? throw new ArgumentNullException(nameof(label));
     }
 }

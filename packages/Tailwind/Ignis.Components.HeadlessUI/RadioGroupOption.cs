@@ -1,16 +1,16 @@
-﻿using Ignis.Components.Web;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComponent<RadioGroupOption<T>>
+public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComponent<RadioGroupOption<T>>,
+    IAriaLabeled, IAriaDescribed
 {
     private readonly AttributeCollection _attributes;
 
-    private RadioGroupDescription? _description;
-    private RadioGroupLabel? _label;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -21,14 +21,18 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
         {
             yield return this;
 
-            if (_label != null) yield return _label;
+            if (Label != null) yield return Label;
 
-            if (_description != null) yield return _description;
+            if (Description != null) yield return Description;
         }
     }
 
     /// <inheritdoc />
     protected override IEnumerable<string> KeysToCapture { get; } = new[] { "ArrowUp", "ArrowDown" };
+
+    /// <inheritdoc />
+    [Parameter]
+    public string? Id { get; set; }
 
     /// <inheritdoc />
     [Parameter]
@@ -56,9 +60,7 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
 
     [Parameter] public T? Value { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public EventCallback<IComponentEvent> OnClick { get; set; }
+    [Parameter] public EventCallback<IComponentEvent> OnClick { get; set; }
 
     [CascadingParameter] public RadioGroup<T> RadioGroup { get; set; } = null!;
 
@@ -75,11 +77,15 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc />
     public bool IsActive => RadioGroup.ActiveOption == this;
 
-    /// <inheritdoc />
     public bool IsChecked => RadioGroup.IsValueChecked(Value);
+
+    /// <inheritdoc />
+    public IAriaComponentPart? Label { get; set; }
+
+    /// <inheritdoc />
+    public IAriaComponentPart? Description { get; set; }
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
@@ -96,11 +102,13 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
 
         _attributes = new AttributeCollection(new[]
         {
+            () => new KeyValuePair<string, object?>("id", RadioGroup.GetId(this)),
             () => new KeyValuePair<string, object?>("role", "radio"),
             () => new KeyValuePair<string, object?>("tabindex", IsChecked ? 0 : -1),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("aria-checked", IsChecked.ToString().ToLowerInvariant()),
-            () => new KeyValuePair<string, object?>("aria-labelledby", _label?.Id)
+            () => new KeyValuePair<string, object?>("aria-labelledby", RadioGroup.GetId(Label)),
+            () => new KeyValuePair<string, object?>("aria-describedby", RadioGroup.GetId(Description)),
         });
     }
 
@@ -151,19 +159,19 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
                 RadioGroup.Options[0].Check();
                 break;
             case "ArrowDown":
-                {
-                    var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) + 1;
-                    if (index < RadioGroup.Options.Length) RadioGroup.Options[index].Check();
-                    else RadioGroup.Options[0].Check();
-                    break;
-                }
+            {
+                var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) + 1;
+                if (index < RadioGroup.Options.Length) RadioGroup.Options[index].Check();
+                else RadioGroup.Options[0].Check();
+                break;
+            }
             case "ArrowUp":
-                {
-                    var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) - 1;
-                    if (index >= 0) RadioGroup.Options[index].Check();
-                    else RadioGroup.Options[^1].Check();
-                    break;
-                }
+            {
+                var index = Array.IndexOf(RadioGroup.Options, RadioGroup.ActiveOption) - 1;
+                if (index >= 0) RadioGroup.Options[index].Check();
+                else RadioGroup.Options[^1].Check();
+                break;
+            }
         }
     }
 
@@ -171,7 +179,7 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
     {
         RadioGroup.CheckValue(Value);
 
-        RadioGroup.SetOptionActive(this, true);
+        RadioGroup.ActiveOption = this;
 
         var __ = FocusAsync();
     }
@@ -187,26 +195,16 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
         Check();
     }
 
-    public void SetLabel(RadioGroupLabel label)
-    {
-        _label = label ?? throw new ArgumentNullException(nameof(label));
-    }
-
-    public void SetDescription(RadioGroupDescription description)
-    {
-        _description = description ?? throw new ArgumentNullException(nameof(description));
-    }
-
     /// <inheritdoc />
     protected override void OnFocus()
     {
-        RadioGroup.SetOptionActive(this, true);
+        RadioGroup.ActiveOption = this;
     }
 
     /// <inheritdoc />
     protected override void OnBlur()
     {
-        RadioGroup.SetOptionActive(this, false);
+        if (RadioGroup.ActiveOption == this) RadioGroup.ActiveOption = null;
     }
 
     /// <inheritdoc />

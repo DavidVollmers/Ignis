@@ -1,25 +1,25 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroupDescription : DynamicComponentBase<RadioGroupDescription>
+public sealed class RadioGroupDescription : DynamicComponentBase<RadioGroupDescription>, IAriaComponentPart
 {
-    [Parameter]
-    public string? Id { get; set; }
+    /// <inheritdoc />
+    [Parameter] public string? Id { get; set; }
 
-    [CascadingParameter] public RadioGroup<object> RadioGroup { get; set; } = null!;
+    [CascadingParameter(Name = nameof(RadioGroup<object>))]
+    public IAriaLabeled RadioGroup { get; set; } = null!;
 
-    [CascadingParameter] public RadioGroupOption<object>? RadioGroupOption { get; set; }
+    [CascadingParameter(Name = nameof(RadioGroupOption<object>))]
+    public IAriaDescribed? RadioGroupOption { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     public RadioGroupDescription() : base("div")
     {
-        SetAttributes(new[]
-        {
-            () => new KeyValuePair<string, object?>("id", Id ?? RadioGroup.Id + "-description"),
-        });
+        SetAttributes(new[] { () => new KeyValuePair<string, object?>("id", Id ?? RadioGroup.Id + "-description"), });
     }
 
     /// <inheritdoc />
@@ -31,7 +31,7 @@ public sealed class RadioGroupDescription : DynamicComponentBase<RadioGroupDescr
                 $"{nameof(RadioGroupDescription)} must be used inside a {nameof(RadioGroup<object>)}.");
         }
 
-        RadioGroupOption?.SetDescription(this);
+        if (RadioGroupOption != null) RadioGroupOption.Description = this;
     }
 
     /// <inheritdoc />

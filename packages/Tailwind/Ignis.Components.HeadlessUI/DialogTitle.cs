@@ -6,6 +6,7 @@ namespace Ignis.Components.HeadlessUI;
 
 public sealed class DialogTitle : DynamicComponentBase<DialogTitle>, IAriaComponentPart
 {
+    /// <inheritdoc />
     [Parameter] public string? Id { get; set; }
 
     [CascadingParameter] public Dialog Dialog { get; set; } = null!;

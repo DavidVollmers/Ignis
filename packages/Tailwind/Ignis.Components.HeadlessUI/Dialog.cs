@@ -82,10 +82,13 @@ public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog
         set => _attributes.AdditionalAttributes = value;
     }
 
+    /// <inheritdoc />
     public IAriaComponentPart? Description { get; set; }
 
+    /// <inheritdoc />
     public IAriaComponentPart? Label { get; set; }
 
+    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-dialog-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />

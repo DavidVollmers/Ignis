@@ -1,16 +1,20 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroupLabel : DynamicComponentBase<RadioGroupLabel>
+public sealed class RadioGroupLabel : DynamicComponentBase<RadioGroupLabel>, IAriaComponentPart
 {
+    /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public RadioGroup<object> RadioGroup { get; set; } = null!;
+    [CascadingParameter(Name = nameof(RadioGroup<object>))]
+    public IAriaLabeled RadioGroup { get; set; } = null!;
 
-    [CascadingParameter] public RadioGroupOption<object>? RadioGroupOption { get; set; }
+    [CascadingParameter(Name = nameof(RadioGroupOption<object>))]
+    public IAriaDescribed? RadioGroupOption { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -18,9 +22,9 @@ public sealed class RadioGroupLabel : DynamicComponentBase<RadioGroupLabel>
     {
         SetAttributes(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id ?? RadioGroup.Id + "-label"), () =>
-                new KeyValuePair<string, object?>("onclick",
-                    RadioGroupOption != null ? EventCallback.Factory.Create(this, RadioGroupOption.FocusAsync) : null)
+            () => new KeyValuePair<string, object?>("id", RadioGroup.GetId(this)), 
+            () => new KeyValuePair<string, object?>("onclick",
+                    RadioGroupOption != null ? EventCallback.Factory.Create(this, RadioGroupOption.FocusAsync) : null),
         });
     }
 
@@ -35,11 +39,11 @@ public sealed class RadioGroupLabel : DynamicComponentBase<RadioGroupLabel>
 
         if (RadioGroupOption != null)
         {
-            RadioGroupOption.SetLabel(this);
+            RadioGroupOption.Label = this;
         }
         else
         {
-            RadioGroup.SetLabel(this);
+            RadioGroup.Label = this;
         }
     }
 
