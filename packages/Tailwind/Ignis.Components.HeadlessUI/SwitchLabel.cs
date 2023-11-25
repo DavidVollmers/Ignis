@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class SwitchLabel : DynamicComponentBase<SwitchLabel>
+public sealed class SwitchLabel : DynamicComponentBase<SwitchLabel>, IAriaComponentPart
 {
+    /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
 
@@ -16,7 +18,7 @@ public sealed class SwitchLabel : DynamicComponentBase<SwitchLabel>
     {
         SetAttributes(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id ?? SwitchGroup.Id + "-label"), () =>
+            () => new KeyValuePair<string, object?>("id", SwitchGroup.GetId(SwitchGroup.Label)), () =>
                 new KeyValuePair<string, object?>("onclick",
                     EventCallback.Factory.Create(this, SwitchGroup.ToggleSwitch)),
         });
@@ -31,7 +33,7 @@ public sealed class SwitchLabel : DynamicComponentBase<SwitchLabel>
                 $"{nameof(SwitchLabel)} must be used inside a {nameof(HeadlessUI.SwitchGroup)}.");
         }
 
-        SwitchGroup.SetLabel(this);
+        SwitchGroup.Label = this;
     }
 
     /// <inheritdoc />

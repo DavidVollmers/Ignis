@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Components.Web;
 namespace Ignis.Components.HeadlessUI;
 
 public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComponent<RadioGroupOption<T>>,
-    IAriaRadioGroupOption
+    IAriaCheckGroupOption
 {
     private readonly AttributeCollection _attributes;
 

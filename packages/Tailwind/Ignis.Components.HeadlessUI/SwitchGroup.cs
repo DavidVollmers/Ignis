@@ -1,25 +1,28 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class SwitchGroup : DynamicComponentBase<SwitchGroup>
+public sealed class SwitchGroup : DynamicComponentBase<SwitchGroup>, IAriaCheckGroup
 {
-    private Switch? _switch;
-
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    public SwitchLabel? Label { get; private set; }
+    /// <inheritdoc />
+    public IAriaComponentPart? Label { get; set; }
 
-    public SwitchDescription? Description { get; private set; }
+    public Switch? Switch { get; set; }
+    
+    public IAriaComponentPart? Description { get; set; }
 
+    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-switch-" + Guid.NewGuid().ToString("N");
 
     public SwitchGroup() : base(typeof(Fragment))
     {
         SetAttributes(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id),
+            () => new KeyValuePair<string, object?>("id", GetId(this)),
         });
     }
 
@@ -42,23 +45,22 @@ public sealed class SwitchGroup : DynamicComponentBase<SwitchGroup>
         builder.CloseComponent();
     }
 
-    public void SetSwitch(Switch @switch)
+    /// <inheritdoc />
+    public string? GetId(IAriaComponentPart? componentPart)
     {
-        _switch = @switch ?? throw new ArgumentNullException(nameof(@switch));
-    }
+        if (componentPart == null) return null;
 
-    public void SetLabel(SwitchLabel label)
-    {
-        Label = label ?? throw new ArgumentNullException(nameof(label));
-    }
+        if (componentPart.Id != null) return componentPart.Id;
 
-    public void SetDescription(SwitchDescription description)
-    {
-        Description = description ?? throw new ArgumentNullException(nameof(description));
+        if (componentPart == Label) return Id + "-label";
+        
+        if (componentPart == Switch) return Id + "-button";
+
+        return null;
     }
 
     public void ToggleSwitch()
     {
-        _switch?.Toggle();
+        Switch?.Toggle();
     }
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroup<T> : DynamicComponentBase<RadioGroup<T>>, IAriaRadioGroup
+public sealed class RadioGroup<T> : DynamicComponentBase<RadioGroup<T>>, IAriaCheckGroup
 {
     private readonly IList<RadioGroupOption<T>> _options = new List<RadioGroupOption<T>>();
 

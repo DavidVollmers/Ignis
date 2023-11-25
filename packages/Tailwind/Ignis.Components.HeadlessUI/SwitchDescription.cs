@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class SwitchDescription : DynamicComponentBase<SwitchDescription>
+public sealed class SwitchDescription : DynamicComponentBase<SwitchDescription>, IAriaComponentPart
 {
+    /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
 
@@ -16,7 +18,7 @@ public sealed class SwitchDescription : DynamicComponentBase<SwitchDescription>
     {
         SetAttributes(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id ?? SwitchGroup.Id + "-description"),
+            () => new KeyValuePair<string, object?>("id", SwitchGroup.GetId(SwitchGroup.Description)),
         });
     }
 
@@ -29,7 +31,7 @@ public sealed class SwitchDescription : DynamicComponentBase<SwitchDescription>
                 $"{nameof(SwitchDescription)} must be used inside a {nameof(HeadlessUI.SwitchGroup)}.");
         }
 
-        SwitchGroup.SetDescription(this);
+        SwitchGroup.Description = this;
     }
 
     /// <inheritdoc />

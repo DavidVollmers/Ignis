@@ -11,10 +11,10 @@ public sealed class RadioGroupLabel : DynamicComponentBase<RadioGroupLabel>, IAr
     public string? Id { get; set; }
 
     [CascadingParameter(Name = nameof(RadioGroup<object>))]
-    public IAriaRadioGroup RadioGroup { get; set; } = null!;
+    public IAriaCheckGroup RadioGroup { get; set; } = null!;
 
     [CascadingParameter(Name = nameof(RadioGroupOption<object>))]
-    public IAriaRadioGroupOption? RadioGroupOption { get; set; }
+    public IAriaCheckGroupOption? RadioGroupOption { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 

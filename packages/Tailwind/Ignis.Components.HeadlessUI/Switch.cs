@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Switch : DynamicComponentBase<Switch>
+public sealed class Switch : DynamicComponentBase<Switch>, IAriaComponentPart
 {
+    /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
 
@@ -12,8 +14,7 @@ public sealed class Switch : DynamicComponentBase<Switch>
 
     [Parameter] public EventCallback<bool> CheckedChanged { get; set; }
 
-    [Parameter]
-    public EventCallback<IComponentEvent> OnClick { get; set; }
+    [Parameter] public EventCallback<IComponentEvent> OnClick { get; set; }
 
     [CascadingParameter] public SwitchGroup? SwitchGroup { get; set; }
 
@@ -23,26 +24,23 @@ public sealed class Switch : DynamicComponentBase<Switch>
     {
         SetAttributes(new[]
         {
-            () => new KeyValuePair<string, object?>("id",
-                Id != null || SwitchGroup != null ? Id ?? SwitchGroup?.Id + "-button" : null),
+            () => new KeyValuePair<string, object?>("id", SwitchGroup?.GetId(this) ?? Id),
             () => new KeyValuePair<string, object?>("tabindex", "0"),
             () => new KeyValuePair<string, object?>("role", "switch"),
             () => new KeyValuePair<string, object?>("aria-checked", Checked.ToString().ToLowerInvariant()),
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
-            () => new KeyValuePair<string, object?>("type",
-                string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)), () =>
+                new KeyValuePair<string, object?>("type",
+                    string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
             () =>
-                new KeyValuePair<string, object?>("aria-labelledby",
-                    SwitchGroup?.Label == null ? null : SwitchGroup.Label.Id ?? SwitchGroup.Id + "-label"),
-            () => new KeyValuePair<string, object?>("aria-describedby",
-                SwitchGroup?.Description == null ? null : SwitchGroup.Description.Id ?? SwitchGroup.Id + "-description"),
+                new KeyValuePair<string, object?>("aria-labelledby", SwitchGroup?.GetId(SwitchGroup?.Label)),
+            () => new KeyValuePair<string, object?>("aria-describedby", SwitchGroup?.GetId(SwitchGroup?.Description)),
         });
     }
 
     /// <inheritdoc />
     protected override void OnInitialized()
     {
-        SwitchGroup?.SetSwitch(this);
+        if (SwitchGroup != null) SwitchGroup.Switch = this;
     }
 
     /// <inheritdoc />
