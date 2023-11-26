@@ -129,3 +129,28 @@ public sealed class Dynamic : IgnisComponentBase, IDynamicParentComponent<Dynami
     }
 }
 ```
+
+You can also use the `DynamicComponentBase` class to simplify the implementation of a dynamic component.
+
+```csharp
+public sealed class Dynamic : DynamicComponentBase<Dynamic>
+{
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    // Make sure to provide a default for either the AsElement or AsComponent property via the base constructor.
+    public Dynamic() : base(typeof(Fragment))
+    {
+        // Use the SetAttributes method to set the attributes of your component. (Even if there are none)
+        SetAttributes(ArraySegment<Func<KeyValuePair<string, object?>>>.Empty);
+    }
+
+    protected override void BuildRenderTree(RenderTreeBuilder builder)
+    {
+        builder.OpenAs(0, this);
+        builder.AddMultipleAttributes(1, Attributes!);
+        builder.AddChildContentFor(2, this, ChildContent);
+
+        builder.CloseAs(this);
+    }
+}
+```
