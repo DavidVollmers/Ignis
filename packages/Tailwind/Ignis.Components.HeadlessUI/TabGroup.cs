@@ -23,7 +23,7 @@ public sealed class TabGroup : DynamicComponentBase<TabGroup>, IAriaComponent
     [Parameter] public RenderFragment<TabGroup>? ChildContent { get; set; }
 
     public IEnumerable<Tab> Tabs => _tabs.ToArray();
-    
+
     public IEnumerable<TabPanel> TabPanels => _tabPanels.ToArray();
 
     public TabGroup() : base(typeof(Fragment))
@@ -82,7 +82,7 @@ public sealed class TabGroup : DynamicComponentBase<TabGroup>, IAriaComponent
 
         return null;
     }
-    
+
     public bool IsTabSelected(Tab tab)
     {
         if (tab == null) throw new ArgumentNullException(nameof(tab));

@@ -5,7 +5,6 @@ namespace Ignis.Components.HeadlessUI;
 
 public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase, IOpenClose, IWithTransition
 {
-    private Transition? _transition;
     private bool _isOpen;
 
     /// <inheritdoc />
@@ -27,6 +26,9 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
     [Inject] private IFrameTracker FrameTracker { get; set; } = null!;
 
     /// <inheritdoc />
+    public Transition? Transition { get; set; }
+    
+    /// <inheritdoc />
     public void Open(Action? continueWith = null)
     {
         if (_isOpen || FrameTracker.IsPending)
@@ -37,8 +39,8 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
 
         _ = IsOpenChanged.InvokeAsync(_isOpen = true);
 
-        if (_transition != null)
-            FrameTracker.ExecuteOnNextFrame(this, () => _transition.Enter(() => OnAfterOpen(continueWith)));
+        if (Transition != null)
+            FrameTracker.ExecuteOnNextFrame(this, () => Transition.Enter(() => OnAfterOpen(continueWith)));
         else if (continueWith != null) FrameTracker.ExecuteOnNextFrame(this, () => OnAfterOpen(continueWith));
 
         Update();
@@ -60,9 +62,9 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
             return;
         }
 
-        if (_transition != null)
+        if (Transition != null)
         {
-            _transition.Leave(() => CloseCore(continueWith, async: true));
+            Transition.Leave(() => CloseCore(continueWith, async: true));
             return;
         }
 
@@ -76,12 +78,6 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
         if (continueWith != null) FrameTracker.ExecuteOnNextFrame(this, continueWith);
 
         Update(async);
-    }
-
-    /// <inheritdoc />
-    public void SetTransition(Transition transition)
-    {
-        _transition = transition ?? throw new ArgumentNullException(nameof(transition));
     }
 
     /// <inheritdoc />

@@ -61,13 +61,13 @@ public sealed class Transition : TransitionBase<Transition>, IContentProvider, I
     /// <inheritdoc />
     protected override void OnInitialized()
     {
-        Menu?.SetTransition(this);
+        if (Menu != null) Menu.Transition = this;
+        
+        if (Listbox != null) Listbox.Transition = this;
 
-        Listbox?.SetTransition(this);
+        if (Popover != null) Popover.Transition = this;
 
-        Popover?.SetTransition(this);
-
-        Disclosure?.SetTransition(this);
+        if (Disclosure != null) Disclosure.Transition = this;
     }
 
     /// <inheritdoc />
