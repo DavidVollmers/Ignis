@@ -3,7 +3,7 @@
   "configurations": {
     "ignis-e2e-website-stapp": {
       "appLocation": ".",
-      "outputLocation": "bin/Release/net7.0/publish/wwwroot",
+      "outputLocation": "bin/Release/net8.0/publish/wwwroot",
       "appBuildCommand": "dotnet publish -c Release",
       "run": "dotnet watch run",
       "appDevserverUrl": "http://localhost:8000",
