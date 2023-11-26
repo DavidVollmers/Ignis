@@ -1,27 +1,34 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Globalization;
+using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class TabGroup : DynamicComponentBase<TabGroup>
+public sealed class TabGroup : DynamicComponentBase<TabGroup>, IAriaComponent
 {
     private readonly IList<TabPanel> _tabPanels = new List<TabPanel>();
     private readonly IList<Tab> _tabs = new List<Tab>();
 
+    /// <inheritdoc />
     [Parameter]
-    public int DefaultIndex { get; set; }
+    public string? Id { get; set; }
 
-    [Parameter]
-    public int SelectedIndex { get; set; }
+    [Parameter] public int DefaultIndex { get; set; }
+
+    [Parameter] public int SelectedIndex { get; set; }
 
     [Parameter] public EventCallback<int> SelectedIndexChanged { get; set; }
 
     [Parameter] public RenderFragment<TabGroup>? ChildContent { get; set; }
 
-    public Tab[] Tabs => _tabs.ToArray();
+    public IEnumerable<Tab> Tabs => _tabs.ToArray();
+    
+    public IEnumerable<TabPanel> TabPanels => _tabPanels.ToArray();
 
     public TabGroup() : base(typeof(Fragment))
     {
+        SetAttributes(new[] { () => new KeyValuePair<string, object?>("id", GetId(this)), });
     }
 
     /// <inheritdoc />
@@ -51,6 +58,31 @@ public sealed class TabGroup : DynamicComponentBase<TabGroup>
         builder.CloseComponent();
     }
 
+    public string? GetId(IAriaComponentPart? componentPart)
+    {
+        if (componentPart == null) return null;
+
+        if (componentPart.Id != null) return componentPart.Id;
+
+        if (componentPart is Tab tab)
+        {
+            var index = Array.IndexOf(_tabs.ToArray(), tab);
+            if (index < 0) return null;
+
+            return Id + "-tab-" + index.ToString(CultureInfo.InvariantCulture);
+        }
+
+        if (componentPart is TabPanel tabPanel)
+        {
+            var index = Array.IndexOf(_tabPanels.ToArray(), tabPanel);
+            if (index < 0) return null;
+
+            return Id + "-panel-" + index.ToString(CultureInfo.InvariantCulture);
+        }
+
+        return null;
+    }
+    
     public bool IsTabSelected(Tab tab)
     {
         if (tab == null) throw new ArgumentNullException(nameof(tab));

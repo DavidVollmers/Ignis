@@ -1,16 +1,21 @@
-﻿using Ignis.Components.Web;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Tab : FocusComponentBase, IDynamicParentComponent<Tab>
+public sealed class Tab : FocusComponentBase, IDynamicParentComponent<Tab>, IAriaComponentPart
 {
     private readonly AttributeCollection _attributes;
 
     private Type? _asComponent;
     private string? _asElement;
+
+    /// <inheritdoc />
+    [Parameter]
+    public string? Id { get; set; }
 
     /// <inheritdoc />
     protected override IEnumerable<object> Targets
@@ -48,9 +53,7 @@ public sealed class Tab : FocusComponentBase, IDynamicParentComponent<Tab>
         }
     }
 
-    /// <inheritdoc />
-    [Parameter]
-    public EventCallback<IComponentEvent> OnClick { get; set; }
+    [Parameter] public EventCallback<IComponentEvent> OnClick { get; set; }
 
     [CascadingParameter] public TabGroup TabGroup { get; set; } = null!;
 
@@ -67,7 +70,6 @@ public sealed class Tab : FocusComponentBase, IDynamicParentComponent<Tab>
         set => _attributes.AdditionalAttributes = value;
     }
 
-    /// <inheritdoc />
     public bool IsSelected => TabGroup.IsTabSelected(this);
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
@@ -83,14 +85,20 @@ public sealed class Tab : FocusComponentBase, IDynamicParentComponent<Tab>
     {
         AsElement = "button";
 
-        //TODO aria-controls
         _attributes = new AttributeCollection(new[]
         {
+            () => new KeyValuePair<string, object?>("id", TabGroup.GetId(this)),
             () => new KeyValuePair<string, object?>("role", "tab"),
             () => new KeyValuePair<string, object?>("aria-selected", IsSelected.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("tabindex", IsSelected ? 0 : -1),
-            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
-            () => new KeyValuePair<string, object?>("type", string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null)
+            () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)), () =>
+                new KeyValuePair<string, object?>("type",
+                    string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
+            () =>
+            {
+                var tabPanel = TabGroup.TabPanels.ElementAtOrDefault(Array.IndexOf(TabGroup.Tabs.ToArray(), this));
+                return new KeyValuePair<string, object?>("aria-controls", TabGroup.GetId(tabPanel));
+            },
         });
     }
 
@@ -121,22 +129,19 @@ public sealed class Tab : FocusComponentBase, IDynamicParentComponent<Tab>
     /// <inheritdoc />
     protected override void OnKeyDown(KeyboardEventArgs eventArgs)
     {
+        var tabs = TabGroup.Tabs.ToArray();
+
         switch (eventArgs.Code)
         {
             case "ArrowLeft":
-                (TabGroup.SelectedIndex == 0
-                    ? TabGroup.Tabs[^1]
-                    : TabGroup.Tabs[TabGroup.SelectedIndex - 1]).Click();
+                (TabGroup.SelectedIndex == 0 ? tabs[^1] : tabs[TabGroup.SelectedIndex - 1]).Click();
                 break;
             case "ArrowRight":
-                (TabGroup.SelectedIndex == TabGroup.Tabs.Length - 1
-                    ? TabGroup.Tabs[0]
-                    : TabGroup.Tabs[TabGroup.SelectedIndex + 1]).Click();
+                (TabGroup.SelectedIndex == tabs.Length - 1 ? tabs[0] : tabs[TabGroup.SelectedIndex + 1]).Click();
                 break;
         }
     }
 
-    /// <inheritdoc />
     public void Click()
     {
         var @event = new ComponentEvent();

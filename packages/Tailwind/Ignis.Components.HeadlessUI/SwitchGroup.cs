@@ -12,7 +12,7 @@ public sealed class SwitchGroup : DynamicComponentBase<SwitchGroup>, IAriaCheckG
     public IAriaComponentPart? Label { get; set; }
 
     public Switch? Switch { get; set; }
-    
+
     public IAriaComponentPart? Description { get; set; }
 
     /// <inheritdoc />
@@ -53,7 +53,7 @@ public sealed class SwitchGroup : DynamicComponentBase<SwitchGroup>, IAriaCheckG
         if (componentPart.Id != null) return componentPart.Id;
 
         if (componentPart == Label) return Id + "-label";
-        
+
         if (componentPart == Switch) return Id + "-button";
 
         return null;

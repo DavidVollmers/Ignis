@@ -1,24 +1,32 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class TabPanel : DynamicComponentBase<TabPanel>, IDisposable
+public sealed class TabPanel : DynamicComponentBase<TabPanel>, IAriaComponentPart, IDisposable
 {
+    /// <inheritdoc />
+    [Parameter]
+    public string? Id { get; set; }
+
     [CascadingParameter] public TabGroup TabGroup { get; set; } = null!;
 
     [Parameter] public RenderFragment<TabPanel>? ChildContent { get; set; }
 
-    /// <inheritdoc />
     public bool IsSelected => TabGroup.IsTabPanelSelected(this);
 
     public TabPanel() : base("div")
     {
-        //TODO aria-labelledby
         SetAttributes(new[]
         {
+            () => new KeyValuePair<string, object?>("id", TabGroup.GetId(this)),
             () => new KeyValuePair<string, object?>("role", "tabpanel"),
-            () => new KeyValuePair<string, object?>("tabindex", IsSelected ? 0 : -1),
+            () => new KeyValuePair<string, object?>("tabindex", IsSelected ? 0 : -1), () =>
+            {
+                var tab = TabGroup.Tabs.ElementAtOrDefault(Array.IndexOf(TabGroup.TabPanels.ToArray(), this));
+                return new KeyValuePair<string, object?>("aria-labelledby", TabGroup.GetId(tab));
+            },
         });
     }
 
