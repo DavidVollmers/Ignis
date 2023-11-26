@@ -77,7 +77,7 @@ public abstract class TransitionBase<T> : DynamicComponentBase<T>, ICssClass, IH
     {
     }
 
-    protected virtual void EnterTransition(Action? continueWith = null)
+    public virtual void EnterTransition(Action? continueWith = null)
     {
         if (_state != TransitionState.Default && _state != TransitionState.CanEnter) return;
 
@@ -104,7 +104,7 @@ public abstract class TransitionBase<T> : DynamicComponentBase<T>, ICssClass, IH
         });
     }
 
-    protected virtual void LeaveTransition(Action? continueWith = null)
+    public virtual void LeaveTransition(Action? continueWith = null)
     {
         if (_state != TransitionState.Default && _state != TransitionState.CanLeave) return;
 

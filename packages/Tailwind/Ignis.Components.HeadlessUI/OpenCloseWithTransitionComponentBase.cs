@@ -40,7 +40,7 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
         _ = IsOpenChanged.InvokeAsync(_isOpen = true);
 
         if (Transition != null)
-            FrameTracker.ExecuteOnNextFrame(this, () => Transition.Enter(() => OnAfterOpen(continueWith)));
+            FrameTracker.ExecuteOnNextFrame(this, () => Transition.EnterTransition(() => OnAfterOpen(continueWith)));
         else if (continueWith != null) FrameTracker.ExecuteOnNextFrame(this, () => OnAfterOpen(continueWith));
 
         Update();
@@ -64,7 +64,7 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
 
         if (Transition != null)
         {
-            Transition.Leave(() => CloseCore(continueWith, async: true));
+            Transition.LeaveTransition(() => CloseCore(continueWith, async: true));
             return;
         }
 

@@ -40,7 +40,7 @@ public sealed class RadioGroup<T> : DynamicComponentBase<RadioGroup<T>>, IAriaCh
     }
 
     /// <inheritdoc />
-    public IAriaComponentPart Label { get; set; }
+    public IAriaComponentPart? Label { get; set; }
 
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-radiogroup-" + Guid.NewGuid().ToString("N");

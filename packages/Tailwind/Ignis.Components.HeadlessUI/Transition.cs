@@ -116,18 +116,8 @@ public sealed class Transition : TransitionBase<Transition>, IContentProvider, I
         base.Update(async);
     }
 
-    public void Leave(Action? continueWith = null)
-    {
-        LeaveTransition(continueWith);
-    }
-
-    public void Enter(Action? continueWith)
-    {
-        EnterTransition(continueWith);
-    }
-
     /// <inheritdoc />
-    protected override void EnterTransition(Action? continueWith = null)
+    public override void EnterTransition(Action? continueWith = null)
     {
         _transitioningTo = _show = true;
 
@@ -135,7 +125,7 @@ public sealed class Transition : TransitionBase<Transition>, IContentProvider, I
     }
 
     /// <inheritdoc />
-    protected override void LeaveTransition(Action? continueWith = null)
+    public override void LeaveTransition(Action? continueWith = null)
     {
         _transitioningTo = false;
 
