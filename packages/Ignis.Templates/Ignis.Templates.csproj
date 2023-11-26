@@ -17,7 +17,7 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <ContentTargetFolders>content</ContentTargetFolders>
     <NoDefaultExcludes>true</NoDefaultExcludes>
-    <PackageOutputPath>..\..\nuget_templates</PackageOutputPath>
+    <PackageOutputPath>..\..\nuget</PackageOutputPath>
     <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
 

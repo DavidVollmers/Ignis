@@ -1,5 +1,4 @@
 nuget
-nuget_templates
 dist
 
 ## Ignore Visual Studio temporary files, build results, and
