@@ -162,19 +162,19 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
                 options[0].Check();
                 break;
             case "ArrowDown":
-            {
-                var index = Array.IndexOf(options, RadioGroup.ActiveOption) + 1;
-                if (index < options.Length) options[index].Check();
-                else options[0].Check();
-                break;
-            }
+                {
+                    var index = Array.IndexOf(options, RadioGroup.ActiveOption) + 1;
+                    if (index < options.Length) options[index].Check();
+                    else options[0].Check();
+                    break;
+                }
             case "ArrowUp":
-            {
-                var index = Array.IndexOf(options, RadioGroup.ActiveOption) - 1;
-                if (index >= 0) options[index].Check();
-                else options[^1].Check();
-                break;
-            }
+                {
+                    var index = Array.IndexOf(options, RadioGroup.ActiveOption) - 1;
+                    if (index >= 0) options[index].Check();
+                    else options[^1].Check();
+                    break;
+                }
         }
     }
 
