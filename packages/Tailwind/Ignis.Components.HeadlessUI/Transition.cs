@@ -80,21 +80,20 @@ public sealed class Transition : TransitionBase<Transition>, IContentProvider, I
 
     private void BuildContentRenderTree(RenderTreeBuilder builder)
     {
+        if (!RenderContent && !_show) return;
+        
         builder.OpenComponent<CascadingValue<Transition>>(0);
         builder.AddAttribute(1, nameof(CascadingValue<Transition>.IsFixed), value: true);
         builder.AddAttribute(2, nameof(CascadingValue<Transition>.Value), this);
-        if (RenderContent || _show)
+        // ReSharper disable once VariableHidesOuterVariable
+        builder.AddAttribute(3, nameof(CascadingValue<Transition>.ChildContent), (RenderFragment)(builder =>
         {
-            // ReSharper disable once VariableHidesOuterVariable
-            builder.AddAttribute(3, nameof(CascadingValue<Transition>.ChildContent), (RenderFragment)(builder =>
-            {
-                builder.OpenAs(4, this);
-                builder.AddMultipleAttributes(5, Attributes!);
-                builder.AddChildContentFor(6, this, ChildContent);
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, Attributes!);
+            builder.AddChildContentFor(6, this, ChildContent);
 
-                builder.CloseAs(this);
-            }));
-        }
+            builder.CloseAs(this);
+        }));
 
         builder.CloseComponent();
     }

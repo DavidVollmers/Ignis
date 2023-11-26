@@ -29,10 +29,11 @@ public sealed class TransitionChild : TransitionBase<TransitionChild>, IDisposab
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        if (!RenderContent) return;
+            
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        if (RenderContent)
-            builder.AddChildContentFor(2, this, ChildContent?.Invoke(this));
+        builder.AddChildContentFor(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }
