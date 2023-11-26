@@ -9,6 +9,7 @@ public sealed class TabPanels : DynamicComponentBase<TabPanels>
 
     public TabPanels() : base("div")
     {
+        SetAttributes(ArraySegment<Func<KeyValuePair<string, object?>>>.Empty);
     }
 
     /// <inheritdoc />
