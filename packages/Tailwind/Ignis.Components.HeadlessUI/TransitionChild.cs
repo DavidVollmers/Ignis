@@ -30,7 +30,7 @@ public sealed class TransitionChild : TransitionBase<TransitionChild>, IDisposab
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
         if (!RenderContent) return;
-            
+
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         builder.AddChildContentFor(2, this, ChildContent?.Invoke(this));

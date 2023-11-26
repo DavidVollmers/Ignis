@@ -81,7 +81,7 @@ public sealed class Transition : TransitionBase<Transition>, IContentProvider, I
     private void BuildContentRenderTree(RenderTreeBuilder builder)
     {
         if (!RenderContent && !_show) return;
-        
+
         builder.OpenComponent<CascadingValue<Transition>>(0);
         builder.AddAttribute(1, nameof(CascadingValue<Transition>.IsFixed), value: true);
         builder.AddAttribute(2, nameof(CascadingValue<Transition>.Value), this);
