@@ -21,7 +21,7 @@ jobs:
       - run: dotnet build website/Ignis.Website -c Release
       - run: |
           dotnet build tools/Ignis.Website.Generator -c Release
-          dotnet tools/Ignis.Website.Generator/bin/Release/net6.0/Ignis.Website.Generator.dll
+          dotnet tools/Ignis.Website.Generator/bin/Release/net8.0/Ignis.Website.Generator.dll
       - run: dotnet publish website/Ignis.Website.WebAssembly/Ignis.Website.WebAssembly.csproj -c Release
       - run: swa deploy -d ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }} --env production
         working-directory: website/Ignis.Website.WebAssembly

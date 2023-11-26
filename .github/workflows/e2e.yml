@@ -19,7 +19,7 @@ jobs:
       - run: npm i -g @azure/static-web-apps-cli
       - run: |
           dotnet build tools/Ignis.Components.HeroIcons.Generator -c Release
-          dotnet tools/Ignis.Components.HeroIcons.Generator/bin/Release/net6.0/Ignis.Components.HeroIcons.Generator.dll
+          dotnet tools/Ignis.Components.HeroIcons.Generator/bin/Release/net8.0/Ignis.Components.HeroIcons.Generator.dll
       - run: dotnet build tests/e2e/Ignis.Tests.E2E.Website -c Release
       - run: dotnet publish tests/e2e/Ignis.Tests.E2E.Website/Ignis.Tests.E2E.Website.csproj -c Release
       - run: swa deploy -d ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_E2E }} --env production
@@ -37,5 +37,5 @@ jobs:
         with:
           dotnet-version: 8.0.x
       - run: dotnet build tests/e2e/Ignis.Tests.E2E/Ignis.Tests.E2E.csproj -c Release
-      - run: pwsh tests/e2e/Ignis.Tests.E2E/bin/Release/net7.0/playwright.ps1 install --with-deps
+      - run: pwsh tests/e2e/Ignis.Tests.E2E/bin/Release/net8.0/playwright.ps1 install --with-deps
       - run: dotnet test tests/e2e/Ignis.Tests.E2E/Ignis.Tests.E2E.csproj -c Release
