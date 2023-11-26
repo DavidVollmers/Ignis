@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;
 
-public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAfterRender
+public abstract class TransitionBase<T> : DynamicComponentBase<T>, ICssClass, IHandleAfterRender
+    where T : TransitionBase<T>
 {
     // this is needed for the transition to work properly and no frames are skipped.
     private const int TransitionGraceDuration = 10;
@@ -24,9 +25,6 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     [Parameter] public string? LeaveFrom { get; set; }
 
     [Parameter] public string? LeaveTo { get; set; }
-
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
     /// <inheritdoc />
     public string? CssClass
@@ -48,14 +46,14 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
         }
     }
 
-    /// <inheritdoc cref="IDynamicComponent" />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes
+    /// <inheritdoc cref="DynamicComponentBase{T}" />
+    public new IEnumerable<KeyValuePair<string, object?>>? Attributes
     {
         get
         {
-            if (AdditionalAttributes != null)
+            if (base.Attributes != null)
             {
-                foreach (var attribute in AdditionalAttributes)
+                foreach (var attribute in base.Attributes)
                 {
                     if (string.Equals(attribute.Key, "class", StringComparison.OrdinalIgnoreCase)) continue;
 
@@ -70,6 +68,14 @@ public abstract class TransitionBase : IgnisComponentBase, ICssClass, IHandleAft
     [Inject] private IFrameTracker FrameTracker { get; set; } = null!;
 
     [Inject] internal TimeProvider TimeProvider { get; set; } = null!;
+
+    protected TransitionBase(string asElement) : base(asElement)
+    {
+    }
+
+    protected TransitionBase(Type asComponent) : base(asComponent)
+    {
+    }
 
     protected virtual void EnterTransition(Action? continueWith = null)
     {

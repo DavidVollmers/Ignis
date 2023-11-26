@@ -1,114 +1,66 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class SwitchGroup : IgnisRigidComponentBase, ISwitchGroup
+public sealed class SwitchGroup : DynamicComponentBase<SwitchGroup>, IAriaCheckGroup
 {
-    private Type? _asComponent;
-    private string? _asElement;
-    private ISwitch? _switch;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<ISwitchGroup>? _ { get; set; }
-
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    /// <summary>
-    /// Additional attributes to be applied to the switch group.
-    /// </summary>
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
-
     /// <inheritdoc />
-    public ISwitchLabel? Label { get; private set; }
+    public IAriaComponentPart? Label { get; set; }
 
-    /// <inheritdoc />
-    public ISwitchDescription? Description { get; private set; }
+    public Switch? Switch { get; set; }
+
+    public IAriaComponentPart? Description { get; set; }
 
     /// <inheritdoc />
     public string Id { get; } = "ignis-hui-switch-" + Guid.NewGuid().ToString("N");
 
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
-
-    public SwitchGroup()
+    public SwitchGroup() : base(typeof(Fragment))
     {
-        AsComponent = typeof(Fragment);
+        SetAttributes(new[]
+        {
+            () => new KeyValuePair<string, object?>("id", GetId(this)),
+        });
     }
 
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
+        builder.OpenComponent<CascadingValue<SwitchGroup>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<SwitchGroup>.IsFixed), value: true);
+        builder.AddAttribute(2, nameof(CascadingValue<SwitchGroup>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.AddAttribute(3, nameof(CascadingValue<SwitchGroup>.ChildContent), (RenderFragment)(builder =>
         {
-            builder.OpenComponent<CascadingValue<ISwitchGroup>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<ISwitchGroup>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<ISwitchGroup>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<ISwitchGroup>.ChildContent),
-                this.GetChildContent<ISwitchGroup, SwitchGroup>(ChildContent));
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, Attributes!);
+            builder.AddChildContentFor(6, this, ChildContent);
 
-            builder.CloseComponent();
-        });
+            builder.CloseAs(this);
+        }));
 
-        builder.CloseAs(this);
+        builder.CloseComponent();
     }
 
     /// <inheritdoc />
-    public void SetSwitch(ISwitch @switch)
+    public string? GetId(IAriaComponentPart? componentPart)
     {
-        _switch = @switch ?? throw new ArgumentNullException(nameof(@switch));
+        if (componentPart == null) return null;
+
+        if (componentPart.Id != null) return componentPart.Id;
+
+        if (componentPart == Label) return Id + "-label";
+
+        if (componentPart == Switch) return Id + "-button";
+
+        return null;
     }
 
-    /// <inheritdoc />
-    public void SetLabel(ISwitchLabel label)
-    {
-        Label = label ?? throw new ArgumentNullException(nameof(label));
-    }
-
-    /// <inheritdoc />
-    public void SetDescription(ISwitchDescription description)
-    {
-        Description = description ?? throw new ArgumentNullException(nameof(description));
-    }
-
-    /// <inheritdoc />
     public void ToggleSwitch()
     {
-        _switch?.Toggle();
+        Switch?.Toggle();
     }
 }

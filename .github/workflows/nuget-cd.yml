@@ -25,7 +25,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18.x
-      - run: echo "VERSION=$(git describe --tags --dirty)" >> $GITHUB_ENV
+      - run: echo "VERSION=$(git describe --tags)" >> $GITHUB_ENV
       - run: npm i
       # Remove Meziantou.Analyzer from all projects (Roslyn analyzer which does not need to pollute the nuget package)
       - run: dotnet remove package Meziantou.Analyzer

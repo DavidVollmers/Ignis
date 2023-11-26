@@ -1,83 +1,35 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class RadioGroupLabel : IgnisRigidComponentBase, IRadioGroupLabel
+public sealed class RadioGroupLabel : DynamicComponentBase<RadioGroupLabel>, IAriaComponentPart
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
     /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public IRadioGroup RadioGroup { get; set; } = null!;
+    [CascadingParameter(Name = nameof(RadioGroup<object>))]
+    public IAriaCheckGroup RadioGroup { get; set; } = null!;
 
-    [CascadingParameter] public IRadioGroupOption? RadioGroupOption { get; set; }
-
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<IRadioGroupLabel>? _ { get; set; }
+    [CascadingParameter(Name = nameof(RadioGroupOption<object>))]
+    public IAriaCheckGroupOption? RadioGroupOption { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    public RadioGroupLabel() : base("label")
     {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public RadioGroupLabel()
-    {
-        AsElement = "label";
-
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id ?? RadioGroup.Id + "-label"), () =>
+            () => new KeyValuePair<string, object?>("id", RadioGroup.GetId(this)), () =>
                 new KeyValuePair<string, object?>("onclick",
-                    RadioGroupOption != null ? EventCallback.Factory.Create(this, RadioGroupOption.FocusAsync) : null)
+                    RadioGroupOption != null ? EventCallback.Factory.Create(this, RadioGroupOption.FocusAsync) : null),
         });
     }
 
     /// <inheritdoc />
-    protected override void OnRender()
+    protected override void OnInitialized()
     {
         if (RadioGroup == null)
         {
@@ -87,11 +39,11 @@ public sealed class RadioGroupLabel : IgnisRigidComponentBase, IRadioGroupLabel
 
         if (RadioGroupOption != null)
         {
-            RadioGroupOption.SetLabel(this);
+            RadioGroupOption.Label = this;
         }
         else
         {
-            RadioGroup.SetLabel(this);
+            RadioGroup.Label = this;
         }
     }
 
@@ -101,7 +53,7 @@ public sealed class RadioGroupLabel : IgnisRigidComponentBase, IRadioGroupLabel
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IRadioGroupLabel, RadioGroupLabel>(3, this, ChildContent);
+        builder.AddChildContentFor(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

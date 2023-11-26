@@ -1,37 +1,15 @@
-﻿using Ignis.Components.Web;
+﻿using System.Globalization;
+using Ignis.Components.HeadlessUI.Aria;
+using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
+public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Menu>, IAriaPopup<MenuItem>
 {
-    private readonly IList<IMenuItem> _items = new List<IMenuItem>();
-
-    private IDynamicParentComponent? _itemsComponent;
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    protected override IEnumerable<object> Targets
-    {
-        get
-        {
-            if (Button != null) yield return Button;
-
-            if (_itemsComponent != null) yield return _itemsComponent;
-
-            foreach (var item in Items)
-            {
-                yield return item;
-            }
-        }
-    }
-
-    /// <inheritdoc />
-    protected override IEnumerable<string> KeysToCapture { get; } =
-        new[] { "Escape", "Space", "Enter", "ArrowUp", "ArrowDown" };
+    #region Parameters
 
     /// <inheritdoc />
     [Parameter]
@@ -59,9 +37,9 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IMenu>? _ { get; set; }
+    public RenderFragment<Menu>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IMenu>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<Menu>? ChildContent { get; set; }
 
     /// <summary>
     /// Additional attributes to be applied to the menu.
@@ -69,14 +47,12 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    /// <inheritdoc />
-    public IMenuItem? ActiveItem { get; private set; }
+    #endregion Parameters
 
-    /// <inheritdoc />
-    public IMenuButton? Button { get; private set; }
+    #region Rendering
 
-    /// <inheritdoc />
-    public string Id { get; } = "ignis-hui-menu-" + Guid.NewGuid().ToString("N");
+    private Type? _asComponent;
+    private string? _asElement;
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
@@ -87,9 +63,6 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     /// <inheritdoc />
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
-    /// <inheritdoc />
-    public IMenuItem[] Items => _items.ToArray();
-
     public Menu()
     {
         AsComponent = typeof(Fragment);
@@ -98,64 +71,128 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
+        builder.OpenComponent<CascadingValue<Menu>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<Menu>.IsFixed), value: true);
+        builder.AddAttribute(2, nameof(CascadingValue<Menu>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.AddAttribute(3, nameof(CascadingValue<Menu>.ChildContent), (RenderFragment)(builder =>
         {
-            builder.OpenComponent<CascadingValue<IMenu>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IMenu>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<IMenu>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IMenu>.ChildContent), this.GetChildContent(ChildContent));
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, Attributes!);
+            // ReSharper disable once VariableHidesOuterVariable
+            builder.AddChildContentFor(6, this, ChildContent);
 
-            builder.CloseComponent();
-        });
+            builder.CloseAs(this);
+        }));
 
-        builder.CloseAs(this);
+        builder.CloseComponent();
     }
 
+    #endregion Rendering
+
+    #region ARIA
+
+    private readonly IList<MenuItem> _descendants = new List<MenuItem>();
+
+    private MenuItem? _activeDescendant;
+
     /// <inheritdoc />
-    public void SetItemActive(IMenuItem item, bool isActive)
+    public string Id { get; } = "ignis-hui-menu-" + Guid.NewGuid().ToString("N");
+
+    /// <inheritdoc />
+    public IEnumerable<MenuItem> Descendants => _descendants.ToArray();
+
+    IEnumerable<IAriaDescendant> IAriaPopup.Descendants => _descendants;
+
+    /// <inheritdoc />
+    public MenuItem? ActiveDescendant
     {
-        if (isActive)
+        get => _activeDescendant;
+        set
         {
-            ActiveItem = item;
+            _activeDescendant = value;
+
+            Update();
         }
-        else if (ActiveItem == item)
+    }
+
+    IAriaDescendant? IAriaPopup.ActiveDescendant
+    {
+        get => _activeDescendant;
+        set => ActiveDescendant = (MenuItem?)value;
+    }
+
+    /// <inheritdoc />
+    public IAriaComponentPart? Controlled { get; set; }
+
+    /// <inheritdoc />
+    public IAriaComponentPart? Button { get; set; }
+
+    /// <inheritdoc />
+    public IAriaComponentPart? Label { get; set; }
+
+    /// <inheritdoc />
+    public void AddDescendant(MenuItem descendant)
+    {
+        if (descendant == null) throw new ArgumentNullException(nameof(descendant));
+
+        if (!_descendants.Contains(descendant)) _descendants.Add(descendant);
+    }
+
+    /// <inheritdoc />
+    public void RemoveDescendant(MenuItem descendant)
+    {
+        if (descendant == null) throw new ArgumentNullException(nameof(descendant));
+
+        _descendants.Remove(descendant);
+    }
+
+    /// <inheritdoc />
+    public string? GetId(IAriaComponentPart? componentPart)
+    {
+        if (componentPart == null) return null;
+
+        if (componentPart.Id != null) return componentPart.Id;
+
+        if (componentPart == Button) return Id + "-button";
+
+        if (componentPart == Label) return Id + "-label";
+
+        if (componentPart == Controlled) return Id + "-controlled";
+
+        if (componentPart is not MenuItem item) return null;
+
+        var index = Array.IndexOf(_descendants.ToArray(), item);
+        if (index < 0) return null;
+
+        return Id + "-item-" + index.ToString(CultureInfo.InvariantCulture);
+    }
+
+    #endregion ARIA
+
+    #region Focus
+
+    /// <inheritdoc />
+    protected override IEnumerable<object> Targets
+    {
+        get
         {
-            ActiveItem = null;
+            if (Button != null) yield return Button;
+
+            if (Label != null) yield return Label;
+
+            if (Controlled != null) yield return Controlled;
+
+            foreach (var item in _descendants)
+            {
+                yield return item;
+            }
         }
-
-        Update();
     }
 
     /// <inheritdoc />
-    public void AddItem(IMenuItem item)
-    {
-        if (item == null) throw new ArgumentNullException(nameof(item));
-
-        if (!_items.Contains(item)) _items.Add(item);
-    }
-
-    /// <inheritdoc />
-    public void RemoveItem(IMenuItem item)
-    {
-        if (item == null) throw new ArgumentNullException(nameof(item));
-
-        _items.Remove(item);
-    }
-
-    /// <inheritdoc />
-    public void SetButton(IMenuButton button)
-    {
-        Button = button ?? throw new ArgumentNullException(nameof(button));
-    }
-
-    /// <inheritdoc />
-    public void SetItems(IDynamicParentComponent items)
-    {
-        _itemsComponent = items ?? throw new ArgumentNullException(nameof(items));
-    }
+    protected override IEnumerable<string> KeysToCapture { get; } =
+        new[] { "Escape", "Space", "Enter", "ArrowUp", "ArrowDown" };
 
     /// <inheritdoc />
     protected override void OnBlur()
@@ -163,72 +200,24 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IMenu
         Close();
     }
 
+    #endregion Focus
+
+    #region Menu
+
     /// <inheritdoc />
-#pragma warning disable MA0051
-    protected override void OnKeyDown(KeyboardEventArgs eventArgs)
-#pragma warning restore MA0051
+    protected override void OnAfterOpen(Action? continueWith)
     {
-        switch (eventArgs.Code)
-        {
-            case "Escape":
-                Close();
-                break;
-            case "Space" or "Enter":
-                if (IsOpen)
-                {
-                    if (ActiveItem != null) ActiveItem.Click();
-                    else Close();
-                }
-                else
-                {
-                    Open(() =>
-                    {
-                        var firstItem = Items.FirstOrDefault();
-                        if (firstItem != null) SetItemActive(firstItem, isActive: true);
-                    });
-                }
+        var selectedOption = _descendants.FirstOrDefault();
+        if (selectedOption != null) this.SetActiveDescendant(selectedOption, isActive: true);
 
-                break;
-            case "ArrowUp" when ActiveItem == null:
-            case "ArrowDown" when ActiveItem == null:
-                if (Items.Any()) SetItemActive(Items[0], isActive: true);
-                else if (!IsOpen)
-                {
-                    Open(() =>
-                    {
-                        if (Items.Any()) SetItemActive(Items[0], isActive: true);
-                    });
-                }
-
-                break;
-            case "ArrowDown":
-                {
-                    var index = Array.IndexOf(Items, ActiveItem) + 1;
-                    if (index < Items.Length) SetItemActive(Items[index], isActive: true);
-                    else if (!IsOpen)
-                    {
-                        Open(() =>
-                        {
-                            if (Items.Any()) SetItemActive(Items[0], isActive: true);
-                        });
-                    }
-
-                    break;
-                }
-            case "ArrowUp":
-                {
-                    var index = Array.IndexOf(Items, ActiveItem) - 1;
-                    if (index >= 0) SetItemActive(Items[index], isActive: true);
-                    else if (!IsOpen)
-                    {
-                        Open(() =>
-                        {
-                            if (Items.Any()) SetItemActive(Items[0], isActive: true);
-                        });
-                    }
-
-                    break;
-                }
-        }
+        base.OnAfterOpen(continueWith);
     }
+
+    /// <inheritdoc />
+    protected override void OnKeyDown(KeyboardEventArgs eventArgs)
+    {
+        AriaPopupExtensions.OnKeyDown(this, eventArgs);
+    }
+
+    #endregion Menu
 }

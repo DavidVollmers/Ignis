@@ -1,78 +1,28 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DialogTitle : IgnisRigidComponentBase, IDialogTitle
+public sealed class DialogTitle : DynamicComponentBase<DialogTitle>, IAriaComponentPart
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
     /// <inheritdoc />
     [Parameter] public string? Id { get; set; }
 
-    [CascadingParameter] public IDialog Dialog { get; set; } = null!;
-
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<IDialogTitle>? _ { get; set; }
+    [CascadingParameter] public Dialog Dialog { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    public DialogTitle() : base("h2")
     {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
-
-    public DialogTitle()
-    {
-        AsElement = "h2";
-
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id ?? Dialog.Id + "-label"),
+            () => new KeyValuePair<string, object?>("id", Dialog.GetId(this)),
         });
     }
 
     /// <inheritdoc />
-    protected override void OnRender()
+    protected override void OnInitialized()
     {
         if (Dialog == null)
         {
@@ -80,7 +30,7 @@ public sealed class DialogTitle : IgnisRigidComponentBase, IDialogTitle
                 $"{nameof(DialogTitle)} must be used inside a {nameof(HeadlessUI.Dialog)}.");
         }
 
-        Dialog.SetTitle(this);
+        Dialog.Label = this;
     }
 
     /// <inheritdoc />
@@ -89,7 +39,7 @@ public sealed class DialogTitle : IgnisRigidComponentBase, IDialogTitle
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IDialogTitle, DialogTitle>(3, this, ChildContent);
+        builder.AddChildContentFor(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

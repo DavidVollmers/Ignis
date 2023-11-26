@@ -54,11 +54,11 @@ public static class InputExtensions
         }
     }
 
-    private static bool TryConvertToBool<TValue>(string? value, out TValue result)
+    private static bool TryConvertToBool<T>(string? value, out T result)
     {
         if (bool.TryParse(value, out var @bool))
         {
-            result = (TValue)(object)@bool;
+            result = (T)(object)@bool;
             return true;
         }
 
@@ -66,7 +66,7 @@ public static class InputExtensions
         return false;
     }
 
-    private static bool TryConvertToNullableBool<TValue>(string? value, out TValue result)
+    private static bool TryConvertToNullableBool<T>(string? value, out T result)
     {
         if (!string.IsNullOrEmpty(value))
         {

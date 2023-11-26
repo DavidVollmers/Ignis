@@ -1,82 +1,29 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class SwitchDescription : IgnisRigidComponentBase, ISwitchDescription
+public sealed class SwitchDescription : DynamicComponentBase<SwitchDescription>, IAriaComponentPart
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
     /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public ISwitchGroup SwitchGroup { get; set; } = null!;
-
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<ISwitchDescription>? _ { get; set; }
+    [CascadingParameter] public SwitchGroup SwitchGroup { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    /// <summary>
-    /// Additional attributes to be applied to the switch label.
-    /// </summary>
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    public SwitchDescription() : base("p")
     {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public SwitchDescription()
-    {
-        AsElement = "p";
-
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id ?? SwitchGroup.Id + "-description")
+            () => new KeyValuePair<string, object?>("id", SwitchGroup.GetId(SwitchGroup.Description)),
         });
     }
 
     /// <inheritdoc />
-    protected override void OnRender()
+    protected override void OnInitialized()
     {
         if (SwitchGroup == null)
         {
@@ -84,7 +31,7 @@ public sealed class SwitchDescription : IgnisRigidComponentBase, ISwitchDescript
                 $"{nameof(SwitchDescription)} must be used inside a {nameof(HeadlessUI.SwitchGroup)}.");
         }
 
-        SwitchGroup.SetDescription(this);
+        SwitchGroup.Description = this;
     }
 
     /// <inheritdoc />
@@ -92,7 +39,7 @@ public sealed class SwitchDescription : IgnisRigidComponentBase, ISwitchDescript
     {
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<ISwitchDescription, SwitchDescription>(2, this, ChildContent);
+        builder.AddChildContentFor(2, this, ChildContent);
 
         builder.CloseAs(this);
     }

@@ -1,14 +1,13 @@
-﻿using Ignis.Components.Web;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
+public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Popover>, IAriaControl
 {
-    private IDynamicParentComponent? _panel;
-    private IPopoverButton? _button;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -17,9 +16,9 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
     {
         get
         {
-            if (_button != null) yield return _button;
+            if (Button != null) yield return Button;
 
-            if (_panel != null) yield return _panel;
+            if (Controlled != null) yield return Controlled;
         }
     }
 
@@ -52,9 +51,9 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IPopover>? _ { get; set; }
+    public RenderFragment<Popover>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IPopover>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<Popover>? ChildContent { get; set; }
 
     /// <summary>
     /// Additional attributes to be applied to the popover.
@@ -62,8 +61,11 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    /// <inheritdoc />
     public string Id { get; } = "ignis-hui-popover-" + Guid.NewGuid().ToString("N");
+
+    public PopoverButton? Button { get; set; }
+
+    public IAriaComponentPart? Controlled { get; set; }
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
@@ -82,32 +84,20 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
+        builder.OpenComponent<CascadingValue<Popover>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<Popover>.IsFixed), value: true);
+        builder.AddAttribute(2, nameof(CascadingValue<Popover>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.AddAttribute(3, nameof(CascadingValue<Popover>.ChildContent), (RenderFragment)(builder =>
         {
-            builder.OpenComponent<CascadingValue<IPopover>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IPopover>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<IPopover>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IPopover>.ChildContent), this.GetChildContent(ChildContent));
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, Attributes!);
+            builder.AddChildContentFor(6, this, ChildContent);
 
-            builder.CloseComponent();
-        });
+            builder.CloseAs(this);
+        }));
 
-        builder.CloseAs(this);
-    }
-
-    /// <inheritdoc />
-    public void SetButton(IPopoverButton button)
-    {
-        _button = button ?? throw new ArgumentNullException(nameof(button));
-    }
-
-    /// <inheritdoc />
-    public void SetPanel(IDynamicParentComponent panel)
-    {
-        _panel = panel ?? throw new ArgumentNullException(nameof(panel));
+        builder.CloseComponent();
     }
 
     /// <inheritdoc />
@@ -122,5 +112,19 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IPopover
         if (!string.Equals(eventArgs.Code, "Escape", StringComparison.Ordinal)) return;
 
         Close();
+    }
+
+    /// <inheritdoc />
+    public string? GetId(IAriaComponentPart? componentPart)
+    {
+        if (componentPart == null) return null;
+
+        if (componentPart.Id != null) return componentPart.Id;
+
+        if (componentPart == Button) return Id + "-button";
+
+        if (componentPart == Controlled) return Id + "-controlled";
+
+        return null;
     }
 }

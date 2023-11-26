@@ -2,5 +2,5 @@
 
 public interface IWithTransition
 {
-    internal void SetTransition(ITransition transition);
+    Transition? Transition { get; set; }
 }

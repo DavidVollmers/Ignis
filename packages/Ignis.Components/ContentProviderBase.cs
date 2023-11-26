@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components;
 
-public abstract class IgnisContentProviderComponentBase : IgnisComponentBase, IContentProvider, IDisposable
+public abstract class ContentProviderBase : IgnisComponentBase, IContentProvider, IDisposable
 {
     private bool _ignoreOutlet;
 

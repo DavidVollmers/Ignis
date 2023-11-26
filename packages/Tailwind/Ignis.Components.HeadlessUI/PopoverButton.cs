@@ -1,79 +1,33 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
+public sealed class PopoverButton : DynamicComponentBase<PopoverButton>, IAriaComponentPart
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
     /// <inheritdoc />
     [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
+    public string? Id { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
+    [Parameter] public EventCallback<IComponentEvent> OnClick { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public EventCallback<IComponentEvent> OnClick { get; set; }
-
-    [CascadingParameter] public IPopover Popover { get; set; } = null!;
-
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<IPopoverButton>? _ { get; set; }
+    [CascadingParameter] public Popover Popover { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    public PopoverButton() : base("button")
     {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public PopoverButton()
-    {
-        AsElement = "button";
-
-        //TODO aria-controls
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
+            () => new KeyValuePair<string, object?>("id", Popover.GetId(this)),
             () => new KeyValuePair<string, object?>("onclick", EventCallback.Factory.Create(this, Click)),
             () => new KeyValuePair<string, object?>("aria-expanded", Popover.IsOpen.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("type",
                 string.Equals(AsElement, "button", StringComparison.OrdinalIgnoreCase) ? "button" : null),
+            () => new KeyValuePair<string, object?>("aria-controls",
+                Popover.IsOpen ? Popover.GetId(Popover.Controlled) : null),
         });
     }
 
@@ -86,7 +40,7 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
                 $"{nameof(PopoverButton)} must be used inside a {nameof(HeadlessUI.Popover)}.");
         }
 
-        Popover.SetButton(this);
+        Popover.Button = this;
     }
 
     /// <inheritdoc />
@@ -95,7 +49,7 @@ public sealed class PopoverButton : IgnisComponentBase, IPopoverButton
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IPopoverButton, PopoverButton>(3, this, ChildContent);
+        builder.AddChildContentFor(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 
