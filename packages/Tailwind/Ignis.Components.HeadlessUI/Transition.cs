@@ -62,7 +62,7 @@ public sealed class Transition : TransitionBase<Transition>, IContentProvider, I
     protected override void OnInitialized()
     {
         if (Menu != null) Menu.Transition = this;
-        
+
         if (Listbox != null) Listbox.Transition = this;
 
         if (Popover != null) Popover.Transition = this;

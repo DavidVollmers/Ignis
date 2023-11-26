@@ -27,7 +27,7 @@ public abstract class OpenCloseWithTransitionComponentBase : FocusComponentBase,
 
     /// <inheritdoc />
     public Transition? Transition { get; set; }
-    
+
     /// <inheritdoc />
     public void Open(Action? continueWith = null)
     {
