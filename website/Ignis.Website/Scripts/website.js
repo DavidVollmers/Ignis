@@ -7,6 +7,15 @@ import './theme'
 window.OnPageLoad = () => {
   Prism.highlightAll()
 
+  const interval = setInterval(() => {
+    if (window.mermaid) {
+      initMermaid()
+      clearInterval(interval)
+    }
+  }, 100)
+}
+
+function initMermaid() {
   const isDarkMode = getTheme() === '2'
   mermaid.init(
     {
