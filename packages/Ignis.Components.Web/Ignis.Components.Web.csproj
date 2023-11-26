@@ -24,13 +24,13 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.20" />
-    <PackageReference Include="Microsoft.JSInterop" Version="6.0.20" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.25" />
+    <PackageReference Include="Microsoft.JSInterop" Version="6.0.25" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.9" />
-    <PackageReference Include="Microsoft.JSInterop" Version="7.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.14" />
+    <PackageReference Include="Microsoft.JSInterop" Version="7.0.14" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
