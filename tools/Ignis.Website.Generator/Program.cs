@@ -14,7 +14,7 @@ builder.Build(markdownDirectory, outputDirectoryServer);
 builder.Build(markdownDirectory, outputDirectoryWebAssembly);
 
 var sourceDirectory = new DirectoryInfo(Path.Combine(assemblyFile.DirectoryName!, "..", "..", "..", "..", "..",
-    "website", "Ignis.Website", "bin", "Release", "net7.0"));
+    "website", "Ignis.Website", "bin", "Release", "net8.0"));
 outputDirectoryServer = new DirectoryInfo(Path.Combine(assemblyFile.DirectoryName!, "..", "..", "..", "..", "..",
     "website", "Ignis.Website.Server", "wwwroot", "_api"));
 outputDirectoryWebAssembly = new DirectoryInfo(Path.Combine(assemblyFile.DirectoryName!, "..", "..", "..", "..",
