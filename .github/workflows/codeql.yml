@@ -27,7 +27,7 @@ jobs:
           languages: ${{ matrix.language }}
       - uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 8.0.x
       - uses: actions/setup-node@v3
         with:
           node-version: 18.x
@@ -38,7 +38,7 @@ jobs:
         working-directory: packages/Ignis.Fragments.Abstractions
       - run: |
           dotnet build tools/Ignis.Components.HeroIcons.Generator -c Release
-          dotnet tools/Ignis.Components.HeroIcons.Generator/bin/Release/net6.0/Ignis.Components.HeroIcons.Generator.dll
+          dotnet tools/Ignis.Components.HeroIcons.Generator/bin/Release/net8.0/Ignis.Components.HeroIcons.Generator.dll
       # This is required to build the wwwroot folder so it is included in the nuget package (https://github.com/DavidVollmers/Ignis/issues/2)
       - run: dotnet build -c Release packages/Ignis.Components.Web
       - run: dotnet pack -c Release
