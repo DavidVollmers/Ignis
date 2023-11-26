@@ -223,14 +223,15 @@
         cut.WaitForState(() => cut.FindAll($"#{dialogId}").Count == 0);
         
         transitions = cut.FindAll($"#{transitionId}");
-        Assert.Single(transitions);
+        Assert.Empty(transitions);
+
+        dialogs = cut.FindAll($"#{dialogId}");
+        Assert.Empty(dialogs);
         
-        transitionDiv = transitions.Single();
-        outletDiv = cut.Find($"#{outletId}");
         var transitionChildDivs = cut.FindAll($"#{transitionChildId}");
-        var dialogPanelDivs = cut.FindAll($"#{dialogPanelId}");
-        Assert.True(outletDiv.Contains(transitionDiv));
         Assert.Empty(transitionChildDivs);
+        
+        var dialogPanelDivs = cut.FindAll($"#{dialogPanelId}");
         Assert.Empty(dialogPanelDivs);
     }
 

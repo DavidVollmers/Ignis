@@ -1,74 +1,34 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Globalization;
+using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class TabGroup : IgnisComponentBase, ITabGroup
+public sealed class TabGroup : DynamicComponentBase<TabGroup>, IAriaComponent
 {
-    private readonly IList<ITabPanel> _tabPanels = new List<ITabPanel>();
-    private readonly IList<ITab> _tabs = new List<ITab>();
-
-    private Type? _asComponent;
-    private string? _asElement;
+    private readonly IList<TabPanel> _tabPanels = new List<TabPanel>();
+    private readonly IList<Tab> _tabs = new List<Tab>();
 
     /// <inheritdoc />
     [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
+    public string? Id { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
+    [Parameter] public int DefaultIndex { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public int DefaultIndex { get; set; }
-
-    /// <inheritdoc />
-    [Parameter]
-    public int SelectedIndex { get; set; }
+    [Parameter] public int SelectedIndex { get; set; }
 
     [Parameter] public EventCallback<int> SelectedIndexChanged { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<ITabGroup>? _ { get; set; }
+    [Parameter] public RenderFragment<TabGroup>? ChildContent { get; set; }
 
-    [Parameter] public RenderFragment<ITabGroup>? ChildContent { get; set; }
+    public IEnumerable<Tab> Tabs => _tabs.ToArray();
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
+    public IEnumerable<TabPanel> TabPanels => _tabPanels.ToArray();
 
-    /// <inheritdoc />
-    public ITab[] Tabs => _tabs.ToArray();
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
-
-    public TabGroup()
+    public TabGroup() : base(typeof(Fragment))
     {
-        AsComponent = typeof(Fragment);
+        SetAttributes(new[] { () => new KeyValuePair<string, object?>("id", GetId(this)), });
     }
 
     /// <inheritdoc />
@@ -82,25 +42,48 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, AdditionalAttributes!);
+        builder.OpenComponent<CascadingValue<TabGroup>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<TabGroup>.IsFixed), value: true);
+        builder.AddAttribute(2, nameof(CascadingValue<TabGroup>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.AddAttribute(3, nameof(CascadingValue<TabGroup>.ChildContent), (RenderFragment)(builder =>
         {
-            builder.OpenComponent<CascadingValue<ITabGroup>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<ITabGroup>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<ITabGroup>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<ITabGroup>.ChildContent),
-                this.GetChildContent(ChildContent));
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, AdditionalAttributes!);
+            builder.AddChildContentFor(6, this, ChildContent);
 
-            builder.CloseComponent();
-        });
+            builder.CloseAs(this);
+        }));
 
-        builder.CloseAs(this);
+        builder.CloseComponent();
     }
 
-    /// <inheritdoc />
-    public bool IsTabSelected(ITab tab)
+    public string? GetId(IAriaComponentPart? componentPart)
+    {
+        if (componentPart == null) return null;
+
+        if (componentPart.Id != null) return componentPart.Id;
+
+        if (componentPart is Tab tab)
+        {
+            var index = Array.IndexOf(_tabs.ToArray(), tab);
+            if (index < 0) return null;
+
+            return Id + "-tab-" + index.ToString(CultureInfo.InvariantCulture);
+        }
+
+        if (componentPart is TabPanel tabPanel)
+        {
+            var index = Array.IndexOf(_tabPanels.ToArray(), tabPanel);
+            if (index < 0) return null;
+
+            return Id + "-panel-" + index.ToString(CultureInfo.InvariantCulture);
+        }
+
+        return null;
+    }
+
+    public bool IsTabSelected(Tab tab)
     {
         if (tab == null) throw new ArgumentNullException(nameof(tab));
 
@@ -109,8 +92,7 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
         return index == SelectedIndex;
     }
 
-    /// <inheritdoc />
-    public void SelectTab(ITab tab)
+    public void SelectTab(Tab tab)
     {
         if (tab == null) throw new ArgumentNullException(nameof(tab));
 
@@ -125,24 +107,21 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
         Update();
     }
 
-    /// <inheritdoc />
-    public void AddTab(ITab tab)
+    public void AddTab(Tab tab)
     {
         if (tab == null) throw new ArgumentNullException(nameof(tab));
 
         if (!_tabs.Contains(tab)) _tabs.Add(tab);
     }
 
-    /// <inheritdoc />
-    public void RemoveTab(ITab tab)
+    public void RemoveTab(Tab tab)
     {
         if (tab == null) throw new ArgumentNullException(nameof(tab));
 
         _tabs.Remove(tab);
     }
 
-    /// <inheritdoc />
-    public bool IsTabPanelSelected(ITabPanel tabPanel)
+    public bool IsTabPanelSelected(TabPanel tabPanel)
     {
         if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));
 
@@ -151,16 +130,14 @@ public sealed class TabGroup : IgnisComponentBase, ITabGroup
         return index == SelectedIndex;
     }
 
-    /// <inheritdoc />
-    public void AddTabPanel(ITabPanel tabPanel)
+    public void AddTabPanel(TabPanel tabPanel)
     {
         if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));
 
         if (!_tabPanels.Contains(tabPanel)) _tabPanels.Add(tabPanel);
     }
 
-    /// <inheritdoc />
-    public void RemoveTabPanel(ITabPanel tabPanel)
+    public void RemoveTabPanel(TabPanel tabPanel)
     {
         if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));
 

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
+public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent<DialogPanel>
 {
     private Type? _asComponent;
     private string? _asElement;
@@ -16,7 +16,7 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
         {
             yield return this;
 
-            if (Dialog.Title != null) yield return Dialog.Title;
+            if (Dialog.Label != null) yield return Dialog.Label;
 
             if (Dialog.Description != null) yield return Dialog.Description;
         }
@@ -49,11 +49,11 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
         }
     }
 
-    [CascadingParameter] public IDialog Dialog { get; set; } = null!;
+    [CascadingParameter] public Dialog Dialog { get; set; } = null!;
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDynamicComponent>? _ { get; set; }
+    public RenderFragment<DialogPanel>? _ { get; set; }
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
@@ -90,7 +90,7 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddContentFor(3, this, ChildContent);
+        builder.AddChildContentFor(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

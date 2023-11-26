@@ -28,24 +28,6 @@ will trigger a re-render of the component.
 You can read more about when parameters are
 set [here](https://learn.microsoft.com/en-us/aspnet/core/blazor/components/lifecycle?view=aspnetcore-7.0#when-parameters-are-set-setparametersasync).
 
-## Rigid components
-
-Rigid components are components that only render when parameters are changed. You can make your component rigid by
-inheriting from `IgnisRigidComponentBase`.
-
-```csharp
-public class MyComponent : IgnisRigidComponentBase
-{
-    [Parameter]
-    public string MyParameter { get; set; }
-
-    protected override void OnRender()
-    {
-        // This will be called when the component is first rendered and when MyParameter is changed.
-    }
-}
-```
-
 ## Additional lifecycle methods
 
 Contrary to Razor components, Ignis components do not offer an `OnAfterRender` method, nor do they automatically update
@@ -74,5 +56,4 @@ public class MyComponent : IgnisComponentBase, IHandleAfterRender, IHandleEvent
 Also contrary to Razor components, Ignis component's lifecycle methods are not called twice when the rendering mode is
 set to `ServerPrerendered`.
 
-If you still want to have the same behaviour as Razor components, you can either inherit from
-the `IgnisRigidComponentBase` class or implement the `IHandleAfterRender` interface.
+If you still want to have the same behaviour as Razor components, you can implement the `IHandleAfterRender` interface.

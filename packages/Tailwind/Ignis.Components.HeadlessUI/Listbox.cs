@@ -1,4 +1,6 @@
-﻿using Ignis.Components.Web;
+﻿using System.Globalization;
+using Ignis.Components.HeadlessUI.Aria;
+using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.Web;
@@ -8,36 +10,11 @@ namespace Ignis.Components.HeadlessUI;
 /// <summary>
 /// Renders a listbox which can be used to select one or more values.
 /// </summary>
-/// <typeparam name="TValue">The value type.</typeparam>
-public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, IListbox
+/// <typeparam name="T">The value type.</typeparam>
+public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Listbox<T>>,
+    IAriaPopup<ListboxOption<T>>
 {
-    private readonly IList<IListboxOption> _options = new List<IListboxOption>();
-
-    private IDynamicParentComponent? _optionsComponent;
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    protected override IEnumerable<object> Targets
-    {
-        get
-        {
-            if (Button != null) yield return Button;
-
-            if (Label != null) yield return Label;
-
-            if (_optionsComponent != null) yield return _optionsComponent;
-
-            foreach (var option in _options)
-            {
-                yield return option;
-            }
-        }
-    }
-
-    /// <inheritdoc />
-    protected override IEnumerable<string> KeysToCapture { get; } =
-        new[] { "Escape", "Space", "Enter", "ArrowUp", "ArrowDown" };
+    #region Parameters
 
     /// <inheritdoc />
     [Parameter]
@@ -67,22 +44,23 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     /// Gets or sets the selected value.
     /// </summary>
     [Parameter]
-    public TValue? Value { get; set; }
+    public T? Value { get; set; }
 
     /// <summary>
     /// Gets or sets the callback which is invoked when the selected value changes.
     /// </summary>
     [Parameter]
-    public EventCallback<TValue?> ValueChanged { get; set; }
+    public EventCallback<T?> ValueChanged { get; set; }
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IListbox>? _ { get; set; }
+    public RenderFragment<Listbox<T>>? _ { get; set; }
 
     /// <summary>
     /// Gets or sets the content of the listbox.
     /// </summary>
-    [Parameter] public RenderFragment<IListbox>? ChildContent { get; set; }
+    [Parameter]
+    public RenderFragment<Listbox<T>>? ChildContent { get; set; }
 
     /// <summary>
     /// Gets or sets additional attributes that will be applied to the listbox.
@@ -90,20 +68,12 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    /// <inheritdoc />
-    public IListboxOption[] Options => _options.ToArray();
+    #endregion Parameters
 
-    /// <inheritdoc />
-    public IListboxOption? ActiveOption { get; private set; }
+    #region Rendering
 
-    /// <inheritdoc />
-    public IListboxLabel? Label { get; private set; }
-
-    /// <inheritdoc />
-    public IListboxButton? Button { get; private set; }
-
-    /// <inheritdoc />
-    public string Id { get; } = "ignis-hui-listbox-" + Guid.NewGuid().ToString("N");
+    private Type? _asComponent;
+    private string? _asElement;
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
     public ElementReference? Element { get; set; }
@@ -115,7 +85,7 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     public IEnumerable<KeyValuePair<string, object?>>? Attributes => AdditionalAttributes;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Listbox{TValue}"/> class.
+    /// Initializes a new instance of the <see cref="Listbox{T}"/> class.
     /// </summary>
     public Listbox()
     {
@@ -125,95 +95,128 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
+        builder.OpenComponent<CascadingValue<Listbox<T>>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<Listbox<T>>.IsFixed), value: true);
+        builder.AddAttribute(1, nameof(CascadingValue<Listbox<T>>.Name), nameof(Listbox<T>));
+        builder.AddAttribute(2, nameof(CascadingValue<Listbox<T>>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.AddAttribute(3, nameof(CascadingValue<Listbox<T>>.ChildContent), (RenderFragment)(builder =>
         {
-            builder.OpenComponent<CascadingValue<IListbox>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IListbox>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<IListbox>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IListbox>.ChildContent), this.GetChildContent(ChildContent));
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, Attributes!);
+            builder.AddChildContentFor(6, this, ChildContent);
 
-            builder.CloseComponent();
-        });
+            builder.CloseAs(this);
+        }));
 
-        builder.CloseAs(this);
+        builder.CloseComponent();
     }
 
-    /// <inheritdoc />
-    protected override void OnAfterOpen(Action? continueWith)
-    {
-        var selectedOption = Options.FirstOrDefault(x => x.IsSelected);
-        if (selectedOption != null) SetOptionActive(selectedOption, true);
+    #endregion Rendering
 
-        base.OnAfterOpen(continueWith);
-    }
+    #region ARIA
 
-    /// <inheritdoc />
-    public bool IsValueSelected<TValue1>(TValue1? value)
-    {
-        return value?.Equals(Value) ?? Value?.Equals(value) ?? false;
-    }
+    private readonly IList<ListboxOption<T>> _descendants = new List<ListboxOption<T>>();
+
+    private ListboxOption<T>? _activeDescendant;
 
     /// <inheritdoc />
-    public void SelectValue<TValue1>(TValue1? value)
-    {
-        var __ = ValueChanged.InvokeAsync(Value = (TValue?)(object?)value);
-
-        Update();
-    }
+    public string Id { get; } = "ignis-hui-listbox-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc />
-    public void SetOptionActive(IListboxOption option, bool isActive)
-    {
-        if (option == null) throw new ArgumentNullException(nameof(option));
+    public IEnumerable<ListboxOption<T>> Descendants => _descendants;
 
-        if (isActive)
+    IEnumerable<IAriaDescendant> IAriaPopup.Descendants => _descendants;
+
+    /// <inheritdoc />
+    public ListboxOption<T>? ActiveDescendant
+    {
+        get => _activeDescendant;
+        set
         {
-            ActiveOption = option;
+            _activeDescendant = value;
+
+            Update();
         }
-        else if (ActiveOption == option)
+    }
+
+    IAriaDescendant? IAriaPopup.ActiveDescendant
+    {
+        get => _activeDescendant;
+        set => ActiveDescendant = (ListboxOption<T>?)value;
+    }
+
+    /// <inheritdoc />
+    public IAriaComponentPart? Controlled { get; set; }
+
+    /// <inheritdoc />
+    public IAriaComponentPart? Button { get; set; }
+
+    /// <inheritdoc />
+    public IAriaComponentPart? Label { get; set; }
+
+    /// <inheritdoc />
+    public void AddDescendant(ListboxOption<T> descendant)
+    {
+        if (descendant == null) throw new ArgumentNullException(nameof(descendant));
+
+        if (!_descendants.Contains(descendant)) _descendants.Add(descendant);
+    }
+
+    /// <inheritdoc />
+    public void RemoveDescendant(ListboxOption<T> descendant)
+    {
+        if (descendant == null) throw new ArgumentNullException(nameof(descendant));
+
+        _descendants.Remove(descendant);
+    }
+
+    /// <inheritdoc />
+    public string? GetId(IAriaComponentPart? componentPart)
+    {
+        if (componentPart == null) return null;
+
+        if (componentPart.Id != null) return componentPart.Id;
+
+        if (componentPart == Button) return Id + "-button";
+
+        if (componentPart == Label) return Id + "-label";
+
+        if (componentPart == Controlled) return Id + "-controlled";
+
+        if (componentPart is not ListboxOption<T> option) return null;
+
+        var index = Array.IndexOf(_descendants.ToArray(), option);
+        if (index < 0) return null;
+
+        return Id + "-option-" + index.ToString(CultureInfo.InvariantCulture);
+    }
+
+    #endregion ARIA
+
+    #region Focus
+
+    /// <inheritdoc />
+    protected override IEnumerable<object> Targets
+    {
+        get
         {
-            ActiveOption = null;
+            if (Button != null) yield return Button;
+
+            if (Label != null) yield return Label;
+
+            if (Controlled != null) yield return Controlled;
+
+            foreach (var option in _descendants)
+            {
+                yield return option;
+            }
         }
-
-        Update();
     }
 
     /// <inheritdoc />
-    public void AddOption(IListboxOption option)
-    {
-        if (option == null) throw new ArgumentNullException(nameof(option));
-
-        if (!_options.Contains(option)) _options.Add(option);
-    }
-
-    /// <inheritdoc />
-    public void RemoveOption(IListboxOption option)
-    {
-        if (option == null) throw new ArgumentNullException(nameof(option));
-
-        _options.Remove(option);
-    }
-
-    /// <inheritdoc />
-    public void SetButton(IListboxButton button)
-    {
-        Button = button ?? throw new ArgumentNullException(nameof(button));
-    }
-
-    /// <inheritdoc />
-    public void SetLabel(IListboxLabel label)
-    {
-        Label = label ?? throw new ArgumentNullException(nameof(label));
-    }
-
-    /// <inheritdoc />
-    public void SetOptions(IDynamicParentComponent options)
-    {
-        _optionsComponent = options ?? throw new ArgumentNullException(nameof(options));
-    }
+    protected override IEnumerable<string> KeysToCapture { get; } =
+        new[] { "Escape", "Space", "Enter", "ArrowUp", "ArrowDown" };
 
     /// <inheritdoc />
     protected override void OnBlur()
@@ -221,45 +224,36 @@ public sealed class Listbox<TValue> : OpenCloseWithTransitionComponentBase, ILis
         Close();
     }
 
+    #endregion Focus
+
+    #region Listbox
+
+    public bool IsValueSelected(T? value)
+    {
+        return value?.Equals(Value) ?? Value?.Equals(value) ?? false;
+    }
+
+    public void SelectValue(T? value)
+    {
+        var __ = ValueChanged.InvokeAsync(Value = value);
+
+        Update();
+    }
+
+    /// <inheritdoc />
+    protected override void OnAfterOpen(Action? continueWith)
+    {
+        var selectedOption = _descendants.FirstOrDefault(x => x.IsSelected);
+        if (selectedOption != null) this.SetActiveDescendant(selectedOption, isActive: true);
+
+        base.OnAfterOpen(continueWith);
+    }
+
     /// <inheritdoc />
     protected override void OnKeyDown(KeyboardEventArgs eventArgs)
     {
-        switch (eventArgs.Code)
-        {
-            case "Escape":
-                Close();
-                break;
-            case "Space" or "Enter":
-                if (IsOpen)
-                {
-                    if (ActiveOption != null) ActiveOption.Click();
-                    else Close();
-                }
-                else
-                {
-                    Open();
-                }
-
-                break;
-            case "ArrowUp" when ActiveOption == null:
-            case "ArrowDown" when ActiveOption == null:
-                if (Options.Any()) SetOptionActive(Options[0], true);
-                else if (!IsOpen) Open();
-                break;
-            case "ArrowDown":
-                {
-                    var index = Array.IndexOf(Options, ActiveOption) + 1;
-                    if (index < Options.Length) SetOptionActive(Options[index], true);
-                    else if (!IsOpen) Open();
-                    break;
-                }
-            case "ArrowUp":
-                {
-                    var index = Array.IndexOf(Options, ActiveOption) - 1;
-                    if (index >= 0) SetOptionActive(Options[index], true);
-                    else if (!IsOpen) Open();
-                    break;
-                }
-        }
+        AriaPopupExtensions.OnKeyDown(this, eventArgs);
     }
+
+    #endregion Listbox
 }

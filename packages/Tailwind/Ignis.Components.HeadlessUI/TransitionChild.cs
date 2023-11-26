@@ -3,52 +3,15 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class TransitionChild : TransitionBase, ITransitionChild, IDisposable
+public sealed class TransitionChild : TransitionBase<TransitionChild>, IDisposable
 {
-    private Type? _asComponent;
-    private string? _asElement;
+    [CascadingParameter] public Transition Parent { get; set; } = null!;
 
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
+    [Parameter] public RenderFragment<TransitionChild>? ChildContent { get; set; }
+
+    public TransitionChild() : base("div")
     {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
-    [CascadingParameter] public ITransition Parent { get; set; } = null!;
-
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<ITransitionChild>? _ { get; set; }
-
-    [Parameter] public RenderFragment<ITransitionChild>? ChildContent { get; set; }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    public TransitionChild()
-    {
-        AsElement = "div";
+        SetAttributes(ArraySegment<Func<KeyValuePair<string, object?>>>.Empty);
     }
 
     /// <inheritdoc />
@@ -66,21 +29,20 @@ public sealed class TransitionChild : TransitionBase, ITransitionChild, IDisposa
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
+        if (!RenderContent) return;
+
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        if (RenderContent)
-            builder.AddChildContentFor<ITransitionChild, TransitionChild>(2, this, ChildContent?.Invoke(this));
+        builder.AddChildContentFor(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }
 
-    /// <inheritdoc />
     public void Hide(Action? continueWith = null)
     {
         LeaveTransition(continueWith);
     }
 
-    /// <inheritdoc />
     public void Show(Action? continueWith = null)
     {
         EnterTransition(continueWith);

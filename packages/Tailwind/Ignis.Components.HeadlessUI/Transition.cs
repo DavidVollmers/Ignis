@@ -1,44 +1,19 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Transition : TransitionBase, ITransition, IDisposable
+public sealed class Transition : TransitionBase<Transition>, IContentProvider, IDisposable
 {
-    private readonly IList<ITransitionChild> _children = new List<ITransitionChild>();
-    private readonly IList<IDialog> _dialogs = new List<IDialog>();
+    private readonly IList<TransitionChild> _children = new List<TransitionChild>();
+    private readonly IList<Dialog> _dialogs = new List<Dialog>();
 
     private bool _transitioningTo;
     private bool _didRenderOnce;
     private bool _showInitially;
-    private Type? _asComponent;
-    private string? _asElement;
     private bool _isHosted;
     private bool _show;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
 
     [Parameter]
     public bool Show
@@ -61,49 +36,38 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
 
     [CascadingParameter] public IContentHost? Outlet { get; set; }
 
-    [CascadingParameter] public IMenu? Menu { get; set; }
+    [CascadingParameter] public Menu? Menu { get; set; }
 
-    [CascadingParameter] public IListbox? Listbox { get; set; }
+    [CascadingParameter(Name = nameof(Listbox<object>))] public IAriaPopup? Listbox { get; set; }
 
-    [CascadingParameter] public IPopover? Popover { get; set; }
+    [CascadingParameter] public Popover? Popover { get; set; }
 
-    [CascadingParameter] public IDisclosure? Disclosure { get; set; }
+    [CascadingParameter] public Disclosure? Disclosure { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<ITransition>? _ { get; set; }
-
-    [Parameter] public RenderFragment<ITransition>? ChildContent { get; set; }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
+    [Parameter] public RenderFragment<Transition>? ChildContent { get; set; }
 
     /// <inheritdoc />
     public RenderFragment Content => BuildContentRenderTree;
 
-    /// <inheritdoc />
     public bool HasOutletDialogs => _dialogs.Any(d => !d.IgnoreOutlet);
 
     [Inject] public IContentRegistry ContentRegistry { get; set; } = null!;
 
-    public Transition()
+    public Transition() : base("div")
     {
-        AsElement = "div";
+        SetAttributes(ArraySegment<Func<KeyValuePair<string, object?>>>.Empty);
     }
 
     /// <inheritdoc />
     protected override void OnInitialized()
     {
-        Menu?.SetTransition(this);
+        if (Menu != null) Menu.Transition = this;
 
-        Listbox?.SetTransition(this);
+        if (Listbox != null) Listbox.Transition = this;
 
-        Popover?.SetTransition(this);
+        if (Popover != null) Popover.Transition = this;
 
-        Disclosure?.SetTransition(this);
+        if (Disclosure != null) Disclosure.Transition = this;
     }
 
     /// <inheritdoc />
@@ -116,22 +80,22 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
 
     private void BuildContentRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
+        if (!RenderContent && !_show) return;
+
+        builder.OpenComponent<CascadingValue<Transition>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<Transition>.IsFixed), value: true);
+        builder.AddAttribute(2, nameof(CascadingValue<Transition>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.AddAttribute(3, nameof(CascadingValue<Transition>.ChildContent), (RenderFragment)(builder =>
         {
-            builder.OpenComponent<CascadingValue<ITransition>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<ITransition>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<ITransition>.Value), this);
-            if (RenderContent || _show)
-                builder.AddAttribute(6, nameof(CascadingValue<ITransition>.ChildContent),
-                    this.GetChildContent(ChildContent));
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, Attributes!);
+            builder.AddChildContentFor(6, this, ChildContent);
 
-            builder.CloseComponent();
-        });
+            builder.CloseAs(this);
+        }));
 
-        builder.CloseAs(this);
+        builder.CloseComponent();
     }
 
     /// <inheritdoc />
@@ -152,13 +116,12 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
         base.Update(async);
     }
 
-    /// <inheritdoc />
-    public void Hide(Action? continueWith = null)
+    public void Leave(Action? continueWith = null)
     {
         LeaveTransition(continueWith);
     }
 
-    void ITransition.Show(Action? continueWith)
+    public void Enter(Action? continueWith)
     {
         EnterTransition(continueWith);
     }
@@ -184,24 +147,21 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
         });
     }
 
-    /// <inheritdoc />
-    public void AddChild(ITransitionChild child)
+    public void AddChild(TransitionChild child)
     {
         if (child == null) throw new ArgumentNullException(nameof(child));
 
         if (!_children.Contains(child)) _children.Add(child);
     }
 
-    /// <inheritdoc />
-    public void RemoveChild(ITransitionChild child)
+    public void RemoveChild(TransitionChild child)
     {
         if (child == null) throw new ArgumentNullException(nameof(child));
 
         _children.Remove(child);
     }
 
-    /// <inheritdoc />
-    public void AddDialog(IDialog dialog)
+    public void AddDialog(Dialog dialog)
     {
         if (dialog == null) throw new ArgumentNullException(nameof(dialog));
 
@@ -210,8 +170,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
         if (Outlet == null) ContentRegistry.RegisterContentProvider(this);
     }
 
-    /// <inheritdoc />
-    public void RemoveDialog(IDialog dialog)
+    public void RemoveDialog(Dialog dialog)
     {
         if (dialog == null) throw new ArgumentNullException(nameof(dialog));
 
@@ -220,7 +179,7 @@ public sealed class Transition : TransitionBase, ITransition, IDisposable
 
     private void WatchTransition(bool isEnter, Action? continueWith)
     {
-        var startedTransitions = new List<ITransitionChild>();
+        var startedTransitions = new List<TransitionChild>();
         var finishedTransitions = 0;
 
         if (isEnter) base.EnterTransition(() => AggregateDialogs(open: true, ContinueWith));

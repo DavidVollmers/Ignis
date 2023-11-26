@@ -1,78 +1,32 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class MenuItems : IgnisRigidComponentBase, IDynamicParentComponent
+public sealed class MenuItems : DynamicComponentBase<MenuItems>, IAriaComponentPart
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
     /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
+    [Parameter] public string? Id { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
-    [CascadingParameter] public IMenu Menu { get; set; } = null!;
-
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<IDynamicComponent>? _ { get; set; }
+    [CascadingParameter] public Menu Menu { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    public MenuItems() : base("div")
     {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public MenuItems()
-    {
-        AsElement = "div";
-
-        //TODO aria-active-descendant
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
+            () => new KeyValuePair<string, object?>("id", Menu.GetId(this)),
             () => new KeyValuePair<string, object?>("tabindex", -1),
-            () => new KeyValuePair<string, object?>("role", "menu"), () => new KeyValuePair<string, object?>(
-                "aria-labelledby", Menu.Button == null ? null : Menu.Button.Id ?? Menu.Id + "-button")
+            () => new KeyValuePair<string, object?>("role", "menu"),
+            () => new KeyValuePair<string, object?>("aria-labelledby", Menu.GetId(Menu.Button)),
+            () => new KeyValuePair<string, object?>("aria-activedescendant", Menu.GetId(Menu.ActiveDescendant)),
         });
     }
 
     /// <inheritdoc />
-    protected override void OnRender()
+    protected override void OnInitialized()
     {
         if (Menu == null)
         {
@@ -80,7 +34,7 @@ public sealed class MenuItems : IgnisRigidComponentBase, IDynamicParentComponent
                 $"{nameof(MenuItems)} must be used inside a {nameof(HeadlessUI.Menu)}.");
         }
 
-        Menu.SetItems(this);
+        Menu.Controlled = this;
     }
 
     /// <inheritdoc />
@@ -91,7 +45,7 @@ public sealed class MenuItems : IgnisRigidComponentBase, IDynamicParentComponent
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IDynamicComponent, MenuItems>(3, this, ChildContent);
+        builder.AddChildContentFor(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

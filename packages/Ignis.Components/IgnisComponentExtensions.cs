@@ -1,4 +1,5 @@
-﻿using Ignis.Components.Extensions;
+﻿using System.Reflection;
+using Ignis.Components.Extensions;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.DependencyInjection;
@@ -76,16 +77,14 @@ public static class IgnisComponentExtensions
         }
     }
 
-    public static RenderFragment? GetChildContent<TContext, TDynamic>(this TDynamic dynamicComponent,
-        RenderFragment<TContext>? childContent)
-        where TContext : IDynamicComponent where TDynamic : IDynamicParentComponent<TContext>, TContext
+    private static RenderFragment? GetChildContent<T>(this T dynamicComponent, RenderFragment<T>? childContent)
+        where T : IDynamicParentComponent<T>
     {
-        return GetChildContent<TContext, TDynamic>(dynamicComponent, childContent?.Invoke(dynamicComponent));
+        return GetChildContent(dynamicComponent, childContent?.Invoke(dynamicComponent));
     }
 
-    public static RenderFragment? GetChildContent<TContext, TDynamic>(this TDynamic dynamicComponent,
-        RenderFragment? childContent)
-        where TContext : IDynamicComponent where TDynamic : IDynamicParentComponent<TContext>, TContext
+    private static RenderFragment? GetChildContent<T>(this T dynamicComponent, RenderFragment? childContent)
+        where T : IDynamicParentComponent<T>
     {
         switch (dynamicComponent)
         {
@@ -99,17 +98,32 @@ public static class IgnisComponentExtensions
         return dynamicComponent._ != null ? dynamicComponent._.Invoke(dynamicComponent) : childContent;
     }
 
-    public static void AddChildContentFor<TContext, TDynamic>(this RenderTreeBuilder builder, int sequence,
-        TDynamic dynamicComponent, RenderFragment? childContent)
-        where TContext : IDynamicComponent where TDynamic : IDynamicParentComponent<TContext>, TContext
+    public static void AddChildContentFor<T>(this RenderTreeBuilder builder, int sequence, T dynamicComponent,
+        RenderFragment? childContent) where T : IDynamicParentComponent<T>
     {
-        AddContentFor(builder, sequence, dynamicComponent,
-            GetChildContent<TContext, TDynamic>(dynamicComponent, childContent));
+        AddContentForCore(builder, sequence, dynamicComponent, GetChildContent(dynamicComponent, childContent));
+    }
+
+    public static void AddChildContentFor<T>(this RenderTreeBuilder builder, int sequence, T dynamicComponent,
+        RenderFragment<T>? childContent) where T : IDynamicParentComponent<T>
+    {
+        AddContentForCore(builder, sequence, dynamicComponent, GetChildContent(dynamicComponent, childContent));
+    }
+
+    public static void AddContentFor(this RenderTreeBuilder builder, int sequence, IDynamicComponent dynamicComponent,
+        RenderFragment? content)
+    {
+        if (dynamicComponent.GetType().GetInterfaces().Any(i => i.IsGenericType &&
+                                                                i.GetGenericTypeDefinition() ==
+                                                                typeof(IDynamicParentComponent<>)))
+            throw new InvalidOperationException(
+                $"You cannot use {nameof(AddContentFor)} with a IDynamicParentComponent. Use {nameof(AddChildContentFor)} instead.");
+        AddContentForCore(builder, sequence, dynamicComponent, content);
     }
 
 #pragma warning disable ASP0006
-    public static void AddContentFor(this RenderTreeBuilder builder, int sequence, IDynamicComponent dynamicComponent,
-        RenderFragment? content)
+    private static void AddContentForCore(this RenderTreeBuilder builder, int sequence,
+        IDynamicComponent dynamicComponent, RenderFragment? content)
     {
         if (builder == null) throw new ArgumentNullException(nameof(builder));
         switch (dynamicComponent)
@@ -140,7 +154,7 @@ public static class IgnisComponentExtensions
 
         return dynamicComponent.Component switch
         {
-            IDynamicParentComponent component => component.TryProvideElementReference(),
+            IDynamicComponent component => component.TryProvideElementReference(),
             IElementReferenceProvider elementReferenceProvider => elementReferenceProvider.Element,
             _ => dynamicComponent.Element
         };

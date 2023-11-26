@@ -1,75 +1,32 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class TabPanel : IgnisComponentBase, ITabPanel, IDisposable
+public sealed class TabPanel : DynamicComponentBase<TabPanel>, IAriaComponentPart, IDisposable
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
     /// <inheritdoc />
     [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
+    public string? Id { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
+    [CascadingParameter] public TabGroup TabGroup { get; set; } = null!;
 
-    [CascadingParameter] public ITabGroup TabGroup { get; set; } = null!;
+    [Parameter] public RenderFragment<TabPanel>? ChildContent { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<ITabPanel>? _ { get; set; }
-
-    [Parameter] public RenderFragment<ITabPanel>? ChildContent { get; set; }
-
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
-    {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc />
     public bool IsSelected => TabGroup.IsTabPanelSelected(this);
 
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public TabPanel()
+    public TabPanel() : base("div")
     {
-        AsElement = "div";
-
-        //TODO aria-labelledby
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
+            () => new KeyValuePair<string, object?>("id", TabGroup.GetId(this)),
             () => new KeyValuePair<string, object?>("role", "tabpanel"),
-            () => new KeyValuePair<string, object?>("tabindex", IsSelected ? 0 : -1)
+            () => new KeyValuePair<string, object?>("tabindex", IsSelected ? 0 : -1), () =>
+            {
+                var tab = TabGroup.Tabs.ElementAtOrDefault(Array.IndexOf(TabGroup.TabPanels.ToArray(), this));
+                return new KeyValuePair<string, object?>("aria-labelledby", TabGroup.GetId(tab));
+            },
         });
     }
 
@@ -92,7 +49,7 @@ public sealed class TabPanel : IgnisComponentBase, ITabPanel, IDisposable
 
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
-        builder.AddChildContentFor<ITabPanel, TabPanel>(2, this, ChildContent?.Invoke(this));
+        builder.AddChildContentFor(2, this, ChildContent?.Invoke(this));
 
         builder.CloseAs(this);
     }

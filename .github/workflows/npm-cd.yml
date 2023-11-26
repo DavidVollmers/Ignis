@@ -13,7 +13,7 @@ jobs:
         with:
           # https://github.com/actions/checkout/issues/701 https://github.com/actions/checkout/pull/579
           fetch-depth: 0
-      - run: echo "VERSION=$(git describe --tags --dirty)" >> $GITHUB_ENV
+      - run: echo "VERSION=$(git describe --tags)" >> $GITHUB_ENV
       - uses: actions/setup-node@v3
         with:
           node-version: 18.x

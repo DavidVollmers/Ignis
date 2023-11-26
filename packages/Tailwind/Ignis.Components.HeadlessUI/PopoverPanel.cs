@@ -1,72 +1,30 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class PopoverPanel : IgnisRigidComponentBase, IDynamicParentComponent
+public sealed class PopoverPanel : DynamicComponentBase<PopoverPanel>, IAriaComponentPart
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
     /// <inheritdoc />
     [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
+    public string? Id { get; set; }
 
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
-    [CascadingParameter] public IPopover Popover { get; set; } = null!;
-
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<IDynamicComponent>? _ { get; set; }
+    [CascadingParameter] public Popover Popover { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    public PopoverPanel() : base("div")
     {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public PopoverPanel()
-    {
-        AsElement = "div";
-
-        _attributes = new AttributeCollection(new[] { () => new KeyValuePair<string, object?>("tabindex", -1) });
+        SetAttributes(new[]
+        {
+            () => new KeyValuePair<string, object?>("id", Popover.GetId(this)),
+            () => new KeyValuePair<string, object?>("tabindex", -1),
+        });
     }
 
     /// <inheritdoc />
-    protected override void OnRender()
+    protected override void OnInitialized()
     {
         if (Popover == null)
         {
@@ -74,7 +32,7 @@ public sealed class PopoverPanel : IgnisRigidComponentBase, IDynamicParentCompon
                 $"{nameof(PopoverPanel)} must be used inside a {nameof(HeadlessUI.Popover)}.");
         }
 
-        Popover.SetPanel(this);
+        Popover.Controlled = this;
     }
 
     /// <inheritdoc />
@@ -85,7 +43,7 @@ public sealed class PopoverPanel : IgnisRigidComponentBase, IDynamicParentCompon
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IDynamicComponent, PopoverPanel>(3, this, ChildContent);
+        builder.AddChildContentFor(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 

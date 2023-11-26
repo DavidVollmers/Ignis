@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosure
+public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Disclosure>, IAriaControl
 {
-    private IDisclosureButton? _button;
     private Type? _asComponent;
     private string? _asElement;
 
@@ -14,9 +14,9 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
     {
         get
         {
-            if (_button != null) yield return _button;
+            if (Button != null) yield return Button;
 
-            if (Panel != null) yield return Panel;
+            if (Controlled != null) yield return Controlled;
         }
     }
 
@@ -46,17 +46,17 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
 
     /// <inheritdoc />
     [Parameter]
-    public RenderFragment<IDisclosure>? _ { get; set; }
+    public RenderFragment<Disclosure>? _ { get; set; }
 
-    [Parameter] public RenderFragment<IDisclosure>? ChildContent { get; set; }
+    [Parameter] public RenderFragment<Disclosure>? ChildContent { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }
 
-    /// <inheritdoc />
-    public IDisclosurePanel? Panel { get; private set; }
+    public DisclosureButton? Button { get; set; }
 
-    /// <inheritdoc />
+    public IAriaComponentPart? Controlled { get; set; }
+
     public string Id { get; } = "ignis-hui-disclosure-" + Guid.NewGuid().ToString("N");
 
     /// <inheritdoc cref="IElementReferenceProvider.Element" />
@@ -76,32 +76,31 @@ public sealed class Disclosure : OpenCloseWithTransitionComponentBase, IDisclosu
     /// <inheritdoc />
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenAs(0, this);
-        builder.AddMultipleAttributes(1, Attributes!);
+        builder.OpenComponent<CascadingValue<Disclosure>>(0);
+        builder.AddAttribute(1, nameof(CascadingValue<Disclosure>.IsFixed), value: true);
+        builder.AddAttribute(2, nameof(CascadingValue<Disclosure>.Value), this);
         // ReSharper disable once VariableHidesOuterVariable
-        builder.AddContentFor(2, this, builder =>
+        builder.AddAttribute(3, nameof(CascadingValue<Disclosure>.ChildContent), (RenderFragment)(builder =>
         {
-            builder.OpenComponent<CascadingValue<IDisclosure>>(3);
-            builder.AddAttribute(4, nameof(CascadingValue<IDisclosure>.IsFixed), true);
-            builder.AddAttribute(5, nameof(CascadingValue<IDisclosure>.Value), this);
-            builder.AddAttribute(6, nameof(CascadingValue<IDisclosure>.ChildContent),
-                this.GetChildContent(ChildContent));
+            builder.OpenAs(4, this);
+            builder.AddMultipleAttributes(5, Attributes!);
+            builder.AddChildContentFor(6, this, ChildContent);
 
-            builder.CloseComponent();
-        });
+            builder.CloseAs(this);
+        }));
 
-        builder.CloseAs(this);
+        builder.CloseComponent();
     }
 
     /// <inheritdoc />
-    public void SetPanel(IDisclosurePanel panel)
+    public string? GetId(IAriaComponentPart? componentPart)
     {
-        Panel = panel ?? throw new ArgumentNullException(nameof(panel));
-    }
+        if (componentPart == null) return null;
 
-    /// <inheritdoc />
-    public void SetButton(IDisclosureButton button)
-    {
-        _button = button ?? throw new ArgumentNullException(nameof(button));
+        if (componentPart.Id != null) return componentPart.Id;
+
+        if (componentPart == Controlled) return Id + "-panel";
+
+        return null;
     }
 }

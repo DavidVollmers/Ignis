@@ -1,81 +1,32 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Ignis.Components.HeadlessUI.Aria;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
+public sealed class ListboxLabel : DynamicComponentBase<ListboxLabel>, IAriaComponentPart
 {
-    private readonly AttributeCollection _attributes;
-
-    private Type? _asComponent;
-    private string? _asElement;
-
-    /// <inheritdoc />
-    [Parameter]
-    public string? AsElement
-    {
-        get => _asElement;
-        set
-        {
-            _asElement = value;
-            _asComponent = null;
-        }
-    }
-
-    /// <inheritdoc />
-    [Parameter]
-    public Type? AsComponent
-    {
-        get => _asComponent;
-        set
-        {
-            _asComponent = value;
-            _asElement = null;
-        }
-    }
-
     /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
 
-    [CascadingParameter] public IListbox Listbox { get; set; } = null!;
-
-    /// <inheritdoc />
-    [Parameter]
-    public RenderFragment<IListboxLabel>? _ { get; set; }
+    [CascadingParameter(Name = nameof(Listbox<object>))]
+    public IAriaPopup Listbox { get; set; } = null!;
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter(CaptureUnmatchedValues = true)]
-    public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
+    public ListboxLabel() : base("label")
     {
-        get => _attributes.AdditionalAttributes;
-        set => _attributes.AdditionalAttributes = value;
-    }
-
-    /// <inheritdoc cref="IElementReferenceProvider.Element" />
-    public ElementReference? Element { get; set; }
-
-    /// <inheritdoc />
-    public object? Component { get; set; }
-
-    /// <inheritdoc />
-    public IEnumerable<KeyValuePair<string, object?>> Attributes => _attributes;
-
-    public ListboxLabel()
-    {
-        AsElement = "label";
-
-        _attributes = new AttributeCollection(new[]
+        SetAttributes(new[]
         {
-            () => new KeyValuePair<string, object?>("id", Id ?? Listbox.Id + "-label"), () =>
+            () => new KeyValuePair<string, object?>("id", Listbox.GetId(this)), () =>
                 new KeyValuePair<string, object?>("onclick",
-                    EventCallback.Factory.Create(this, Listbox.FocusAsync))
+                    EventCallback.Factory.Create(this, Listbox.FocusAsync)),
         });
     }
 
     /// <inheritdoc />
-    protected override void OnRender()
+    protected override void OnInitialized()
     {
         if (Listbox == null)
         {
@@ -83,7 +34,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
                 $"{nameof(ListboxLabel)} must be used inside a {nameof(Listbox<object>)}.");
         }
 
-        Listbox.SetLabel(this);
+        Listbox.Label = this;
     }
 
     /// <inheritdoc />
@@ -92,7 +43,7 @@ public sealed class ListboxLabel : IgnisRigidComponentBase, IListboxLabel
         builder.OpenAs(0, this);
         builder.AddMultipleAttributes(1, Attributes!);
         if (AsElement != null) builder.AddElementReferenceCapture(2, e => Element = e);
-        builder.AddChildContentFor<IListboxLabel, ListboxLabel>(3, this, ChildContent);
+        builder.AddChildContentFor(3, this, ChildContent);
         if (AsComponent != null && AsComponent != typeof(Fragment))
             builder.AddComponentReferenceCapture(4, c => Component = c);
 
