@@ -6,7 +6,7 @@ This project is built using [Ignis](https://ignis.dvolper.dev).
 
 Please make sure you have the following prerequisites installed:
 
-- [.NET SDK](https://dotnet.microsoft.com/en-us/download) (net7.0)
+- [.NET SDK](https://dotnet.microsoft.com/en-us/download) (net8.0)
 - [Node.js](https://nodejs.org/en/) (v18.17.1)
 
 ## Getting started
