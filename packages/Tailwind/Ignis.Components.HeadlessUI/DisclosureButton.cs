@@ -57,7 +57,7 @@ public sealed class DisclosureButton : DynamicComponentBase<DisclosureButton>
 
         var __ = OnClick.InvokeAsync(@event);
 
-        if (@event.CancellationToken.IsCancellationRequested) return;
+        if (@event.DefaultPrevented) return;
 
         Toggle();
     }

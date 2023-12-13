@@ -148,7 +148,7 @@ public sealed class Tab : FocusComponentBase, IDynamicParentComponent<Tab>, IAri
 
         var __ = OnClick.InvokeAsync(@event);
 
-        if (@event.CancellationToken.IsCancellationRequested) return;
+        if (@event.DefaultPrevented) return;
 
         TabGroup.SelectTab(this);
     }

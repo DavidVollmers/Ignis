@@ -62,7 +62,7 @@ public sealed class MenuButton : DynamicComponentBase<MenuButton>, IAriaComponen
 
         var __ = OnClick.InvokeAsync(@event);
 
-        if (@event.CancellationToken.IsCancellationRequested) return;
+        if (@event.DefaultPrevented) return;
 
         if (Menu.IsOpen) Menu.Close();
         else Menu.Open();

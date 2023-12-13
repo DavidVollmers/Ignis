@@ -62,7 +62,7 @@ public sealed class PopoverButton : DynamicComponentBase<PopoverButton>, IAriaCo
 
         var __ = OnClick.InvokeAsync(@event);
 
-        if (@event.CancellationToken.IsCancellationRequested) return;
+        if (@event.DefaultPrevented) return;
 
         if (Popover.IsOpen) Popover.Close();
         else Popover.Open();
