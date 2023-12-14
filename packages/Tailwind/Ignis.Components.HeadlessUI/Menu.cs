@@ -195,7 +195,7 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
         new[] { "Escape", "Space", "Enter", "ArrowUp", "ArrowDown" };
 
     /// <inheritdoc />
-    protected override void OnBlur()
+    protected override void OnTargetBlur()
     {
         Close();
     }

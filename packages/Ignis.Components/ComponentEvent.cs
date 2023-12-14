@@ -4,7 +4,7 @@ public class ComponentEvent : IComponentEvent, IDisposable
 {
     private readonly CancellationTokenSource _cancellationTokenSource = new();
 
-    public CancellationToken CancellationToken => this._cancellationTokenSource.Token;
+    public bool DefaultPrevented => this._cancellationTokenSource.IsCancellationRequested;
 
     public void PreventDefault()
     {

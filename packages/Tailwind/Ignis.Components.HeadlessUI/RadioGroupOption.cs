@@ -193,19 +193,19 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
 
         var __ = OnClick.InvokeAsync(@event);
 
-        if (@event.CancellationToken.IsCancellationRequested) return;
+        if (@event.DefaultPrevented) return;
 
         Check();
     }
 
     /// <inheritdoc />
-    protected override void OnFocus()
+    protected override void OnTargetFocus()
     {
         RadioGroup.ActiveOption = this;
     }
 
     /// <inheritdoc />
-    protected override void OnBlur()
+    protected override void OnTargetBlur()
     {
         if (RadioGroup.ActiveOption == this) RadioGroup.ActiveOption = null;
     }

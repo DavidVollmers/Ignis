@@ -66,7 +66,7 @@ public sealed class Switch : DynamicComponentBase<Switch>, IAriaComponentPart
 
         var __ = OnClick.InvokeAsync(@event);
 
-        if (@event.CancellationToken.IsCancellationRequested) return;
+        if (@event.DefaultPrevented) return;
 
         Toggle();
     }

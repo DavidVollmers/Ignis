@@ -98,7 +98,7 @@ public sealed class DialogPanel : FocusComponentBase, IDynamicParentComponent<Di
     }
 
     /// <inheritdoc />
-    protected override void OnBlur()
+    protected override void OnTargetBlur()
     {
         Dialog.Close();
     }

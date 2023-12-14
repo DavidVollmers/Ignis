@@ -2,5 +2,7 @@
 
 public interface IComponentEvent
 {
+    bool DefaultPrevented { get; }
+
     void PreventDefault();
 }

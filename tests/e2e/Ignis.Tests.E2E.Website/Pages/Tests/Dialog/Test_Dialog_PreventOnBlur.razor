@@ -1,0 +1,10 @@
+﻿@page "/tests/dialog/preventOnBlur"
+@inherits IgnisComponentBase
+
+<PageTitle>Test: Prevent OnBlur</PageTitle>
+
+<CustomDialog data-testid="dialog" Open="true" OnBlur="e => e.PreventDefault()">
+    <p data-testid="content">This dialog cannot be closed.</p>
+</CustomDialog>
+
+<DialogOutlet/>

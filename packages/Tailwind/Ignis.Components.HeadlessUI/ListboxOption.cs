@@ -73,7 +73,7 @@ public sealed class ListboxOption<T> : DynamicComponentBase<ListboxOption<T>>, I
 
         var __ = OnClick.InvokeAsync(@event);
 
-        if (@event.CancellationToken.IsCancellationRequested) return;
+        if (@event.DefaultPrevented) return;
 
         Listbox.SelectValue(Value);
 

@@ -101,7 +101,7 @@ public sealed class Popover : OpenCloseWithTransitionComponentBase, IDynamicPare
     }
 
     /// <inheritdoc />
-    protected override void OnBlur()
+    protected override void OnTargetBlur()
     {
         Close();
     }

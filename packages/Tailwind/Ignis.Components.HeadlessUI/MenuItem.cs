@@ -65,7 +65,7 @@ public sealed class MenuItem : DynamicComponentBase<MenuItem>, IAriaDescendant, 
 
         var __ = OnClick.InvokeAsync(@event);
 
-        if (@event.CancellationToken.IsCancellationRequested) return;
+        if (@event.DefaultPrevented) return;
 
         Menu.Close();
     }

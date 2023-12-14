@@ -16,6 +16,10 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
 
     protected virtual bool FocusOnRender => false;
 
+    [Parameter] public EventCallback<IComponentEvent> OnFocus { get; set; }
+
+    [Parameter] public EventCallback<IComponentEvent> OnBlur { get; set; }
+
     // ReSharper disable once InconsistentNaming
     [Inject] public IJSRuntime JSRuntime { get; set; } = null!;
 
@@ -32,14 +36,20 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
     {
         if (_isFocused) return;
 
+        var @event = new ComponentEvent();
+
+        await OnFocus.InvokeAsync(@event);
+
+        if (@event.DefaultPrevented) return;
+
         _isFocused = true;
 
 #pragma warning disable MA0042
         // ReSharper disable once MethodHasAsyncOverload
-        OnFocus();
+        OnTargetFocus();
 #pragma warning restore MA0042
 
-        await OnFocusAsync();
+        await OnTargetFocusAsync();
     }
 
     /// <summary>
@@ -50,14 +60,20 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
     {
         if (!_isFocused) return;
 
+        var @event = new ComponentEvent();
+
+        await OnBlur.InvokeAsync(@event);
+
+        if (@event.DefaultPrevented) return;
+
         _isFocused = false;
 
 #pragma warning disable MA0042
         // ReSharper disable once MethodHasAsyncOverload
-        OnBlur();
+        OnTargetBlur();
 #pragma warning restore MA0042
 
-        await OnBlurAsync();
+        await OnTargetBlurAsync();
     }
 
     /// <summary>
@@ -117,20 +133,20 @@ public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAf
         }
     }
 
-    protected virtual void OnFocus()
+    protected virtual void OnTargetFocus()
     {
     }
 
-    protected virtual Task OnFocusAsync()
+    protected virtual Task OnTargetFocusAsync()
     {
         return Task.CompletedTask;
     }
 
-    protected virtual void OnBlur()
+    protected virtual void OnTargetBlur()
     {
     }
 
-    protected virtual Task OnBlurAsync()
+    protected virtual Task OnTargetBlurAsync()
     {
         return Task.CompletedTask;
     }

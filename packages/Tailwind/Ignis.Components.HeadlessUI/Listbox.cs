@@ -219,7 +219,7 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
         new[] { "Escape", "Space", "Enter", "ArrowUp", "ArrowDown" };
 
     /// <inheritdoc />
-    protected override void OnBlur()
+    protected override void OnTargetBlur()
     {
         Close();
     }

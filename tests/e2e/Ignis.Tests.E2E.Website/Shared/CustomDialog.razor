@@ -1,6 +1,6 @@
 ﻿@inherits IgnisComponentBase
 
-<Transition AsComponent="typeof(Fragment)" Show="Open" Context="_">
+<Transition AsComponent="typeof(Fragment)" Show="Open" Context="_" Appear>
     <Dialog Context="dialog" IsOpenChanged="OpenChanged"
             class="relative z-20" @attributes="AdditionalAttributes">
         <TransitionChild AsComponent="typeof(Fragment)"
@@ -23,7 +23,8 @@
                                  LeaveFrom="opacity-100 translate-y-0 sm:scale-100"
                                  LeaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                                  Context="transition">
-                    <DialogPanel class="@Css.Class("relative text-left shadow-xl sm:my-8 sm:w-full sm:max-w-2xl pointer-events-auto rounded-lg transform transition-all", transition)">
+                    <DialogPanel OnBlur="OnBlur"
+                                 class="@Css.Class("relative text-left shadow-xl sm:my-8 sm:w-full sm:max-w-2xl pointer-events-auto rounded-lg transform transition-all", transition)">
                         <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4 rounded-t-lg">
                             @ChildContent
                         </div>
@@ -39,17 +40,15 @@
 
 @code
 {
-    [Parameter]
-    public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter]
-    public RenderFragment? FooterContent { get; set; }
+    [Parameter] public RenderFragment? FooterContent { get; set; }
 
-    [Parameter]
-    public bool Open { get; set; }
+    [Parameter] public bool Open { get; set; }
 
-    [Parameter]
-    public EventCallback<bool> OpenChanged { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+
+    [Parameter] public EventCallback<IComponentEvent> OnBlur { get; set; }
 
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes { get; set; }

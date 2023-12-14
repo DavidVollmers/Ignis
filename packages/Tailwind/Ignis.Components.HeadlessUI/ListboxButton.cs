@@ -67,7 +67,7 @@ public sealed class ListboxButton : DynamicComponentBase<ListboxButton>, IAriaCo
 
         var __ = OnClick.InvokeAsync(@event);
 
-        if (@event.CancellationToken.IsCancellationRequested) return;
+        if (@event.DefaultPrevented) return;
 
         if (Listbox.IsOpen) Listbox.Close();
         else Listbox.Open();
