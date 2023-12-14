@@ -70,13 +70,13 @@ public class DialogTests : PageTest
     public async Task Test_Dialog_PreventOnBlur()
     {
         await Page.GotoAsync("https://e2e.ignis.dvolper.dev/tests/dialog/preventOnBlur");
-        
+
         var dialog = Page.GetByTestId("dialog");
 
         await Expect(dialog).ToBeInViewportAsync();
-        
+
         var content = Page.GetByTestId("content");
-        
+
         await Expect(content).ToBeInViewportAsync();
 
         await Expect(content).ToContainTextAsync("This dialog cannot be closed.");
