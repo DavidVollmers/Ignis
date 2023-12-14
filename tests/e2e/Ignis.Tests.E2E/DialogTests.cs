@@ -65,4 +65,27 @@ public class DialogTests : PageTest
             await Expect(dialog).ToBeHiddenAsync();
         }
     }
+
+    [Test]
+    public async Task Test_Dialog_PreventOnBlur()
+    {
+        await Page.GotoAsync("https://e2e.ignis.dvolper.dev/tests/dialog/preventOnBlur");
+        
+        var dialog = Page.GetByTestId("dialog");
+
+        await Expect(dialog).ToBeInViewportAsync();
+        
+        var content = Page.GetByTestId("content");
+        
+        await Expect(content).ToBeInViewportAsync();
+
+        await Expect(content).ToContainTextAsync("This dialog cannot be closed.");
+
+        await Page.ClickAsync(".fixed.inset-0.bg-gray-500",
+            new PageClickOptions { Position = new Position { X = 0, Y = 0 } });
+
+        await Task.Delay(300);
+
+        await Expect(dialog).ToBeInViewportAsync();
+    }
 }
