@@ -31,7 +31,6 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
 
     /// <inheritdoc />
     [Parameter]
-    [DefaultValue(typeof(Fragment))]
     public Type? AsComponent
     {
         get => _asComponent;
