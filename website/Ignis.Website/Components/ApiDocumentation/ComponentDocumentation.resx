@@ -21,4 +21,13 @@
   <data name="ParametersHeading" xml:space="preserve">
     <value>Parameters</value>
   </data>
+  <data name="ViewApiReference" xml:space="preserve">
+    <value>View full API reference</value>
+  </data>
+  <data name="EventCallback" xml:space="preserve">
+    <value>Event</value>
+  </data>
+  <data name="RenderFragment" xml:space="preserve">
+    <value>Slot</value>
+  </data>
 </root>
