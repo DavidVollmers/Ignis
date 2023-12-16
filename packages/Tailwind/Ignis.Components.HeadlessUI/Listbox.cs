@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.ComponentModel;
+using System.Globalization;
 using Ignis.Components.HeadlessUI.Aria;
 using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
@@ -30,6 +31,7 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
 
     /// <inheritdoc />
     [Parameter]
+    [DefaultValue(typeof(Fragment))]
     public Type? AsComponent
     {
         get => _asComponent;

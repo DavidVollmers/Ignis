@@ -18,9 +18,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ParametersHeading" xml:space="preserve">
-    <value>Parameters</value>
-  </data>
   <data name="ViewApiReference" xml:space="preserve">
     <value>View full API reference</value>
   </data>
@@ -29,5 +26,14 @@
   </data>
   <data name="RenderFragment" xml:space="preserve">
     <value>Slot</value>
+  </data>
+  <data name="ParameterHeading" xml:space="preserve">
+    <value>Parameter</value>
+  </data>
+  <data name="DefaultHeading" xml:space="preserve">
+    <value>Default</value>
+  </data>
+  <data name="DescriptionHeading" xml:space="preserve">
+    <value>Description</value>
   </data>
 </root>

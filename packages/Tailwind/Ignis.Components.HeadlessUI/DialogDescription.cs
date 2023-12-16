@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components.HeadlessUI;
 
+/// <summary>
+/// The description of a dialog.
+/// </summary>
 public sealed class DialogDescription : DynamicComponentBase<DialogDescription>, IAriaComponentPart
 {
     /// <inheritdoc />
@@ -13,6 +16,9 @@ public sealed class DialogDescription : DynamicComponentBase<DialogDescription>,
 
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DialogDescription"/> class.
+    /// </summary>
     public DialogDescription() : base("p")
     {
         SetAttributes(new[] { () => new KeyValuePair<string, object?>("id", Dialog.GetId(this)), });

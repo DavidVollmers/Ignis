@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Rendering;
 namespace Ignis.Components.HeadlessUI;
 
 /// <summary>
-/// Renders a dialog which can be opened and closed.
+/// The main Dialog component.
 /// </summary>
 public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog>, IAriaModal,
     IHandleAfterRender
@@ -40,7 +40,9 @@ public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog
         }
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets a value indicating whether the dialog is open.
+    /// </summary>
     [Parameter]
     public bool IsOpen
     {
@@ -52,12 +54,14 @@ public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog
         }
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets or sets the callback that will be invoked when the <see cref="IsOpen"/> property changes.
+    /// </summary>
     [Parameter]
     public EventCallback<bool> IsOpenChanged { get; set; }
 
     /// <summary>
-    /// Gets or sets the transition which is used to animate the dialog.
+    /// Gets or sets the transition that will be used to animate the dialog.
     /// </summary>
     [CascadingParameter]
     public Transition? Transition { get; set; }
@@ -73,7 +77,7 @@ public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog
     public RenderFragment<Dialog>? ChildContent { get; set; }
 
     /// <summary>
-    /// Gets or sets additional attributes that will be applied to the dialog.
+    /// Gets or sets the additional attributes that will be applied to the dialog.
     /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public IEnumerable<KeyValuePair<string, object?>>? AdditionalAttributes
@@ -103,7 +107,7 @@ public sealed class Dialog : ContentProviderBase, IDynamicParentComponent<Dialog
     [Inject] private IFrameTracker FrameTracker { get; set; } = null!;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Dialog" /> class.
+    /// Initializes a new instance of the <see cref="Dialog"/> class.
     /// </summary>
     public Dialog()
     {
