@@ -10,9 +10,9 @@
         JSInterop.Mode = JSRuntimeMode.Loose;
 
         var cut = Render(@<Listbox T="object">
-                             <ListboxButton>
-                             </ListboxButton>
-                         </Listbox>);
+            <ListboxButton>
+            </ListboxButton>
+        </Listbox>);
 
         cut.Find("button").Click();
 
@@ -32,9 +32,9 @@
         JSInterop.Mode = JSRuntimeMode.Loose;
 
         var cut = Render(@<Listbox T="object">
-                             <ListboxButton OnClick="e => e.PreventDefault()">
-                             </ListboxButton>
-                         </Listbox>);
+            <ListboxButton OnClick="e => e.PreventDefault()">
+            </ListboxButton>
+        </Listbox>);
 
         cut.Find("button").Click();
 
@@ -72,5 +72,44 @@
             var listbox = cut.FindComponent<Listbox<Type>>();
             Assert.Equal(typeof(int), listbox.Instance.Value);
         });
+    }
+
+    [Fact]
+    public void MultipleValues()
+    {
+        Services.AddIgnisTestServices();
+
+        JSInterop.Mode = JSRuntimeMode.Loose;
+
+        var values = new[] { 1, 2, 3 };
+
+        var cut = Render(@<Listbox Values="values">
+            <ListboxButton>
+                @for (var i = 1; i <= 5; i++)
+                {
+                    var value = i;
+                    <ListboxOption Value="value" Context="_">
+                        @value
+                    </ListboxOption>
+                }
+            </ListboxButton>
+        </Listbox>);
+
+        cut.Find("button").Click();
+
+        var listbox = cut.FindComponent<Listbox<int>>();
+        Assert.True(listbox.Instance.IsOpen);
+        
+        var option2 = cut.Find("li:nth-child(2)");
+        option2.Click();
+        
+        var option5 = cut.Find("li:nth-child(5)");
+        option5.Click();
+        
+        Assert.Equal(new[] { 1, 3, 5 }, listbox.Instance.Values);
+
+        cut.Find("button").Click();
+
+        Assert.False(listbox.Instance.IsOpen);
     }
 }
