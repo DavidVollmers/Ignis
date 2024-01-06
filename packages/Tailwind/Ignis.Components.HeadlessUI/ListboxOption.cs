@@ -16,7 +16,7 @@ public sealed class ListboxOption<T> : DynamicComponentBase<ListboxOption<T>>, I
     [CascadingParameter(Name = nameof(Listbox<T>))]
     public Listbox<T> Listbox { get; set; } = null!;
 
-    [Parameter, EditorRequired] public T? Value { get; set; }
+    [Parameter, EditorRequired] public T Value { get; set; } = default!;
 
     [Parameter] public RenderFragment<ListboxOption<T>>? ChildContent { get; set; }
 
