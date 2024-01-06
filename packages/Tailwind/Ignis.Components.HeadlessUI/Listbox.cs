@@ -241,7 +241,7 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
     #region Listbox
 
     public bool Multiple => Values != null;
-    
+
     public bool IsValueSelected(T value)
     {
         if (Values != null) return Values.Contains(value);
@@ -252,11 +252,11 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
     {
         if (Values != null)
         {
-            Values = Values.Contains(value)
-                ? Values.Where(x => !x!.Equals(value) || value.Equals(x)).ToArray()!
+            var values = Values.Contains(value)
+                ? Values.Where(x => !x!.Equals(value)).ToArray()
                 : Values.Append(value).ToArray();
 
-            var __ = ValuesChanged.InvokeAsync(Values);
+            var __ = ValuesChanged.InvokeAsync(Values = values);
         }
         else
         {
