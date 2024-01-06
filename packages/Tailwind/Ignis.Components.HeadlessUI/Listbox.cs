@@ -240,6 +240,8 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
 
     #region Listbox
 
+    public bool Multiple => Values != null;
+    
     public bool IsValueSelected(T value)
     {
         if (Values != null) return Values.Contains(value);

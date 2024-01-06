@@ -77,7 +77,7 @@ public sealed class ListboxOption<T> : DynamicComponentBase<ListboxOption<T>>, I
 
         Listbox.SelectValue(Value);
 
-        Listbox.Close();
+        if (!Listbox.Multiple) Listbox.Close();
     }
 
     private void OnMouseEnter()
