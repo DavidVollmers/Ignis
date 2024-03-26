@@ -26,7 +26,7 @@ call the `Update` method on the component when the value or reference is changed
 {
     private readonly ReactiveValue<int> _counter;
 
-    // We need to create the ReactiveValue in the constructor of the component since we need to pass the component as its owner
+    // We need to create the ReactiveValue in the constructor of the component.
     public ReactiveCounter()
     {
         _counter = new ReactiveValue<int>(this, 0);
@@ -63,7 +63,7 @@ by using the `ReactiveSection` component.
     private readonly ReactiveValue<int> _counter1;
     private readonly ReactiveValue<int> _counter2;
 
-    // We need to create the ReactiveValue in the constructor of the component since we need to pass the component as its owner
+    // We need to create the ReactiveValue in the constructor of the component.
     public ReactiveSectionCounter()
     {
         _counter1 = new ReactiveValue<int>(this, 0);
