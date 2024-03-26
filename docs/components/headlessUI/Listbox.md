@@ -27,6 +27,16 @@ of items receives focus and is automatically navigable via the keyboard.
 Unlike native HTML form controls which only allow you to provide strings as values, Headless UI supports binding complex
 objects as well.
 
+## Selecting multiple values
+
+To allow selecting multiple values in your listbox, pass an array to the `Values` prop instead of using the `Value`
+prop.
+
+This will keep the listbox open when you are selecting options, and choosing an option will toggle it in place.
+
+The `ValuesChanged` handler will be called with an array containing all selected options any time an option is added or
+removed.
+
 ## Using a custom label
 
 By default the `Listbox` will use the button contents as the label for screenreaders. If you'd like more control over

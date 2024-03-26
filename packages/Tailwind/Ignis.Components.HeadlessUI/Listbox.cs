@@ -48,10 +48,22 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
     public T? Value { get; set; }
 
     /// <summary>
+    /// Gets or sets the selected values.
+    /// </summary>
+    [Parameter]
+    public T[]? Values { get; set; }
+
+    /// <summary>
     /// Gets or sets the callback which is invoked when the selected value changes.
     /// </summary>
     [Parameter]
     public EventCallback<T?> ValueChanged { get; set; }
+
+    /// <summary>
+    /// Gets or sets the callback which is invoked when the selected values changes.
+    /// </summary>
+    [Parameter]
+    public EventCallback<T[]?> ValuesChanged { get; set; }
 
     /// <inheritdoc />
     [Parameter]
@@ -229,14 +241,28 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
 
     #region Listbox
 
-    public bool IsValueSelected(T? value)
+    public bool Multiple => Values != null;
+
+    public bool IsValueSelected(T value)
     {
+        if (Values != null) return Values.Contains(value);
         return value?.Equals(Value) ?? Value?.Equals(value) ?? false;
     }
 
-    public void SelectValue(T? value)
+    public void SelectValue(T value)
     {
-        var __ = ValueChanged.InvokeAsync(Value = value);
+        if (Values != null)
+        {
+            var values = Values.Contains(value)
+                ? Values.Where(x => !x!.Equals(value)).ToArray()
+                : Values.Append(value).ToArray();
+
+            var __ = ValuesChanged.InvokeAsync(Values = values);
+        }
+        else
+        {
+            var __ = ValueChanged.InvokeAsync(Value = value);
+        }
 
         Update();
     }
