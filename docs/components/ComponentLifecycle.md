@@ -53,7 +53,19 @@ public class MyComponent : IgnisComponentBase, IHandleAfterRender, IHandleEvent
 
 ## `ServerPrerendered` rendering mode
 
-Also contrary to Razor components, Ignis component's lifecycle methods are not called twice when the rendering mode is
-set to `ServerPrerendered`.
+Contrary to Razor components, Ignis component's lifecycle methods are not called twice when the rendering mode is set
+to `ServerPrerendered`.
 
-If you still want to have the same behaviour as Razor components, you can implement the `IHandleAfterRender` interface.
+If you still want to prerender your Ignis components, you can use the `PrerenderAttribute` to enable prerendering:
+
+```csharp
+@attribute [Prerender]
+@inherits IgnisComponentBase
+
+<div>
+    This content will be prerendered.
+</div>
+```
+
+The prerender cycle will happen without calling the `OnInitialized` and `OnUpdate` methods. This can be useful if you
+want to render loading states, placeholders or search engine relevant content.
