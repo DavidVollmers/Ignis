@@ -44,7 +44,7 @@ public abstract class IgnisComponentBase : IComponent
             if (prerenderAttribute == null) return;
 
             parameters.SetParameterProperties(this);
-                
+
             UpdateCore(async: false);
 
             return;
