@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Ignis.Components;
@@ -37,7 +38,17 @@ public abstract class IgnisComponentBase : IComponent
 
     public async Task SetParametersAsync(ParameterView parameters)
     {
-        if (HostContext.IsPrerendering) return;
+        if (HostContext.IsPrerendering)
+        {
+            var prerenderAttribute = GetType().GetCustomAttribute<PrerenderAttribute>();
+            if (prerenderAttribute == null) return;
+
+            parameters.SetParameterProperties(this);
+                
+            UpdateCore(async: false);
+
+            return;
+        }
 
         parameters.SetParameterProperties(this);
 
