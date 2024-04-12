@@ -58,7 +58,7 @@ to `ServerPrerendered`.
 
 If you still want to prerender your Ignis components, you can use the `PrerenderAttribute` to enable prerendering:
 
-```csharp
+```cshtml
 @attribute [Prerender]
 @inherits IgnisComponentBase
 
