@@ -1,6 +1,7 @@
 ﻿@using Ignis.Components
 @using Ignis.Components.HeadlessUI
 @using Ignis.Components.HeroIcons.Solid
+@using Ignis.Utils
 
 @inherits IgnisComponentBase
 
@@ -19,9 +20,46 @@
                         Leave="transition ease-in duration-100"
                         LeaveFrom="opacity-100"
                         LeaveTo="opacity-0"
-                        AfterLeave="() => SetQuery(string.Empty)">
-                
+                        AfterLeave="() => SetQuery(string.Empty)"
+                        Context="transition">
+                <ComboboxOptions class="@Css.Class("absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm", transition)">
+                    @if (FilteredPersons.Length == 0 && _query != string.Empty)
+                    {
+                        <div class="relative cursor-default select-none px-4 py-2 text-gray-700">
+                            Nothing found.
+                        </div>
+                    }
+                    else
+                    {
+                        foreach (var person in FilteredPersons)
+                        {
+                            <ComboboxOption @key="person.Name"
+                                            AsComponent="typeof(Fragment)"
+                                            Value="person"
+                                            Context="option">
+                                <li @ref="option.Element"
+                                    @attributes="option.Attributes"
+                                    class="@Css.Class("relative cursor-default select-none py-2 pl-10 pr-4", option.IsActive ? "bg-teal-600 text-white" : "text-gray-900")">
+                                    <span class="@Css.Class("block truncate", option.IsSelected ? "font-medium" : "font-normal")">
+                                        @person.Name
+                                    </span>
+                                    @if (option.IsSelected)
+                                    {
+                                        <span class="@Css.Class("absolute inset-y-0 left-0 flex items-center pl-3", option.IsActive ? "text-white" : "text-teal-600")">
+                                            <CheckIcon class="h-5 w-5"/>
+                                        </span>
+                                    }
+                                </li>
+                            </ComboboxOption>
+                        }
+                    }
+                </ComboboxOptions>
             </Transition>
         </div>
     </Combobox>
 </div>
+
+@code 
+{
+    
+}
