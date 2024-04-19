@@ -494,3 +494,4 @@ $RECYCLE.BIN/
 !packages/Tailwind
 
 !tests/e2e/Ignis.Tests.E2E
+.doki/
