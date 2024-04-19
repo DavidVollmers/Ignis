@@ -10,6 +10,9 @@ var assemblyLocation = new FileInfo(Assembly.GetExecutingAssembly().Location).Di
 var outputPath = Path.Combine(assemblyLocation, "..", "..", "..", "..", "..", "packages", "Tailwind",
     "Ignis.Components.HeroIcons");
 
-await generator.GenerateAsync("optimized/24/solid", Path.Combine(outputPath, "Solid"));
-await generator.GenerateAsync("optimized/24/outline", Path.Combine(outputPath, "Outline"));
-await generator.GenerateAsync("optimized/20/solid", Path.Combine(outputPath, "Mini"));
+await Task.WhenAll([
+    generator.GenerateAsync("optimized/24/outline", Path.Combine(outputPath, "Outline")),
+    generator.GenerateAsync("optimized/24/solid", Path.Combine(outputPath, "Solid")),
+    generator.GenerateAsync("optimized/20/solid", Path.Combine(outputPath, "Mini")),
+    generator.GenerateAsync("optimized/16/solid", Path.Combine(outputPath, "Micro"))
+]);

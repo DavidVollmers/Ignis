@@ -1,0 +1,59 @@
+﻿@using Ignis.Components.Extensions
+@using Microsoft.AspNetCore.Components.Rendering
+@inherits TestContext
+
+@code
+{
+    [Fact]
+    public void Cycle()
+    {
+        Services.AddIgnis();
+        
+        var context = new PrerenderHostContext();
+        Services.AddSingleton<IHostContext>(context);
+        
+        context.IsPrerenderingValue = true;
+        
+        var cut = RenderComponent<PrerenderComponent>();
+        
+        var result = cut.Markup;
+        Assert.Equal("OnPrerender", result);
+        
+        context.IsPrerenderingValue = false;
+        
+        cut.Render();
+        
+        result = cut.Markup;
+        
+        Assert.Equal("OnInitialized", result);
+    }
+
+    [Prerender]
+    class PrerenderComponent : IgnisComponentBase
+    {
+        private string _message = "OnPrerender";
+
+        protected override void OnInitialized()
+        {
+            _message = "OnInitialized";
+        }
+
+        protected override void BuildRenderTree(RenderTreeBuilder builder)
+        {
+            builder.AddContent(0, _message);
+        }
+    }
+
+    class PrerenderHostContext : HostContextBase
+    {
+        public bool IsPrerenderingValue { get; set; }
+
+        public override bool IsPrerendering => IsPrerenderingValue;
+
+        public override bool IsServerSide => false;
+
+        public PrerenderHostContext() : base(Array.Empty<IComponentExtension>())
+        {
+        }
+    }
+}

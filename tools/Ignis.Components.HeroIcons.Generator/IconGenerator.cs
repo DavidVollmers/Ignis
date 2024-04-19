@@ -13,7 +13,7 @@ internal class IconGenerator
     {
         _httpClient = httpClient;
 
-        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
+        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
     }
 
     public async Task GenerateAsync(string repositoryPath, string outputPath)
