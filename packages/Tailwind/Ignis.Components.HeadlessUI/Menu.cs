@@ -216,7 +216,7 @@ public sealed class Menu : OpenCloseWithTransitionComponentBase, IDynamicParentC
     /// <inheritdoc />
     protected override void OnKeyDown(KeyboardEventArgs eventArgs)
     {
-        AriaPopupExtensions.OnKeyDown(this, eventArgs);
+        AriaPopupExtensions.OnKeyDown(this, eventArgs, JSRuntime);
     }
 
     #endregion Menu
