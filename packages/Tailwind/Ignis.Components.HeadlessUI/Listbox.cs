@@ -278,7 +278,7 @@ public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicP
     /// <inheritdoc />
     protected override void OnKeyDown(KeyboardEventArgs eventArgs)
     {
-        AriaPopupExtensions.OnKeyDown(this, eventArgs, JSRuntime);
+        AriaPopupExtensions.OnKeyDown(this, eventArgs);
     }
 
     #endregion Listbox

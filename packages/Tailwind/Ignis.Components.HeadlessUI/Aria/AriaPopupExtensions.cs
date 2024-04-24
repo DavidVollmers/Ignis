@@ -5,14 +5,14 @@ namespace Ignis.Components.HeadlessUI.Aria;
 
 internal static class AriaPopupExtensions
 {
-    public static void SetActiveDescendant(this IAriaPopup popup, IAriaDescendant descendant, bool isActive, IJSRuntime? jSRuntime = null)
+    public static void SetActiveDescendant(this IAriaPopup popup, IAriaDescendant descendant, bool isActive)
     {
         if (descendant == null) throw new ArgumentNullException(nameof(descendant));
 
         if (isActive)
         {
             popup.ActiveDescendant = descendant;
-            _ = ScrollIntoViewAsync(popup.GetId(descendant), jSRuntime);
+            _ = ScrollIntoViewAsync(popup.GetId(descendant), popup.JSRuntime);
         }
         else if (popup.ActiveDescendant == descendant)
         {
@@ -20,7 +20,7 @@ internal static class AriaPopupExtensions
         }
     }
 
-    public static void OnKeyDown(this IAriaPopup popup, KeyboardEventArgs eventArgs, IJSRuntime? jSRuntime = null)
+    public static void OnKeyDown(this IAriaPopup popup, KeyboardEventArgs eventArgs)
     {
         var descendants = popup.Descendants.ToArray();
 
@@ -49,14 +49,14 @@ internal static class AriaPopupExtensions
             case "ArrowDown":
                 {
                     var index = Array.IndexOf(descendants, popup.ActiveDescendant) + 1;
-                    if (index < descendants.Length) popup.SetActiveDescendant(descendants[index], isActive: true, jSRuntime);
+                    if (index < descendants.Length) popup.SetActiveDescendant(descendants[index], isActive: true);
                     else if (!popup.IsOpen) popup.Open();
                     break;
                 }
             case "ArrowUp":
                 {
                     var index = Array.IndexOf(descendants, popup.ActiveDescendant) - 1;
-                    if (index >= 0) popup.SetActiveDescendant(descendants[index], isActive: true, jSRuntime);
+                    if (index >= 0) popup.SetActiveDescendant(descendants[index], isActive: true);
                     else if (!popup.IsOpen) popup.Open();
                     break;
                 }
