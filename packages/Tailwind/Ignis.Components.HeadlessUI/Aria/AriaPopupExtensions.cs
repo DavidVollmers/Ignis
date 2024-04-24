@@ -12,7 +12,7 @@ internal static class AriaPopupExtensions
         if (isActive)
         {
             popup.ActiveDescendant = descendant;
-            _ = ScrollIntoView(popup.GetId(descendant), jSRuntime).ConfigureAwait(false);
+            _ = ScrollIntoViewAsync(popup.GetId(descendant), jSRuntime);
         }
         else if (popup.ActiveDescendant == descendant)
         {
@@ -43,7 +43,7 @@ internal static class AriaPopupExtensions
                 break;
             case "ArrowUp" when popup.ActiveDescendant == null:
             case "ArrowDown" when popup.ActiveDescendant == null:
-                if (descendants.Any()) popup.SetActiveDescendant(descendants[0], isActive: true, jSRuntime);
+                if (descendants.Any()) popup.SetActiveDescendant(descendants[0], isActive: true);
                 else if (!popup.IsOpen) popup.Open();
                 break;
             case "ArrowDown":
@@ -63,14 +63,14 @@ internal static class AriaPopupExtensions
         }
     }
 
-    private static object ScrollOptions { get; } = new { Behavior = "smooth", Block = "nearest" };
+    private static readonly object scrollOptions = new { Behavior = "smooth", Block = "nearest" };
 
-    private static async Task ScrollIntoView(string? id, IJSRuntime? jSRuntime)
+    private static async Task ScrollIntoViewAsync(string? id, IJSRuntime? jSRuntime)
     {
         if (jSRuntime is null || id is null) return;
 
         var element = await jSRuntime.InvokeAsync<IJSObjectReference>("document.getElementById", id).ConfigureAwait(false);
-        await element.InvokeVoidAsync("scrollIntoView", ScrollOptions).ConfigureAwait(false);
+        await element.InvokeVoidAsync("scrollIntoView", scrollOptions).ConfigureAwait(false);
         await element.DisposeAsync().ConfigureAwait(false);
     }
 }
