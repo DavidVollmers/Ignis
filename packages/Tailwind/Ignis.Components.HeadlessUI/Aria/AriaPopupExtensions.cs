@@ -12,7 +12,7 @@ internal static class AriaPopupExtensions
         if (isActive)
         {
             popup.ActiveDescendant = descendant;
-            _ = ScrollIntoViewAsync(popup.GetId(descendant), popup.JSRuntime);
+            _ = ScrollIntoViewAsync(popup);
         }
         else if (popup.ActiveDescendant == descendant)
         {
@@ -65,12 +65,12 @@ internal static class AriaPopupExtensions
 
     private static readonly object scrollOptions = new { Behavior = "smooth", Block = "nearest" };
 
-    private static async Task ScrollIntoViewAsync(string? id, IJSRuntime? jSRuntime)
+    private static async Task ScrollIntoViewAsync(IAriaPopup popup)
     {
-        if (jSRuntime is null || id is null) return;
+        var id = popup.GetId(popup.ActiveDescendant);
+        if (id == null) return;
 
-        var element = await jSRuntime.InvokeAsync<IJSObjectReference>("document.getElementById", id).ConfigureAwait(false);
-        await element.InvokeVoidAsync("scrollIntoView", scrollOptions).ConfigureAwait(false);
-        await element.DisposeAsync().ConfigureAwait(false);
+        await using var element = await popup.JSRuntime.InvokeAsync<IJSObjectReference>("document.getElementById", id);
+        await element.InvokeVoidAsync("scrollIntoView", scrollOptions);
     }
 }

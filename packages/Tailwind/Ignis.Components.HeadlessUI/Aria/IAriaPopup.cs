@@ -23,5 +23,5 @@ public interface IAriaPopup : IAriaControl, IAriaLabeled, IOpenClose, IWithTrans
 
     IAriaComponentPart? Button { get; set; }
 
-    IJSRuntime JSRuntime { get; }
+    internal IJSRuntime JSRuntime { get; }
 }
