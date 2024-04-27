@@ -4,6 +4,7 @@
   "output": [
     {
       "type": "Doki.Output.Markdown",
+      "from": "../Doki/src/Doki.Output.Markdown/Doki.Output.Markdown.csproj",
       "options": {
         "outputPath": "docs/api"
       }
