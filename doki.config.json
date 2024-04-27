@@ -1,5 +1,5 @@
 {
-  "$schema": "https://cdn.dvolper.dev/doki/latest/doki.config.schema.json",
+  "$schema": "https://cdn.dvolper.dev/doki/0.3.0-preview/doki.config.schema.json",
   "input": ["packages/**/*.csproj", "!packages/Ignis/Ignis.csproj", "!packages/Ignis.Templates/**/*.csproj"],
   "output": [
     {
