@@ -1,4 +1,5 @@
 ﻿using Ignis.Components.Web;
+using Microsoft.JSInterop;
 
 namespace Ignis.Components.HeadlessUI.Aria;
 
@@ -47,4 +48,7 @@ public interface IAriaPopup : IAriaControl, IAriaLabeled, IOpenClose, IWithTrans
     /// The button which controls the popup.
     /// </summary>
     IAriaComponentPart? Button { get; set; }
+
+    // ReSharper disable once InconsistentNaming
+    internal IJSRuntime JSRuntime { get; }
 }
