@@ -1,4 +1,5 @@
 ﻿using Ignis.Components.Web;
+using Microsoft.JSInterop;
 
 namespace Ignis.Components.HeadlessUI.Aria;
 
@@ -21,4 +22,6 @@ public interface IAriaPopup : IAriaControl, IAriaLabeled, IOpenClose, IWithTrans
     IAriaDescendant? ActiveDescendant { get; set; }
 
     IAriaComponentPart? Button { get; set; }
+
+    internal IJSRuntime JSRuntime { get; }
 }
