@@ -63,7 +63,7 @@ internal static class AriaPopupExtensions
         }
     }
 
-    private static readonly object scrollOptions = new { Behavior = "smooth", Block = "nearest" };
+    private static readonly object ScrollOptions = new { Behavior = "smooth", Block = "nearest" };
 
     private static async Task ScrollIntoViewAsync(IAriaPopup popup)
     {
@@ -71,6 +71,6 @@ internal static class AriaPopupExtensions
         if (id == null) return;
 
         await using var element = await popup.JSRuntime.InvokeAsync<IJSObjectReference>("document.getElementById", id);
-        await element.InvokeVoidAsync("scrollIntoView", scrollOptions);
+        await element.InvokeVoidAsync("scrollIntoView", ScrollOptions);
     }
 }

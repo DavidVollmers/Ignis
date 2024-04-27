@@ -23,5 +23,6 @@ public interface IAriaPopup : IAriaControl, IAriaLabeled, IOpenClose, IWithTrans
 
     IAriaComponentPart? Button { get; set; }
 
+    // ReSharper disable once InconsistentNaming
     internal IJSRuntime JSRuntime { get; }
 }
