@@ -48,7 +48,7 @@ public abstract class TypeDocumentationBase : IgnisAsyncComponentBase, IHandleAf
         NamespaceDocumentation = @namespace;
 
         var type = NamespaceDocumentation.Types.FirstOrDefault(t =>
-            string.Equals(t.FullName, Type.FullName, StringComparison.Ordinal));
+            string.Equals(t.Id, Type.FullName, StringComparison.Ordinal));
         if (type == null)
         {
             Router.NavigateTo("/");

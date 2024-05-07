@@ -1,5 +1,6 @@
 ﻿@using System.Reflection
 @using System.ComponentModel
+@using Doki
 @inherits TypeDocumentationBase
 @inject IStringLocalizer<ComponentDocumentation> Resources
 
@@ -32,9 +33,9 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var prop in parameterProperties)
+            @foreach (var memberDocumentation in GetAllProperties())
             {
-                var memberDocumentation = TypeDocumentation.Properties.First(p => p.Name == prop.Name);
+                var prop = parameterProperties.First(p => p.Name == memberDocumentation.Name);
                 var isEvent = prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(EventCallback<>) || prop.PropertyType == typeof(EventCallback);
                 var isSlot = prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(RenderFragment<>) || prop.PropertyType == typeof(RenderFragment);
                 <tr>
@@ -87,5 +88,15 @@
             }
             </tbody>
         </table>
+    }
+}
+
+@code 
+{
+    public IEnumerable<MemberDocumentation> GetAllProperties()
+    {
+        //TODO get all properties from TypeDocumentation and base types
+        
+        yield break;
     }
 }
