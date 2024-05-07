@@ -4,7 +4,7 @@
 @inject IStringLocalizer<ClassDocumentation> Resources
 
 <h2>
-    @Type.SanitizeTypeName()
+    @TypeDocumentation.Name
 </h2>
 
 <h3>
@@ -19,22 +19,22 @@
     </dd>
 </dl>
 
-@if (TypeComments?.Summary != null)
+@if (TypeDocumentation.Summary != null)
 {
     <p>
-        @TypeComments.Summary.ResolveCodeComment()
+        @TypeDocumentation.Summary.ToMarkupString()
     </p>
 }
 
-<pre class="whitespace-normal"><code class="language-csharp">@GetTypeDefinition(Type)</code></pre>
+<pre class="whitespace-normal"><code class="language-csharp">@TypeDocumentation.Definition</code></pre>
 
-@if (Type.GenericTypeParameters.Any())
+@if (TypeDocumentation.GenericArguments.Any())
 {
     <h4>
         @Resources["TypeParametersHeading"]
     </h4>
 
-    foreach (var typeParam in Type.GenericTypeParameters)
+    foreach (var typeParam in TypeDocumentation.GenericArguments)
     {
         <p>
             <code>@typeParam.Name</code>
@@ -42,7 +42,7 @@
     }
 }
 
-@if (Type.DeclaredConstructors.Any())
+@if (TypeDocumentation.Constructors.Any())
 {
     <h4>
         @Resources["ConstructorsHeading"]
@@ -56,18 +56,14 @@
         </tr>
         </thead>
         <tbody>
-        @foreach (var ctor in Type.DeclaredConstructors)
+        @foreach (var ctor in TypeDocumentation.Constructors)
         {
-            var methodComments = Reader!.GetMethodComments(ctor);
             <tr>
                 <td>
-                    <code>@GetConstructorDefinition(ctor)</code>
+                    <code>@ctor.Name</code>
                 </td>
                 <td>
-                    @if (methodComments?.Summary != null)
-                    {
-                        @methodComments.Summary.ResolveCodeComment()
-                    }
+                    @ctor.Summary?.ToMarkupString()
                 </td>
             </tr>
         }
@@ -75,158 +71,60 @@
     </table>
 }
 
-@{
-    var publicProperties = Type.DeclaredProperties.Where(p => p.GetMethod?.IsPublic == true || p.SetMethod?.IsPublic == true).ToArray();
-    if (publicProperties.Any())
-    {
-        <h4>
-            @Resources["PropertiesHeading"]
-        </h4>
+@if (TypeDocumentation.Properties.Any())
+{
+    <h4>
+        @Resources["PropertiesHeading"]
+    </h4>
 
-        <table>
-            <thead>
+    <table>
+        <thead>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var prop in TypeDocumentation.Properties)
+        {
             <tr>
-                <td></td>
-                <td></td>
+                <td>
+                    <code>@prop.Name</code>
+                </td>
+                <td>
+                    @prop.Summary?.ToMarkupString()
+                </td>
             </tr>
-            </thead>
-            <tbody>
-            @foreach (var prop in publicProperties)
-            {
-                var propComments = Reader!.GetMemberComments(prop);
-                <tr>
-                    <td>
-                        <code>@prop.Name</code>
-                    </td>
-                    <td>
-                        @if (propComments?.Summary != null)
-                        {
-                            @propComments.Summary.ResolveCodeComment()
-                        }
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
-    }
-
-    var publicMethods = Type.DeclaredMethods.Where(m => m is { IsPublic: true,IsSpecialName: false }).ToArray();
-    if (publicMethods.Any())
-    {
-        <h4>
-            @Resources["MethodsHeading"]
-        </h4>
-
-        <table>
-            <thead>
-            <tr>
-                <td></td>
-                <td></td>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var method in publicMethods)
-            {
-                var methodComments = Reader!.GetMethodComments(method);
-                <tr>
-                    <td>
-                        <code>@GetMethodDefinition(method)</code>
-                    </td>
-                    <td>
-                        @if (methodComments?.Summary != null)
-                        {
-                            @methodComments.Summary.ResolveCodeComment()
-                        }
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
-    }
+        }
+        </tbody>
+    </table>
 }
 
-@code
+@if (TypeDocumentation.Methods.Any())
 {
-    private string GetTypeDefinition(TypeInfo type)
-    {
-        var builder = new StringBuilder();
-        builder.Append("public");
+    <h4>
+        @Resources["MethodsHeading"]
+    </h4>
 
-        if (type is { IsAbstract: true, IsSealed: true }) builder.Append(" static");
-        else if (type.IsAbstract) builder.Append(" abstract");
-        else if (type.IsSealed) builder.Append(" sealed");
-
-        if (type.IsClass) builder.Append(" class");
-        else if (type.IsEnum) builder.Append(" enum");
-        else if (type.IsInterface) builder.Append(" interface");
-        else if (type.IsValueType) builder.Append(" struct");
-
-        builder.Append(' ');
-        builder.Append(type.SanitizeTypeName());
-
-        var types = new List<string>();
-
-        if (type.BaseType != null && type.BaseType != typeof(object))
+    <table>
+        <thead>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var method in TypeDocumentation.Methods)
         {
-            types.Add(type.BaseType.GetTypeInfo().SanitizeTypeName(true));
+            <tr>
+                <td>
+                    <code>@method.Name</code>
+                </td>
+                <td>
+                    @method.Summary?.ToMarkupString()
+                </td>
+            </tr>
         }
-
-        if (type.ImplementedInterfaces.Any())
-        {
-            types.AddRange(type.ImplementedInterfaces.Select(i => i.GetTypeInfo().SanitizeTypeName(true)));
-        }
-
-        if (types.Any())
-        {
-            builder.Append(" : ");
-            builder.Append(string.Join(", ", types));
-        }
-
-        return builder.ToString();
-    }
-
-    private string GetConstructorDefinition(ConstructorInfo ctor)
-    {
-        var definition = new StringBuilder();
-        definition.Append(Type.SanitizeTypeName());
-
-        AppendParameters(definition, ctor);
-
-        return definition.ToString();
-    }
-
-    private string GetMethodDefinition(MethodInfo method)
-    {
-        var definition = new StringBuilder();
-        definition.Append(method.Name);
-        if (method.IsGenericMethod)
-        {
-            var args = method.GetGenericArguments().Select(a => a.Name).ToList();
-            definition.Append($"<{string.Join(", ", args)}>");
-        }
-
-        AppendParameters(definition, method);
-
-        return definition.ToString();
-    }
-
-    private static void AppendParameters(StringBuilder definition, MethodBase method)
-    {
-        definition.Append("(");
-
-        var parameter = method.GetParameters();
-        foreach (var param in parameter)
-        {
-            definition.Append(param.ParameterType.GetTypeInfo().SanitizeTypeName());
-            definition.Append(" ");
-            definition.Append(param.Name);
-
-            if (param != parameter.Last())
-            {
-                definition.Append(", ");
-            }
-        }
-
-        definition.Append(")");
-    }
+        </tbody>
+    </table>
 }
