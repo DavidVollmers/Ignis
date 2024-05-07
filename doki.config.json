@@ -1,10 +1,9 @@
 {
-  "$schema": "https://cdn.dvolper.dev/doki/0.3.0-preview/doki.config.schema.json",
+  "$schema": "https://cdn.dvolper.dev/doki/0.4.0-preview/doki.config.schema.json",
   "input": ["packages/**/*.csproj", "!packages/Ignis/Ignis.csproj", "!packages/Ignis.Templates/**/*.csproj"],
   "output": [
     {
-      "type": "Doki.Output.Markdown",
-      "from": "../Doki/src/Doki.Output.Markdown/Doki.Output.Markdown.csproj",
+      "type": "Doki.Output.Json",
       "options": {
         "outputPath": "docs/api"
       }
