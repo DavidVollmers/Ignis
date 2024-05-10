@@ -1,21 +1,26 @@
-﻿@using System.Reflection
-@using System.Text
+﻿@using Doki
 @inherits TypeDocumentationBase
 @inject IStringLocalizer<ClassDocumentation> Resources
 
 <h2>
-    @TypeDocumentation.Name
+    @TypeDocumentation.Name @Enum.GetName(typeof(DocumentationContentType), TypeDocumentation.ContentType)
 </h2>
 
 <h3>
     @Resources["DefinitionHeading"]
 </h3>
-<dl class="flex gap-x-2">
+<dl>
     <dt>
         @Resources["NamespaceLabel"]:
     </dt>
     <dd>
-        @Type.Namespace
+        @TypeDocumentation.Namespace
+    </dd>
+    <dt>
+        @Resources["AssemblyLabel"]:
+    </dt>
+    <dd>
+        @TypeDocumentation.Assembly
     </dd>
 </dl>
 
@@ -28,6 +33,27 @@
 
 <pre class="whitespace-normal"><code class="language-csharp">@TypeDocumentation.Definition</code></pre>
 
+<dl>
+    <dt>
+        @Resources["InheritanceLabel"]:
+    </dt>
+    <dd>
+        TODO: Inheritance
+    </dd>
+    <dt>
+        @Resources["DerivedLabel"]:
+    </dt>
+    <dd>
+        TODO: Derived
+    </dd>
+    <dt>
+        @Resources["ImplementedInterfacesLabel"]:
+    </dt>
+    <dd>
+        TODO: Implemented interfaces
+    </dd>
+</dl>
+
 @if (TypeDocumentation.GenericArguments.Any())
 {
     <h4>
@@ -38,6 +64,20 @@
     {
         <p>
             <code>@typeParam.Name</code>
+        </p>
+    }
+}
+
+@if (TypeDocumentation.Remarks.Any())
+{
+    <h4>
+        @Resources["RemarksHeading"]
+    </h4>
+
+    @foreach (var remark in TypeDocumentation.Remarks)
+    {
+        <p>
+            @remark.ToMarkupString()
         </p>
     }
 }

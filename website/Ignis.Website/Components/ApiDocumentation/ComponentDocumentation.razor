@@ -33,14 +33,14 @@
             </tr>
             </thead>
             <tbody>
-            @foreach (var memberDocumentation in GetAllProperties())
+            @foreach (var prop in parameterProperties)
             {
-                var prop = parameterProperties.First(p => p.Name == memberDocumentation.Name);
+                var memberDocumentation = TypeDocumentation.Properties.FirstOrDefault(p => p.Name == prop.Name);
                 var isEvent = prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(EventCallback<>) || prop.PropertyType == typeof(EventCallback);
                 var isSlot = prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(RenderFragment<>) || prop.PropertyType == typeof(RenderFragment);
                 <tr>
                     <td>
-                        <code>@memberDocumentation.Name</code>
+                        <code>@prop.Name</code>
                         @if (isEvent)
                         {
                             <span class="inline-flex items-center rounded-md bg-pink-400/10 px-2 py-1 text-xs font-medium text-pink-400 ring-1 ring-inset ring-pink-400/20 ml-2">
@@ -82,21 +82,11 @@
                         }
                     </td>
                     <td>
-                        @memberDocumentation.Summary?.ToMarkupString()
+                        @memberDocumentation?.Summary?.ToMarkupString()
                     </td>
                 </tr>
             }
             </tbody>
         </table>
-    }
-}
-
-@code 
-{
-    public IEnumerable<MemberDocumentation> GetAllProperties()
-    {
-        //TODO get all properties from TypeDocumentation and base types
-        
-        yield break;
     }
 }
