@@ -41,7 +41,7 @@
   <data name="MethodsHeading" xml:space="preserve">
     <value>Methods</value>
   </data>
-  <data name="AssemblyHeading" xml:space="preserve">
+  <data name="AssemblyLabel" xml:space="preserve">
     <value>Assembly</value>
   </data>
   <data name="RemarksHeading" xml:space="preserve">

@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Globalization;
+using System.Web;
 using Doki;
 using Ignis.Components;
 using Ignis.Components.Web;
@@ -26,7 +27,24 @@ public static class IgnisWebsiteExtensions
     {
         ArgumentNullException.ThrowIfNull(type);
 
-        return $"/api/{HttpUtility.UrlEncode(type.AssemblyQualifiedName)}/_";
+        var id = $"{type.FullName}, {type.Assembly.GetName().Name}";
+
+        return $"/api/{HttpUtility.UrlEncode(id)}/_";
+    }
+
+    public static string? GetTypeDocumentationLink(this TypeDocumentationReference typeDocumentationReference)
+    {
+        ArgumentNullException.ThrowIfNull(typeDocumentationReference);
+
+        if (typeDocumentationReference.IsMicrosoft)
+            return
+                $"https://learn.microsoft.com/{CultureInfo.CurrentUICulture}/dotnet/api/{typeDocumentationReference.FullName}";
+
+        if (!typeDocumentationReference.IsDocumented) return null;
+
+        var id = $"{typeDocumentationReference.FullName}, {typeDocumentationReference.Assembly}";
+
+        return $"/api/{HttpUtility.UrlEncode(id)}/_";
     }
 
     public static MarkupString ToMarkupString(this XmlDocumentation xmlDocumentation)

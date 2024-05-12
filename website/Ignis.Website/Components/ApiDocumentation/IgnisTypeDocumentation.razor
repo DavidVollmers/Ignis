@@ -1,6 +1,6 @@
 ﻿@using Doki
 @inherits TypeDocumentationBase
-@inject IStringLocalizer<ClassDocumentation> Resources
+@inject IStringLocalizer<IgnisTypeDocumentation> Resources
 
 <h2>
     @TypeDocumentation.Name @Enum.GetName(typeof(DocumentationContentType), TypeDocumentation.ContentType)
@@ -37,20 +37,67 @@
     <dt>
         @Resources["InheritanceLabel"]:
     </dt>
-    <dd>
-        TODO: Inheritance
+    <dd class="whitespace-normal">
+        @foreach (var inheritedType in GetInheritanceChain().Reverse())
+        {
+            var link = inheritedType.GetTypeDocumentationLink();
+            if (link != null)
+            {
+                <a href="@link">
+                    @(inheritedType.IsDocumented ? inheritedType.Name : inheritedType.FullName)
+                </a>
+            }
+            else
+            {
+                <span>@inheritedType.Name</span>
+            }
+
+            <span class="px-1">→</span>
+        }
+
+        <span>@TypeDocumentation.Name</span>
     </dd>
     <dt>
         @Resources["DerivedLabel"]:
     </dt>
     <dd>
-        TODO: Derived
+        @foreach (var derivedType in TypeDocumentation.DerivedTypes)
+        {
+            var link = derivedType.GetTypeDocumentationLink();
+            if (link != null)
+            {
+                <a href="@link">
+                    @(derivedType.IsDocumented ? derivedType.Name : derivedType.FullName)
+                </a>
+            }
+            else
+            {
+                <span>@derivedType.Name</span>
+            }
+            
+            <br />
+        }
     </dd>
     <dt>
         @Resources["ImplementedInterfacesLabel"]:
     </dt>
     <dd>
-        TODO: Implemented interfaces
+        @foreach(var interfaceType in TypeDocumentation.Interfaces)
+        {
+            var link = interfaceType.GetTypeDocumentationLink();
+            if (link != null)
+            {
+                <a href="@link">
+                    @(interfaceType.IsDocumented ? interfaceType.Name : interfaceType.FullName)
+                </a>
+            }
+            else
+            {
+                <span>@interfaceType.Name</span>
+            }
+            
+            <br />
+        }
     </dd>
 </dl>
 
@@ -167,4 +214,17 @@
         }
         </tbody>
     </table>
+}
+
+@code
+{
+    public IEnumerable<TypeDocumentationReference> GetInheritanceChain()
+    {
+        var currentType = TypeDocumentation.BaseType;
+        while (currentType != null)
+        {
+            yield return currentType;
+            currentType = currentType.BaseType;
+        }
+    }
 }
