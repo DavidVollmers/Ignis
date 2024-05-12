@@ -20,7 +20,7 @@
 
     [Parameter] public string Type { get; set; } = null!;
 
-    protected override void OnInitialized()
+    protected override void OnUpdate()
     {
         var type = System.Type.GetType(HttpUtility.UrlDecode(Type));
 
