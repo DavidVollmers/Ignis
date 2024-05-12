@@ -9,7 +9,7 @@ namespace Ignis.Website.Components.ApiDocumentation;
 public abstract class TypeDocumentationBase : IgnisAsyncComponentBase, IHandleAfterRender
 {
     private readonly Dictionary<string, AssemblyDocumentation> _assemblies = new(StringComparer.Ordinal);
-    
+
     [Parameter, EditorRequired] public Type Type { get; set; } = null!;
 
     [Inject] public IStaticFileService StaticFileService { get; set; } = null!;
@@ -47,14 +47,14 @@ public abstract class TypeDocumentationBase : IgnisAsyncComponentBase, IHandleAf
     private async Task LoadAssemblyDocumentationAsync(CancellationToken cancellationToken)
     {
         var assemblyName = Type.Assembly.GetName().Name!;
-        
+
         if (_assemblies.TryGetValue(assemblyName, out var existing))
         {
             AssemblyDocumentation = existing;
             LoadTypeDocumentation();
             return;
         }
-        
+
         var path = $"/_api/{assemblyName}.json";
 
         var assembly =
@@ -68,7 +68,7 @@ public abstract class TypeDocumentationBase : IgnisAsyncComponentBase, IHandleAf
         AssemblyDocumentation = assembly;
 
         _assemblies[assemblyName] = assembly;
-        
+
         LoadTypeDocumentation();
     }
 
