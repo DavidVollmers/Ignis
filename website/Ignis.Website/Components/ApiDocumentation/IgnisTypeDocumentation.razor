@@ -37,25 +37,25 @@
     <dt>
         @Resources["InheritanceLabel"]:
     </dt>
-    <dd class="whitespace-normal">
+    <dd>
         @foreach (var inheritedType in GetInheritanceChain().Reverse())
         {
             var link = inheritedType.GetTypeDocumentationLink();
             if (link != null)
             {
-                <a href="@link">
+                <a href="@link" class="inline-block">
                     @(inheritedType.IsDocumented ? inheritedType.Name : inheritedType.FullName)
                 </a>
             }
             else
             {
-                <span>@inheritedType.Name</span>
+                <span class="inline-block">@inheritedType.Name</span>
             }
 
-            <span class="px-1">→</span>
+            <span class="inline-block px-1">→</span>
         }
 
-        <span>@TypeDocumentation.Name</span>
+        <span class="inline-block">@TypeDocumentation.Name</span>
     </dd>
     <dt>
         @Resources["DerivedLabel"]:
