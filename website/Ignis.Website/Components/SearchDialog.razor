@@ -1,17 +1,45 @@
-﻿@inherits IgnisComponentBase
+﻿@using Ignis.Components.HeroIcons.Outline
+@inherits IgnisComponentBase
 
 <Dialog IsOpen="IsOpen" IsOpenChanged="IsOpenChanged" class="fixed inset-0 z-50">
     <div class="fixed inset-0 bg-slate-900/50 backdrop-blur"></div>
     <div class="fixed inset-0 overflow-y-auto px-4 py-4 sm:px-6 sm:py-20 md:py-32 lg:px-8 lg:py-[15vh]">
         <DialogPanel class="mx-auto transform-gpu overflow-hidden rounded-xl bg-white shadow-xl sm:max-w-xl dark:bg-slate-800 dark:ring-1 dark:ring-slate-700">
-            
+            <div class="group relative flex h-12">
+                <MagnifyingGlassIcon class="pointer-events-none absolute left-4 top-0 h-full w-5 stroke-slate-400 dark:stroke-slate-500"/>
+                <ReactiveSection For="_isLoading">
+                    <input type="search"
+                           class="@Css.Class("flex-auto appearance-none bg-transparent pl-12 text-slate-900 outline-none placeholder:text-slate-400 focus:w-full focus:flex-none sm:text-sm dark:text-white [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden [&::-webkit-search-results-button]:hidden [&::-webkit-search-results-decoration]:hidden", _isLoading.Value ? "pr-11" : "pr-4")"
+                           @onkeydown="OnKeyDownAsync"/>
+                    @if (_isLoading.Value)
+                    {
+                        <div class="absolute inset-y-0 right-3 flex items-center">
+                            <LoadingIcon class="h-6 w-6 animate-spin stroke-slate-200 text-slate-400 dark:stroke-slate-700 dark:text-slate-500"/>
+                        </div>
+                    }
+                </ReactiveSection>
+            </div>
         </DialogPanel>
     </div>
 </Dialog>
 
 @code
 {
+    private readonly ReactiveValue<bool> _isLoading;
+
     [Parameter] public bool IsOpen { get; set; }
 
     [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+
+    public SearchDialog()
+    {
+        _isLoading = new ReactiveValue<bool>(this, false);
+    }
+
+    private async Task OnKeyDownAsync(KeyboardEventArgs args)
+    {
+        _isLoading.Value = true;
+        await Task.Delay(1000);
+        _isLoading.Value = false;
+    }
 }
