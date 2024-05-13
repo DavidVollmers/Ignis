@@ -1,0 +1,17 @@
+﻿@inherits IgnisComponentBase
+
+<Dialog IsOpen="IsOpen" IsOpenChanged="IsOpenChanged" class="fixed inset-0 z-50">
+    <div class="fixed inset-0 bg-slate-900/50 backdrop-blur"></div>
+    <div class="fixed inset-0 overflow-y-auto px-4 py-4 sm:px-6 sm:py-20 md:py-32 lg:px-8 lg:py-[15vh]">
+        <DialogPanel class="mx-auto transform-gpu overflow-hidden rounded-xl bg-white shadow-xl sm:max-w-xl dark:bg-slate-800 dark:ring-1 dark:ring-slate-700">
+            
+        </DialogPanel>
+    </div>
+</Dialog>
+
+@code
+{
+    [Parameter] public bool IsOpen { get; set; }
+
+    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+}
