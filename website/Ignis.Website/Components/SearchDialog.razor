@@ -1,6 +1,8 @@
 ﻿@using Debouncer;
 @using Ignis.Components.HeroIcons.Outline
+@using Ignis.Website.Services
 @inherits IgnisAsyncComponentBase
+@inject ISearchService SearchService
 
 <Dialog IsOpen="IsOpen" IsOpenChanged="IsOpenChanged" class="fixed inset-0 z-50">
     <div class="fixed inset-0 bg-slate-900/50 backdrop-blur"></div>
@@ -9,13 +11,44 @@
             <div class="group relative flex h-12">
                 <MagnifyingGlassIcon class="pointer-events-none absolute left-4 top-0 h-full w-5 stroke-slate-400 dark:stroke-slate-500"/>
                 <ReactiveSection For="_isLoading">
-                    <input type="search"
+                    <input type="search" @bind="_searchQuery"
                            class="@Css.Class("flex-auto appearance-none bg-transparent pl-12 text-slate-900 outline-none placeholder:text-slate-400 focus:w-full focus:flex-none sm:text-sm dark:text-white [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden [&::-webkit-search-results-button]:hidden [&::-webkit-search-results-decoration]:hidden", _isLoading.Value ? "pr-11" : "pr-4")"
                            @onkeydown="OnKeyDownAsync"/>
                     @if (_isLoading.Value)
                     {
                         <div class="absolute inset-y-0 right-3 flex items-center">
                             <LoadingIcon class="h-6 w-6 animate-spin stroke-slate-200 text-slate-400 dark:stroke-slate-700 dark:text-slate-500"/>
+                        </div>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(_searchQuery))
+                    {
+                        <div class="border-t border-slate-200 bg-white px-2 py-3 empty:hidden dark:border-slate-400/10 dark:bg-slate-800">
+                            @if (_results == null)
+                            {
+                                <p class="px-4 py-8 text-center text-sm text-slate-700 dark:text-slate-400">
+                                    No results for &ldquo;
+                                    <span class="break-words text-slate-900 dark:text-white">
+                                        @_searchQuery
+                                    </span>
+                                    &rdquo;
+                                </p>
+                            }
+                            else
+                            {
+                                <ul>
+                                    @foreach (var result in _results)
+                                    {
+                                        <li class="group block cursor-default rounded-lg px-3 py-2 aria-selected:bg-slate-100 dark:aria-selected:bg-slate-700/30">
+                                            <div class="text-sm text-slate-700 group-aria-selected:text-sky-600 dark:text-slate-300 dark:group-aria-selected:text-sky-400">
+                                                <HighlightText Text="@result.Title" Query="_searchQuery" HighlightClass="group-aria-selected:underline bg-transparent text-sky-600 dark:text-sky-400"/>
+                                            </div>
+                                            <div class="mt-0.5 truncate whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
+                                                <HighlightText Text="@result.Section" Query="_searchQuery" HighlightClass="group-aria-selected:underline bg-transparent text-sky-600 dark:text-sky-400"/>
+                                            </div>
+                                        </li>
+                                    }
+                                </ul>
+                            }
                         </div>
                     }
                 </ReactiveSection>
@@ -28,6 +61,9 @@
 {
     private readonly ReactiveValue<bool> _isLoading;
     private readonly IAsyncDebounce _debounce;
+
+    private SearchResult[]? _results;
+    private string? _searchQuery;
 
     [Parameter] public bool IsOpen { get; set; }
 
@@ -54,8 +90,16 @@
 
     private async Task SearchAsync()
     {
+        if (string.IsNullOrWhiteSpace(_searchQuery))
+        {
+            _results = null;
+            return;
+        }
+
         _isLoading.Value = true;
-        await Task.Delay(1000);
+
+        _results = await SearchService.SearchAsync(_searchQuery);
+
         _isLoading.Value = false;
     }
 }
