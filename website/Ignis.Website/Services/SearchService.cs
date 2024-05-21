@@ -6,9 +6,17 @@ internal class SearchService(IPageService pageService, IStaticFileService static
 {
     private static readonly string[] AssemblyNames =
     [
-        "Ignis.Components", "Ignis.Components.HeadlessUI", "Ignis.Components.HeroIcons", "Ignis.Components.Reactivity",
-        "Ignis.Components.Server", "Ignis.Components.Web", "Ignis.Components.WebAssembly", "Ignis.Fragments",
-        "Ignis.Fragments.Abstractions", "Ignis.Fragments.Extensions", "Ignis.Utils"
+        "Ignis.Components",
+        "Ignis.Components.HeadlessUI",
+        "Ignis.Components.HeroIcons",
+        "Ignis.Components.Reactivity",
+        "Ignis.Components.Server",
+        "Ignis.Components.Web",
+        "Ignis.Components.WebAssembly",
+        "Ignis.Fragments",
+        "Ignis.Fragments.Abstractions",
+        "Ignis.Fragments.Extensions",
+        "Ignis.Utils"
     ];
 
     private AssemblyDocumentation[]? _assemblies;
@@ -56,10 +64,10 @@ internal class SearchService(IPageService pageService, IStaticFileService static
         var assemblies = await GetAssembliesAsync(cancellationToken).ConfigureAwait(false);
 
         results.AddRange(from assembly in assemblies
-            from @namespace in assembly.Namespaces
-            from type in @namespace.Types
-            where type.Name.Contains(query, StringComparison.OrdinalIgnoreCase)
-            select new SearchResult(type));
+                         from @namespace in assembly.Namespaces
+                         from type in @namespace.Types
+                         where type.Name.Contains(query, StringComparison.OrdinalIgnoreCase)
+                         select new SearchResult(type));
 
         return results.OrderBy(r => r.Title, StringComparer.OrdinalIgnoreCase).ToArray();
     }

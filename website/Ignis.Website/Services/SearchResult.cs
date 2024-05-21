@@ -6,7 +6,7 @@ namespace Ignis.Website.Services;
 public record SearchResult
 {
     public string Title { get; } = null!;
-    
+
     public string Section { get; } = null!;
 
     public string Url { get; } = null!;
