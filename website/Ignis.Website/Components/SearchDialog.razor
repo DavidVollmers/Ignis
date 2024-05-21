@@ -1,5 +1,6 @@
-﻿@using Ignis.Components.HeroIcons.Outline
-@inherits IgnisComponentBase
+﻿@using Debouncer;
+@using Ignis.Components.HeroIcons.Outline
+@inherits IgnisAsyncComponentBase
 
 <Dialog IsOpen="IsOpen" IsOpenChanged="IsOpenChanged" class="fixed inset-0 z-50">
     <div class="fixed inset-0 bg-slate-900/50 backdrop-blur"></div>
@@ -26,6 +27,7 @@
 @code
 {
     private readonly ReactiveValue<bool> _isLoading;
+    private readonly IAsyncDebounce _debounce;
 
     [Parameter] public bool IsOpen { get; set; }
 
@@ -34,9 +36,23 @@
     public SearchDialog()
     {
         _isLoading = new ReactiveValue<bool>(this, false);
+        _debounce = Debouncer.Debounce(SearchAsync, 500);
     }
 
     private async Task OnKeyDownAsync(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+        {
+            _debounce.Cancel();
+
+            await SearchAsync();
+            return;
+        }
+
+        await _debounce.InvokeAsync();
+    }
+
+    private async Task SearchAsync()
     {
         _isLoading.Value = true;
         await Task.Delay(1000);
