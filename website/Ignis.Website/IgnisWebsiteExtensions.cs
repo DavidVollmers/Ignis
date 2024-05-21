@@ -20,6 +20,7 @@ public static class IgnisWebsiteExtensions
         services.AddIgnis();
 
         services.AddScoped<IPageService, PageService>();
+        services.AddScoped<ISearchService, SearchService>();
 
         return services;
     }
