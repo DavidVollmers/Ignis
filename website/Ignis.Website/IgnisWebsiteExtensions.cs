@@ -1,6 +1,7 @@
-﻿using System.Reflection;
-using System.Text.RegularExpressions;
+﻿using System.Globalization;
+using System.Text;
 using System.Web;
+using Doki;
 using Ignis.Components;
 using Ignis.Components.Web;
 using Ignis.Website.Services;
@@ -9,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Ignis.Website;
 
-public static partial class IgnisWebsiteExtensions
+public static class IgnisWebsiteExtensions
 {
     public static IServiceCollection AddIgnisWebsite(this IServiceCollection services)
     {
@@ -19,72 +20,110 @@ public static partial class IgnisWebsiteExtensions
         services.AddIgnis();
 
         services.AddScoped<IPageService, PageService>();
+        services.AddScoped<ISearchService, SearchService>();
 
         return services;
     }
 
-    public static string SanitizeTypeName(this TypeInfo type, bool withNamespace = false)
+    public static string GetTypeDocumentationLink(this Type type)
     {
-        if (type == null) throw new ArgumentNullException(nameof(type));
+        ArgumentNullException.ThrowIfNull(type);
 
-        var name = withNamespace ? type.FullName! : type.Name;
-        // ReSharper disable once InvertIf
-        if (type.IsGenericType)
+        var id = $"{type.FullName}, {type.Assembly.GetName().Name}";
+
+        return $"/api/{HttpUtility.UrlEncode(id)}/_";
+    }
+
+    public static string? GetTypeDocumentationLink(this TypeDocumentationReference typeDocumentationReference)
+    {
+        ArgumentNullException.ThrowIfNull(typeDocumentationReference);
+
+        if (typeDocumentationReference.IsMicrosoft)
+            return
+                $"https://learn.microsoft.com/{CultureInfo.CurrentUICulture}/dotnet/api/{typeDocumentationReference.FullName}";
+
+        if (!typeDocumentationReference.IsDocumented) return null;
+
+        var id = $"{typeDocumentationReference.FullName}, {typeDocumentationReference.Assembly}";
+
+        return $"/api/{HttpUtility.UrlEncode(id)}/_";
+    }
+
+    public static MarkupString ToMarkupString(this XmlDocumentation xmlDocumentation)
+    {
+        ArgumentNullException.ThrowIfNull(xmlDocumentation);
+
+        var stringBuilder = new StringBuilder();
+
+        stringBuilder.AppendHtml(xmlDocumentation);
+
+        return new MarkupString(stringBuilder.ToString());
+    }
+
+#pragma warning disable MA0051
+    private static void AppendHtml(this StringBuilder stringBuilder, DocumentationObject documentationObject)
+#pragma warning restore MA0051
+    {
+        ArgumentNullException.ThrowIfNull(documentationObject);
+
+        // ReSharper disable once SwitchStatementMissingSomeEnumCasesNoDefault
+        switch (documentationObject.ContentType)
         {
-            var index = name.LastIndexOf('`');
-            name = name[..index];
+            case DocumentationContentType.Xml:
+                stringBuilder.Append("<div>");
+                var xmlDocumentation = (XmlDocumentation)documentationObject;
+                foreach (var content in xmlDocumentation.Contents)
+                    stringBuilder.AppendHtml(content);
+                stringBuilder.Append("</div>");
+                return;
 
-            var args = type.GenericTypeParameters.Select(p => p.Name).ToList();
-            args.AddRange(type.GenericTypeArguments.Select(a => a.GetTypeInfo().SanitizeTypeName(true)));
-            name += $"<{string.Join(", ", args)}>";
+            case DocumentationContentType.Text:
+                stringBuilder.Append("<span>");
+                var textDocumentation = (TextContent)documentationObject;
+                stringBuilder.Append(' ').Append(textDocumentation.Text);
+                stringBuilder.Append("</span>");
+                return;
+
+            case DocumentationContentType.Link:
+                stringBuilder.Append("<a href=\"");
+                var link = (Link)documentationObject;
+                stringBuilder.Append(link.Url);
+                stringBuilder.Append("\">");
+                stringBuilder.Append(link.Text);
+                stringBuilder.Append("</a>");
+                return;
+
+            case DocumentationContentType.CodeBlock:
+                stringBuilder.Append("<pre class=\"whitespace-normal\"><code class=\"language-");
+                var codeBlock = (CodeBlock)documentationObject;
+                stringBuilder.Append(codeBlock.Language);
+                stringBuilder.Append("\">");
+                stringBuilder.Append(codeBlock.Code);
+                stringBuilder.Append("</code></pre>");
+                return;
+
+            case DocumentationContentType.Object:
+            case DocumentationContentType.TypeReference:
+                var typeDocumentationReference = (TypeDocumentationReference)documentationObject;
+                var hRef = typeDocumentationReference.GetTypeDocumentationLink();
+                if (hRef != null)
+                {
+                    stringBuilder.Append("<a href=\"");
+                    stringBuilder.Append(hRef);
+                    stringBuilder.Append("\">");
+                    stringBuilder.Append(typeDocumentationReference.IsDocumented
+                        ? typeDocumentationReference.Name
+                        : typeDocumentationReference.FullName);
+                    stringBuilder.Append("</a>");
+                }
+                else
+                {
+                    stringBuilder.Append("<span>");
+                    stringBuilder.Append(typeDocumentationReference.FullName);
+                    stringBuilder.Append("</span>");
+                }
+
+                return;
         }
-
-        return name;
     }
-
-    public static MarkupString ResolveCodeComment(this string comment)
-    {
-        if (comment == null) throw new ArgumentNullException(nameof(comment));
-
-        var regex = SeeReferenceRegex();
-
-        var matches = regex.Matches(comment);
-        foreach (Match match in matches)
-        {
-            var cref = match.Groups["cref"].Value;
-            var typeInfo = ResolveCRef(cref);
-            if (typeInfo == null) continue;
-
-            var name = typeInfo.SanitizeTypeName();
-            var link = typeInfo.GetTypeDocumentationLink();
-            comment = comment.Replace(match.Value, $"<a href=\"{link}\">{name}</a>");
-        }
-
-        return new MarkupString(comment);
-    }
-
-    private static TypeInfo? ResolveCRef(string cref)
-    {
-        if (cref == null) throw new ArgumentNullException(nameof(cref));
-
-        var type = Type.GetType(cref);
-        if (type != null) return type.GetTypeInfo();
-
-        var parts = cref.Split('.');
-        var ns = string.Join('.', parts[..^1]);
-        var assembly = Assembly.Load(ns);
-
-        type = assembly.GetType(cref);
-        return type?.GetTypeInfo();
-    }
-
-    public static string GetTypeDocumentationLink(this TypeInfo typeInfo)
-    {
-        if (typeInfo == null) throw new ArgumentNullException(nameof(typeInfo));
-
-        return $"/api/{HttpUtility.UrlEncode(typeInfo.AssemblyQualifiedName)}/_";
-    }
-
-    [GeneratedRegex("<see cref=\"T:(?<cref>.+?)\"\\s*/>", RegexOptions.Compiled)]
-    private static partial Regex SeeReferenceRegex();
 }

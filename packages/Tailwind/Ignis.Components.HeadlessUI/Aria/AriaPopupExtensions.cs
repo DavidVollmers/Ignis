@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Web;
+using Microsoft.JSInterop;
 
 namespace Ignis.Components.HeadlessUI.Aria;
 
@@ -11,6 +12,7 @@ internal static class AriaPopupExtensions
         if (isActive)
         {
             popup.ActiveDescendant = descendant;
+            _ = ScrollIntoViewAsync(popup);
         }
         else if (popup.ActiveDescendant == descendant)
         {
@@ -59,5 +61,16 @@ internal static class AriaPopupExtensions
                     break;
                 }
         }
+    }
+
+    private static readonly object ScrollOptions = new { Behavior = "smooth", Block = "nearest" };
+
+    private static async Task ScrollIntoViewAsync(IAriaPopup popup)
+    {
+        var id = popup.GetId(popup.ActiveDescendant);
+        if (id == null) return;
+
+        await using var element = await popup.JSRuntime.InvokeAsync<IJSObjectReference>("document.getElementById", id);
+        await element.InvokeVoidAsync("scrollIntoView", ScrollOptions);
     }
 }

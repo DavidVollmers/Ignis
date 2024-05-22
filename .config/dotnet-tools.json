@@ -5,6 +5,10 @@
     "husky": {
       "version": "0.6.1",
       "commands": ["husky"]
+    },
+    "doki.commandline": {
+      "version": "0.4.0-preview",
+      "commands": ["doki"]
     }
   }
 }

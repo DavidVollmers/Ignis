@@ -1,10 +1,11 @@
 ﻿@using System.Reflection
 @using System.ComponentModel
+@using Doki
 @inherits TypeDocumentationBase
 @inject IStringLocalizer<ComponentDocumentation> Resources
 
 <h2>
-    @Type.SanitizeTypeName()
+    @TypeDocumentation.Name
 </h2>
 
 @{
@@ -34,7 +35,7 @@
             <tbody>
             @foreach (var prop in parameterProperties)
             {
-                var propComments = Reader!.GetMemberComments(prop);
+                var memberDocumentation = TypeDocumentation.Properties.FirstOrDefault(p => p.Name == prop.Name);
                 var isEvent = prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(EventCallback<>) || prop.PropertyType == typeof(EventCallback);
                 var isSlot = prop.PropertyType.IsGenericType && prop.PropertyType.GetGenericTypeDefinition() == typeof(RenderFragment<>) || prop.PropertyType == typeof(RenderFragment);
                 <tr>
@@ -81,10 +82,7 @@
                         }
                     </td>
                     <td>
-                        @if (propComments?.Summary != null)
-                        {
-                            @propComments.Summary.ResolveCodeComment()
-                        }
+                        @memberDocumentation?.Summary?.ToMarkupString()
                     </td>
                 </tr>
             }

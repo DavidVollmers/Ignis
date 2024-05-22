@@ -56,7 +56,7 @@
 
             @foreach (var typeName in _page.ApiTypeNames)
             {
-                var type = Type.GetType(typeName)?.GetTypeInfo();
+                var type = Type.GetType(typeName);
                 if (type == null) continue;
 
                 <ComponentDocumentation @key="typeName" Type="type"/>
