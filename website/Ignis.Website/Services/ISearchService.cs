@@ -2,5 +2,5 @@
 
 public interface ISearchService
 {
-    Task<SearchResult[]> SearchAsync(string query, CancellationToken cancellationToken = default);
+    IAsyncEnumerable<SearchResult> SearchAsync(string query, CancellationToken cancellationToken = default);
 }

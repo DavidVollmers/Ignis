@@ -1,4 +1,5 @@
-﻿using Doki;
+﻿using System.Runtime.CompilerServices;
+using Doki;
 
 namespace Ignis.Website.Services;
 
@@ -41,10 +42,9 @@ internal class SearchService(IPageService pageService, IStaticFileService static
         return _assemblies;
     }
 
-    public async Task<SearchResult[]> SearchAsync(string query, CancellationToken cancellationToken = default)
+    public async IAsyncEnumerable<SearchResult> SearchAsync(string query,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var results = new List<SearchResult>();
-
         var sections = await pageService.GetSectionsAsync(cancellationToken).ConfigureAwait(false);
         if (sections != null)
         {
@@ -55,7 +55,7 @@ internal class SearchService(IPageService pageService, IStaticFileService static
                     var content = await pageService.GetPageContentAsync(page, cancellationToken).ConfigureAwait(false);
                     if (content != null && content.Contains(query, StringComparison.OrdinalIgnoreCase))
                     {
-                        results.Add(new SearchResult(page, section));
+                        yield return new SearchResult(page, section);
                     }
                 }
             }
@@ -63,12 +63,18 @@ internal class SearchService(IPageService pageService, IStaticFileService static
 
         var assemblies = await GetAssembliesAsync(cancellationToken).ConfigureAwait(false);
 
-        results.AddRange(from assembly in assemblies
-                         from @namespace in assembly.Namespaces
-                         from type in @namespace.Types
-                         where type.Name.Contains(query, StringComparison.OrdinalIgnoreCase)
-                         select new SearchResult(type));
-
-        return results.OrderBy(r => r.Title, StringComparer.OrdinalIgnoreCase).ToArray();
+        foreach (var assemblyDocumentation in assemblies)
+        {
+            foreach (var namespaceDocumentation in assemblyDocumentation.Namespaces)
+            {
+                foreach (var typeDocumentation in namespaceDocumentation.Types)
+                {
+                    if (typeDocumentation.Name.Contains(query, StringComparison.OrdinalIgnoreCase))
+                    {
+                        yield return new SearchResult(typeDocumentation);
+                    }
+                }
+            }
+        }
     }
 }
