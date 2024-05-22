@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.ComponentModel;
+using System.Globalization;
 using Ignis.Components.HeadlessUI.Aria;
 using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;

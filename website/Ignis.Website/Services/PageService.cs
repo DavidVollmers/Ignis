@@ -3,23 +3,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Ignis.Website.Services;
 
-internal class PageService : IPageService
+internal class PageService(IStaticFileService staticFileService, ILogger<PageService> logger)
+    : IPageService
 {
-    private static readonly IDictionary<string, string?> Cache = new Dictionary<string, string?>(StringComparer.Ordinal);
+    private static readonly Dictionary<string, string?> Cache = new(StringComparer.Ordinal);
+
     private static Section[]? _sections;
-
-    private readonly IStaticFileService _staticFileService;
-    private readonly ILogger<PageService> _logger;
-
-    public PageService(IStaticFileService staticFileService, ILogger<PageService> logger)
-    {
-        _staticFileService = staticFileService ?? throw new ArgumentNullException(nameof(staticFileService));
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-    }
 
     public async Task<Section?> GetSectionByLinkAsync(string link, CancellationToken cancellationToken = default)
     {
-        if (link == null) throw new ArgumentNullException(nameof(link));
+        ArgumentNullException.ThrowIfNull(link);
 
         // ReSharper disable once InvertIf
         if (_sections == null)
@@ -46,7 +39,7 @@ internal class PageService : IPageService
 
     public async Task<string?> GetPageContentAsync(Page page, CancellationToken cancellationToken = default)
     {
-        if (page == null) throw new ArgumentNullException(nameof(page));
+        ArgumentNullException.ThrowIfNull(page);
 
         if (Cache.TryGetValue(page.Link, out var cachedContent)) return cachedContent;
 
@@ -61,14 +54,15 @@ internal class PageService : IPageService
         if (string.Equals(path, "/", StringComparison.Ordinal)) path += "index";
         path = "/docs" + path + ".html";
 
-        return await _staticFileService.GetFileContentAsync(path, cancellationToken).ConfigureAwait(false);
+        return await staticFileService.GetFileContentAsync(path, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<Section[]?> LoadSectionsAsync(CancellationToken cancellationToken)
     {
         const string path = "/docs/sitemap.json";
 
-        return await _staticFileService.GetFileContentAsJsonAsync<Section[]>(path, cancellationToken).ConfigureAwait(false);
+        return await staticFileService.GetFileContentAsJsonAsync<Section[]>(path, cancellationToken)
+            .ConfigureAwait(false);
     }
 
     private async Task ReloadSectionsAsync(CancellationToken cancellationToken)
@@ -77,7 +71,7 @@ internal class PageService : IPageService
 
         if (sections == null)
         {
-            _logger.LogWarning("Failed to load sections.");
+            logger.LogWarning("Failed to load sections.");
             return;
         }
 

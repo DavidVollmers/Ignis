@@ -84,6 +84,8 @@
 
     private async Task ParseLinkAsync(CancellationToken cancellationToken)
     {
+        _previousPage = _nextPage = null;
+        
         var link = _link = ('/' + Router.ToBaseRelativePath(Router.Uri)).Split('#')[0];
         if (link.StartsWith("/docs")) link = link["/docs".Length..];
 

@@ -4,6 +4,7 @@ using Microsoft.JSInterop;
 
 namespace Ignis.Components.Web;
 
+//TODO inherit from IgnisAsyncComponentBase and pass cancellation token to JSRuntime calls
 public abstract class FocusComponentBase : IgnisComponentBase, IFocus, IHandleAfterRender, IDisposable
 {
     private readonly DotNetObjectReference<FocusComponentBase> _reference;

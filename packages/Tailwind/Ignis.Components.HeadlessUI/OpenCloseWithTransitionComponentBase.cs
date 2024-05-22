@@ -1,4 +1,5 @@
-﻿using Ignis.Components.Web;
+﻿using System.ComponentModel;
+using Ignis.Components.Web;
 using Microsoft.AspNetCore.Components;
 
 namespace Ignis.Components.HeadlessUI;

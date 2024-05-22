@@ -1,0 +1,39 @@
+﻿@using System.Text
+@using System.Text.RegularExpressions
+@inherits IgnisComponentBase
+
+<span>
+    @HighlightedText
+</span>
+
+@code
+{
+    [Parameter, EditorRequired] public string Text { get; set; } = null!;
+
+    [Parameter, EditorRequired] public string Query { get; set; } = null!;
+
+    [Parameter] public string? HighlightClass { get; set; }
+
+    public MarkupString HighlightedText
+    {
+        get
+        {
+            var parts = Regex.Split(Text, $"({Regex.Escape(Query)})", RegexOptions.IgnoreCase);
+
+            var sb = new StringBuilder();
+            foreach (var part in parts)
+            {
+                if (string.Equals(part, Query, StringComparison.OrdinalIgnoreCase))
+                {
+                    sb.Append($"<mark class=\"{HighlightClass}\">{part}</mark>");
+                }
+                else
+                {
+                    sb.Append($"<span>{part}</span>");
+                }
+            }
+            
+            return (MarkupString)sb.ToString();
+        }
+    }
+}
