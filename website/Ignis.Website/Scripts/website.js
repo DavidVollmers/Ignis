@@ -15,6 +15,12 @@ window.OnPageLoad = () => {
   }, 100)
 }
 
+window.OnKeyUp = (input, dotNetRef) => {
+  input.onkeyup = (event) => {
+    dotNetRef.invokeMethodAsync('OnKeyUpAsync', event.key, input.value)
+  }
+}
+
 function initMermaid() {
   const isDarkMode = getTheme() === '2'
   mermaid.init(

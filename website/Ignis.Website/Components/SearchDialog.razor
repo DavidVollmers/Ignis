@@ -2,7 +2,9 @@
 @using Ignis.Components.HeroIcons.Outline
 @using Ignis.Website.Services
 @inherits IgnisAsyncComponentBase
+@implements IHandleAfterRender
 @inject ISearchService SearchService
+@inject IJSRuntime JSRuntime
 
 <Dialog IsOpen="IsOpen" IsOpenChanged="IsOpenChanged" class="fixed inset-0 z-50">
     <div class="fixed inset-0 bg-slate-900/50 backdrop-blur"></div>
@@ -11,9 +13,8 @@
             <ReactiveSection For="_isLoading">
                 <div class="group relative flex h-12">
                     <MagnifyingGlassIcon class="pointer-events-none absolute left-4 top-0 h-full w-5 stroke-slate-400 dark:stroke-slate-500"/>
-                    <input type="search" @bind="_searchQuery"
-                           class="@Css.Class("flex-auto appearance-none bg-transparent pl-12 text-slate-900 outline-none placeholder:text-slate-400 focus:w-full focus:flex-none sm:text-sm dark:text-white [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden [&::-webkit-search-results-button]:hidden [&::-webkit-search-results-decoration]:hidden", _isLoading.Value ? "pr-11" : "pr-4")"
-                           @onkeydown="OnKeyDownAsync"/>
+                    <input type="search" @bind="_searchQuery" @ref="_input"
+                           class="@Css.Class("flex-auto appearance-none bg-transparent pl-12 text-slate-900 outline-none placeholder:text-slate-400 focus:w-full focus:flex-none sm:text-sm dark:text-white [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden [&::-webkit-search-results-button]:hidden [&::-webkit-search-results-decoration]:hidden", _isLoading.Value ? "pr-11" : "pr-4")"/>
                     @if (_isLoading.Value)
                     {
                         <div class="absolute inset-y-0 right-3 flex items-center">
@@ -24,7 +25,7 @@
                 @if (!string.IsNullOrWhiteSpace(_searchQuery))
                 {
                     <div class="border-t border-slate-200 bg-white px-2 py-3 empty:hidden dark:border-slate-400/10 dark:bg-slate-800">
-                        @if (_results == null)
+                        @if (_results == null || !_results.Any())
                         {
                             <p class="px-4 py-8 text-center text-sm text-slate-700 dark:text-slate-400">
                                 No results for &ldquo;
@@ -63,6 +64,7 @@
     private readonly IAsyncDebounce _debounce;
 
     private SearchResult[]? _results;
+    private ElementReference _input;
     private string? _searchQuery;
 
     [Parameter] public bool IsOpen { get; set; }
@@ -75,9 +77,12 @@
         _debounce = Debouncer.Debounce(SearchAsync, 500);
     }
 
-    private async Task OnKeyDownAsync(KeyboardEventArgs args)
+    [JSInvokable]
+    public async Task OnKeyUpAsync(string key, string value)
     {
-        if (args.Key == "Enter")
+        _searchQuery = value;
+
+        if (key == "Enter")
         {
             _debounce.Cancel();
 
@@ -102,5 +107,10 @@
         }
 
         _isLoading.Value = false;
+    }
+
+    public async Task OnAfterRenderAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("OnKeyUp", CancellationToken, _input, DotNetObjectReference.Create(this));
     }
 }
