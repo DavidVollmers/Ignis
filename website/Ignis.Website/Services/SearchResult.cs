@@ -14,7 +14,7 @@ public record SearchResult
     public SearchResult(Page page, Section section)
     {
         Title = page.Title;
-        Url = page.Link;
+        Url = $"/docs{page.Link}";
         Section = section.Title;
     }
 

@@ -16,6 +16,7 @@ window.OnPageLoad = () => {
 }
 
 window.OnKeyUp = (input, dotNetRef) => {
+  if (!input) return
   input.onkeyup = (event) => {
     dotNetRef.invokeMethodAsync('OnKeyUpAsync', event.key, input.value)
   }

@@ -69,7 +69,8 @@ internal class SearchService(IPageService pageService, IStaticFileService static
             {
                 foreach (var typeDocumentation in namespaceDocumentation.Types)
                 {
-                    if (typeDocumentation.Name.Contains(query, StringComparison.OrdinalIgnoreCase))
+                    if (typeDocumentation.Name.Contains(query, StringComparison.OrdinalIgnoreCase)
+                        || typeDocumentation.Namespace!.Contains(query, StringComparison.OrdinalIgnoreCase))
                     {
                         yield return new SearchResult(typeDocumentation);
                     }
