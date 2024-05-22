@@ -25,7 +25,7 @@
                 @if (!string.IsNullOrWhiteSpace(_searchQuery))
                 {
                     <div class="border-t border-slate-200 bg-white px-2 py-3 empty:hidden dark:border-slate-400/10 dark:bg-slate-800">
-                        @if (_results == null || !_results.Any())
+                        @if (_results == null || _results.Length == 0)
                         {
                             <p class="px-4 py-8 text-center text-sm text-slate-700 dark:text-slate-400">
                                 No results for &ldquo;
