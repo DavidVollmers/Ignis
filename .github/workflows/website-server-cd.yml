@@ -18,7 +18,7 @@ jobs:
           node-version: 18.x
       - run: npm i
       - run: dotnet build website/Ignis.Website -c Release
-      - run: dotnet doki g --allow-preview
+      - run: dotnet doki g
       - run: |
           dotnet build tools/Ignis.Website.Generator -c Release
           dotnet tools/Ignis.Website.Generator/bin/Release/net8.0/Ignis.Website.Generator.dll
