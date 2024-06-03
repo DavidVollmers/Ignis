@@ -104,7 +104,13 @@ public static class IgnisWebsiteExtensions
 
             case DocumentationContentType.Object:
             case DocumentationContentType.TypeReference:
-                var typeDocumentationReference = (TypeDocumentationReference)documentationObject;
+                var typeDocumentationReference = documentationObject switch
+                {
+                    TypeDocumentationReference reference => reference,
+                    MemberDocumentation memberDocumentation => (TypeDocumentationReference)memberDocumentation.Parent!,
+                    _ => throw new InvalidOperationException("Invalid documentation object type.")
+                };
+
                 var hRef = typeDocumentationReference.GetTypeDocumentationLink();
                 if (hRef != null)
                 {

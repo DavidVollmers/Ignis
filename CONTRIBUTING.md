@@ -39,8 +39,16 @@ dotnet run --project ./tools/Ignis.Components.HeroIcons.Generator
 ```
 
 The `Ignis.Website` project contains the generated documentation for the Ignis repository. This documentation is
-generated from the markdown files in the [docs](docs) directory. You can generate the documentation with the following
-command:
+generated from the markdown files in the [docs](docs) directory and the JSON output generated
+using [doki](https://github.com/DavidVollmers/doki).
+
+You can generate the [doki](https://github.com/DavidVollmers/doki) documentation with the following command:
+
+```shell
+dotnet doki g
+```
+
+Then you can generate the website documentation with the following command:
 
 ```shell
 dotnet run --project ./tools/Ignis.Website.Generator
