@@ -7,7 +7,7 @@
       "commands": ["husky"]
     },
     "doki.commandline": {
-      "version": "1.0.2",
+      "version": "2.1.0",
       "commands": ["doki"]
     }
   }

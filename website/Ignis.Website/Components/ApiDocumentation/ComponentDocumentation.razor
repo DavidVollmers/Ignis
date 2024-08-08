@@ -82,7 +82,7 @@
                         }
                     </td>
                     <td>
-                        @memberDocumentation?.Summary?.ToMarkupString()
+                        @memberDocumentation?.Summaries.FirstOrDefault()?.ToMarkupString()
                     </td>
                 </tr>
             }

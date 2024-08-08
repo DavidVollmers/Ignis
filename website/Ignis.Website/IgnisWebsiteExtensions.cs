@@ -103,11 +103,10 @@ public static class IgnisWebsiteExtensions
                 return;
 
             case DocumentationContentType.Object:
-            case DocumentationContentType.TypeReference:
+                //TODO resolve member documentation objects
                 var typeDocumentationReference = documentationObject switch
                 {
                     TypeDocumentationReference reference => reference,
-                    MemberDocumentation memberDocumentation => (TypeDocumentationReference)memberDocumentation.Parent!,
                     _ => throw new InvalidOperationException("Invalid documentation object type.")
                 };
 
