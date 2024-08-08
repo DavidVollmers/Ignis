@@ -1,0 +1,127 @@
+﻿@using Debouncer;
+@using Ignis.Components.HeroIcons.Outline
+@using Ignis.Website.Services
+@inherits IgnisAsyncComponentBase
+@implements IHandleAfterRender
+@inject ISearchService SearchService
+@inject NavigationManager Router
+@inject IJSRuntime JSRuntime
+
+<Dialog IsOpen="IsOpen" IsOpenChanged="IsOpenChanged" class="fixed inset-0 z-50">
+    <div class="fixed inset-0 bg-slate-900/50 backdrop-blur"></div>
+    <div class="fixed inset-0 overflow-y-auto px-4 py-4 sm:px-6 sm:py-20 md:py-32 lg:px-8 lg:py-[15vh]">
+        <DialogPanel class="mx-auto transform-gpu overflow-hidden rounded-xl bg-white shadow-xl sm:max-w-xl dark:bg-slate-800 dark:ring-1 dark:ring-slate-700">
+            <ReactiveSection For="_isLoading">
+                <div class="group relative flex h-12">
+                    <MagnifyingGlassIcon class="pointer-events-none absolute left-4 top-0 h-full w-5 stroke-slate-400 dark:stroke-slate-500"/>
+                    <input type="search" @bind="_searchQuery" @ref="_input"
+                           class="@Css.Class("flex-auto appearance-none bg-transparent pl-12 text-slate-900 outline-none placeholder:text-slate-400 focus:w-full focus:flex-none sm:text-sm dark:text-white [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden [&::-webkit-search-results-button]:hidden [&::-webkit-search-results-decoration]:hidden", _isLoading.Value ? "pr-11" : "pr-4")"/>
+                    @if (_isLoading.Value)
+                    {
+                        <div class="absolute inset-y-0 right-3 flex items-center">
+                            <LoadingIcon class="h-6 w-6 animate-spin stroke-slate-200 text-slate-400 dark:stroke-slate-700 dark:text-slate-500"/>
+                        </div>
+                    }
+                </div>
+                @if (!string.IsNullOrWhiteSpace(_searchQuery))
+                {
+                    <div class="border-t border-slate-200 bg-white px-2 py-3 empty:hidden dark:border-slate-400/10 dark:bg-slate-800">
+                        @if (_results == null || _results.Length == 0)
+                        {
+                            <p class="px-4 py-8 text-center text-sm text-slate-700 dark:text-slate-400">
+                                No results for &ldquo;
+                                <span class="break-words text-slate-900 dark:text-white">
+                                    @_searchQuery
+                                </span>
+                                &rdquo;
+                            </p>
+                        }
+                        else
+                        {
+                            <ul>
+                                @foreach (var result in _results)
+                                {
+                                    <li onclick="@(() => OnClick(result))"
+                                        class="group block cursor-default rounded-lg px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-700/30">
+                                        <div class="text-sm text-slate-700 group-hover:text-sky-600 dark:text-slate-300 dark:group-hover:text-sky-400">
+                                            <HighlightText Text="@result.Title" Query="@_searchQuery" HighlightClass="group-hover:underline bg-transparent text-sky-600 dark:text-sky-400"/>
+                                        </div>
+                                        <div class="mt-0.5 truncate whitespace-nowrap text-xs text-slate-500 dark:text-slate-400">
+                                            <HighlightText Text="@result.Section" Query="@_searchQuery" HighlightClass="group-hover:underline bg-transparent text-sky-600 dark:text-sky-400"/>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                }
+            </ReactiveSection>
+        </DialogPanel>
+    </div>
+</Dialog>
+
+@code
+{
+    private readonly ReactiveValue<bool> _isLoading;
+    private readonly IAsyncDebounce _debounce;
+
+    private SearchResult[]? _results;
+    private ElementReference? _input;
+    private string? _searchQuery;
+
+    [Parameter] public bool IsOpen { get; set; }
+
+    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+
+    public SearchDialog()
+    {
+        _isLoading = new ReactiveValue<bool>(this, false);
+        _debounce = Debouncer.Debounce(SearchAsync, 500);
+    }
+
+    [JSInvokable]
+    public async Task OnKeyUpAsync(string key, string value)
+    {
+        _searchQuery = value;
+
+        if (key == "Enter")
+        {
+            _debounce.Cancel();
+
+            await SearchAsync();
+            return;
+        }
+
+        await _debounce.InvokeAsync();
+    }
+
+    private async Task SearchAsync()
+    {
+        _isLoading.Value = true;
+
+        if (string.IsNullOrWhiteSpace(_searchQuery))
+        {
+            _results = null;
+        }
+        else
+        {
+            _results = await SearchService.SearchAsync(_searchQuery, CancellationToken).Take(5).ToArrayAsync(CancellationToken);
+        }
+
+        _isLoading.Value = false;
+    }
+
+    public async Task OnAfterRenderAsync()
+    {
+        if (!_input.HasValue) return;
+
+        await JSRuntime.InvokeVoidAsync("OnKeyUp", CancellationToken, _input.Value, DotNetObjectReference.Create(this));
+    }
+
+    private void OnClick(SearchResult result)
+    {
+        IsOpenChanged.InvokeAsync(IsOpen = false);
+
+        Router.NavigateTo(result.Url);
+    }
+}

@@ -16,7 +16,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageOutputPath>..\..\..\nuget</PackageOutputPath>
-    <NoWarn>BL0007</NoWarn>
+    <NoWarn>BL0007,MA0004</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 

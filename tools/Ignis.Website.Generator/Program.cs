@@ -14,11 +14,11 @@ builder.Build(markdownDirectory, outputDirectoryServer);
 builder.Build(markdownDirectory, outputDirectoryWebAssembly);
 
 var sourceDirectory = new DirectoryInfo(Path.Combine(assemblyFile.DirectoryName!, "..", "..", "..", "..", "..",
-    "website", "Ignis.Website", "bin", "Release", "net8.0"));
+    "docs", "api"));
 outputDirectoryServer = new DirectoryInfo(Path.Combine(assemblyFile.DirectoryName!, "..", "..", "..", "..", "..",
     "website", "Ignis.Website.Server", "wwwroot", "_api"));
 outputDirectoryWebAssembly = new DirectoryInfo(Path.Combine(assemblyFile.DirectoryName!, "..", "..", "..", "..",
     "..", "website", "Ignis.Website.WebAssembly", "wwwroot", "_api"));
 
-XmlCopy.Copy(sourceDirectory, outputDirectoryServer);
-XmlCopy.Copy(sourceDirectory, outputDirectoryWebAssembly);
+FileCopy.Copy(sourceDirectory, "*.json", outputDirectoryServer);
+FileCopy.Copy(sourceDirectory, "*.json", outputDirectoryWebAssembly);

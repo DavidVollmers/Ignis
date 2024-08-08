@@ -1,0 +1,230 @@
+﻿@using Doki
+@inherits TypeDocumentationBase
+@inject IStringLocalizer<IgnisTypeDocumentation> Resources
+
+<h2>
+    @TypeDocumentation.Name @Enum.GetName(typeof(DocumentationContentType), TypeDocumentation.ContentType)
+</h2>
+
+<h3>
+    @Resources["DefinitionHeading"]
+</h3>
+<dl>
+    <dt>
+        @Resources["NamespaceLabel"]:
+    </dt>
+    <dd>
+        @TypeDocumentation.Namespace
+    </dd>
+    <dt>
+        @Resources["AssemblyLabel"]:
+    </dt>
+    <dd>
+        @TypeDocumentation.Assembly
+    </dd>
+</dl>
+
+@if (TypeDocumentation.Summaries.Length != 0)
+{
+    <p>
+        @TypeDocumentation.Summaries.First().ToMarkupString()
+    </p>
+}
+
+<pre class="whitespace-normal"><code class="language-csharp">@TypeDocumentation.Definition</code></pre>
+
+<dl>
+    <dt>
+        @Resources["InheritanceLabel"]:
+    </dt>
+    <dd>
+        @foreach (var inheritedType in GetInheritanceChain().Reverse())
+        {
+            var link = inheritedType.GetTypeDocumentationLink();
+            if (link != null)
+            {
+                <a href="@link" class="inline-block">
+                    @(inheritedType.IsDocumented ? inheritedType.Name : inheritedType.FullName)
+                </a>
+            }
+            else
+            {
+                <span class="inline-block">@inheritedType.Name</span>
+            }
+
+            <span class="inline-block px-1">→</span>
+        }
+
+        <span class="inline-block">@TypeDocumentation.Name</span>
+    </dd>
+    <dt>
+        @Resources["DerivedLabel"]:
+    </dt>
+    <dd>
+        @foreach (var derivedType in TypeDocumentation.DerivedTypes)
+        {
+            var link = derivedType.GetTypeDocumentationLink();
+            if (link != null)
+            {
+                <a href="@link">
+                    @(derivedType.IsDocumented ? derivedType.Name : derivedType.FullName)
+                </a>
+            }
+            else
+            {
+                <span>@derivedType.Name</span>
+            }
+            
+            <br />
+        }
+    </dd>
+    <dt>
+        @Resources["ImplementedInterfacesLabel"]:
+    </dt>
+    <dd>
+        @foreach(var interfaceType in TypeDocumentation.Interfaces)
+        {
+            var link = interfaceType.GetTypeDocumentationLink();
+            if (link != null)
+            {
+                <a href="@link">
+                    @(interfaceType.IsDocumented ? interfaceType.Name : interfaceType.FullName)
+                </a>
+            }
+            else
+            {
+                <span>@interfaceType.Name</span>
+            }
+            
+            <br />
+        }
+    </dd>
+</dl>
+
+@if (TypeDocumentation.GenericArguments.Any())
+{
+    <h4>
+        @Resources["TypeParametersHeading"]
+    </h4>
+
+    foreach (var typeParam in TypeDocumentation.GenericArguments)
+    {
+        <p>
+            <code>@typeParam.Name</code>
+        </p>
+    }
+}
+
+@if (TypeDocumentation.Remarks.Any())
+{
+    <h4>
+        @Resources["RemarksHeading"]
+    </h4>
+
+    @foreach (var remark in TypeDocumentation.Remarks)
+    {
+        <p>
+            @remark.ToMarkupString()
+        </p>
+    }
+}
+
+@if (TypeDocumentation.Constructors.Any())
+{
+    <h4>
+        @Resources["ConstructorsHeading"]
+    </h4>
+
+    <table>
+        <thead>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var ctor in TypeDocumentation.Constructors)
+        {
+            <tr>
+                <td>
+                    <code>@ctor.Name</code>
+                </td>
+                <td>
+                    @ctor.Summaries.FirstOrDefault()?.ToMarkupString()
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@if (TypeDocumentation.Properties.Any())
+{
+    <h4>
+        @Resources["PropertiesHeading"]
+    </h4>
+
+    <table>
+        <thead>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var prop in TypeDocumentation.Properties)
+        {
+            <tr>
+                <td>
+                    <code>@prop.Name</code>
+                </td>
+                <td>
+                    @prop.Summaries.FirstOrDefault()?.ToMarkupString()
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@if (TypeDocumentation.Methods.Any())
+{
+    <h4>
+        @Resources["MethodsHeading"]
+    </h4>
+
+    <table>
+        <thead>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var method in TypeDocumentation.Methods)
+        {
+            <tr>
+                <td>
+                    <code>@method.Name</code>
+                </td>
+                <td>
+                    @method.Summaries.FirstOrDefault()?.ToMarkupString()
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code
+{
+    public IEnumerable<TypeDocumentationReference> GetInheritanceChain()
+    {
+        var currentType = TypeDocumentation.BaseType;
+        while (currentType != null)
+        {
+            yield return currentType;
+            currentType = currentType.BaseType;
+        }
+    }
+}

@@ -22,9 +22,37 @@ with the project's goals or because someone else is already working on it.
 
 1. Fork and clone the repository
 2. Run `npm install` to install dependencies
-3. Run `dotnet build Ignis.sln` to build the project
+3. Run `dotnet build ./Ignis.sln -c Release` to build the project
 
 This should be all you need to get started. If you run into any issues, please let us know by opening an issue.
+
+#### Generated content
+
+Both the `Ignis.Components.HeroIcons` and the `Ignis.Website` projects contain generated content.
+
+The `Ignis.Components.HeroIcons` project contains the generated C# code for the HeroIcons. This code is generated from
+the official [heroicons repository](https://github.com/tailwindlabs/heroicons) , which you can run with the following
+command:
+
+```shell
+dotnet run --project ./tools/Ignis.Components.HeroIcons.Generator
+```
+
+The `Ignis.Website` project contains the generated documentation for the Ignis repository. This documentation is
+generated from the markdown files in the [docs](docs) directory and the JSON output generated
+using [doki](https://github.com/DavidVollmers/doki).
+
+You can generate the [doki](https://github.com/DavidVollmers/doki) documentation with the following command:
+
+```shell
+dotnet doki g
+```
+
+Then you can generate the website documentation with the following command:
+
+```shell
+dotnet run --project ./tools/Ignis.Website.Generator
+```
 
 ## Coding standards
 
