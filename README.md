@@ -33,44 +33,6 @@ Visit the official website for guides and documentation: https://ignis.dvolper.d
 
 ---
 
-## Packages
-
-Please refer to the official website for more [information](https://ignis.dvolper.dev/docs/components/packages).
-
-### Ignis.Components
-
-The core components package, containing abstract component bases which implement the
-Ignis [component lifecycle](https://ignis.dvolper.dev/docs/components/lifecycle) and common components like `Dynamic`
-and `Fragment`.
-
-### Ignis.Components.Web
-
-The web components package, containing components and interfaces that are specific to the web/browser,
-like `ScrollDetector` and `ILocalStorage` or `IFocus`.
-
-### Ignis.Components.Reactivity
-
-The reactivity package, containing components and classes that are specific to the Ignis [reactivity system](https://ignis.dvolper.dev/docs/components/reactivity).
-
-### Ignis.Utils
-
-This package contains a set of utilities that can be used in your application, like a static `Css` class that can be
-used to generate CSS classes for your components.
-
-### Ignis.Components.HeadlessUI
-
-This package contains a set of components that are based on the [HeadlessUI](https://headlessui.com) project.
-
-You can read more about it [here](https://ignis.dvolper.dev/docs/components/headlessUI).
-
-### Ignis.Components.HeroIcons
-
-Beautiful hand-crafted SVG icons, by the makers of Tailwind CSS.
-
-Port of the [heroicons](https://heroicons.com) project based on Ignis components.
-
----
-
 ## License
 
 This project is licensed under the [MIT](LICENSE.txt) license.
