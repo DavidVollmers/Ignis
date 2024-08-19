@@ -13,7 +13,7 @@ namespace Ignis.Components.HeadlessUI;
 /// </summary>
 /// <typeparam name="T">The value type.</typeparam>
 public sealed class Listbox<T> : OpenCloseWithTransitionComponentBase, IDynamicParentComponent<Listbox<T>>,
-    IAriaPopup<ListboxOption<T>>
+    IAriaPopup<ListboxOption<T>>, IAriaDisabled
 {
     #region Parameters
 

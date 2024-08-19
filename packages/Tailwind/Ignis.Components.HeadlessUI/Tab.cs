@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components.Web;
 
 namespace Ignis.Components.HeadlessUI;
 
-public sealed class Tab : FocusComponentBase, IDynamicParentComponent<Tab>, IAriaComponentPart
+public sealed class Tab : FocusComponentBase, IDynamicParentComponent<Tab>, IAriaComponentPart, IAriaDisabled
 {
     private readonly AttributeCollection _attributes;
 

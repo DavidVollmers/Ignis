@@ -3,6 +3,6 @@
 /// <summary>
 /// A group of checkable elements.
 /// </summary>
-public interface IAriaCheckGroup : IAriaComponent, IAriaLabeled
+public interface IAriaCheckGroup : IAriaComponent, IAriaLabeled, IAriaDisabled
 {
 }

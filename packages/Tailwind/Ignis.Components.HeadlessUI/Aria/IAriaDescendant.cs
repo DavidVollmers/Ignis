@@ -3,7 +3,7 @@
 /// <summary>
 /// A component part which is a descendant of an ARIA conform component.
 /// </summary>
-public interface IAriaDescendant : IAriaComponentPart
+public interface IAriaDescendant : IAriaComponentPart, IAriaDisabled
 {
     /// <summary>
     /// Whether the component part is an active descendant.
