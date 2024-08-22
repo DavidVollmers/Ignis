@@ -4,6 +4,7 @@ public class ComponentEvent : IComponentEvent, IDisposable
 {
     private readonly CancellationTokenSource _cancellationTokenSource = new();
 
+    //TODO rename to IsDefaultPrevented
     public bool DefaultPrevented => this._cancellationTokenSource.IsCancellationRequested;
 
     public void PreventDefault()

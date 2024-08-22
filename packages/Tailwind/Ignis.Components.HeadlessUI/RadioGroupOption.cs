@@ -33,6 +33,9 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
     /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
+    
+    /// <inheritdoc />
+    [Parameter] public bool IsDisabled { get; set; }
 
     /// <inheritdoc />
     [Parameter]
@@ -110,6 +113,7 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
             () => new KeyValuePair<string, object?>("aria-checked", IsChecked.ToString().ToLowerInvariant()),
             () => new KeyValuePair<string, object?>("aria-labelledby", RadioGroup.GetId(Label)),
             () => new KeyValuePair<string, object?>("aria-describedby", RadioGroup.GetId(Description)),
+            () => new KeyValuePair<string, object?>("aria-disabled", IsDisabled.ToString().ToLowerInvariant()),
         });
     }
 
@@ -180,6 +184,8 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
 
     public void Check()
     {
+        if (IsDisabled) return;
+        
         RadioGroup.CheckValue(Value);
 
         RadioGroup.ActiveOption = this;
@@ -201,12 +207,16 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
     /// <inheritdoc />
     protected override void OnTargetFocus()
     {
+        if (IsDisabled) return;
+        
         RadioGroup.ActiveOption = this;
     }
 
     /// <inheritdoc />
     protected override void OnTargetBlur()
     {
+        if (IsDisabled) return;
+        
         if (RadioGroup.ActiveOption == this) RadioGroup.ActiveOption = null;
     }
 
