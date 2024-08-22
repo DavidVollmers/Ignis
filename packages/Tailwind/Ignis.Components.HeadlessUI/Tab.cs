@@ -30,6 +30,9 @@ public sealed class Tab : FocusComponentBase, IDynamicParentComponent<Tab>, IAri
     protected override IEnumerable<string> KeysToCapture { get; } = new[] { "ArrowLeft", "ArrowRight" };
 
     /// <inheritdoc />
+    [Parameter] public bool IsDisabled { get; set; }
+
+    /// <inheritdoc />
     [Parameter]
     public string? AsElement
     {
@@ -99,6 +102,7 @@ public sealed class Tab : FocusComponentBase, IDynamicParentComponent<Tab>, IAri
                 var tabPanel = TabGroup.TabPanels.ElementAtOrDefault(Array.IndexOf(TabGroup.Tabs.ToArray(), this));
                 return new KeyValuePair<string, object?>("aria-controls", TabGroup.GetId(tabPanel));
             },
+            () => new KeyValuePair<string, object?>("aria-disabled", IsDisabled.ToString().ToLowerInvariant()),
         });
     }
 

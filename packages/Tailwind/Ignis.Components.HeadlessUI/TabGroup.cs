@@ -64,28 +64,30 @@ public sealed class TabGroup : DynamicComponentBase<TabGroup>, IAriaComponent
 
         if (componentPart.Id != null) return componentPart.Id;
 
-        if (componentPart is Tab tab)
+        switch (componentPart)
         {
-            var index = Array.IndexOf(_tabs.ToArray(), tab);
-            if (index < 0) return null;
+            case Tab tab:
+            {
+                var index = Array.IndexOf(_tabs.ToArray(), tab);
+                if (index < 0) return null;
 
-            return Id + "-tab-" + index.ToString(CultureInfo.InvariantCulture);
+                return Id + "-tab-" + index.ToString(CultureInfo.InvariantCulture);
+            }
+            case TabPanel tabPanel:
+            {
+                var index = Array.IndexOf(_tabPanels.ToArray(), tabPanel);
+                if (index < 0) return null;
+
+                return Id + "-panel-" + index.ToString(CultureInfo.InvariantCulture);
+            }
+            default:
+                return null;
         }
-
-        if (componentPart is TabPanel tabPanel)
-        {
-            var index = Array.IndexOf(_tabPanels.ToArray(), tabPanel);
-            if (index < 0) return null;
-
-            return Id + "-panel-" + index.ToString(CultureInfo.InvariantCulture);
-        }
-
-        return null;
     }
 
     public bool IsTabSelected(Tab tab)
     {
-        if (tab == null) throw new ArgumentNullException(nameof(tab));
+        ArgumentNullException.ThrowIfNull(tab);
 
         var index = _tabs.IndexOf(tab);
 
@@ -94,7 +96,9 @@ public sealed class TabGroup : DynamicComponentBase<TabGroup>, IAriaComponent
 
     public void SelectTab(Tab tab)
     {
-        if (tab == null) throw new ArgumentNullException(nameof(tab));
+        ArgumentNullException.ThrowIfNull(tab);
+
+        if (tab.IsDisabled) return;
 
         var index = _tabs.IndexOf(tab);
 
@@ -109,21 +113,21 @@ public sealed class TabGroup : DynamicComponentBase<TabGroup>, IAriaComponent
 
     public void AddTab(Tab tab)
     {
-        if (tab == null) throw new ArgumentNullException(nameof(tab));
+        ArgumentNullException.ThrowIfNull(tab);
 
         if (!_tabs.Contains(tab)) _tabs.Add(tab);
     }
 
     public void RemoveTab(Tab tab)
     {
-        if (tab == null) throw new ArgumentNullException(nameof(tab));
+        ArgumentNullException.ThrowIfNull(tab);
 
         _tabs.Remove(tab);
     }
 
     public bool IsTabPanelSelected(TabPanel tabPanel)
     {
-        if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));
+        ArgumentNullException.ThrowIfNull(tabPanel);
 
         var index = _tabPanels.IndexOf(tabPanel);
 
@@ -132,14 +136,14 @@ public sealed class TabGroup : DynamicComponentBase<TabGroup>, IAriaComponent
 
     public void AddTabPanel(TabPanel tabPanel)
     {
-        if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));
+        ArgumentNullException.ThrowIfNull(tabPanel);
 
         if (!_tabPanels.Contains(tabPanel)) _tabPanels.Add(tabPanel);
     }
 
     public void RemoveTabPanel(TabPanel tabPanel)
     {
-        if (tabPanel == null) throw new ArgumentNullException(nameof(tabPanel));
+        ArgumentNullException.ThrowIfNull(tabPanel);
 
         _tabPanels.Remove(tabPanel);
     }

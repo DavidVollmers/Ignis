@@ -33,7 +33,7 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
     /// <inheritdoc />
     [Parameter]
     public string? Id { get; set; }
-    
+
     /// <inheritdoc />
     [Parameter] public bool IsDisabled { get; set; }
 
@@ -185,7 +185,7 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
     public void Check()
     {
         if (IsDisabled) return;
-        
+
         RadioGroup.CheckValue(Value);
 
         RadioGroup.ActiveOption = this;
@@ -208,7 +208,7 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
     protected override void OnTargetFocus()
     {
         if (IsDisabled) return;
-        
+
         RadioGroup.ActiveOption = this;
     }
 
@@ -216,7 +216,7 @@ public sealed class RadioGroupOption<T> : FocusComponentBase, IDynamicParentComp
     protected override void OnTargetBlur()
     {
         if (IsDisabled) return;
-        
+
         if (RadioGroup.ActiveOption == this) RadioGroup.ActiveOption = null;
     }
 
