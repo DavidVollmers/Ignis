@@ -8,7 +8,7 @@
     "prepare": "dotnet tool restore && dotnet husky install"
   },
   "devDependencies": {
-    "lint-staged": "^15.2.0",
+    "lint-staged": "^15.2.9",
     "prettier": "^3.1.1"
   },
   "lint-staged": {
