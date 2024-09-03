@@ -38,7 +38,7 @@ jobs:
         with:
           node-version: 18.x
           registry-url: https://registry.npmjs.org
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4.1.7
         with:
           name: NPM
           path: npm
