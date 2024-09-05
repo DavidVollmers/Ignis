@@ -10,7 +10,7 @@
     "tailwindcss": "^3.4.1"
   },
   "devDependencies": {
-    "webpack": "^5.89.0",
+    "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4"
   }
 }
